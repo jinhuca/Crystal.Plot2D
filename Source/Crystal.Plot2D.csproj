@@ -27,16 +27,20 @@
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>2.1.0.7</Version>
+    <Version>2.1.0.1</Version>
     <Authors>Jin Hu</Authors>
     <Description>Library for Scientific Data Visualization.</Description>
+    <PackageProjectUrl>https://github.com/jinhuca/Crystal.Plot2D</PackageProjectUrl>
+    <PackageIcon>CrystalPlot2D.png</PackageIcon>
+    <PackageTags>.NET;Visualization</PackageTags>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <OutputPath>bin\debug</OutputPath>
-    <BaseIntermediateOutputPath>obj\debug</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath>obj\</BaseIntermediateOutputPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
@@ -142,6 +146,7 @@
     <EmbeddedResource Remove="Properties\Resources.resx" />
     <EmbeddedResource Remove="Strings\Exceptions.ru-ru.resx" />
     <EmbeddedResource Remove="Strings\UIResources.ru-ru.resx" />
+    <None Remove="Resources\CrystalPlot2D.png" />
     <Page Remove="Charts\Legend.xaml" />
   </ItemGroup>
   <ItemGroup>
@@ -149,5 +154,11 @@
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="6.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\CrystalPlot2D.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </Resource>
   </ItemGroup>
 </Project>
