@@ -11,7 +11,7 @@ using System.Windows.Markup;
 // General Information about an assembly is controlled through the following set of attributes. 
 // Change these attribute values to modify the information associated with an assembly.
 [assembly: AssemblyTitle("Crystal.Plot2D")]
-[assembly: AssemblyDescription("WPF Control for Scientific Data Visualization")]
+[assembly: AssemblyDescription("Scientific Data Visualization")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Jin Hu")]
 [assembly: AssemblyProduct("Crystal.Plot2D")]
@@ -19,10 +19,7 @@ using System.Windows.Markup;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.0.0.0")]
 [assembly: NeutralResourcesLanguage("en-US")]
-[assembly: SatelliteContractVersion("1.0.0.0")]
-[assembly: AssemblyFileVersionAttribute("1.0.0.0")]
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 [assembly: XmlnsDefinition(AssemblyConstants.DefaultXmlNamespace, "Crystal.Plot2D")]
 [assembly: XmlnsDefinition(AssemblyConstants.DefaultXmlNamespace, "Crystal.Plot2D.Charts")]
@@ -38,7 +35,6 @@ namespace Crystal.Plot2D
 {
   public static class AssemblyConstants
   {
-    //public const string DefaultXmlNamespace = "http://jinhuca.visualization.com/Plotter2D/1.0";
     public const string DefaultXmlNamespace = "http://schemas.crystal.com/Plot2D";
   }
 }

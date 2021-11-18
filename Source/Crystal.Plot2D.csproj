@@ -26,11 +26,15 @@
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>2.1.0.7</Version>
+    <Authors>Jin Hu</Authors>
+    <Description>Library for Scientific Data Visualization.</Description>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <RunCodeAnalysis>false</RunCodeAnalysis>
-    <OutputPath>..\Output\</OutputPath>
-    <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
+    <OutputPath>bin\debug</OutputPath>
+    <BaseIntermediateOutputPath>obj\debug</BaseIntermediateOutputPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
@@ -38,8 +42,8 @@
     <DefineConstants>TRACE;CODE_ANALYSIS</DefineConstants>
     <DocumentationFile>
     </DocumentationFile>
-    <OutputPath>..\Output\</OutputPath>
-    <BaseIntermediateOutputPath>..\Output\Obj</BaseIntermediateOutputPath>
+    <OutputPath>bin\release</OutputPath>
+    <BaseIntermediateOutputPath>obj\release</BaseIntermediateOutputPath>
     <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
     <DebugSymbols>true</DebugSymbols>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
