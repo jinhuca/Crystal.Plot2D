@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\JinHu.Visualization.Plotter2D\JinHu.Visualization.Plotter2D.csproj" />
+    <ProjectReference Include="..\JinHu.Visualization.Plotter2D\Crystal.Plot2D.csproj" />
   </ItemGroup>
 
 </Project>

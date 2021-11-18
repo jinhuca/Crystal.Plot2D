@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31912.275
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "JinHu.Visualization.Plotter2D", "JinHu.Visualization.Plotter2D\JinHu.Visualization.Plotter2D.csproj", "{ECD37682-DF7E-409F-912D-0965634556B5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Crystal.Plot2D", "JinHu.Visualization.Plotter2D\Crystal.Plot2D.csproj", "{ECD37682-DF7E-409F-912D-0965634556B5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dotnet5Demo", "Dotnet5Demo\Dotnet5Demo.csproj", "{1A89CF06-9F64-4F5E-B5E6-F1618BED6EBE}"
 EndProject
