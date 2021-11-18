@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.PointMarkers
+namespace Crystal.Plot2D
 {
   public class RectanglePointMarker : ShapePointMarker
   {

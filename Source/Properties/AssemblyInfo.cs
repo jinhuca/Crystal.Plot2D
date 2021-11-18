@@ -23,7 +23,7 @@ using System.Windows.Markup;
 [assembly: ThemeInfo(ResourceDictionaryLocation.None, ResourceDictionaryLocation.SourceAssembly)]
 [assembly: XmlnsDefinition(AssemblyConstants.DefaultXmlNamespace, "Crystal.Plot2D")]
 [assembly: XmlnsDefinition(AssemblyConstants.DefaultXmlNamespace, "Crystal.Plot2D.Charts")]
-[assembly: XmlnsDefinition(AssemblyConstants.DefaultXmlNamespace, "Crystal.Plot2D.Graphs")]
+
 [assembly: XmlnsDefinition(AssemblyConstants.DefaultXmlNamespace, "Crystal.Plot2D.DataSources")]
 [assembly: XmlnsDefinition(AssemblyConstants.DefaultXmlNamespace, "Crystal.Plot2D.Common")]
 [assembly: XmlnsPrefix(AssemblyConstants.DefaultXmlNamespace, "Plotter2D")]

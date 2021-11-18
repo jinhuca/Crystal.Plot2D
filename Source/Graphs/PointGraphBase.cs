@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
 
-namespace Crystal.Plot2D.Graphs
+namespace Crystal.Plot2D
 {
   public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
   {

@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Graphs
+namespace Crystal.Plot2D
 {
   /// <summary>
   /// Class represents a series of markers.

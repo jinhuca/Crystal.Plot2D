@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Graphs;
-using System.Collections.Specialized;
+﻿using System.Collections.Specialized;
 using System.Windows;
 
 namespace Crystal.Plot2D

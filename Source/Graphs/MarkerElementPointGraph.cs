@@ -4,7 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Graphs
+namespace Crystal.Plot2D
 {
   public class ElementMarkerPointsGraph : PointsGraphBase
   {

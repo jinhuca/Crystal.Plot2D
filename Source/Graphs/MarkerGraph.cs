@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace Crystal.Plot2D.Graphs
+namespace Crystal.Plot2D
 {
   public class MarkerGraph<T> : PointsGraphBase where T : PointMarker
   {

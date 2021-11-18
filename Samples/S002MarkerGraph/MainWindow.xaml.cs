@@ -18,7 +18,7 @@ namespace S002MarkerGraph
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
       // Prepare data in arrays
-      const int N = 610;
+      const int N = 120;
       double[] x = new double[N];
       double[] cs = new double[N];
       double[] sn = new double[N];

@@ -8,7 +8,7 @@ using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
-namespace Crystal.Plot2D.Graphs
+namespace Crystal.Plot2D
 {
   /// <summary>
   /// Class represents a series of points connected by one polyline.

@@ -1,5 +1,4 @@
 ﻿using Crystal.Plot2D.Common;
-using Crystal.Plot2D.Graphs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;

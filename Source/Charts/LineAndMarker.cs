@@ -1,6 +1,4 @@
-﻿using Crystal.Plot2D.Graphs;
-
-namespace Crystal.Plot2D
+﻿namespace Crystal.Plot2D
 {
   public sealed class LineAndMarker<T>
   {

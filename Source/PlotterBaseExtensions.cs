@@ -1,6 +1,5 @@
 ﻿using Crystal.Plot2D.Charts;
 using Crystal.Plot2D.DataSources;
-using Crystal.Plot2D.Graphs;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;

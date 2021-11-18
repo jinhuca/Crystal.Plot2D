@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Graphs;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
 
