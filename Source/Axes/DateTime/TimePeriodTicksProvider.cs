@@ -123,7 +123,7 @@ namespace Crystal.Plot2D.Charts
         step--;
       }
 
-      List<T> ticks = new List<T>();
+      List<T> ticks = new();
       T finishTick = AddStep(range.Max, step);
       while (Continue(tick, finishTick))
       {
@@ -138,7 +138,7 @@ namespace Crystal.Plot2D.Charts
 
       ticks = Trim(ticks, range);
 
-      TicksInfo<T> res = new TicksInfo<T> { Ticks = ticks.ToArray(), Info = diff };
+      TicksInfo<T> res = new() { Ticks = ticks.ToArray(), Info = diff };
       return res;
     }
 
@@ -190,7 +190,7 @@ namespace Crystal.Plot2D.Charts
         }
       }
 
-      List<DateTime> res = new List<DateTime>(endIndex - startIndex + 1);
+      List<DateTime> res = new(endIndex - startIndex + 1);
       for (int i = startIndex; i <= endIndex; i++)
       {
         res.Add(ticks[i]);

@@ -21,7 +21,7 @@
       Domain = domain;
     }
 
-    private DataRect domain = new DataRect(-1, -1, 2, 2);
+    private DataRect domain = new(-1, -1, 2, 2);
 
     /// <summary>
     /// Gets or sets the domain.

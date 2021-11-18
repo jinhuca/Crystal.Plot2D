@@ -130,8 +130,7 @@ namespace Crystal.Plot2D
 
       foreach (var item in viewport.ContentBoundsHosts)
       {
-        PointsGraphBase chart = item as PointsGraphBase;
-        if (chart != null)
+        if (item is PointsGraphBase chart)
         {
           chart.ProvideVisiblePoints = true;
         }
@@ -144,8 +143,7 @@ namespace Crystal.Plot2D
       {
         foreach (var item in e.NewItems)
         {
-          PointsGraphBase chart = item as PointsGraphBase;
-          if (chart != null)
+          if (item is PointsGraphBase chart)
           {
             chart.ProvideVisiblePoints = true;
           }

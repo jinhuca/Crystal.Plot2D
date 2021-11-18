@@ -260,11 +260,9 @@ namespace Crystal.Plot2D.Charts
 
     protected static void OnLayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      FrameworkElement uiElement = d as FrameworkElement;
-      if (uiElement != null)
+      if (d is FrameworkElement uiElement)
       {
-        ViewportPanel panel = VisualTreeHelper.GetParent(uiElement) as ViewportPanel;
-        if (panel != null)
+        if (VisualTreeHelper.GetParent(uiElement) is ViewportPanel panel)
         {
           // invalidating not self arrange, but calling Arrange method of only that uiElement which has changed position
           panel.InvalidatePosition(uiElement);

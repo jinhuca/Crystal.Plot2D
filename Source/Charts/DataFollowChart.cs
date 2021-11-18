@@ -123,14 +123,12 @@ namespace Crystal.Plot2D.Charts
     private static void OnPointSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
       DataFollowChart chart = (DataFollowChart)d;
-      PointsGraphBase previous = e.OldValue as PointsGraphBase;
-      if (previous != null)
+      if (e.OldValue is PointsGraphBase previous)
       {
         previous.VisiblePointsChanged -= chart.Source_VisiblePointsChanged;
       }
 
-      PointsGraphBase current = e.NewValue as PointsGraphBase;
-      if (current != null)
+      if (e.NewValue is PointsGraphBase current)
       {
         current.ProvideVisiblePoints = true;
         current.VisiblePointsChanged += chart.Source_VisiblePointsChanged;
@@ -159,7 +157,7 @@ namespace Crystal.Plot2D.Charts
       }
     }
 
-    private readonly FollowDataContext followDataContext = new FollowDataContext();
+    private readonly FollowDataContext followDataContext = new();
     public FollowDataContext FollowDataContext => followDataContext;
 
     private void UpdateUIRepresentation()
@@ -193,7 +191,7 @@ namespace Crystal.Plot2D.Charts
 
           double ratio = (x - ptBefore.X) / (ptAfter.X - ptBefore.X);
           double y = ptBefore.Y + (ptAfter.Y - ptBefore.Y) * ratio;
-          Point temp = new Point(x, y);
+          Point temp = new(x, y);
           SetX(marker, temp.X);
           SetY(marker, temp.Y);
 

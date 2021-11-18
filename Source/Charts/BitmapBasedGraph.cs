@@ -45,9 +45,9 @@ namespace Crystal.Plot2D
     /// <remarks>STA is required for creating WPF components in this thread</remarks>
     private Thread renderThread = null;
 
-    private readonly AutoResetEvent renderRequested = new AutoResetEvent(false);
+    private readonly AutoResetEvent renderRequested = new(false);
 
-    private readonly ManualResetEvent shutdownRequested = new ManualResetEvent(false);
+    private readonly ManualResetEvent shutdownRequested = new(false);
 
     /// <summary>True means that current bitmap is invalidated and is to be re-rendered.</summary>
     private bool bitmapInvalidated = true;
@@ -87,9 +87,11 @@ namespace Crystal.Plot2D
         }
       }
 
-      popup = new PopupTip();
-      popup.Placement = PlacementMode.Relative;
-      popup.PlacementTarget = this;
+      popup = new PopupTip
+      {
+        Placement = PlacementMode.Relative,
+        PlacementTarget = this
+      };
       Plotter.Children.Add(popup);
       return popup;
     }
@@ -121,21 +123,23 @@ namespace Crystal.Plot2D
       popup.HorizontalOffset = p.X;
       popup.ShowDelayed(new TimeSpan(0, 0, 1));
 
-      Grid grid = new Grid();
-      Rectangle rect = new Rectangle
+      Grid grid = new();
+      Rectangle rect = new()
       {
         Stroke = Brushes.Black,
         Fill = SystemColors.InfoBrush
       };
 
-      StackPanel sp = new StackPanel();
+      StackPanel sp = new();
       sp.Orientation = Orientation.Vertical;
       sp.Children.Add(tooltip);
       sp.Margin = new Thickness(4, 2, 4, 2);
 
-      var tb = new TextBlock();
-      tb.Text = $"Location: {dp.X:F2}, {dp.Y:F2}"; //String.Format("Location: {0:F2}, {1:F2}", dp.X, dp.Y);
-      tb.Foreground = SystemColors.GrayTextBrush;
+      var tb = new TextBlock
+      {
+        Text = $"Location: {dp.X:F2}, {dp.Y:F2}", //String.Format("Location: {0:F2}, {1:F2}", dp.X, dp.Y);
+        Foreground = SystemColors.GrayTextBrush
+      };
       sp.Children.Add(tb);
 
       grid.Children.Add(rect);
@@ -160,7 +164,7 @@ namespace Crystal.Plot2D
         return;
       }
 
-      Rect output = new Rect(RenderSize);
+      Rect output = new(RenderSize);
       CreateRenderTask(Viewport.Visible, output);
       InvalidateVisual();
     }
@@ -235,8 +239,10 @@ namespace Crystal.Plot2D
       }
       if (renderThread == null)
       {
-        renderThread = new Thread(RenderThreadFunc);
-        renderThread.IsBackground = true;
+        renderThread = new Thread(RenderThreadFunc)
+        {
+          IsBackground = true
+        };
         renderThread.SetApartmentState(ApartmentState.STA);
         renderThread.Start();
       }

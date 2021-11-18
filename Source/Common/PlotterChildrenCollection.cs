@@ -57,14 +57,13 @@ namespace Crystal.Plot2D.Common
         throw new ArgumentNullException(nameof(content));
       }
 
-      IPlotterElement plotterElement = content as IPlotterElement;
-      if (plotterElement != null)
+      if (content is IPlotterElement plotterElement)
       {
         Add(plotterElement);
       }
       else
       {
-        ViewportUIContainer container = new ViewportUIContainer(content);
+        ViewportUIContainer container = new(content);
         Add(container);
       }
     }
@@ -96,14 +95,12 @@ namespace Crystal.Plot2D.Common
 
     bool IList.Contains(object value)
     {
-      IPlotterElement element = value as IPlotterElement;
-      return element != null && Contains(element);
+      return value is IPlotterElement element && Contains(element);
     }
 
     int IList.IndexOf(object value)
     {
-      IPlotterElement element = value as IPlotterElement;
-      if (element != null)
+      if (value is IPlotterElement element)
       {
         return IndexOf(element);
       }
@@ -113,8 +110,7 @@ namespace Crystal.Plot2D.Common
 
     void IList.Insert(int index, object value)
     {
-      IPlotterElement element = value as IPlotterElement;
-      if (element != null)
+      if (value is IPlotterElement element)
       {
         Insert(index, element);
       }
@@ -126,8 +122,7 @@ namespace Crystal.Plot2D.Common
 
     void IList.Remove(object value)
     {
-      IPlotterElement element = value as IPlotterElement;
-      if (element != null)
+      if (value is IPlotterElement element)
       {
         Remove(element);
       }
@@ -143,8 +138,7 @@ namespace Crystal.Plot2D.Common
       }
       set
       {
-        IPlotterElement element = value as IPlotterElement;
-        if (element != null)
+        if (value is IPlotterElement element)
         {
           this[index] = element;
         }
@@ -157,8 +151,7 @@ namespace Crystal.Plot2D.Common
 
     void ICollection.CopyTo(Array array, int index)
     {
-      IPlotterElement[] elements = array as IPlotterElement[];
-      if (elements != null)
+      if (array is IPlotterElement[] elements)
       {
         CopyTo(elements, index);
       }

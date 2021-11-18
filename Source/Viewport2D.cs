@@ -265,8 +265,7 @@ namespace Crystal.Plot2D
       contentBoundsHosts.Clear();
       foreach (var item in PlotterBase.Children)
       {
-        DependencyObject dependencyObject = item as DependencyObject;
-        if (dependencyObject != null)
+        if (item is DependencyObject dependencyObject)
         {
           bool hasNonEmptyBounds = !GetContentBounds(dependencyObject).IsEmpty;
           if (hasNonEmptyBounds && GetIsContentBoundsHost(dependencyObject))
@@ -279,7 +278,7 @@ namespace Crystal.Plot2D
       UpdateVisible();
     }
 
-    private readonly ObservableCollection<DependencyObject> contentBoundsHosts = new ObservableCollection<DependencyObject>();
+    private readonly ObservableCollection<DependencyObject> contentBoundsHosts = new();
     private readonly ReadOnlyObservableCollection<DependencyObject> readonlyContentBoundsHosts;
 
     /// <summary>
@@ -337,8 +336,7 @@ namespace Crystal.Plot2D
 
         foreach (var item in contentBoundsHosts)
         {
-          IPlotterElement plotterElement = item as IPlotterElement;
-          if (plotterElement == null)
+          if (item is not IPlotterElement plotterElement)
           {
             continue;
           }
@@ -471,7 +469,7 @@ namespace Crystal.Plot2D
 
     #region Domain
 
-    private readonly DomainConstraint domainConstraint = new DomainConstraint { Domain = Rect.Empty };
+    private readonly DomainConstraint domainConstraint = new() { Domain = Rect.Empty };
 
     /// <summary>
     ///   Gets or sets the domain - rectangle in viewport coordinates that limits maximal size of <see cref="Visible"/> rectangle.
@@ -668,8 +666,7 @@ namespace Crystal.Plot2D
 
     private static void OnIsContentBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      IPlotterElement plotterElement = d as IPlotterElement;
-      if (plotterElement != null && plotterElement.Plotter != null)
+      if (d is IPlotterElement plotterElement && plotterElement.Plotter != null)
       {
         PlotterBase plotter2d = plotterElement.Plotter;
         plotter2d.Viewport.UpdateContentBoundsHosts();
@@ -701,17 +698,14 @@ namespace Crystal.Plot2D
 
     private static void OnContentBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      IPlotterElement element = d as IPlotterElement;
-      if (element != null)
+      if (d is IPlotterElement element)
       {
-        FrameworkElement frElement = element as FrameworkElement;
-        if (frElement != null)
+        if (element is FrameworkElement frElement)
         {
           frElement.RaiseEvent(new RoutedEventArgs(ContentBoundsChangedEvent));
         }
 
-        PlotterBase plotter2d = element.Plotter as PlotterBase;
-        if (plotter2d != null)
+        if (element.Plotter is PlotterBase plotter2d)
         {
           plotter2d.Viewport.UpdateContentBoundsHosts();
         }
@@ -764,11 +758,9 @@ namespace Crystal.Plot2D
 
     private static void OnUsesApproximateContentBoundsComparisonChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      IPlotterElement element = d as IPlotterElement;
-      if (element != null)
+      if (d is IPlotterElement element)
       {
-        PlotterBase plotter2d = element.Plotter as PlotterBase;
-        if (plotter2d != null)
+        if (element.Plotter is PlotterBase plotter2d)
         {
           plotter2d.Viewport.UpdateVisible();
         }

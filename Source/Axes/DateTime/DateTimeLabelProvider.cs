@@ -25,7 +25,7 @@ namespace Crystal.Plot2D.Charts
         DateFormat = GetDateFormat(diff);
       }
 
-      LabelTickInfo<DateTime> tickInfo = new LabelTickInfo<DateTime> { Info = info };
+      LabelTickInfo<DateTime> tickInfo = new() { Info = info };
 
       UIElement[] res = new UIElement[ticks.Length];
       for (int i = 0; i < ticks.Length; i++)

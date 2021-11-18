@@ -131,7 +131,7 @@ namespace Crystal.Plot2D.Charts
           height = 0;
         }
 
-        DataRect bounds = new DataRect(new Size(width, height));
+        DataRect bounds = new(new Size(width, height));
         Rect screenBounds = bounds.ViewportToScreen(transform);
 
         res = new Size(hasViewportWidth ? screenBounds.Width : selfWidth,
@@ -168,7 +168,7 @@ namespace Crystal.Plot2D.Charts
 
     protected virtual Rect GetElementScreenBoundsCore(CoordinateTransform transform, UIElement child)
     {
-      Rect bounds = new Rect(0, 0, 1, 1);
+      Rect bounds = new(0, 0, 1, 1);
 
       DataRect ownViewportBounds = GetViewportBounds(child);
       if (!ownViewportBounds.IsEmpty)
@@ -200,7 +200,7 @@ namespace Crystal.Plot2D.Charts
         bool hasViewportWidth = viewportWidth.IsNotNaN();
         bool hasViewportHeight = viewportHeight.IsNotNaN();
 
-        DataRect r = new DataRect(new Size(hasViewportWidth ? viewportWidth : child.DesiredSize.Width,
+        DataRect r = new(new Size(hasViewportWidth ? viewportWidth : child.DesiredSize.Width,
                        hasViewportHeight ? viewportHeight : child.DesiredSize.Height));
         r = r.ViewportToScreen(transform);
 
@@ -264,7 +264,7 @@ namespace Crystal.Plot2D.Charts
         screenOffsetY = 0;
       }
 
-      Vector screenOffset = new Vector(screenOffsetX, screenOffsetY);
+      Vector screenOffset = new(screenOffsetX, screenOffsetY);
       bounds.Offset(screenOffset);
       return bounds;
     }

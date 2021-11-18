@@ -73,7 +73,7 @@ namespace Crystal.Plot2D.Charts
 
           foreach (LevelLine line in collection)
           {
-            StreamGeometry lineGeometry = new StreamGeometry();
+            StreamGeometry lineGeometry = new();
             using (var context = lineGeometry.Open())
             {
               context.BeginFigure(line.StartPoint.ViewportToScreen(transform), false, false);
@@ -82,7 +82,7 @@ namespace Crystal.Plot2D.Charts
             lineGeometry.Freeze();
 
             var paletteRatio = (line.RealValue - globalMinMax.Min) / globalMinMax.GetLength();
-            Pen pen = new Pen(new SolidColorBrush(Palette.GetColor(paletteRatio)), strokeThickness);
+            Pen pen = new(new SolidColorBrush(Palette.GetColor(paletteRatio)), strokeThickness);
 
             dc.DrawGeometry(null, pen, lineGeometry);
           }

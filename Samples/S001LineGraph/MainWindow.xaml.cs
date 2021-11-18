@@ -24,13 +24,17 @@ namespace S001LineGraph
         yA[i] = (double).1* Math.Sin(xA[i]);
       }
 
-      var xDataSource = new EnumerableDataSource<double>(xA);
-      xDataSource.XMapping = x => x;
+      var xDataSource = new EnumerableDataSource<double>(xA)
+      {
+        XMapping = x => x
+      };
 
-      var yDataSource = new EnumerableDataSource<double>(yA);
-      yDataSource.YMapping = y => 2*y;
+      var yDataSource = new EnumerableDataSource<double>(yA)
+      {
+        YMapping = y => 2 * y
+      };
 
-      CompositeDataSource compositeDataSource = new CompositeDataSource(xDataSource, yDataSource);
+      CompositeDataSource compositeDataSource = new(xDataSource, yDataSource);
 
       plotter.AddLineGraph(compositeDataSource);
 

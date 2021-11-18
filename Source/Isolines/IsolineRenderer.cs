@@ -37,7 +37,7 @@ namespace Crystal.Plot2D.Charts
         double delta = totalDelta / number;
         double x = collection.Min + Math.Ceiling((visibleMinMax.Min - collection.Min) / delta) * delta;
 
-        List<double> result = new List<double>();
+        List<double> result = new();
         while (x < visibleMinMax.Max)
         {
           result.Add(x);
@@ -54,7 +54,7 @@ namespace Crystal.Plot2D.Charts
     {
       foreach (LevelLine line in collection)
       {
-        StreamGeometry lineGeometry = new StreamGeometry();
+        StreamGeometry lineGeometry = new();
         using (var context = lineGeometry.Open())
         {
           context.BeginFigure(line.StartPoint.ViewportToScreen(transform), false, false);
@@ -69,7 +69,7 @@ namespace Crystal.Plot2D.Charts
         }
         lineGeometry.Freeze();
 
-        Pen pen = new Pen(new SolidColorBrush(Palette.GetColor(line.Value01)), strokeThickness);
+        Pen pen = new(new SolidColorBrush(Palette.GetColor(line.Value01)), strokeThickness);
 
         dc.DrawGeometry(null, pen, lineGeometry);
       }

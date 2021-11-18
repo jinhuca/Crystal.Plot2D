@@ -16,7 +16,7 @@ namespace Crystal.Plot2D.Charts
     }
 
     private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> providers =
-        new Dictionary<DifferenceIn, ITicksProvider<T>>();
+        new();
 
     protected static Dictionary<DifferenceIn, ITicksProvider<T>> Providers
     {
@@ -24,7 +24,7 @@ namespace Crystal.Plot2D.Charts
     }
 
     private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> minorProviders =
-        new Dictionary<DifferenceIn, ITicksProvider<T>>();
+        new();
 
     protected static Dictionary<DifferenceIn, ITicksProvider<T>> MinorProviders
     {
@@ -62,7 +62,7 @@ namespace Crystal.Plot2D.Charts
 
       diff = strategy.GetDifference(length);
 
-      TicksInfo<T> result = new TicksInfo<T> { Info = diff };
+      TicksInfo<T> result = new() { Info = diff };
       if (providers.ContainsKey(diff))
       {
         ITicksInfo<T> innerResult = providers[diff].GetTicks(range, ticksCount);

@@ -15,7 +15,7 @@ namespace Crystal.Plot2D
 
     public static Rect RectZoom(Rect rect, Point zoomCenter, double horizontalRatio, double verticalRatio)
     {
-      Rect res = new Rect();
+      Rect res = new();
       res.X = zoomCenter.X - (zoomCenter.X - rect.X) * horizontalRatio;
       res.Y = zoomCenter.Y - (zoomCenter.Y - rect.Y) * verticalRatio;
       res.Width = rect.Width * horizontalRatio;
@@ -34,7 +34,7 @@ namespace Crystal.Plot2D
 
     public static DataRect RectZoom(DataRect rect, Point zoomCenter, double horizontalRatio, double verticalRatio)
     {
-      DataRect res = new DataRect();
+      DataRect res = new();
       res.XMin = zoomCenter.X - (zoomCenter.X - rect.XMin) * horizontalRatio;
       res.YMin = zoomCenter.Y - (zoomCenter.Y - rect.YMin) * verticalRatio;
       res.Width = rect.Width * horizontalRatio;

@@ -132,7 +132,7 @@ namespace Crystal.Plot2D
         hue += 360;
       }
 
-      HsbColor res = new HsbColor();
+      HsbColor res = new();
       res.hue = hue;
       res.saturation = sat;
       res.brightness = brightness;

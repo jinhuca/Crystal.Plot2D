@@ -6,10 +6,10 @@ namespace Crystal.Plot2D.DataSources
   public static class DataSourceExtensions
   {
     public static RawDataSource AsDataSource(this IEnumerable<Point> points)
-      => new RawDataSource(points);
+      => new(points);
 
     public static EnumerableDataSource<T> AsDataSource<T>(this IEnumerable<T> collection)
-      => new EnumerableDataSource<T>(collection);
+      => new(collection);
 
     public static EnumerableDataSource<T> AsXDataSource<T>(this IEnumerable<T> collection)
     {
@@ -26,7 +26,7 @@ namespace Crystal.Plot2D.DataSources
 
     public static EnumerableDataSource<float> AsXDataSource(this IEnumerable<float> collection)
     {
-      EnumerableXDataSource<float> ds = new EnumerableXDataSource<float>(collection);
+      EnumerableXDataSource<float> ds = new(collection);
       ds.XMapping = f => f;
       return ds;
     }
@@ -46,7 +46,7 @@ namespace Crystal.Plot2D.DataSources
 
     public static EnumerableDataSource<double> AsXDataSource(this IEnumerable<double> collection)
     {
-      EnumerableXDataSource<double> ds = new EnumerableXDataSource<double>(collection);
+      EnumerableXDataSource<double> ds = new(collection);
       ds.XMapping = x => x;
       //ds.SetXMapping(x => x);
       return ds;
@@ -54,7 +54,7 @@ namespace Crystal.Plot2D.DataSources
 
     public static EnumerableDataSource<double> AsYDataSource(this IEnumerable<double> collection)
     {
-      EnumerableYDataSource<double> ds = new EnumerableYDataSource<double>(collection);
+      EnumerableYDataSource<double> ds = new(collection);
       ds.YMapping = y => y;
       //ds.SetYMapping(y => y);
       return ds;
@@ -62,14 +62,14 @@ namespace Crystal.Plot2D.DataSources
 
     public static EnumerableDataSource<float> AsYDataSource(this IEnumerable<float> collection)
     {
-      EnumerableYDataSource<float> ds = new EnumerableYDataSource<float>(collection);
+      EnumerableYDataSource<float> ds = new(collection);
       ds.YMapping = f => f;
       //ds.SetYMapping(f => f);
       return ds;
     }
 
     public static CompositeDataSource Join(this IPointDataSource ds1, IPointDataSource ds2)
-      => new CompositeDataSource(ds1, ds2);
+      => new(ds1, ds2);
 
     public static IEnumerable<Point> GetPoints(this IPointDataSource dataSource)
       => DataSourceHelper.GetPoints(dataSource);

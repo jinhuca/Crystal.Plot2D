@@ -23,7 +23,7 @@ namespace Crystal.Plot2D.Charts
       InitializeComponent();
     }
 
-    Vector blockShift = new Vector(3, 3);
+    Vector blockShift = new(3, 3);
 
     #region Plotter
 

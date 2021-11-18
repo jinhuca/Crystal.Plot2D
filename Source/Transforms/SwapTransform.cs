@@ -19,13 +19,13 @@ namespace Crystal.Plot2D
     /// <returns>
     /// Transformed point in viewport coordinates.
     /// </returns>
-    public override Point DataToViewport(Point pt) => new Point(pt.Y, pt.X);
+    public override Point DataToViewport(Point pt) => new(pt.Y, pt.X);
 
     /// <summary>
     /// Transforms the point in viewport coordinates to data coordinates.
     /// </summary>
     /// <param name="pt">The point in viewport coordinates.</param>
     /// <returns>Transformed point in data coordinates.</returns>
-    public override Point ViewportToData(Point pt) => new Point(pt.Y, pt.X);
+    public override Point ViewportToData(Point pt) => new(pt.Y, pt.X);
   }
 }

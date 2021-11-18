@@ -40,7 +40,7 @@ namespace Crystal.Plot2D.Charts
 
       UIElement[] result = new UIElement[ticks.Length];
 
-      LabelTickInfo<TAxis> labelInfo = new LabelTickInfo<TAxis> { Info = ticksInfo.Info };
+      LabelTickInfo<TAxis> labelInfo = new() { Info = ticksInfo.Info };
 
       for (int i = 0; i < result.Length; i++)
       {
@@ -50,7 +50,7 @@ namespace Crystal.Plot2D.Charts
 
         string labelText = GetString(labelInfo);
 
-        TextBlock label = new TextBlock { Text = labelText };
+        TextBlock label = new() { Text = labelText };
 
         ApplyCustomView(labelInfo, label);
 

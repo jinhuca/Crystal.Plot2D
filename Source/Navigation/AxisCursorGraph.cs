@@ -90,7 +90,7 @@ namespace Crystal.Plot2D.Charts
       parent.MouseEnter += parent_MouseEnter;
       parent.MouseLeave += parent_MouseLeave;
 
-      Style lineStyle = new Style(typeof(Line));
+      Style lineStyle = new(typeof(Line));
       AddBindingSetter(lineStyle, Shape.StrokeProperty);
       AddBindingSetter(lineStyle, Shape.StrokeThicknessProperty);
 

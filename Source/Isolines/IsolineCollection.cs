@@ -28,7 +28,7 @@ namespace Crystal.Plot2D.Charts
     /// <value>The start point.</value>
     public Point StartPoint { get; set; }
 
-    private readonly List<Point> otherPoints = new List<Point>();
+    private readonly List<Point> otherPoints = new();
     /// <summary>
     /// Gets other points of line, except first point.
     /// </summary>
@@ -114,7 +114,7 @@ namespace Crystal.Plot2D.Charts
       set { max = value; }
     }
 
-    private readonly List<LevelLine> lines = new List<LevelLine>();
+    private readonly List<LevelLine> lines = new();
     /// <summary>
     /// Gets the list of isoline lines.
     /// </summary>
@@ -126,7 +126,7 @@ namespace Crystal.Plot2D.Charts
 
     internal void StartLine(Point p, double value01, double realValue)
     {
-      LevelLine segment = new LevelLine { StartPoint = p, Value01 = value01, RealValue = realValue };
+      LevelLine segment = new() { StartPoint = p, Value01 = value01, RealValue = realValue };
       if (lines.Count == 0 || lines[lines.Count - 1].OtherPoints.Count > 0)
       {
         lines.Add(segment);

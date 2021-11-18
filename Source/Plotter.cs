@@ -354,8 +354,7 @@ namespace Crystal.Plot2D
 
     protected override void OnIsDefaultAxisChangedCore(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      var axis = d as GeneralAxis;
-      if (axis != null)
+      if (d is GeneralAxis axis)
       {
         var value = (bool)e.NewValue;
         var oldKeepOldAxis = _keepOldAxis;

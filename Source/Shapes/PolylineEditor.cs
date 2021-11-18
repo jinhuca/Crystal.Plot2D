@@ -65,7 +65,7 @@ namespace Crystal.Plot2D.Charts
       ViewportPolylineBase line = (ViewportPolylineBase)sender;
 
       pointsAdded = true;
-      List<IPlotterElement> draggablePoints = new List<IPlotterElement>();
+      List<IPlotterElement> draggablePoints = new();
       GetDraggablePoints(draggablePoints);
 
       foreach (var point in draggablePoints)
@@ -103,7 +103,7 @@ namespace Crystal.Plot2D.Charts
     {
       for (int i = 0; i < polyline.Points.Count; i++)
       {
-        DraggablePoint point = new DraggablePoint();
+        DraggablePoint point = new();
         point.SetBinding(PositionalViewportUIContainer.PositionProperty, new Binding
         {
           Source = polyline,

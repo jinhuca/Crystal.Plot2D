@@ -26,7 +26,7 @@ namespace Crystal.Plot2D.Charts
     /// <returns></returns>
     public Collection<IsolineTextLabel> Annotate(IsolineCollection collection, DataRect visible)
     {
-      Collection<IsolineTextLabel> res = new Collection<IsolineTextLabel>();
+      Collection<IsolineTextLabel> res = new();
 
       foreach (var line in collection.Lines)
       {

@@ -20,7 +20,7 @@ namespace Crystal.Plot2D.Charts
       FrameworkElement parent = (FrameworkElement)Parent;
       var renderer = (FrameworkElement)parent.FindName("PART_IsolineRenderer");
 
-      Binding contentBoundsBinding = new Binding { Path = new PropertyPath("(0)", Viewport2D.ContentBoundsProperty), Source = renderer };
+      Binding contentBoundsBinding = new() { Path = new PropertyPath("(0)", Viewport2D.ContentBoundsProperty), Source = renderer };
       SetBinding(Viewport2D.ContentBoundsProperty, contentBoundsBinding);
       SetBinding(ViewportPanel.ViewportBoundsProperty, contentBoundsBinding);
 

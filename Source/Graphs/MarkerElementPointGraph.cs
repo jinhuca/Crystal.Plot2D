@@ -11,7 +11,7 @@ namespace Crystal.Plot2D
     /// <summary>
     ///   List with created but unused markers.
     /// </summary>
-    private readonly List<UIElement> unused = new List<UIElement>();
+    private readonly List<UIElement> unused = new();
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="MarkerPointsGraph"/> class.
@@ -99,7 +99,7 @@ namespace Crystal.Plot2D
         int index = 0;
         var transform = GetTransform();
         using IPointEnumerator enumerator = DataSource.GetEnumerator(context: GetContext());
-        Point point = new Point();
+        Point point = new();
         DataRect bounds = DataRect.Empty;
 
         while (enumerator.MoveNext())

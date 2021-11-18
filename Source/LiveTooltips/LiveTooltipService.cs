@@ -112,8 +112,7 @@ namespace Crystal.Plot2D.Charts
 
       var content = e.NewValue;
 
-      DataTemplate template = content as DataTemplate;
-      if (template != null)
+      if (content is DataTemplate template)
       {
         content = template.LoadContent();
       }
@@ -151,7 +150,7 @@ namespace Crystal.Plot2D.Charts
     {
       AdornerLayer layer = AdornerLayer.GetAdornerLayer(source);
 
-      LiveToolTipAdorner adorner = new LiveToolTipAdorner(source, tooltip);
+      LiveToolTipAdorner adorner = new(source, tooltip);
       layer.Add(adorner);
     }
 
@@ -203,7 +202,7 @@ namespace Crystal.Plot2D.Charts
         BindingOperations.SetBinding(tooltip, ContentControl.ContentProperty, binding);
       }
 
-      Binding dataContextBinding = new Binding { Path = new PropertyPath("DataContext"), Source = source };
+      Binding dataContextBinding = new() { Path = new PropertyPath("DataContext"), Source = source };
       tooltip.SetBinding(FrameworkElement.DataContextProperty, dataContextBinding);
 
       tooltip.Owner = source;

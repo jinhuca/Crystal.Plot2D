@@ -39,7 +39,7 @@ namespace Crystal.Plot2D
 
     protected PlotterBase() : this(PlotterLoadMode.Normal)
     {
-      Children.CollectionChanged += (s, e) => viewport.UpdateIterationCount = 0;
+      Children.CollectionChanged += (s, e) => viewportInstance.UpdateIterationCount = 0;
       InitViewport();
     }
 
@@ -157,10 +157,9 @@ namespace Crystal.Plot2D
       _addedVisualElements.Clear();
       foreach (var item in GetAllPanels())
       {
-        var panel = item as INotifyingPanel;
-        if (panel != null)
+        if (item is INotifyingPanel panel)
         {
-          panel.ChildrenCreated -= notifyingItem_ChildrenCreated;
+          panel.ChildrenCreated -= NotifyingItem_ChildrenCreated;
           if (panel.NotifyingChildren != null)
           {
             panel.NotifyingChildren.CollectionChanged -= OnVisualCollectionChanged;
@@ -221,7 +220,7 @@ namespace Crystal.Plot2D
         {
           if (panel.NotifyingChildren == null)
           {
-            panel.ChildrenCreated += notifyingItem_ChildrenCreated;
+            panel.ChildrenCreated += NotifyingItem_ChildrenCreated;
           }
           else
           {
@@ -231,7 +230,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private void MigrateChildren(Panel previousParent, Panel currentParent)
+    private static void MigrateChildren(Panel previousParent, Panel currentParent)
     {
       if (previousParent != null && currentParent != null)
       {
@@ -253,7 +252,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private void notifyingItem_ChildrenCreated(object sender, EventArgs e)
+    private void NotifyingItem_ChildrenCreated(object sender, EventArgs e)
     {
       INotifyingPanel panel = (INotifyingPanel)sender;
       SubscribePanelEvents(panel);
@@ -261,7 +260,7 @@ namespace Crystal.Plot2D
 
     private void SubscribePanelEvents(INotifyingPanel panel)
     {
-      panel.ChildrenCreated -= notifyingItem_ChildrenCreated;
+      panel.ChildrenCreated -= NotifyingItem_ChildrenCreated;
       panel.NotifyingChildren.CollectionChanged -= OnVisualCollectionChanged;
       panel.NotifyingChildren.CollectionChanged += OnVisualCollectionChanged;
     }
@@ -281,7 +280,7 @@ namespace Crystal.Plot2D
             }
             else
             {
-              notifyingPanel.ChildrenCreated += notifyingItem_ChildrenCreated;
+              notifyingPanel.ChildrenCreated += NotifyingItem_ChildrenCreated;
             }
           }
           OnVisualChildAdded((UIElement)item, (UIElementCollection)sender);
@@ -293,7 +292,7 @@ namespace Crystal.Plot2D
         {
           if (item is INotifyingPanel notifyingPanel)
           {
-            notifyingPanel.ChildrenCreated -= notifyingItem_ChildrenCreated;
+            notifyingPanel.ChildrenCreated -= NotifyingItem_ChildrenCreated;
             if (notifyingPanel.NotifyingChildren != null)
             {
               notifyingPanel.NotifyingChildren.CollectionChanged -= OnVisualCollectionChanged;
@@ -331,7 +330,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private void SetBindings(UIElement proxy, UIElement target)
+    private static void SetBindings(UIElement proxy, UIElement target)
     {
       if (proxy != target)
       {
@@ -342,7 +341,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private void RemoveBindings(UIElement proxy, UIElement target)
+    private static void RemoveBindings(UIElement proxy, UIElement target)
     {
       if (proxy != target)
       {
@@ -353,7 +352,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private IEnumerable<DependencyProperty> GetPropertiesToSetBindingOn()
+    private static IEnumerable<DependencyProperty> GetPropertiesToSetBindingOn()
     {
       yield return OpacityProperty;
       yield return VisibilityProperty;
@@ -416,7 +415,7 @@ namespace Crystal.Plot2D
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
     public PlotterChildrenCollection Children { [DebuggerStepThrough] get; }
 
-    private readonly List<Action> _waitingForExecute = new List<Action>();
+    private readonly List<Action> _waitingForExecute = new();
 
     bool _executedWaitingChildrenAdding;
     private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -457,7 +456,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private readonly Stack<IPlotterElement> _addingElements = new Stack<IPlotterElement>();
+    private readonly Stack<IPlotterElement> _addingElements = new();
     internal bool PerformChildChecks { get; set; } = true;
     protected IPlotterElement CurrentChild { get; private set; }
 
@@ -516,9 +515,8 @@ namespace Crystal.Plot2D
         throw new InvalidOperationException(Strings.Exceptions.VisualBindingsWrongState);
       }
 
-      UIElement result = child as UIElement;
 
-      if (result == null)
+      if (child is not UIElement result)
       {
         result = new UIElement();
       }
@@ -526,7 +524,7 @@ namespace Crystal.Plot2D
       return result;
     }
 
-    private readonly Stack<IPlotterElement> _removingElements = new Stack<IPlotterElement>();
+    private readonly Stack<IPlotterElement> _removingElements = new();
     protected virtual void OnChildRemoving(IPlotterElement child)
     {
       if (child != null)
@@ -554,8 +552,7 @@ namespace Crystal.Plot2D
             }
           }
 
-          DependencyObject dependencyObject = child as DependencyObject;
-          if (dependencyObject != null)
+          if (child is DependencyObject dependencyObject)
           {
             SetPlotter(dependencyObject, null);
           }
@@ -575,7 +572,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private readonly Dictionary<IPlotterElement, List<UIElement>> _addedVisualElements = new Dictionary<IPlotterElement, List<UIElement>>();
+    private readonly Dictionary<IPlotterElement, List<UIElement>> _addedVisualElements = new();
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Panel ParallelCanvas { get; protected set; }
@@ -613,7 +610,7 @@ namespace Crystal.Plot2D
     {
       UIElement parent = (UIElement)Parent;
 
-      Rect renderBounds = new Rect(RenderSize);
+      Rect renderBounds = new(RenderSize);
 
       Point p1 = renderBounds.TopLeft;
       Point p2 = renderBounds.BottomRight;
@@ -693,8 +690,7 @@ namespace Crystal.Plot2D
 
       while (index < elements.Count)
       {
-        DependencyObject d = elements[index] as DependencyObject;
-        if (d != null && !GetIsDefaultElement(d))
+        if (elements[index] is DependencyObject d && !GetIsDefaultElement(d))
         {
           elements.RemoveAt(index);
         }
@@ -775,12 +771,12 @@ namespace Crystal.Plot2D
 
         if (useDeferredPanning)
         {
-          return deferredPanningProxy ??= new Viewport2dDeferredPanningProxy(viewport);
+          return deferredPanningProxy ??= new Viewport2dDeferredPanningProxy(viewportInstance);
         }
 
-        return viewport;
+        return viewportInstance;
       }
-      protected set => viewport = value;
+      protected set => viewportInstance = value;
     }
 
     /// <summary>
@@ -792,8 +788,8 @@ namespace Crystal.Plot2D
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public CoordinateTransform Transform
     {
-      get => viewport.Transform;
-      set => viewport.Transform = value;
+      get => viewportInstance.Transform;
+      set => viewportInstance.Transform = value;
     }
 
     /// <summary>
@@ -805,8 +801,8 @@ namespace Crystal.Plot2D
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public DataRect Visible
     {
-      get => viewport.Visible;
-      set => viewport.Visible = value;
+      get => viewportInstance.Visible;
+      set => viewportInstance.Visible = value;
     }
 
     #endregion
@@ -832,14 +828,13 @@ namespace Crystal.Plot2D
 
     private static void OnPlotterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      FrameworkElement element = d as FrameworkElement;
       PlotterBase prevPlotter = (PlotterBase)e.OldValue;
       PlotterBase currPlotter = (PlotterBase)e.NewValue;
 
       // raise Plotter[*] events, where * is Attached, Detaching, Changed.
-      if (element != null)
+      if (d is FrameworkElement element)
       {
-        PlotterChangedEventArgs args = new PlotterChangedEventArgs(prevPlotter, currPlotter, PlotterDetachingEvent);
+        PlotterChangedEventArgs args = new(prevPlotter, currPlotter, PlotterDetachingEvent);
 
         if (currPlotter == null && prevPlotter != null)
         {
@@ -884,7 +879,7 @@ namespace Crystal.Plot2D
       typeof(PlotterChangedEventHandler),
       typeof(PlotterBase));
 
-    protected Viewport2D viewport;
+    protected Viewport2D viewportInstance;
     private Viewport2dDeferredPanningProxy deferredPanningProxy;
 
     #endregion
@@ -892,13 +887,13 @@ namespace Crystal.Plot2D
     protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
     {
       // This is part of endless axis resize loop workaround
-      if (viewport != null)
+      if (viewportInstance != null)
       {
-        viewport.UpdateIterationCount = 0;
-        if (!viewport.EnforceRestrictions)
+        viewportInstance.UpdateIterationCount = 0;
+        if (!viewportInstance.EnforceRestrictions)
         {
           Debug.WriteLine("Plotter: enabling viewport constraints");
-          viewport.EnforceRestrictions = true;
+          viewportInstance.EnforceRestrictions = true;
         }
       }
       base.OnRenderSizeChanged(sizeInfo);
@@ -907,7 +902,7 @@ namespace Crystal.Plot2D
     /// <summary>
     ///   Fits to view.
     /// </summary>
-    public void FitToView() => viewport.FitToView();
+    public void FitToView() => viewportInstance.FitToView();
 
     protected void InitViewport()
     {
@@ -915,7 +910,7 @@ namespace Crystal.Plot2D
       Grid.SetColumn(ViewportPanel, 1);
       Grid.SetRow(ViewportPanel, 1);
 
-      viewport = new Viewport2D(ViewportPanel, this);
+      viewportInstance = new Viewport2D(ViewportPanel, this);
       if (LoadMode != PlotterLoadMode.Empty)
       {
         MainGrid.Children.Add(ViewportPanel);

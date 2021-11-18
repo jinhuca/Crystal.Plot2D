@@ -226,7 +226,7 @@ namespace Crystal.Plot2D
     #endregion
 
     private RenderState CreateRenderState(DataRect renderVisible, RenderTo renderingType)
-      => new RenderState(renderVisible, Viewport.Visible, Viewport.Output, renderingType);
+      => new(renderVisible, Viewport.Visible, Viewport.Output, renderingType);
 
     protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
     {
@@ -320,7 +320,7 @@ namespace Crystal.Plot2D
 
       DataRect visible = Viewport.Visible;
       var transform = Viewport.Transform;
-      DrawingVisual visual = new DrawingVisual();
+      DrawingVisual visual = new();
       using (DrawingContext dc = visual.RenderOpen())
       {
         Point outputStart = visible.Location.DataToScreen(transform);
@@ -334,7 +334,7 @@ namespace Crystal.Plot2D
 
         const byte c = 240;
         Brush brush = new SolidColorBrush(Color.FromArgb(120, c, c, c));
-        Pen pen = new Pen(Brushes.Black, 1);
+        Pen pen = new(Brushes.Black, 1);
         dc.DrawRectangle(brush, pen, output);
         dc.DrawDrawing(graphContents);
 
@@ -344,7 +344,7 @@ namespace Crystal.Plot2D
         }
       }
 
-      RenderTargetBitmap bmp = new RenderTargetBitmap((int)output.Width, (int)output.Height, 96, 96, PixelFormats.Pbgra32);
+      RenderTargetBitmap bmp = new((int)output.Width, (int)output.Height, 96, 96, PixelFormats.Pbgra32);
       bmp.Render(visual);
       thumbnail = bmp;
       RaisePropertyChanged("Thumbnail");

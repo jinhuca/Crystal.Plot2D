@@ -10,20 +10,20 @@ namespace Crystal.Plot2D.Charts
   {
     protected IsolineGraphBase() { }
 
-    private IsolineCollection collection = new IsolineCollection();
+    private IsolineCollection collection = new();
     protected IsolineCollection Collection
     {
       get { return collection; }
       set { collection = value; }
     }
 
-    private readonly IsolineBuilder isolineBuilder = new IsolineBuilder();
+    private readonly IsolineBuilder isolineBuilder = new();
     protected IsolineBuilder IsolineBuilder
     {
       get { return isolineBuilder; }
     }
 
-    private readonly IsolineTextAnnotater annotater = new IsolineTextAnnotater();
+    private readonly IsolineTextAnnotater annotater = new();
     protected IsolineTextAnnotater Annotater
     {
       get { return annotater; }

@@ -21,7 +21,7 @@ namespace Crystal.Plot2D.Charts
       Init(ticks);
 
       UIElement[] res = new UIElement[ticks.Length];
-      LabelTickInfo<double> tickInfo = new LabelTickInfo<double> { Info = ticksInfo.Info };
+      LabelTickInfo<double> tickInfo = new() { Info = ticksInfo.Info };
       for (int i = 0; i < res.Length; i++)
       {
         tickInfo.Tick = ticks[i];

@@ -122,7 +122,7 @@ namespace Crystal.Plot2D
 
       if (penForDrawingLine != null) // We are requested to draw line graphs
       {
-        LineGraph graph = new LineGraph
+        LineGraph graph = new()
         {
           DataSource = pointSource,
           LinePen = penForDrawingLine
@@ -146,7 +146,7 @@ namespace Crystal.Plot2D
 
       if (marker != null) // We are requested to draw marker graphs
       {
-        MarkerPointsGraph markerGraph = new MarkerPointsGraph
+        MarkerPointsGraph markerGraph = new()
         {
           DataSource = pointSource,
           Marker = marker

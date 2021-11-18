@@ -31,7 +31,7 @@ namespace Crystal.Plot2D
         return points;
       }
 
-      List<Point> res = new List<Point> { points[0] };
+      List<Point> res = new() { points[0] };
 
       int i = 1;
       while (i < points.Count)

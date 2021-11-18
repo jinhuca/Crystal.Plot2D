@@ -6,7 +6,7 @@ namespace Crystal.Plot2D
   {
     internal static bool IsNaN(this DataRect rect) => !rect.IsEmpty && (rect.XMin.IsNaN() || rect.YMin.IsNaN() || rect.XMax.IsNaN() || rect.YMax.IsNaN());
 
-    public static Point GetCenter(this DataRect rect) => new Point(rect.XMin + rect.Width * 0.5, rect.YMin + rect.Height * 0.5);
+    public static Point GetCenter(this DataRect rect) => new(rect.XMin + rect.Width * 0.5, rect.YMin + rect.Height * 0.5);
 
     public static DataRect Zoom(this DataRect rect, Point to, double ratio) => CoordinateUtilities.RectZoom(rect, to, ratio);
 

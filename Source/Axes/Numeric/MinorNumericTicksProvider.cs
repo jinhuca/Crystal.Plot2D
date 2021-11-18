@@ -47,9 +47,11 @@ namespace Crystal.Plot2D.Charts
       }
 
       var minorTicks = ranges.Select(r => CreateTicks(r)).SelectMany(m => m);
-      var res = new TicksInfo<double>();
-      res.TickSizes = minorTicks.Select(m => m.Value).ToArray();
-      res.Ticks = minorTicks.Select(m => m.Tick).ToArray();
+      var res = new TicksInfo<double>
+      {
+        TickSizes = minorTicks.Select(m => m.Value).ToArray(),
+        Ticks = minorTicks.Select(m => m.Tick).ToArray()
+      };
 
       return res;
     }

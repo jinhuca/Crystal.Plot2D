@@ -43,9 +43,9 @@ namespace Crystal.Plot2D.Charts
       }
     }
 
-    readonly TranslateTransform translateTransform = new TranslateTransform();
+    readonly TranslateTransform translateTransform = new();
 
-    private readonly Canvas hostingCanvas = new Canvas();
+    private readonly Canvas hostingCanvas = new();
     internal Canvas HostingCanvas
     {
       get { return hostingCanvas; }

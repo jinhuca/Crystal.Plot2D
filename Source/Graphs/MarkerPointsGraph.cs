@@ -56,7 +56,7 @@ namespace Crystal.Plot2D
       var transform = Plotter.Viewport.Transform;
       DataRect bounds = DataRect.Empty;
       using IPointEnumerator enumerator = DataSource.GetEnumerator(context: GetContext());
-      Point point = new Point();
+      Point point = new();
       while (enumerator.MoveNext())
       {
         enumerator.GetCurrent(p: ref point);

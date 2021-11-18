@@ -22,7 +22,7 @@ namespace Crystal.Plot2D.DataSources
       }
 
       using IPointEnumerator enumerator = dataSource.GetEnumerator(context);
-      Point p = new Point();
+      Point p = new();
       while (enumerator.MoveNext())
       {
         enumerator.GetCurrent(ref p);

@@ -99,7 +99,7 @@ namespace Crystal.Plot2D.Charts
         ticks = new double[] { };
       }
 
-      TicksInfo<double> res = new TicksInfo<double> { Info = log, Ticks = ticks };
+      TicksInfo<double> res = new() { Info = log, Ticks = ticks };
 
       return res;
     }
@@ -115,7 +115,7 @@ namespace Crystal.Plot2D.Charts
         return new double[0];
       }
 
-      List<double> res = new List<double>();
+      List<double> res = new();
 
       double increasedFinish = finish + step * 1.05;
       while (x <= increasedFinish)

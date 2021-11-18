@@ -11,10 +11,10 @@ namespace Crystal.Plot2D.Common
       PlotterDetachingEvent.Notify(target, args);
     }
 
-    public static PlotterEventHelper PlotterAttachedEvent => new PlotterEventHelper(PlotterBase.PlotterAttachedEvent);
+    public static PlotterEventHelper PlotterAttachedEvent => new(PlotterBase.PlotterAttachedEvent);
 
-    public static PlotterEventHelper PlotterDetachingEvent => new PlotterEventHelper(PlotterBase.PlotterDetachingEvent);
+    public static PlotterEventHelper PlotterDetachingEvent => new(PlotterBase.PlotterDetachingEvent);
 
-    public static PlotterEventHelper PlotterChangedEvent => new PlotterEventHelper(PlotterBase.PlotterChangedEvent);
+    public static PlotterEventHelper PlotterChangedEvent => new(PlotterBase.PlotterChangedEvent);
   }
 }

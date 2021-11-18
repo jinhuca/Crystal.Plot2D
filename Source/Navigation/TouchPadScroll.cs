@@ -17,7 +17,7 @@ namespace Crystal.Plot2D
 
     private void OnLoaded(object sender, RoutedEventArgs e)
     {
-      WindowInteropHelper helper = new WindowInteropHelper(Window.GetWindow(this));
+      WindowInteropHelper helper = new(Window.GetWindow(this));
       HwndSource source = HwndSource.FromHwnd(helper.Handle);
       source.AddHook(OnMessageAppeared);
     }

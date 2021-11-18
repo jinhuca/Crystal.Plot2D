@@ -11,7 +11,7 @@ namespace Crystal.Plot2D.Charts
 {
   public class FastIsolineRenderer : IsolineRenderer
   {
-    private List<IsolineCollection> additionalLines = new List<IsolineCollection>();
+    private List<IsolineCollection> additionalLines = new();
     private const int subDivisionNum = 10;
 
     protected override void CreateUIRepresentation()
@@ -24,7 +24,7 @@ namespace Crystal.Plot2D.Charts
       base.OnPlotterAttached();
 
       FrameworkElement parent = (FrameworkElement)Parent;
-      Binding collectionBinding = new Binding("IsolineCollection") { Source = this };
+      Binding collectionBinding = new("IsolineCollection") { Source = this };
       parent.SetBinding(IsolineCollectionProperty, collectionBinding);
     }
 
@@ -181,8 +181,8 @@ namespace Crystal.Plot2D.Charts
         double colorRatio = (annotation.Value - collection.Min) / (collection.Max - collection.Min);
         colorRatio = MathHelper.Clamp(colorRatio);
         Color rectangleStrokeColor = Palette.GetColor(colorRatio);
-        SolidColorBrush rectangleStroke = new SolidColorBrush(rectangleStrokeColor);
-        Pen labelRectangleStrokePen = new Pen(rectangleStroke, 2);
+        SolidColorBrush rectangleStroke = new(rectangleStrokeColor);
+        Pen labelRectangleStrokePen = new(rectangleStroke, 2);
 
         dc.PushTransform(new ScaleTransform(1, labelsScale));
         dc.PushTransform(labelTransform);
@@ -218,14 +218,14 @@ namespace Crystal.Plot2D.Charts
         angle -= 180;
       }
 
-      RotateTransform transform = new RotateTransform(angle, position.X, position.Y);
+      RotateTransform transform = new(angle, position.X, position.Y);
       return transform;
     }
 
     private static FormattedText CreateFormattedText(string text)
     {
 #pragma warning disable CS0618 // 'FormattedText.FormattedText(string, CultureInfo, FlowDirection, Typeface, double, StrokeBrush)' is obsolete: 'Use the PixelsPerDip override'
-      FormattedText result = new FormattedText(text,
+      FormattedText result = new(text,
         CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
 #pragma warning restore CS0618 // 'FormattedText.FormattedText(string, CultureInfo, FlowDirection, Typeface, double, StrokeBrush)' is obsolete: 'Use the PixelsPerDip override'
       return result;

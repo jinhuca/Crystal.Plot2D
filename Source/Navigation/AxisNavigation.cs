@@ -168,7 +168,7 @@ namespace Crystal.Plot2D.Charts
     {
       Point mousePos = e.GetPosition(listeningPanel);
 
-      Rect listeningPanelBounds = new Rect(listeningPanel.RenderSize);
+      Rect listeningPanelBounds = new(listeningPanel.RenderSize);
       if (!listeningPanelBounds.Contains(mousePos))
       {
         return;
@@ -347,7 +347,7 @@ namespace Crystal.Plot2D.Charts
       foreach (var axis in axes)
       {
         var positionInAxis = e.GetPosition(axis);
-        Rect axisBounds = new Rect(axis.RenderSize);
+        Rect axisBounds = new(axis.RenderSize);
         if (axisBounds.Contains(positionInAxis))
         {
           activePlotter = axis.Plotter;

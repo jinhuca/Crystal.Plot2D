@@ -60,8 +60,7 @@ namespace Crystal.Plot2D.Charts
 
     private void UpdateWidth()
     {
-      Panel parentPanel = Parent as Panel;
-      if (parentPanel != null && SourcePanel != null)
+      if (Parent is Panel parentPanel && SourcePanel != null)
       {
         Width = Math.Max(SourcePanel.ActualWidth - (parentPanel.ActualWidth - ActualWidth), 0);
       }

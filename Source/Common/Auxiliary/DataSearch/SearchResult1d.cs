@@ -2,7 +2,7 @@
 {
   internal struct SearchResult1d
   {
-    public static SearchResult1d Empty => new SearchResult1d { Index = -1 };
+    public static SearchResult1d Empty => new() { Index = -1 };
 
     public int Index { get; internal set; }
 

@@ -119,8 +119,8 @@ namespace Crystal.Plot2D
 
     private readonly double gridBrushThickness = 1;
 
-    private readonly Path path = new Path();
-    private readonly Canvas canvas = new Canvas();
+    private readonly Path path = new();
+    private readonly Canvas canvas = new();
     /// <summary>
     /// Initializes a new instance of the <see cref="AxisGrid"/> class.
     /// </summary>
@@ -136,15 +136,14 @@ namespace Crystal.Plot2D
       Content = canvas;
     }
 
-    private readonly ResourcePool<LineGeometry> lineGeometryPool = new ResourcePool<LineGeometry>();
-    private readonly ResourcePool<Line> linePool = new ResourcePool<Line>();
+    private readonly ResourcePool<LineGeometry> lineGeometryPool = new();
+    private readonly ResourcePool<Line> linePool = new();
 
     private void UpdateUIRepresentation()
     {
       foreach (UIElement item in canvas.Children)
       {
-        Line line = item as Line;
-        if (line != null)
+        if (item is Line line)
         {
           linePool.Put(line);
         }
@@ -156,8 +155,7 @@ namespace Crystal.Plot2D
       DrawMinorHorizontalTicks();
       DrawMinorVerticalTicks();
 
-      GeometryGroup prevGroup = path.Data as GeometryGroup;
-      if (prevGroup != null)
+      if (path.Data is GeometryGroup prevGroup)
       {
         foreach (LineGeometry geometry in prevGroup.Children)
         {
@@ -165,7 +163,7 @@ namespace Crystal.Plot2D
         }
       }
 
-      GeometryGroup group = new GeometryGroup();
+      GeometryGroup group = new();
       if (HorizontalTicks != null && drawHorizontalTicks)
       {
         double minY = 0;

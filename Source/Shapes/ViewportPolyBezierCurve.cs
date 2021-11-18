@@ -55,7 +55,7 @@ namespace Crystal.Plot2D.Charts
         points = BezierPoints;
 
         var screenPoints = points.DataToScreen(transform).ToArray();
-        PathFigure figure = new PathFigure();
+        PathFigure figure = new();
         figure.StartPoint = screenPoints[0];
         figure.Segments.Add(new PolyBezierSegment(screenPoints.Skip(1), true));
         geometry.Figures.Add(figure);
@@ -64,7 +64,7 @@ namespace Crystal.Plot2D.Charts
       else if (points == null) { }
       else
       {
-        PathFigure figure = new PathFigure();
+        PathFigure figure = new();
         if (points.Count > 0)
         {
           Point[] bezierPoints = null;

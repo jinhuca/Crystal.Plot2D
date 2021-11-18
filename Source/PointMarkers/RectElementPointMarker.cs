@@ -11,7 +11,7 @@ namespace Crystal.Plot2D
   {
     public override UIElement CreateMarker()
     {
-      Rectangle result = new Rectangle();
+      Rectangle result = new();
       result.Width = Size;
       result.Height = Size;
       result.Stroke = Brush;

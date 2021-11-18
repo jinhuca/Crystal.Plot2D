@@ -22,7 +22,7 @@ namespace Crystal.Plot2D.Charts
       PlotterBase.PlotterProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(OnPlotterChanged));
     }
 
-    private readonly ObservableCollection<FrameworkElement> legendItems = new ObservableCollection<FrameworkElement>();
+    private readonly ObservableCollection<FrameworkElement> legendItems = new();
 
     public Legend() => ItemsSource = legendItems;
 
@@ -253,11 +253,9 @@ namespace Crystal.Plot2D.Charts
 
     private static void OnLegendItemsBuilderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      IPlotterElement plotterElement = d as IPlotterElement;
-      if (plotterElement != null && plotterElement.Plotter != null)
+      if (d is IPlotterElement plotterElement && plotterElement.Plotter != null)
       {
-        Plotter plotter = plotterElement.Plotter as Plotter;
-        if (plotter != null)
+        if (plotterElement.Plotter is Plotter plotter)
         {
           plotter.Legend.PopulateLegend();
         }

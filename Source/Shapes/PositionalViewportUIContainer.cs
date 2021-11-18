@@ -76,7 +76,7 @@ namespace Crystal.Plot2D.Charts
       return value;
     }
 
-    private readonly ObservableCollection<PositionCoerceCallback> positionCoerceCallbacks = new ObservableCollection<PositionCoerceCallback>();
+    private readonly ObservableCollection<PositionCoerceCallback> positionCoerceCallbacks = new();
     /// <summary>
     /// Gets the list of callbacks which are called every time Position changes to coerce it.
     /// </summary>

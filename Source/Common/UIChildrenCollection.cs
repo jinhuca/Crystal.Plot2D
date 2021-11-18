@@ -63,8 +63,7 @@ namespace Crystal.Plot2D.Common
 
         for (int i = 0; i < visualArray.Length; i++)
         {
-          UIElement element = visualArray[i] as UIElement;
-          if (element != null)
+          if (visualArray[i] is UIElement element)
           {
             ClearLogicalParent(element);
           }
@@ -102,9 +101,8 @@ namespace Crystal.Plot2D.Common
 
     public override void RemoveAt(int index)
     {
-      UIElement element = visualChildren[index] as UIElement;
       visualChildren.RemoveAt(index);
-      if (element != null)
+      if (visualChildren[index] is UIElement element)
       {
         ClearLogicalParent(element);
       }
@@ -132,8 +130,7 @@ namespace Crystal.Plot2D.Common
 
         for (int i = 0; i < count; i++)
         {
-          UIElement element = visualArray[i] as UIElement;
-          if (element != null)
+          if (visualArray[i] is UIElement element)
           {
             ClearLogicalParent(element);
           }
@@ -156,8 +153,7 @@ namespace Crystal.Plot2D.Common
 
         if (visualChildren[index] != value)
         {
-          UIElement element = visualChildren[index] as UIElement;
-          if (element != null)
+          if (visualChildren[index] is UIElement element)
           {
             ClearLogicalParent(element);
           }

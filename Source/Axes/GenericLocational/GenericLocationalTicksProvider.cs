@@ -92,7 +92,7 @@ namespace Crystal.Plot2D.Charts
           ticks[i - startIndex] = axisMapping(collection[i]);
         }
 
-        TicksInfo<TAxis> result = new TicksInfo<TAxis>
+        TicksInfo<TAxis> result = new()
         {
           Info = startIndex,
           TickSizes = ArrayExtensions.CreateArray(count, 1.0),

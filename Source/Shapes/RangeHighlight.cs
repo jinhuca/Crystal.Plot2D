@@ -35,7 +35,7 @@ namespace Crystal.Plot2D.Charts
       base.OnApplyTemplate();
 
       linesPath = (Path)Template.FindName(name: "PART_LinesPath", templatedParent: this);
-      GeometryGroup linesGroup = new GeometryGroup();
+      GeometryGroup linesGroup = new();
       linesGroup.Children.Add(value: lineGeometry1);
       linesGroup.Children.Add(value: lineGeometry2);
       linesPath.Data = linesGroup;
@@ -225,19 +225,19 @@ namespace Crystal.Plot2D.Charts
     private Path rectPath;
     private Path linesPath;
 
-    private readonly RectangleGeometry rectGeometry = new RectangleGeometry();
+    private readonly RectangleGeometry rectGeometry = new();
     protected RectangleGeometry RectGeometry
     {
       get { return rectGeometry; }
     }
 
-    private readonly LineGeometry lineGeometry1 = new LineGeometry();
+    private readonly LineGeometry lineGeometry1 = new();
     protected LineGeometry LineGeometry1
     {
       get { return lineGeometry1; }
     }
 
-    private readonly LineGeometry lineGeometry2 = new LineGeometry();
+    private readonly LineGeometry lineGeometry2 = new();
     protected LineGeometry LineGeometry2
     {
       get { return lineGeometry2; }

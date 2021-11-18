@@ -25,7 +25,7 @@ namespace Crystal.Plot2D
     private static IEnumerable<FrameworkElement> DefaultLegendItemsBuilder(IPlotterElement plotterElement)
     {
       LineGraph lineGraph = (LineGraph)plotterElement;
-      Line line = new Line { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph };
+      Line line = new() { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph };
       line.SetBinding(dp: Shape.StrokeProperty, path: "LinePen.Brush");
       line.SetBinding(dp: Shape.StrokeThicknessProperty, path: "LinePen.Thickness");
       Legend.SetVisualContent(obj: lineGraph, value: line);
@@ -203,7 +203,7 @@ namespace Crystal.Plot2D
 
         if (ProvideVisiblePoints)
         {
-          List<Point> viewportPointsList = new List<Point>(capacity: transformedPoints.Count);
+          List<Point> viewportPointsList = new(capacity: transformedPoints.Count);
           if (transform.DataTransform is IdentityTransform)
           {
             viewportPointsList.AddRange(collection: points);
@@ -230,7 +230,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private readonly StreamGeometry _streamGeometry = new StreamGeometry();
+    private readonly StreamGeometry _streamGeometry = new();
     protected override void OnRenderCore(DrawingContext dc, RenderState state)
     {
       if (DataSource == null)

@@ -22,7 +22,7 @@ namespace Crystal.Plot2D
 
     public static int Clamp(int value, int min, int max) => Math.Max(min, Math.Min(value, max));
 
-    public static Rect CreateRectByPoints(double xMin, double yMin, double xMax, double yMax) => new Rect(new Point(xMin, yMin), new Point(xMax, yMax));
+    public static Rect CreateRectByPoints(double xMin, double yMin, double xMax, double yMax) => new(new Point(xMin, yMin), new Point(xMax, yMax));
 
     public static double Interpolate(double start, double end, double ratio) => start * (1 - ratio) + end * ratio;
 
@@ -41,7 +41,7 @@ namespace Crystal.Plot2D
     /// </returns>
     public static double ToAngle(this Vector vector) => Math.Atan2(-vector.Y, vector.X).RadiansToDegrees();
 
-    public static Point ToPoint(this Vector v) => new Point(v.X, v.Y);
+    public static Point ToPoint(this Vector v) => new(v.X, v.Y);
 
     public static bool IsNaN(this double d) => double.IsNaN(d);
 

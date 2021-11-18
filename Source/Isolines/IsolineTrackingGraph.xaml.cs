@@ -79,8 +79,8 @@ namespace Crystal.Plot2D.Charts
       UpdateUIRepresentation();
     }
 
-    private readonly List<Path> addedPaths = new List<Path>();
-    private Vector labelShift = new Vector(3, 3);
+    private readonly List<Path> addedPaths = new();
+    private Vector labelShift = new(3, 3);
     private void UpdateUIRepresentation()
     {
       if (Plotter2D == null)
@@ -142,7 +142,7 @@ namespace Crystal.Plot2D.Charts
 
         foreach (LevelLine segment in collection.Lines)
         {
-          StreamGeometry streamGeom = new StreamGeometry();
+          StreamGeometry streamGeom = new();
           using (StreamGeometryContext context = streamGeom.Open())
           {
             Point startPoint = segment.StartPoint.DataToScreen(transform);
@@ -151,7 +151,7 @@ namespace Crystal.Plot2D.Charts
             context.PolyLineTo(otherPoints, true, true);
           }
 
-          Path path = new Path
+          Path path = new()
           {
             Stroke = new SolidColorBrush(Palette.GetColor(segment.Value01)),
             Data = streamGeom,
@@ -162,7 +162,7 @@ namespace Crystal.Plot2D.Charts
 
           labelGrid.Visibility = Visibility.Visible;
 
-          Binding pathBinding = new Binding { Path = new PropertyPath("StrokeThickness"), Source = this };
+          Binding pathBinding = new() { Path = new PropertyPath("StrokeThickness"), Source = this };
           path.SetBinding(Shape.StrokeThicknessProperty, pathBinding);
         }
       }
@@ -189,7 +189,7 @@ namespace Crystal.Plot2D.Charts
       {
         for (j = 0; j < height - 1; j++)
         {
-          Quad quad = new Quad(
+          Quad quad = new(
           grid[i, j],
           grid[i, j + 1],
           grid[i + 1, j + 1],

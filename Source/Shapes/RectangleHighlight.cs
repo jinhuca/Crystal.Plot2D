@@ -45,7 +45,7 @@ namespace Crystal.Plot2D.Charts
       rectGeometry.Rect = new Rect(p1, p2);
     }
 
-    private readonly RectangleGeometry rectGeometry = new RectangleGeometry();
+    private readonly RectangleGeometry rectGeometry = new();
     protected override Geometry DefiningGeometry
     {
       get { return rectGeometry; }

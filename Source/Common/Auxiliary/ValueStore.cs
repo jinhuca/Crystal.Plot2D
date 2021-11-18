@@ -15,7 +15,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private readonly Dictionary<string, object> cache = new Dictionary<string, object>();
+    private readonly Dictionary<string, object> cache = new();
 
     public object this[string propertyName]
     {

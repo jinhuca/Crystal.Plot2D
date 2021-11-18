@@ -55,11 +55,9 @@ namespace Crystal.Plot2D.Charts
 
     private static void OnCoordinateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-      UIElement reference = d as UIElement;
-      if (reference != null)
+      if (d is UIElement reference)
       {
-        StackCanvas parent = VisualTreeHelper.GetParent(reference) as StackCanvas;
-        if (parent != null)
+        if (VisualTreeHelper.GetParent(reference) is StackCanvas parent)
         {
           parent.InvalidateArrange();
         }
@@ -92,7 +90,7 @@ namespace Crystal.Plot2D.Charts
     protected override Size MeasureOverride(Size constraint)
     {
       Size availableSize = constraint;
-      Size size = new Size();
+      Size size = new();
 
       bool isHorizontal = IsHorizontal;
 
@@ -239,7 +237,7 @@ namespace Crystal.Plot2D.Charts
           }
         }
 
-        Rect bounds = new Rect(new Point(x, y), elementSize);
+        Rect bounds = new(new Point(x, y), elementSize);
         element.Arrange(bounds);
       }
 

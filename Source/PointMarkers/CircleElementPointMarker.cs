@@ -11,7 +11,7 @@ namespace Crystal.Plot2D
   {
     public override UIElement CreateMarker()
     {
-      Ellipse result = new Ellipse();
+      Ellipse result = new();
       result.Width = Size;
       result.Height = Size;
       result.Stroke = Brush;
@@ -19,7 +19,7 @@ namespace Crystal.Plot2D
 
       if (!string.IsNullOrEmpty(ToolTipText))
       {
-        ToolTip tt = new ToolTip();
+        ToolTip tt = new();
         tt.Content = ToolTipText;
         result.ToolTip = tt;
       }
@@ -37,7 +37,7 @@ namespace Crystal.Plot2D
 
       if (!string.IsNullOrEmpty(ToolTipText))
       {
-        ToolTip tt = new ToolTip();
+        ToolTip tt = new();
         tt.Content = ToolTipText;
         ellipse.ToolTip = tt;
       }

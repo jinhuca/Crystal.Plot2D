@@ -111,9 +111,9 @@ namespace Crystal.Plot2D.Charts
       rightLineGeometry.EndPoint = p2 + rightArrowLine;
     }
 
-    private readonly LineGeometry leftLineGeometry = new LineGeometry();
-    private readonly LineGeometry rightLineGeometry = new LineGeometry();
-    private readonly GeometryGroup geometryGroup = new GeometryGroup();
+    private readonly LineGeometry leftLineGeometry = new();
+    private readonly LineGeometry rightLineGeometry = new();
+    private readonly GeometryGroup geometryGroup = new();
     protected override Geometry DefiningGeometry
     {
       get { return geometryGroup; }

@@ -57,7 +57,7 @@ namespace Crystal.Plot2D.Charts
 
     #endregion
 
-    private readonly PathGeometry geometry = new PathGeometry();
+    private readonly PathGeometry geometry = new();
     protected PathGeometry PathGeometry
     {
       get { return geometry; }

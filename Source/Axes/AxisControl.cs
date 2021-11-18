@@ -136,7 +136,7 @@ namespace Crystal.Plot2D.Charts
 
     private void UpdateUIResources()
     {
-      ResourceDictionary resources = new ResourceDictionary
+      ResourceDictionary resources = new()
       {
         Source = new Uri(uriString: Constants.AxisResourceUri, uriKind: UriKind.Relative)
       };
@@ -652,7 +652,7 @@ namespace Crystal.Plot2D.Charts
       }
     }
 
-    private GeometryGroup geomGroup = new GeometryGroup();
+    private GeometryGroup geomGroup = new();
     internal void UpdateUI()
     {
       if (range.IsEmpty)
@@ -717,8 +717,10 @@ namespace Crystal.Plot2D.Charts
         lineGeomPool.Put(geometry);
       }
 
-      geomGroup = new GeometryGroup();
-      geomGroup.Children = new GeometryCollection(lineGeomPool.Count);
+      geomGroup = new GeometryGroup
+      {
+        Children = new GeometryCollection(lineGeomPool.Count)
+      };
 
       if (drawTicks)
       {
@@ -762,7 +764,7 @@ namespace Crystal.Plot2D.Charts
       }
     }
 
-    private readonly ResourcePool<LineGeometry> lineGeomPool = new ResourcePool<LineGeometry>();
+    private readonly ResourcePool<LineGeometry> lineGeomPool = new();
     private void DoDrawTicks(double[] screenTicksX, ICollection<Geometry> lines)
     {
       for (int i = 0; i < screenTicksX.Length; i++)
@@ -814,7 +816,7 @@ namespace Crystal.Plot2D.Charts
         double rangesRatio = GetRangesRatio(majorTicks.Ticks.GetPairs().ToArray()[0], range);
 
         object info = majorTicks.Info;
-        MajorLabelsInfo newInfo = new MajorLabelsInfo
+        MajorLabelsInfo newInfo = new()
         {
           Info = info,
           MajorLabelsCount = (int)Math.Ceiling(rangesRatio)

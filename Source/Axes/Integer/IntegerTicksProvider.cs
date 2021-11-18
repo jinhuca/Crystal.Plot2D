@@ -116,7 +116,7 @@ namespace Crystal.Plot2D.Charts
 
       int[] ticks = CreateTicks(start, finish, step);
 
-      TicksInfo<int> res = new TicksInfo<int> { Info = log, Ticks = ticks };
+      TicksInfo<int> res = new() { Info = log, Ticks = ticks };
 
       return res;
     }
@@ -126,7 +126,7 @@ namespace Crystal.Plot2D.Charts
       DebugVerify.Is(step != 0);
 
       int x = (int)(step * Math.Floor(start / (double)step));
-      List<int> res = new List<int>();
+      List<int> res = new();
 
       checked
       {

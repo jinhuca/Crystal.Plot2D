@@ -291,7 +291,7 @@ namespace Crystal.Plot2D
     private void UpdateZoomRect(Point zoomEndPoint)
     {
       Rect output = Viewport.Output;
-      Rect tmpZoomRect = new Rect(zoomStartPoint, zoomEndPoint);
+      Rect tmpZoomRect = new(zoomStartPoint, zoomEndPoint);
       tmpZoomRect = Rect.Intersect(tmpZoomRect, output);
 
       shouldKeepRatioWhileZooming = IsShiftPressed();
@@ -352,7 +352,7 @@ namespace Crystal.Plot2D
 
         Point p1 = zoomRect.Value.TopLeft.ScreenToViewport(Viewport.Transform);
         Point p2 = zoomRect.Value.BottomRight.ScreenToViewport(Viewport.Transform);
-        DataRect newVisible = new DataRect(p1, p2);
+        DataRect newVisible = new(p1, p2);
         Viewport.Visible = newVisible;
 
         zoomRect = null;

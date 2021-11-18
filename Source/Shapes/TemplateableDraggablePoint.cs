@@ -6,7 +6,7 @@ namespace Crystal.Plot2D.Charts
 {
   public class TemplateableDraggablePoint : DraggablePoint
   {
-    private readonly Control marker = new Control { Focusable = false };
+    private readonly Control marker = new() { Focusable = false };
     public TemplateableDraggablePoint()
     {
       marker.SetBinding(TemplateProperty, new Binding { Source = this, Path = new PropertyPath("MarkerTemplate") });

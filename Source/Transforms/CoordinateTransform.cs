@@ -44,13 +44,13 @@ namespace Crystal.Plot2D
 
     internal static CoordinateTransform FromRects(DataRect visibleRect, Rect screenRect)
     {
-      CoordinateTransform result = new CoordinateTransform(visibleRect, screenRect);
+      CoordinateTransform result = new(visibleRect, screenRect);
       return result;
     }
 
     internal CoordinateTransform WithRects(DataRect visibleRect, Rect screenRect)
     {
-      CoordinateTransform copy = new CoordinateTransform(visibleRect, screenRect);
+      CoordinateTransform copy = new(visibleRect, screenRect);
       copy.dataTransform = dataTransform;
       return copy;
     }
@@ -72,11 +72,11 @@ namespace Crystal.Plot2D
     {
       Rect screenCopy = ScreenRect1;
       screenCopy.Offset(x, y);
-      CoordinateTransform copy = new CoordinateTransform(VisibleRect, screenCopy);
+      CoordinateTransform copy = new(VisibleRect, screenCopy);
       return copy;
     }
 
-    internal static CoordinateTransform CreateDefault() => new CoordinateTransform(new Rect(0, 0, 1, 1), new Rect(0, 0, 1, 1));
+    internal static CoordinateTransform CreateDefault() => new(new Rect(0, 0, 1, 1), new Rect(0, 0, 1, 1));
 
     #endregion
 
@@ -91,7 +91,7 @@ namespace Crystal.Plot2D
     {
       Point viewportPoint = dataTransform.DataToViewport(dataPoint);
 
-      Point screenPoint = new Point(viewportPoint.X * rxToScreen - cxToScreen,
+      Point screenPoint = new(viewportPoint.X * rxToScreen - cxToScreen,
           cyToScreen - viewportPoint.Y * ryToScreen);
 
       return screenPoint;
@@ -104,7 +104,7 @@ namespace Crystal.Plot2D
     /// <returns></returns>
     public Point ScreenToData(Point screenPoint)
     {
-      Point viewportPoint = new Point(screenPoint.X * rxToData - cxToData,
+      Point viewportPoint = new(screenPoint.X * rxToData - cxToData,
           cyToData - screenPoint.Y * ryToData);
 
       Point dataPoint = dataTransform.ViewportToData(viewportPoint);
@@ -119,7 +119,7 @@ namespace Crystal.Plot2D
     /// <returns></returns>
     public Point ViewportToScreen(Point viewportPoint)
     {
-      Point screenPoint = new Point(viewportPoint.X * rxToScreen - cxToScreen,
+      Point screenPoint = new(viewportPoint.X * rxToScreen - cxToScreen,
           cyToScreen - viewportPoint.Y * ryToScreen);
 
       return screenPoint;
@@ -132,7 +132,7 @@ namespace Crystal.Plot2D
     /// <returns></returns>
     public Point ScreenToViewport(Point screenPoint)
     {
-      Point viewportPoint = new Point(screenPoint.X * rxToData - cxToData,
+      Point viewportPoint = new(screenPoint.X * rxToData - cxToData,
           cyToData - screenPoint.Y * ryToData);
 
       return viewportPoint;

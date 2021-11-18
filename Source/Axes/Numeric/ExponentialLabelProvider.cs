@@ -32,7 +32,7 @@ namespace Crystal.Plot2D.Charts
 
       UIElement[] res = new UIElement[ticks.Length];
 
-      LabelTickInfo<double> tickInfo = new LabelTickInfo<double> { Info = ticksInfo.Info };
+      LabelTickInfo<double> tickInfo = new() { Info = ticksInfo.Info };
 
       for (int i = 0; i < res.Length; i++)
       {
@@ -49,9 +49,9 @@ namespace Crystal.Plot2D.Charts
           string mantissa = substrs[0];
           string exponenta = substrs[1];
           exponenta = exponenta.TrimStart('+');
-          Span span = new Span();
+          Span span = new();
           span.Inlines.Add(string.Format(CultureInfo.CurrentCulture, "{0}·10", mantissa));
-          Span exponentaSpan = new Span(new Run(exponenta));
+          Span exponentaSpan = new(new Run(exponenta));
           exponentaSpan.BaselineAlignment = BaselineAlignment.Superscript;
           exponentaSpan.FontSize = 8;
           span.Inlines.Add(exponentaSpan);

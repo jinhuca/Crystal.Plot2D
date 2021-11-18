@@ -30,7 +30,7 @@ namespace Crystal.Plot2D
     private static IEnumerable<FrameworkElement> DefaultLegendItemsBuilder(IPlotterElement plotterElement)
     {
       NewLineGraph lineGraph = (NewLineGraph)plotterElement;
-      Line line = new Line { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph };
+      Line line = new() { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph };
       line.SetBinding(Shape.StrokeProperty, "Stroke");
       line.SetBinding(Shape.StrokeThicknessProperty, "StrokeThickness");
       Legend.SetVisualContent(lineGraph, line);
@@ -38,7 +38,7 @@ namespace Crystal.Plot2D
       yield return legendItem;
     }
 
-    private readonly FilterCollection filters = new FilterCollection();
+    private readonly FilterCollection filters = new();
 
     /// <summary>
     ///   Initializes a new instance of the <see cref="LineGraph"/> class.
@@ -192,7 +192,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    readonly TranslateTransform layoutTransform = new TranslateTransform();
+    readonly TranslateTransform layoutTransform = new();
     private void UpdateTransform()
     {
       var currentTransform = plotter.Transform;
@@ -208,7 +208,7 @@ namespace Crystal.Plot2D
     }
 
     CoordinateTransform transformWhenCreated;
-    readonly ResourcePool<Polyline> polylinePool = new ResourcePool<Polyline>();
+    readonly ResourcePool<Polyline> polylinePool = new();
     private const int pointCount = 500;
 
     private void Update()
@@ -241,7 +241,7 @@ namespace Crystal.Plot2D
 
       Children.Clear();
 
-      PointCollection pointCollection = new PointCollection();
+      PointCollection pointCollection = new();
       foreach (var screenPoint in dataPoints.DataToScreen(plotter.Transform))
       {
         if (pointCollection.Count < pointCount)

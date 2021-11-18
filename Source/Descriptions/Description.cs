@@ -44,7 +44,7 @@ namespace Crystal.Plot2D
     {
       if (ResolveLegendItem != null)
       {
-        ResolveLegendItemEventArgs e = new ResolveLegendItemEventArgs(uncustomizedLegendItem);
+        ResolveLegendItemEventArgs e = new(uncustomizedLegendItem);
         ResolveLegendItem(this, e);
         return e.LegendItem;
       }

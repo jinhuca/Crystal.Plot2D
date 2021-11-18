@@ -30,7 +30,7 @@ namespace Crystal.Plot2D.Charts
       UpdateUIRepresentation();
     }
 
-    private readonly Canvas content = new Canvas();
+    private readonly Canvas content = new();
 
     protected override void UpdateDataSource()
     {
@@ -49,8 +49,8 @@ namespace Crystal.Plot2D.Charts
       }
     }
 
-    private readonly List<FrameworkElement> textBlocks = new List<FrameworkElement>();
-    private readonly List<Path> linePaths = new List<Path>();
+    private readonly List<FrameworkElement> textBlocks = new();
+    private readonly List<Path> linePaths = new();
     protected override void CreateUIRepresentation()
     {
       if (Plotter2D == null)
@@ -72,7 +72,7 @@ namespace Crystal.Plot2D.Charts
             bounds.Union(point);
           }
 
-          Path path = new Path
+          Path path = new()
           {
             Stroke = new SolidColorBrush(Palette.GetColor(line.Value01)),
             StrokeThickness = StrokeThickness,
@@ -119,7 +119,7 @@ namespace Crystal.Plot2D.Charts
       }
 
       string tooltip = textLabel.Value.ToString("F"); //String.Format("{0} at ({1}, {2})", textLabel.Text, textLabel.Position.X, textLabel.Position.Y);
-      Grid grid = new Grid
+      Grid grid = new()
       {
         RenderTransform = new RotateTransform(angle),
         Tag = textLabel,
@@ -127,7 +127,7 @@ namespace Crystal.Plot2D.Charts
         ToolTip = tooltip
       };
 
-      TextBlock res = new TextBlock
+      TextBlock res = new()
       {
         Text = textLabel.Value.ToString("F"),
         Margin = new Thickness(3, 1, 3, 1)
@@ -135,7 +135,7 @@ namespace Crystal.Plot2D.Charts
 
       //res.Measure(SizeHelper.CreateInfiniteSize());
 
-      Rectangle rect = new Rectangle
+      Rectangle rect = new()
       {
         Stroke = Brushes.Gray,
         Fill = labelBackground,
@@ -149,7 +149,7 @@ namespace Crystal.Plot2D.Charts
       grid.Measure(SizeHelper.CreateInfiniteSize());
 
       Size textSize = grid.DesiredSize;
-      Point position = new Point(screenPos.X - textSize.Width / 2, screenPos.Y - textSize.Height / 2);
+      Point position = new(screenPos.X - textSize.Width / 2, screenPos.Y - textSize.Height / 2);
 
       Canvas.SetLeft(grid, position.X);
       Canvas.SetTop(grid, position.Y);
@@ -160,7 +160,7 @@ namespace Crystal.Plot2D.Charts
     {
       var transform = Plotter2D.Viewport.Transform;
 
-      StreamGeometry geometry = new StreamGeometry();
+      StreamGeometry geometry = new();
       using (var context = geometry.Open())
       {
         context.BeginFigure(lineData.StartPoint.DataToScreen(transform), false, false);
@@ -243,7 +243,7 @@ namespace Crystal.Plot2D.Charts
           Point screenPos = label.Position.DataToScreen(transform);
           Size textSize = text.DesiredSize;
 
-          Point position = new Point(screenPos.X - textSize.Width / 2, screenPos.Y - textSize.Height / 2);
+          Point position = new(screenPos.X - textSize.Width / 2, screenPos.Y - textSize.Height / 2);
 
           if (output.Contains(position))
           {

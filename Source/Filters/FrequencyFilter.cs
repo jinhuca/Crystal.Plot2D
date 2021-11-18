@@ -29,7 +29,7 @@ namespace Crystal.Plot2D
       }
 
       List<Point> resultPoints = points;
-      List<Point> currentChain = new List<Point>();
+      List<Point> currentChain = new();
 
       if (points.Count > 2 * screenRect.Width)
       {

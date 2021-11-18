@@ -124,8 +124,7 @@ namespace Crystal.Plot2D.Common
           return false;
         }
 
-        CaptureKeyHolder other = obj as CaptureKeyHolder;
-        if (other == null)
+        if (obj is not CaptureKeyHolder other)
         {
           return false;
         }

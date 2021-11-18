@@ -15,7 +15,7 @@ namespace Crystal.Plot2D
 
     public override List<Point> Filter(List<Point> points)
     {
-      List<Point> result = new List<Point>();
+      List<Point> result = new();
 
       using (var enumerator = points.GetEnumerator())
       {
@@ -23,7 +23,7 @@ namespace Crystal.Plot2D
 
         double minX = 0, maxX = 0, minY = 0, maxY = 0;
 
-        Point left = new Point(), right = new Point(), top = new Point(), bottom = new Point();
+        Point left = new(), right = new(), top = new(), bottom = new();
 
         bool isFirstPoint = true;
         while (enumerator.MoveNext())

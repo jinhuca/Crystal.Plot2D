@@ -25,7 +25,7 @@ namespace Crystal.Plot2D
     public override void Render(DrawingContext dc, Point screenPoint)
     {
 #pragma warning disable CS0618 // 'FormattedText.FormattedText(string, CultureInfo, FlowDirection, Typeface, double, Brush)' is obsolete: 'Use the PixelsPerDip override'
-      FormattedText textToDraw = new FormattedText(
+      FormattedText textToDraw = new(
         textToFormat: Text,
         culture: Thread.CurrentThread.CurrentCulture,
         flowDirection: FlowDirection.LeftToRight,

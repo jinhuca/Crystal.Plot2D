@@ -6,15 +6,15 @@ namespace Crystal.Plot2D.Charts
 {
   internal sealed class PhysicalRectAnimation
   {
-    Vector position = new Vector();
-    Vector velocity = new Vector();
+    Vector position = new();
+    Vector velocity = new();
     public Vector Velocity
     {
       get { return velocity; }
       set { velocity = value; }
     }
 
-    Vector acceleration = new Vector();
+    Vector acceleration = new();
     private double mass = 1; // kilogramms
     public double Mass
     {
@@ -113,15 +113,15 @@ namespace Crystal.Plot2D.Charts
 
       prevTime = time;
 
-      Point pos = new Point(position.X, position.Y);
-      DataRect bounds = new DataRect(pos, from.Size);
+      Point pos = new(position.X, position.Y);
+      DataRect bounds = new(pos, from.Size);
 
       return bounds;
     }
 
     private Vector GetForces()
     {
-      Vector springForce = new Vector();
+      Vector springForce = new();
       if (useMouse)
       {
         Point mousePos = GetMousePosition();

@@ -41,7 +41,7 @@ namespace Crystal.Plot2D.Charts
 
       DebugVerify.Is(ticks.Length < 10);
 
-      LabelTickInfo<DateTime> tickInfo = new LabelTickInfo<DateTime>();
+      LabelTickInfo<DateTime> tickInfo = new();
       for (int i = 0; i < ticks.Length - 1; i++)
       {
         tickInfo.Info = info;
@@ -49,12 +49,12 @@ namespace Crystal.Plot2D.Charts
 
         string tickText = GetString(tickInfo);
 
-        Grid grid = new Grid { };
+        Grid grid = new() { };
 
         // doing binding as described at http://sdolha.spaces.live.com/blog/cns!4121802308C5AB4E!3724.entry?wa=wsignin1.0&sa=835372863
 
         grid.SetBinding(Panel.BackgroundProperty, new Binding { Path = new PropertyPath("(0)", DateTimeAxis.MajorLabelBackgroundBrushProperty), RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
-        Rectangle rect = new Rectangle
+        Rectangle rect = new()
         {
           StrokeThickness = 2
         };

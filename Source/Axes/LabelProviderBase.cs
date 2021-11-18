@@ -191,7 +191,7 @@ namespace Crystal.Plot2D.Charts
       Changed.Raise(this);
     }
 
-    private readonly ResourcePool<UIElement> pool = new ResourcePool<UIElement>();
+    private readonly ResourcePool<UIElement> pool = new();
     internal void ReleaseLabel(UIElement label)
     {
       if (ReleaseCore(label))

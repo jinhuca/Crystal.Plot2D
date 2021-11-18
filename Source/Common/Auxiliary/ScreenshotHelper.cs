@@ -56,17 +56,17 @@ namespace Crystal.Plot2D.Common
       double dpiCoeff = 1;
       int dpi = 96;
 
-      RenderTargetBitmap bmp = new RenderTargetBitmap((int)(size.Width * dpiCoeff), (int)(size.Height * dpiCoeff), dpi, dpi, PixelFormats.Default);
+      RenderTargetBitmap bmp = new((int)(size.Width * dpiCoeff), (int)(size.Height * dpiCoeff), dpi, dpi, PixelFormats.Default);
 
       // white background
-      Rectangle whiteRect = new Rectangle { Width = size.Width, Height = size.Height, Fill = Brushes.White };
+      Rectangle whiteRect = new() { Width = size.Width, Height = size.Height, Fill = Brushes.White };
       whiteRect.Measure(size);
       whiteRect.Arrange(new Rect(size));
       bmp.Render(whiteRect);
       // the very element
       bmp.Render(uiElement);
 
-      CroppedBitmap croppedBmp = new CroppedBitmap(bmp, screenshotSource);
+      CroppedBitmap croppedBmp = new(bmp, screenshotSource);
       return croppedBmp;
     }
 
@@ -79,8 +79,7 @@ namespace Crystal.Plot2D.Common
         double width = 300;
         double height = 300;
 
-        FrameworkElement frElement = uiElement as FrameworkElement;
-        if (frElement != null)
+        if (uiElement is FrameworkElement frElement)
         {
           if (!double.IsNaN(frElement.Width))
           {
@@ -92,12 +91,12 @@ namespace Crystal.Plot2D.Common
           }
         }
 
-        Size size = new Size(width, height);
+        Size size = new(width, height);
         uiElement.Measure(size);
         uiElement.Arrange(new Rect(size));
       }
 
-      RenderTargetBitmap bmp = new RenderTargetBitmap(
+      RenderTargetBitmap bmp = new(
         (int)uiElement.RenderSize.Width,
         (int)uiElement.RenderSize.Height,
         96,
@@ -109,7 +108,7 @@ namespace Crystal.Plot2D.Common
 
       Size elementSize = uiElement.DesiredSize;
       // white background
-      Rectangle whiteRect = new Rectangle { Width = elementSize.Width, Height = elementSize.Height, Fill = Brushes.White };
+      Rectangle whiteRect = new() { Width = elementSize.Width, Height = elementSize.Height, Fill = Brushes.White };
       whiteRect.Measure(elementSize);
       whiteRect.Arrange(new Rect(elementSize));
       bmp.Render(whiteRect);
@@ -117,7 +116,7 @@ namespace Crystal.Plot2D.Common
       return bmp;
     }
 
-    private static readonly Dictionary<BitmapSource, string> pendingBitmaps = new Dictionary<BitmapSource, string>();
+    private static readonly Dictionary<BitmapSource, string> pendingBitmaps = new();
 
     internal static void SaveBitmapToStream(BitmapSource bitmap, Stream stream, string fileExtension)
     {
@@ -161,7 +160,7 @@ namespace Crystal.Plot2D.Common
       bool fileExistedBefore = File.Exists(filePath);
       try
       {
-        using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+        using (FileStream fs = new(filePath, FileMode.Create, FileAccess.Write))
         {
           string extension = System.IO.Path.GetExtension(filePath).TrimStart('.');
           SaveBitmapToStream(bitmap, fs, extension);
@@ -192,7 +191,7 @@ namespace Crystal.Plot2D.Common
         Directory.CreateDirectory(dirPath);
       }
 
-      using (FileStream fs = new FileStream(filePath, FileMode.Create, FileAccess.Write))
+      using (FileStream fs = new(filePath, FileMode.Create, FileAccess.Write))
       {
         string extension = System.IO.Path.GetExtension(filePath).TrimStart('.');
         if (stream.CanSeek)

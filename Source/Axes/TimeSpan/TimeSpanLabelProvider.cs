@@ -11,7 +11,7 @@ namespace Crystal.Plot2D.Charts
       object info = ticksInfo.Info;
       var ticks = ticksInfo.Ticks;
 
-      LabelTickInfo<TimeSpan> tickInfo = new LabelTickInfo<TimeSpan>();
+      LabelTickInfo<TimeSpan> tickInfo = new();
 
       UIElement[] res = new UIElement[ticks.Length];
       for (int i = 0; i < ticks.Length; i++)

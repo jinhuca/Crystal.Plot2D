@@ -35,9 +35,11 @@ namespace Crystal.Plot2D.Charts
         }
       }
 
-      popup = new PopupTip();
-      popup.Placement = PlacementMode.Relative;
-      popup.PlacementTarget = plotter.CentralGrid;
+      popup = new PopupTip
+      {
+        Placement = PlacementMode.Relative,
+        PlacementTarget = plotter.CentralGrid
+      };
       Plotter.Children.Add(popup);
       return popup;
     }
@@ -68,21 +70,23 @@ namespace Crystal.Plot2D.Charts
       popup.HorizontalOffset = screenPoint.X;
       popup.ShowDelayed(TimeSpan.FromSeconds(0));
 
-      Grid grid = new Grid();
-      Rectangle rect = new Rectangle
+      Grid grid = new();
+      Rectangle rect = new()
       {
         Stroke = Brushes.Black,
         Fill = SystemColors.InfoBrush
       };
 
-      StackPanel panel = new StackPanel();
+      StackPanel panel = new();
       panel.Orientation = Orientation.Vertical;
       panel.Children.Add(tooltip);
       panel.Margin = new Thickness(4, 2, 4, 2);
 
-      var textBlock = new TextBlock();
-      textBlock.Text = string.Format("Location: {0:F2}, {1:F2}", viewportPoint.X, viewportPoint.Y);
-      textBlock.Foreground = SystemColors.GrayTextBrush;
+      var textBlock = new TextBlock
+      {
+        Text = string.Format("Location: {0:F2}, {1:F2}", viewportPoint.X, viewportPoint.Y),
+        Foreground = SystemColors.GrayTextBrush
+      };
       panel.Children.Add(textBlock);
 
       grid.Children.Add(rect);

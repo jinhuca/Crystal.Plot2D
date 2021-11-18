@@ -168,7 +168,7 @@ namespace Crystal.Plot2D
 
     protected IEnumerable<Point> GetPoints() => DataSource.GetPoints(context: GetContext());
 
-    private readonly DataSource2dContext _context = new DataSource2dContext();
+    private readonly DataSource2dContext _context = new();
     protected DependencyObject GetContext() => _context;
   }
 }

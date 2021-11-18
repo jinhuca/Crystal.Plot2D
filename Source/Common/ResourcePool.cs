@@ -7,7 +7,7 @@ namespace Crystal.Plot2D.Common
   [DebuggerDisplay("Count = {Count}")]
   internal sealed class ResourcePool<T>
   {
-    private readonly List<T> pool = new List<T>();
+    private readonly List<T> pool = new();
 
     public T Get()
     {

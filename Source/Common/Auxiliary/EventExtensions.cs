@@ -69,7 +69,7 @@ namespace Crystal.Plot2D
     {
       if (@event != null)
       {
-        ValueChangedEventArgs<TValue> args = new ValueChangedEventArgs<TValue>(prevValue, currValue);
+        ValueChangedEventArgs<TValue> args = new(prevValue, currValue);
         @event(sender, args);
       }
     }
@@ -89,7 +89,7 @@ namespace Crystal.Plot2D
     {
       if (@event != null)
       {
-        ValueChangedEventArgs<TValue> args = new ValueChangedEventArgs<TValue>((TValue)prevValue, (TValue)currValue);
+        ValueChangedEventArgs<TValue> args = new((TValue)prevValue, (TValue)currValue);
         @event(sender, args);
       }
     }

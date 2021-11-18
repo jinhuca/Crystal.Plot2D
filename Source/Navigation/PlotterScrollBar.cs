@@ -19,7 +19,7 @@ namespace Crystal.Plot2D
       plotter.Viewport.Visible = visible;
     }
 
-    private readonly ScrollBar scrollBar = new ScrollBar();
+    private readonly ScrollBar scrollBar = new();
     protected ScrollBar ScrollBar
     {
       get { return scrollBar; }

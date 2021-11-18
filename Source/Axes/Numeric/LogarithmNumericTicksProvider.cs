@@ -68,7 +68,7 @@ namespace Crystal.Plot2D.Charts
       ticks = CreateTicks(range);
 
       int log = RoundingHelper.GetDifferenceLog(range.Min, range.Max);
-      TicksInfo<double> result = new TicksInfo<double> { Ticks = ticks, TickSizes = ArrayExtensions.CreateArray(ticks.Length, 1.0), Info = log };
+      TicksInfo<double> result = new() { Ticks = ticks, TickSizes = ArrayExtensions.CreateArray(ticks.Length, 1.0), Info = log };
       return result;
     }
 

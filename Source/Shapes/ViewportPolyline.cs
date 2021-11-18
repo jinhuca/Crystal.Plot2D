@@ -25,7 +25,7 @@ namespace Crystal.Plot2D.Charts
       if (points == null) { }
       else
       {
-        PathFigure figure = new PathFigure();
+        PathFigure figure = new();
         if (points.Count > 0)
         {
           figure.StartPoint = points[0].DataToScreen(transform);

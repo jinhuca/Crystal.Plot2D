@@ -24,7 +24,7 @@ namespace Crystal.Plot2D.Charts
     {
       TimeSpan res = span;
 
-      TimeSpan shift = new TimeSpan();
+      TimeSpan shift = new();
       switch (diff)
       {
         case DifferenceIn.Year:
@@ -125,7 +125,7 @@ namespace Crystal.Plot2D.Charts
         }
       }
 
-      List<TimeSpan> res = new List<TimeSpan>(endIndex - startIndex + 1);
+      List<TimeSpan> res = new(endIndex - startIndex + 1);
       for (int i = startIndex; i <= endIndex; i++)
       {
         res.Add(ticks[i]);

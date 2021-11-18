@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Crystal.Plot2D" Version="2.1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Source\Crystal.Plot2D.csproj" />
   </ItemGroup>
 

@@ -88,7 +88,7 @@ namespace Crystal.Plot2D.Charts
       return indicator;
     }
 
-    private readonly DispatcherTimer timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(value: 100) };
+    private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(value: 100) };
     private int operationsCounter = 0;
     private void OnLongOperationRunningChanged(IPlotterElement element, bool longOperationRunning)
     {

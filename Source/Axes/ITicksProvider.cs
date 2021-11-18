@@ -96,7 +96,7 @@ namespace Crystal.Plot2D.Charts
       internal set { info = value; }
     }
 
-    private static readonly TicksInfo<T> empty = new TicksInfo<T> { info = null, ticks = new T[0], tickSizes = new double[0] };
+    private static readonly TicksInfo<T> empty = new() { info = null, ticks = new T[0], tickSizes = new double[0] };
     internal static TicksInfo<T> Empty
     {
       get { return empty; }

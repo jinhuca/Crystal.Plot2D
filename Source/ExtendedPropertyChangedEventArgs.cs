@@ -10,6 +10,7 @@ namespace Crystal.Plot2D
     public object NewValue { get; set; }
 
     public static ExtendedPropertyChangedEventArgs FromDependencyPropertyChanged(DependencyPropertyChangedEventArgs e)
-      => new ExtendedPropertyChangedEventArgs { PropertyName = e.Property.Name, NewValue = e.NewValue, OldValue = e.OldValue };
+      => new()
+      { PropertyName = e.Property.Name, NewValue = e.NewValue, OldValue = e.OldValue };
   }
 }

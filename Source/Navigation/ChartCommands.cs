@@ -19,7 +19,7 @@ namespace Crystal.Plot2D
 
     private static RoutedUICommand CreateCommand(string name, params Key[] keys)
     {
-      InputGestureCollection gestures = new InputGestureCollection();
+      InputGestureCollection gestures = new();
       foreach (var key in keys)
       {
         gestures.Add(new KeyGesture(key));

@@ -226,10 +226,9 @@ namespace Crystal.Plot2D
     /// <returns>Points in screen coordinates</returns>
     public static List<Point> DataToScreenAsList(this IEnumerable<Point> dataPoints, CoordinateTransform transform)
     {
-      ICollection<Point> iCollection = dataPoints as ICollection<Point>;
       List<Point> res;
 
-      if (iCollection != null)
+      if (dataPoints is ICollection<Point> iCollection)
       {
         res = new List<Point>(iCollection.Count);
       }

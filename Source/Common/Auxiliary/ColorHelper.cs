@@ -5,7 +5,7 @@ namespace Crystal.Plot2D
 {
   public static class ColorHelper
   {
-    private readonly static Random random = new Random();
+    private readonly static Random random = new();
 
     /// <summary>
     ///   Creates color from HSB color space with random hue and saturation and brighness equal to 1.
@@ -14,7 +14,7 @@ namespace Crystal.Plot2D
     public static Color CreateColorWithRandomHue()
     {
       double hue = random.NextDouble() * 360;
-      HsbColor hsbColor = new HsbColor(hue, 1, 1);
+      HsbColor hsbColor = new(hue, 1, 1);
       return hsbColor.ToArgbColor();
     }
 
@@ -94,7 +94,7 @@ namespace Crystal.Plot2D
     /// <value>
     ///   The random brush.
     /// </value>
-    public static SolidColorBrush RandomBrush => new SolidColorBrush(CreateRandomHsbColor());
+    public static SolidColorBrush RandomBrush => new(CreateRandomHsbColor());
 
     public static int ToArgb(this Color color) => color.A << 24 | color.R << 16 | color.G << 8 | color.B;
   }

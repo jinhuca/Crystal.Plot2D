@@ -10,7 +10,7 @@ namespace Crystal.Plot2D.Common
     internal PlotterEventHelper(RoutedEvent @event) => this.@event = @event;
 
     // todo use a weakReference here
-    private readonly Dictionary<DependencyObject, EventHandler<PlotterChangedEventArgs>> handlers = new Dictionary<DependencyObject, EventHandler<PlotterChangedEventArgs>>();
+    private readonly Dictionary<DependencyObject, EventHandler<PlotterChangedEventArgs>> handlers = new();
 
     public void Subscribe(DependencyObject target, EventHandler<PlotterChangedEventArgs> handler)
     {

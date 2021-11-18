@@ -86,7 +86,7 @@ namespace Crystal.Plot2D.Charts
       lineGeometry.EndPoint = p2;
     }
 
-    readonly LineGeometry lineGeometry = new LineGeometry();
+    readonly LineGeometry lineGeometry = new();
     protected LineGeometry LineGeometry
     {
       get { return lineGeometry; }

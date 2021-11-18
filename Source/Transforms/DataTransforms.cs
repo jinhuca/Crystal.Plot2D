@@ -98,7 +98,7 @@ namespace Crystal.Plot2D
     /// </summary>
     /// <param name="pt">The point in viewport coordinates.</param>
     /// <returns></returns>
-    public override Point ViewportToData(Point pt) => new Point(pt.X, Math.Pow(10, pt.Y));
+    public override Point ViewportToData(Point pt) => new(pt.X, Math.Pow(10, pt.Y));
 
     /// <summary>
     /// Gets the data domain of this dataTransform.
@@ -143,7 +143,7 @@ namespace Crystal.Plot2D
     /// </summary>
     /// <param name="pt">The point in viewport coordinates.</param>
     /// <returns></returns>
-    public override Point ViewportToData(Point pt) => new Point(Math.Pow(10, pt.X), pt.Y);
+    public override Point ViewportToData(Point pt) => new(Math.Pow(10, pt.X), pt.Y);
 
     /// <summary>
     /// Gets the data domain.

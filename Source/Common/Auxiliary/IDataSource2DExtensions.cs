@@ -33,7 +33,7 @@ namespace Crystal.Plot2D.Common
         }
       }
 
-      Range<double> res = new Range<double>(min, max);
+      Range<double> res = new(min, max);
       return res;
     }
 
@@ -63,7 +63,7 @@ namespace Crystal.Plot2D.Common
         }
       }
 
-      Range<double> res = new Range<double>(min, max);
+      Range<double> res = new(min, max);
       return res;
     }
 

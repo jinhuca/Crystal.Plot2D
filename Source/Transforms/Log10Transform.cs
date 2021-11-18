@@ -36,7 +36,7 @@ namespace Crystal.Plot2D
     /// </summary>
     /// <param name="pt">The point in viewport coordinates.</param>
     /// <returns>Transformed point in data coordinates.</returns>
-    public override Point ViewportToData(Point pt) => new Point(Math.Pow(10, pt.X), Math.Pow(10, pt.Y));
+    public override Point ViewportToData(Point pt) => new(Math.Pow(10, pt.X), Math.Pow(10, pt.Y));
 
     /// <summary>
     /// Gets the data domain of this dataTransform.

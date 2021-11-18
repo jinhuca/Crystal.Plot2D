@@ -10,7 +10,7 @@ namespace Crystal.Plot2D
       DataRect visible = viewport.Visible;
       DataRect oldVisible = visible;
       Point center = visible.GetCenter();
-      Vector halfSize = new Vector(visible.Width * factor / 2, visible.Height * factor / 2);
+      Vector halfSize = new(visible.Width * factor / 2, visible.Height * factor / 2);
       viewport.Visible = new DataRect(center - halfSize, center + halfSize);
       viewport.Plotter.UndoProvider.AddAction(new DependencyPropertyChangedUndoAction(viewport, Viewport2D.VisibleProperty, oldVisible, visible));
     }

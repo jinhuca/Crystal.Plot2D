@@ -24,8 +24,7 @@ namespace Crystal.Plot2D.Common
         throw GetConvertFromException(value);
       }
 
-      string source = value as string;
-      if (source != null)
+      if (value is string source)
       {
         var parts = source.Split('-');
         var minStr = parts[0];

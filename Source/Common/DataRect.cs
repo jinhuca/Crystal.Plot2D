@@ -123,11 +123,11 @@ namespace Crystal.Plot2D
     /// <param name="xMax">The x max.</param>
     /// <param name="yMax">The y max.</param>
     /// <returns></returns>
-    public static DataRect Create(double xMin, double yMin, double xMax, double yMax) => new DataRect(xMin, yMin, xMax - xMin, yMax - yMin);
+    public static DataRect Create(double xMin, double yMin, double xMax, double yMax) => new(xMin, yMin, xMax - xMin, yMax - yMin);
 
-    public static DataRect FromPoints(double x1, double y1, double x2, double y2) => new DataRect(new Point(x1, y1), new Point(x2, y2));
+    public static DataRect FromPoints(double x1, double y1, double x2, double y2) => new(new Point(x1, y1), new Point(x2, y2));
 
-    public static DataRect FromCenterSize(Point center, double width, double height) => new DataRect(center.X - width / 2, center.Y - height / 2, width, height);
+    public static DataRect FromCenterSize(Point center, double width, double height) => new(center.X - width / 2, center.Y - height / 2, width, height);
 
     public static DataRect FromCenterSize(Point center, Size size) => FromCenterSize(center, size.Width, size.Height);
 
@@ -137,11 +137,11 @@ namespace Crystal.Plot2D
       return rect1;
     }
 
-    public static implicit operator DataRect(Rect rect) => new DataRect(rect);
+    public static implicit operator DataRect(Rect rect) => new(rect);
 
     #endregion
 
-    public Rect ToRect() => new Rect(xMin, yMin, width, height);
+    public Rect ToRect() => new(xMin, yMin, width, height);
 
     public void Intersect(DataRect rect)
     {
@@ -151,7 +151,7 @@ namespace Crystal.Plot2D
         return;
       }
 
-      DataRect res = new DataRect();
+      DataRect res = new();
 
       double x = Math.Max(XMin, rect.XMin);
       double y = Math.Max(YMin, rect.YMin);
@@ -249,7 +249,7 @@ namespace Crystal.Plot2D
     /// </value>
     public Point Location
     {
-      get => new Point(xMin, yMin);
+      get => new(xMin, yMin);
       set
       {
         if (IsEmpty)
@@ -261,9 +261,9 @@ namespace Crystal.Plot2D
       }
     }
 
-    public Point XMaxYMax => new Point(XMax, YMax);
+    public Point XMaxYMax => new(XMax, YMax);
 
-    public Point XMinYMin => new Point(xMin, yMin);
+    public Point XMinYMin => new(xMin, yMin);
 
     /// <summary>
     /// Gets or sets the size.
@@ -339,7 +339,7 @@ namespace Crystal.Plot2D
 
     private static DataRect CreateEmptyRect()
     {
-      DataRect rect = new DataRect();
+      DataRect rect = new();
       rect.xMin = double.PositiveInfinity;
       rect.yMin = double.PositiveInfinity;
       rect.width = double.NegativeInfinity;

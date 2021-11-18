@@ -31,7 +31,7 @@ namespace Crystal.Plot2D
       set { isReversed = value; }
     }
 
-    private readonly List<CommandBinding> addedBindings = new List<CommandBinding>();
+    private readonly List<CommandBinding> addedBindings = new();
     private void AddBinding(CommandBinding binding)
     {
       plotter2D.CommandBindings.Add(binding);
@@ -323,7 +323,7 @@ namespace Crystal.Plot2D
 
     private void SaveScreenshotExecute(object target, ExecutedRoutedEventArgs e)
     {
-      SaveFileDialog dlg = new SaveFileDialog();
+      SaveFileDialog dlg = new();
       dlg.Filter = "PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg|BMP (*.bmp)|*.bmp|GIF (*.gif)|*.gif";
       dlg.FilterIndex = 1;
       dlg.AddExtension = true;
@@ -364,7 +364,7 @@ namespace Crystal.Plot2D
     {
       if (!aboutWindowOpened)
       {
-        AboutWindow window = new AboutWindow();
+        AboutWindow window = new();
         window.Closed += new EventHandler(aboutWindow_Closed);
         window.DataContext = plotter2D;
 

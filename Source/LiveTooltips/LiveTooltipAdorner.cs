@@ -8,7 +8,7 @@ namespace Crystal.Plot2D.Charts
 {
   public class LiveToolTipAdorner : Adorner
   {
-    private readonly Canvas canvas = new Canvas { IsHitTestVisible = false };
+    private readonly Canvas canvas = new() { IsHitTestVisible = false };
     private readonly VisualCollection visualChildren;
     public LiveToolTipAdorner(UIElement adornedElement, LiveToolTip tooltip)
       : base(adornedElement)

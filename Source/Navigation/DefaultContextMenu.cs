@@ -39,7 +39,7 @@ namespace Crystal.Plot2D
     {
       Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
 
-      BitmapImage icon = new BitmapImage();
+      BitmapImage icon = new();
       icon.BeginInit();
       icon.StreamSource = currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources." + name + ".png");
       icon.EndInit();
@@ -51,7 +51,7 @@ namespace Crystal.Plot2D
     private static StreamGeometry LoadIconGeometry(string geometryKey)
     {
       Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
-      StreamGeometry iconGeometry = new StreamGeometry();
+      StreamGeometry iconGeometry = new();
 
       return iconGeometry;
     }
@@ -63,9 +63,9 @@ namespace Crystal.Plot2D
 
     protected ContextMenu PopulateContextMenu(PlotterBase target)
     {
-      ContextMenu menu = new ContextMenu();
+      ContextMenu menu = new();
       //menu.Background = Brushes.Beige;
-      MenuItem fitToViewMenuItem = new MenuItem
+      MenuItem fitToViewMenuItem = new()
       {
         Header = Strings.UIResources.ContextMenuFitToView,
         ToolTip = Strings.UIResources.ContextMenuFitToViewTooltip,
@@ -74,7 +74,7 @@ namespace Crystal.Plot2D
         CommandTarget = target
       };
 
-      MenuItem savePictureMenuItem = new MenuItem
+      MenuItem savePictureMenuItem = new()
       {
         Header = Strings.UIResources.ContextMenuSaveScreenshot,
         ToolTip = Strings.UIResources.ContextMenuSaveScreenshotTooltip,
@@ -83,7 +83,7 @@ namespace Crystal.Plot2D
         CommandTarget = target
       };
 
-      MenuItem copyPictureMenuItem = new MenuItem
+      MenuItem copyPictureMenuItem = new()
       {
         Header = Strings.UIResources.ContextMenuCopyScreenshot,
         ToolTip = Strings.UIResources.ContextMenuCopyScreenshotTooltip,
@@ -92,7 +92,7 @@ namespace Crystal.Plot2D
         CommandTarget = target
       };
 
-      MenuItem quickHelpMenuItem = new MenuItem
+      MenuItem quickHelpMenuItem = new()
       {
         Header = Strings.UIResources.ContextMenuQuickHelp,
         ToolTip = Strings.UIResources.ContextMenuQuickHelpTooltip,
@@ -101,7 +101,7 @@ namespace Crystal.Plot2D
         CommandTarget = target
       };
 
-      MenuItem reportFeedback = new MenuItem
+      MenuItem reportFeedback = new()
       {
         Header = Strings.UIResources.ContextMenuReportFeedback,
         ToolTip = Strings.UIResources.ContextMenuReportFeedbackTooltip,
@@ -132,7 +132,7 @@ namespace Crystal.Plot2D
       }
     }
 
-    private readonly ObservableCollection<object> staticMenuItems = new ObservableCollection<object>();
+    private readonly ObservableCollection<object> staticMenuItems = new();
 
     // hidden because default menu items' command target is plotter, and serializing this will
     // cause circular reference
@@ -211,7 +211,7 @@ namespace Crystal.Plot2D
     }
 
     private bool contextMenuOpen = false;
-    private readonly ObservableCollection<object> dynamicMenuItems = new ObservableCollection<object>();
+    private readonly ObservableCollection<object> dynamicMenuItems = new();
     private void plotter_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
     {
       Point position = e.GetPosition(plotter);
@@ -227,8 +227,7 @@ namespace Crystal.Plot2D
         dynamicMenuItems.Clear();
         var dynamicItems = (hitResults.Where(r =>
         {
-          IPlotterContextMenuSource menuSource = r as IPlotterContextMenuSource;
-          if (menuSource != null)
+          if (r is IPlotterContextMenuSource menuSource)
           {
             menuSource.BuildMenu();
           }
@@ -239,8 +238,7 @@ namespace Crystal.Plot2D
         {
           var menuItems = GetPlotterContextMenu(r);
 
-          FrameworkElement chart = r as FrameworkElement;
-          if (chart != null)
+          if (r is FrameworkElement chart)
           {
             foreach (var menuItem in menuItems.OfType<MenuItem>())
             {
@@ -314,7 +312,7 @@ namespace Crystal.Plot2D
 
     #endregion
 
-    private readonly List<DependencyObject> hitResults = new List<DependencyObject>();
+    private readonly List<DependencyObject> hitResults = new();
     private HitTestResultBehavior CollectAllVisuals_Callback(HitTestResult result)
     {
       if (result == null || result.VisualHit == null)

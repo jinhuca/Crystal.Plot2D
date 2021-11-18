@@ -54,7 +54,7 @@ namespace Crystal.Plot2D.Charts
 
     #region Private methods
 
-    private static readonly Dictionary<int, Dictionary<int, Edge>> dictChooser = new Dictionary<int, Dictionary<int, Edge>>();
+    private static readonly Dictionary<int, Dictionary<int, Edge>> dictChooser = new();
     private static void SetCellDictionaries()
     {
       var bottomDict = new Dictionary<int, Edge>();
@@ -447,7 +447,7 @@ namespace Crystal.Plot2D.Charts
           values[x, y + 1],
           missingValue));
 
-      IrregularCell rect = new IrregularCell(
+      IrregularCell rect = new(
         grid[x, y],
         grid[x + 1, y],
         grid[x + 1, y + 1],
@@ -512,7 +512,7 @@ namespace Crystal.Plot2D.Charts
           values[x, y + 1],
           missingValue));
 
-      IrregularCell rect = new IrregularCell(
+      IrregularCell rect = new(
         grid[x, y],
         grid[x + 1, y],
         grid[x + 1, y + 1],

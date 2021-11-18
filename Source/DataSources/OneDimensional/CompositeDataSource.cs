@@ -40,7 +40,7 @@ namespace Crystal.Plot2D.DataSources
 
     #region 
 
-    private readonly List<IPointDataSource> dataParts = new List<IPointDataSource>();
+    private readonly List<IPointDataSource> dataParts = new();
 
     public IEnumerable<IPointDataSource> DataParts => dataParts;
 

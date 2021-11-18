@@ -39,8 +39,7 @@ namespace Crystal.Plot2D.Charts
 
     private void AttachCollection()
     {
-      INotifyCollectionChanged observableCollection = collection as INotifyCollectionChanged;
-      if (observableCollection != null)
+      if (collection is INotifyCollectionChanged observableCollection)
       {
         observableCollection.CollectionChanged += OnCollectionChanged;
       }
@@ -53,8 +52,7 @@ namespace Crystal.Plot2D.Charts
 
     private void DetachCollection()
     {
-      INotifyCollectionChanged observableCollection = collection as INotifyCollectionChanged;
-      if (observableCollection != null)
+      if (collection is INotifyCollectionChanged observableCollection)
       {
         observableCollection.CollectionChanged -= OnCollectionChanged;
       }

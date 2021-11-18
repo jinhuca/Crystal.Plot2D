@@ -8,7 +8,7 @@ namespace Crystal.Plot2D.Charts
     public static LegendItem BuildDefaultLegendItem(IPlotterElement chart)
     {
       DependencyObject dependencyChart = (DependencyObject)chart;
-      LegendItem result = new LegendItem();
+      LegendItem result = new();
       SetCommonBindings(result, chart);
       return result;
     }

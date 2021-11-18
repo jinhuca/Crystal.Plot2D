@@ -45,7 +45,7 @@ namespace Crystal.Plot2D.Charts
       UpdateUIRepresentation();
     }
 
-    private readonly LineGeometry lineGeometry = new LineGeometry();
+    private readonly LineGeometry lineGeometry = new();
     protected LineGeometry LineGeometry
     {
       get { return lineGeometry; }
