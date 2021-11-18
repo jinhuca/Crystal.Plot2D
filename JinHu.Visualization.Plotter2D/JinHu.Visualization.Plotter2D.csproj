@@ -30,7 +30,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <RunCodeAnalysis>false</RunCodeAnalysis>
     <OutputPath>..\Output\</OutputPath>
-    <BaseIntermediateOutputPath>..\Output\Obj</BaseIntermediateOutputPath>
+    <BaseIntermediateOutputPath></BaseIntermediateOutputPath>
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
     <LangVersion>latest</LangVersion>
   </PropertyGroup>
