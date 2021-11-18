@@ -1,14 +1,12 @@
 ﻿using JinHu.Visualization.Plotter2D;
 using JinHu.Visualization.Plotter2D.DataSources;
 using System;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Media;
 
 namespace Dotnet5Demo
 {
-  /// <summary>
-  /// Interaction logic for MainWindow.xaml
-  /// </summary>
   public partial class MainWindow : Window
   {
     public MainWindow()
@@ -16,38 +14,31 @@ namespace Dotnet5Demo
       InitializeComponent();
     }
 
-    private void Window_Loaded(object sender, RoutedEventArgs e)
-    {
-      // (1) Prepare data in arrays
-      const int N = 120;
-      double[] xA = new double[N];
-      double[] yA = new double[N];
+    private void Window_Loaded(object sender, RoutedEventArgs e) => LoadDataSource();
 
-      for (int i = 0; i < N; i++)
+    private async void LoadDataSource()
+    {
+      var ds = await Task.Run(() => CreateDataSource());
+      //await Task.Delay(3000);
+      plotter.AddLineGraph(pointSource: ds, penForDrawingLine: new Pen(Brushes.Red, 1), descriptionForPen: new PenDescription("sin"));
+    }
+
+    private CompositeDataSource CreateDataSource()
+    {
+      const int N = 100;
+      double[] x = new double[N];
+      double[] y = new double[N];
+      for (var i = 0; i < N; i++)
       {
-        xA[i] = i;
-        yA[i] = 3*Math.Sin(i);
+        x[i] = i * 0.1;
+        y[i] = Math.Sin(x[i]);
       }
 
-      var xDataSource = new EnumerableDataSource<double>(xA);
-      xDataSource.XMapping = x => x;
-      //xDataSource.SetXMapping(x => x);
+      var xDataSource = new EnumerableDataSource<double>(x) { XMapping = xx => xx };
+      var yDataSource = new EnumerableDataSource<double>(y) { YMapping = yy => yy };
+      var composedData = new CompositeDataSource(xDataSource, yDataSource);
 
-      var yDataSource = new EnumerableDataSource<double>(yA);
-      yDataSource.YMapping = y => y;
-      //yDataSource.SetYMapping(y => y);
-
-      // (2) Composite data sources
-      CompositeDataSource compositeDataSource1 = new CompositeDataSource(xDataSource, yDataSource);
-
-      // (3) Create LineGraph
-      plotter.AddLineGraph(
-        compositeDataSource1,
-
-
-        new Pen(Brushes.Red, 1),
-        //new CirclePointMarker { Diameter = 2, FillBrush = Brushes.Red },
-        new PenDescription("Sin"));
+      return composedData;
     }
   }
 }
