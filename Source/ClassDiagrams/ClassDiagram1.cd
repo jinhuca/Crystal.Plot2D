@@ -1,0 +1,116 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="Crystal.Plot2D.Common.NotifiableCollection&lt;T&gt;" Collapsed="true">
+    <Position X="7.75" Y="9.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAJEIAAABBAAAQAAAAAAQAAABBIEAAAAAAAAABA=</HashCode>
+      <FileName>Common\NotifiableCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Charts.FilterCollection" Collapsed="true">
+    <Position X="4" Y="11" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAQAAAAAAABAABAIAAAAAAAAAAAA=</HashCode>
+      <FileName>Charts\FilterCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Common.D3UIElementCollection" Collapsed="true">
+    <Position X="6.75" Y="11" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Common\NotifyingPanels\NotifyingUIElementCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Common.PlotterChildrenCollection" Collapsed="true">
+    <Position X="9.5" Y="11" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgIAAAAACIAEAAABAAAAACAQQBUABQAEAAAAAAAQAAI=</HashCode>
+      <FileName>Common\PlotterChildrenCollection.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Crystal.Plot2D.ConstraintCollection" Collapsed="true">
+    <Position X="12.25" Y="11" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAEAAAAAQAAAAAAAAAABAIAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\ConstraintCollection.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Graphs.LineGraph" Collapsed="true">
+    <Position X="9.75" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABEIIQIAAAASAIAAIAAAABAAAEQQAAAAAAAADgAAQA=</HashCode>
+      <FileName>Graphs\LineGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Graphs.PointsGraphBase" Collapsed="true">
+    <Position X="13.25" Y="3" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier>
+      <HashCode>AAEAYCAAAAAARkAAAJBAQBQMAAAAgASAAmAgAAAAAgA=</HashCode>
+      <FileName>Graphs\PointGraphBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Crystal.Plot2D.ViewportElement2D" Collapsed="true">
+    <Position X="9" Y="1.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCCAwGAAAmgIIMIAQgCAAAgRAAKgCBAAIAJBoEhQg=</HashCode>
+      <FileName>ViewportElement2D.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.1" />
+  </Class>
+  <Class Name="Crystal.Plot2D.BitmapBasedGraph" Collapsed="true">
+    <Position X="7.5" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIQAAQIYCABCAIAEEAAAREAABAIAQAQAUAAAAAECEA=</HashCode>
+      <FileName>Charts\BitmapBasedGraph.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Crystal.Plot2D.NavigationBase" Collapsed="true">
+    <Position X="3" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAQAAAAAAAAAAAAAAAQAAAAAAAAAA=</HashCode>
+      <FileName>Navigation\NavigationBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Graphs.ElementMarkerPointsGraph" Collapsed="true">
+    <Position X="12.75" Y="4.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAwIAAAIIAAQAAAEAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graphs\MarkerElementPointGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Graphs.MarkerPointsGraph" Collapsed="true">
+    <Position X="16.5" Y="4.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAIAAAAAAQAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graphs\MarkerPointsGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.MouseNavigation" Collapsed="true">
+    <Position X="0.5" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AJBAAAABAcIAgAC0IAAJAAAAABAgCEAAqCIFICACBig=</HashCode>
+      <FileName>Navigation\MouseNavigation.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.MouseNavigationBase" Collapsed="true">
+    <Position X="2.75" Y="4.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAkACAAAAAAAAAABAACAgAIAAEAAACAAA=</HashCode>
+      <FileName>Navigation\MouseNavigationBase.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.TouchpadScroll" Collapsed="true">
+    <Position X="5.25" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAQgABAAAAAAAAAAAAAAABAAAAAAA=</HashCode>
+      <FileName>Navigation\TouchPadScroll.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

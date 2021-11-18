@@ -1,5 +1,5 @@
-﻿using JinHu.Visualization.Plotter2D;
-using JinHu.Visualization.Plotter2D.DataSources;
+﻿using Crystal.Plot2D;
+using Crystal.Plot2D.DataSources;
 using System;
 using System.Threading.Tasks;
 using System.Windows;
