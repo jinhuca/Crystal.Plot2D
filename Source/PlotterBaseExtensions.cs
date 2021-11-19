@@ -27,24 +27,23 @@ namespace Crystal.Plot2D
     /// </summary>
     /// <param name="plotter">Host Plotter</param>
     /// <param name="pointSource">Data Source</param>
-    /// <param name="penForDrawingLine">Optional OutlinePen</param>
+    /// <param name="linePen">Optional OutlinePen</param>
     /// <param name="descriptionForPen">Optional descriptionForPen for OutlinePen</param>
     /// <returns>LineGraph</returns>
-    public static LineGraph AddLineGraph(this PlotterBase plotter, IPointDataSource pointSource,
-      Pen penForDrawingLine = default, PenDescription descriptionForPen = default)
+    public static LineGraph AddLineGraph(this PlotterBase plotter, IPointDataSource pointSource, Pen linePen, PenDescription descriptionForPen)
     {
       if (pointSource == null)
       {
         throw new ArgumentNullException(nameof(pointSource));
       }
 
-      penForDrawingLine ??= new Pen { Brush = new SolidColorBrush(Colors.Red), Thickness = 1 };
+      linePen ??= new Pen { Brush = new SolidColorBrush(Colors.Red), Thickness = 1 };
       descriptionForPen ??= new PenDescription(nameof(pointSource));
 
       var lineGraph = new LineGraph
       {
         DataSource = pointSource,
-        LinePen = penForDrawingLine,
+        LinePen = linePen,
         Description = descriptionForPen
       };
       Legend.SetDescription(lineGraph, descriptionForPen.Brief);

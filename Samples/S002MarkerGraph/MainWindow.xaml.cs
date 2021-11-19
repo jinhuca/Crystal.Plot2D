@@ -17,85 +17,64 @@ namespace S002MarkerGraph
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      // Prepare data in arrays
-      const int N = 120;
-      double[] x = new double[N];
-      double[] cs = new double[N];
-      double[] sn = new double[N];
+      var table = new DataTable();
+      table.Columns.Add("Sine", typeof(double));
+      table.Columns.Add("Time", typeof(DateTime));
+      table.Columns.Add("Index", typeof(int));
+      table.Columns.Add("Sqrt", typeof(double));
+      table.Columns.Add("Cosine", typeof(double));
 
-      for (int i = 0; i < N; i++)
+      for (int i = 0; i < 1000; i++)
       {
-        x[i] = i * .1;
-        cs[i] = Math.Sin(x[i]);
-        sn[i] = Math.Cos(x[i]);
+        table.Rows.Add(Math.Sin(i / 100.0), DateTime.Now + new TimeSpan(0, 0, i), i,
+          Math.Sqrt(i / 100.0),
+          Math.Cos(i / 100.0));
       }
 
-      // Add data sources:
-      // 3 partial data sources, containing each of arrays
-      var snDataSource = new EnumerableDataSource<double>(sn)
+      var data1 = new TableDataSource(table)
       {
-        //snDataSource.SetYMapping(y => y);
-        YMapping = y => y
+        XMapping = row => ((DateTime)row["Time"] - (DateTime)table.Rows[0][1]).TotalSeconds,
+        YMapping = row => 10 * (double)row["Sine"]
       };
 
-      var xDataSource = new EnumerableDataSource<double>(x)
-      {
-        XMapping = lx => lx
-      };
-      //xDataSource.SetXMapping(lx => lx);
+      // Map HSB color computes from "Index" column to dependency property Brush of marker
+      data1.AddMapping(ShapePointMarker.FillBrushProperty, row => new SolidColorBrush(new HsbColor(15 * (int)row["Index"], 1, 1).ToArgbColor()));
 
-      var csDataSource = new EnumerableDataSource<double>(cs)
-      {
-        YMapping = y => y
-      };
-      //csDataSource.SetYMapping(y => y);
+      // Map "Sqrt" based values to marker size
+      data1.AddMapping(ShapePointMarker.DiameterProperty, row => 3 * (double)row["Sqrt"]);
 
-      var csqDataSource = new EnumerableDataSource<double>(cs)
+      // Plot first graph
+      plotter.AddMarkerPointsGraph(data1);
+
+      // Plot second graph
+      var data2 = new TableDataSource(table)
       {
-        //csqDataSource.SetYMapping(y => y * y);
-        YMapping = y => y * y
+        XMapping = row => ((DateTime)row["Time"] - (DateTime)table.Rows[0][1]).TotalSeconds,
+        YMapping = row => 10 * (double)row["Cosine"]
       };
 
-      // 2 composite data sources and 2 charts respectively:
-      //  creating composite data source
-      CompositeDataSource compositeDataSource1 = new(xDataSource, csDataSource);
-      // adding graph to plotter
+      data2.AddMapping(ShapePointMarker.FillBrushProperty, row => new SolidColorBrush(new HsbColor(15 * (int)row["Index"], 1, 1).ToArgbColor()));
+      data2.AddMapping(ShapePointMarker.DiameterProperty, row => 3 * (double)row["Sqrt"]);
 
-      plotter.AddLineGraph(
-        compositeDataSource1,
-        new Pen(Brushes.DarkGoldenrod, 1),
-        new PenDescription("Sin"));
-
-      plotter.AddCursor(new CursorCoordinateGraph() { LineStroke = Brushes.Red, LineStrokeThickness = 0.5 });
-      plotter.MainCanvas.Background = Brushes.Transparent;
-      plotter.MainCanvas.Opacity = 1;
-
-      // creating composite data source for cs values
-      CompositeDataSource compositeDataSource2 = new(xDataSource, csDataSource);
-
-      // Adding second graph to plotter
-      // plotter.AddLineGraph(compositeDataSource2, new OutlinePen(Brushes.Blue, 3), new PenDescription("Cos"));
-
-      // creating composite data source for cs^2 values
-      CompositeDataSource compositeDataSource3 = new(xDataSource, csqDataSource);
-
-      // Adding thirs graph to plotter
-      Pen dashed = new(Brushes.Magenta, 6)
+      var circleMarker = new CirclePointMarker()
       {
-        DashStyle = DashStyles.Dot
+        OutlinePen = new Pen { Brush = new SolidColorBrush(Colors.Black) }
       };
-      //plotter.AddLineGraph(compositeDataSource3, dashed, new PenDescription("Cos^2"));
 
-      var marker = new CirclePointMarker()
+      var triangleMarker = new TrianglePointMarker()
       {
-        FillBrush = new SolidColorBrush(Colors.Red),
-        OutlinePen = new Pen { Brush = new SolidColorBrush(Colors.Blue) },
-        Diameter = 10
+        OutlinePen = new Pen { Brush = new SolidColorBrush(Colors.Black) }
       };
-      plotter.AddMarkerPointsGraph(compositeDataSource1, marker, new PenDescription("Cos^2"));
+      triangleMarker.OutlinePen.Freeze();
 
-      // Force everything plotted to be visible
-      plotter.FitToView();
+      var rectangleMarker = new RectanglePointMarker()
+      {
+        OutlinePen = new Pen { Brush = new SolidColorBrush(Colors.Black) }
+      };
+
+      plotter.AddMarkerPointsGraph(pointSource: data2, triangleMarker);
+
+      plotter.AddCursor(new CursorCoordinateGraph());
     }
   }
 }
