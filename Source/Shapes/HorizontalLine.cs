@@ -1,6 +1,5 @@
 ﻿using Crystal.Plot2D.Charts;
 using System.Windows;
-using System.Windows.Media;
 
 namespace Crystal.Plot2D;
 
@@ -28,9 +27,8 @@ public sealed class HorizontalLine : SimpleLine
   protected override void UpdateUIRepresentationCore()
   {
     var transform = Plotter.Viewport.Transform;
-
-    Point p1 = new Point(Plotter.Viewport.Visible.XMin, Value).DataToScreen(transform);
-    Point p2 = new Point(Plotter.Viewport.Visible.XMax, Value).DataToScreen(transform);
+    var p1 = new Point(Plotter.Viewport.Visible.XMin, Value).DataToScreen(transform);
+    var p2 = new Point(Plotter.Viewport.Visible.XMax, Value).DataToScreen(transform);
 
     LineGeometry.StartPoint = p1;
     LineGeometry.EndPoint = p2;

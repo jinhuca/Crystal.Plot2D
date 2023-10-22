@@ -47,6 +47,8 @@ namespace S000Animation
       //animatedDataSource.SetYMapping(y => y);
       animatedDataSource.YMapping = y => y;
 
+      var lineGraph_ = new LineGraph();
+      
       plotter.AddLineGraph(new CompositeDataSource(xSrc, animatedDataSource), new Pen(Brushes.Magenta, 3), new PenDescription("Sin(x + phase)"));
 
       timer.Interval = TimeSpan.FromMilliseconds(10);

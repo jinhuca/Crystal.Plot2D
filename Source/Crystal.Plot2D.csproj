@@ -130,4 +130,10 @@
       <PackagePath>\</PackagePath>
     </Resource>
   </ItemGroup>
+  <ItemGroup>
+    <Page Update="Shapes\RangeHighlightStyle.xaml">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
+    </Page>
+  </ItemGroup>
 </Project>

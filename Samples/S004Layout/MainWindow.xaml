@@ -1,0 +1,28 @@
+﻿<Window x:Class="S004Layout.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:S004Layout"
+        xmlns:d3="http://schemas.crystal.com/Plot2D"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
+  <Grid>
+    <d3:Plotter x:Name="plotter">
+      <d3:Header Height="20" Content="Header Panel"/>
+      <d3:HorizontalAxis Placement="Top"  Background="LightCyan"/>
+      <d3:VerticalAxis Placement="Right" Foreground="Red"/>
+      <d3:HorizontalAxisTitle Placement="Bottom" Foreground="Red" Content="BottomPanel - HorizontalAxisTitle"/>
+      <d3:HorizontalAxisTitle Placement="Top" Content="TopPanel - HorizontalAxisTitle"/>
+      <d3:VerticalAxisTitle Placement="Left" Content="LeftPanel - VerticalAxisTitle"/>
+      <d3:VerticalAxisTitle Placement="Right" Content="RightPanel - VerticalAxisTitle"/>
+      <d3:Footer Height="40" Content="FooterPanel - Footer"/>
+      <d3:Legend />
+      <d3:VerticalAxis Placement="Right"></d3:VerticalAxis>
+      <d3:VerticalAxis></d3:VerticalAxis>
+      <!--<d3:CursorCoordinateGraph ></d3:CursorCoordinateGraph>-->
+      <d3:AxisNavigation Placement="Bottom" ></d3:AxisNavigation>
+      <d3:VerticalRange Value1="0.1" Value2="0.16" Fill="LightBlue"/>
+    </d3:Plotter>
+  </Grid>
+</Window>
