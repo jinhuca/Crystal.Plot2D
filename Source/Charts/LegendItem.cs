@@ -1,44 +1,43 @@
 ﻿using System.Windows.Controls;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+/// <summary>
+///   <see cref="LegendItem"/> is a base class for item in legend, that represents some chart. 
+/// </summary>
+public abstract class LegendItem : ContentControl
 {
   /// <summary>
-  ///   <see cref="LegendItem"/> is a base class for item in legend, that represents some chart. 
+  ///   Initializes a new instance of the <see cref="LegendItem"/> class.
   /// </summary>
-  public abstract class LegendItem : ContentControl
+  protected LegendItem() { }
+
+  /// <summary>
+  ///   Initializes a new instance of the <see cref="LegendItem"/> class.
+  /// </summary>
+  /// <param name="description">
+  ///   The description.
+  /// </param>
+  protected LegendItem(Description description)
   {
-    /// <summary>
-    ///   Initializes a new instance of the <see cref="LegendItem"/> class.
-    /// </summary>
-    protected LegendItem() { }
+    Description = description;
+  }
 
-    /// <summary>
-    ///   Initializes a new instance of the <see cref="LegendItem"/> class.
-    /// </summary>
-    /// <param name="description">
-    ///   The description.
-    /// </param>
-    protected LegendItem(Description description)
+  private Description description;
+
+  /// <summary>
+  ///   Gets or sets the description.
+  /// </summary>
+  /// <value>
+  ///   The description.
+  /// </value>
+  public Description Description
+  {
+    get { return description; }
+    set
     {
-      Description = description;
-    }
-
-    private Description description;
-
-    /// <summary>
-    ///   Gets or sets the description.
-    /// </summary>
-    /// <value>
-    ///   The description.
-    /// </value>
-    public Description Description
-    {
-      get { return description; }
-      set
-      {
-        description = value;
-        Content = description;
-      }
+      description = value;
+      Content = description;
     }
   }
 }

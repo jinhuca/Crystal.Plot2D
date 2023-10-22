@@ -1,29 +1,28 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+/// <summary>
+/// Represents a simple base class for a palette. Contains an abstract merhod for creation of color and method to raise changed event.
+/// </summary>
+public abstract class PaletteBase : IPalette
 {
+  #region IPalette Members
+
   /// <summary>
-  /// Represents a simple base class for a palette. Contains an abstract merhod for creation of color and method to raise changed event.
+  /// Gets the color by interpolation coefficient.
   /// </summary>
-  public abstract class PaletteBase : IPalette
-  {
-    #region IPalette Members
+  /// <param name="t">Interpolation coefficient, should belong to [0..1].</param>
+  /// <returns>Color.</returns>
+  public abstract Color GetColor(double t);
 
-    /// <summary>
-    /// Gets the color by interpolation coefficient.
-    /// </summary>
-    /// <param name="t">Interpolation coefficient, should belong to [0..1].</param>
-    /// <returns>Color.</returns>
-    public abstract Color GetColor(double t);
+  protected void RaiseChanged() => Changed.Raise(this);
 
-    protected void RaiseChanged() => Changed.Raise(this);
+  /// <summary>
+  /// Occurs when palette changes.
+  /// </summary>
+  public event EventHandler Changed;
 
-    /// <summary>
-    /// Occurs when palette changes.
-    /// </summary>
-    public event EventHandler Changed;
-
-    #endregion
-  }
+  #endregion
 }

@@ -2,22 +2,21 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public abstract class PointsFilterBase : IPointsFilter
 {
-  public abstract class PointsFilterBase : IPointsFilter
+  #region IPointsFilter Members
+
+  public abstract List<Point> Filter(List<Point> points);
+
+  public virtual void SetScreenRect(Rect screenRect) { }
+
+  protected void RaiseChanged()
   {
-    #region IPointsFilter Members
-
-    public abstract List<Point> Filter(List<Point> points);
-
-    public virtual void SetScreenRect(Rect screenRect) { }
-
-    protected void RaiseChanged()
-    {
-      Changed.Raise(this);
-    }
-    public event EventHandler Changed;
-
-    #endregion
+    Changed.Raise(this);
   }
+  public event EventHandler Changed;
+
+  #endregion
 }

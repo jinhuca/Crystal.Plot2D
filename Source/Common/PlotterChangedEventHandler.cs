@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D.Common
-{
-  public class PlotterChangedEventArgs : RoutedEventArgs
-  {
-    public PlotterChangedEventArgs(PlotterBase prevPlotter, PlotterBase currPlotter, RoutedEvent routedEvent) : base(routedEvent)
-    {
-      if (prevPlotter == null && currPlotter == null)
-      {
-        throw new ArgumentException("Both Plotters cannot be null.");
-      }
+namespace Crystal.Plot2D.Common;
 
-      PreviousPlotter = prevPlotter;
-      CurrentPlotter = currPlotter;
+public class PlotterChangedEventArgs : RoutedEventArgs
+{
+  public PlotterChangedEventArgs(PlotterBase prevPlotter, PlotterBase currPlotter, RoutedEvent routedEvent) : base(routedEvent)
+  {
+    if (prevPlotter == null && currPlotter == null)
+    {
+      throw new ArgumentException("Both Plotters cannot be null.");
     }
-    public PlotterBase PreviousPlotter { get; }
-    public PlotterBase CurrentPlotter { get; }
+
+    PreviousPlotter = prevPlotter;
+    CurrentPlotter = currPlotter;
   }
+  public PlotterBase PreviousPlotter { get; }
+  public PlotterBase CurrentPlotter { get; }
 }

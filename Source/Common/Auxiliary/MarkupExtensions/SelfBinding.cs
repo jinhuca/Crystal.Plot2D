@@ -1,18 +1,17 @@
 ﻿using System.Windows;
 using System.Windows.Data;
 
-namespace Crystal.Plot2D
-{
-  public class SelfBinding : Binding
-  {
-    public SelfBinding()
-    {
-      RelativeSource = new RelativeSource { Mode = RelativeSourceMode.Self };
-    }
+namespace Crystal.Plot2D;
 
-    public SelfBinding(string propertyPath) : this()
-    {
-      Path = new PropertyPath(propertyPath);
-    }
+public class SelfBinding : Binding
+{
+  public SelfBinding()
+  {
+    RelativeSource = new RelativeSource { Mode = RelativeSourceMode.Self };
+  }
+
+  public SelfBinding(string propertyPath) : this()
+  {
+    Path = new PropertyPath(propertyPath);
   }
 }

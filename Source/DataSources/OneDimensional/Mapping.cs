@@ -1,24 +1,23 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D.DataSources
+namespace Crystal.Plot2D.DataSources;
+
+/// <summary>
+/// Mapping class holds information about mapping of TSource type to some DependencyProperty.
+/// </summary>
+/// <typeparam name="TSource">
+/// Mapping source type.
+/// </typeparam>
+internal sealed class Mapping<TSource>
 {
   /// <summary>
-  /// Mapping class holds information about mapping of TSource type to some DependencyProperty.
+  /// Property that will be set.
   /// </summary>
-  /// <typeparam name="TSource">
-  /// Mapping source type.
-  /// </typeparam>
-  internal sealed class Mapping<TSource>
-  {
-    /// <summary>
-    /// Property that will be set.
-    /// </summary>
-    internal DependencyProperty Property { get; set; }
+  internal DependencyProperty Property { get; set; }
 
-    /// <summary>
-    /// Function that computes value for property from TSource type.
-    /// </summary>
-    internal Func<TSource, object> F { get; set; }
-  }
+  /// <summary>
+  /// Function that computes value for property from TSource type.
+  /// </summary>
+  internal Func<TSource, object> F { get; set; }
 }

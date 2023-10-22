@@ -1,9 +1,8 @@
-﻿namespace Crystal.Plot2D
+﻿namespace Crystal.Plot2D;
+
+public enum PlotterLoadMode
 {
-  public enum PlotterLoadMode
-  {
-    Normal,
-    OnlyViewport,
-    Empty
-  }
+  Normal,
+  OnlyViewport,
+  Empty
 }

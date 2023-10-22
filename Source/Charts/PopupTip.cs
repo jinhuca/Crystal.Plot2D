@@ -2,57 +2,56 @@
 using System.Threading;
 using System.Windows.Controls.Primitives;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public class PopupTip : Popup
 {
-  public class PopupTip : Popup
+  private readonly TimeSpan showDurationInerval = new(0, 0, 10);
+  private Timer timer;
+
+  public void ShowDelayed(TimeSpan delay)
   {
-    private readonly TimeSpan showDurationInerval = new(0, 0, 10);
-    private Timer timer;
-
-    public void ShowDelayed(TimeSpan delay)
+    if (timer != null)
     {
-      if (timer != null)
-      {
-        timer.Change((int)delay.TotalMilliseconds, Timeout.Infinite);
-      }
-      else
-      {
-        timer = new Timer(OnTimerFinished, null, (int)delay.TotalMilliseconds, Timeout.Infinite);
-      }
+      timer.Change((int)delay.TotalMilliseconds, Timeout.Infinite);
     }
-
-    public void HideDelayed(TimeSpan delay)
+    else
     {
-      if (timer != null)
-      {
-        timer.Change((int)delay.TotalMilliseconds, Timeout.Infinite);
-      }
-      else
-      {
-        timer = new Timer(OnTimerFinished, null, (int)delay.TotalMilliseconds, Timeout.Infinite);
-      }
+      timer = new Timer(OnTimerFinished, null, (int)delay.TotalMilliseconds, Timeout.Infinite);
     }
+  }
 
-    public void Hide()
+  public void HideDelayed(TimeSpan delay)
+  {
+    if (timer != null)
     {
-      if (timer != null)
-      {
-        timer.Change(Timeout.Infinite, Timeout.Infinite);
-      }
-      IsOpen = false;
+      timer.Change((int)delay.TotalMilliseconds, Timeout.Infinite);
     }
+    else
+    {
+      timer = new Timer(OnTimerFinished, null, (int)delay.TotalMilliseconds, Timeout.Infinite);
+    }
+  }
 
-    private void OnTimerFinished(object state)
+  public void Hide()
+  {
+    if (timer != null)
     {
-      Dispatcher.BeginInvoke(new Action(() =>
-      {
-        bool show = !IsOpen;
-        IsOpen = show;
-        if (show)
-        {
-          HideDelayed(showDurationInerval);
-        }
-      }));
+      timer.Change(Timeout.Infinite, Timeout.Infinite);
     }
+    IsOpen = false;
+  }
+
+  private void OnTimerFinished(object state)
+  {
+    Dispatcher.BeginInvoke(new Action(() =>
+    {
+      bool show = !IsOpen;
+      IsOpen = show;
+      if (show)
+      {
+        HideDelayed(showDurationInerval);
+      }
+    }));
   }
 }

@@ -1,11 +1,10 @@
 ﻿using Crystal.Plot2D.DataSources;
 using System;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public interface IOneDimensionalChart
 {
-  public interface IOneDimensionalChart
-  {
-    IPointDataSource DataSource { get; set; }
-    event EventHandler DataChanged;
-  }
+  IPointDataSource DataSource { get; set; }
+  event EventHandler DataChanged;
 }

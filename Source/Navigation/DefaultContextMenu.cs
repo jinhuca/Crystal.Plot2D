@@ -12,329 +12,328 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+/// <summary>
+///   Is responsible for displaying and populating default context menu of Plotter
+/// </summary>
+public class DefaultContextMenu : IPlotterElement
 {
-  /// <summary>
-  ///   Is responsible for displaying and populating default context menu of Plotter
-  /// </summary>
-  public class DefaultContextMenu : IPlotterElement
+  private static readonly BitmapImage helpIcon;
+  private static readonly BitmapImage copyScreenshotIcon;
+  private static readonly BitmapImage saveScreenshotIcon;
+  private static readonly BitmapImage fitToViewIcon;
+
+  private static readonly StreamGeometry helpIconGeometry;
+
+  static DefaultContextMenu()
   {
-    private static readonly BitmapImage helpIcon;
-    private static readonly BitmapImage copyScreenshotIcon;
-    private static readonly BitmapImage saveScreenshotIcon;
-    private static readonly BitmapImage fitToViewIcon;
+    helpIcon = LoadIcon("HelpIcon");
+    helpIconGeometry = new StreamGeometry();
+    saveScreenshotIcon = LoadIcon("SaveIcon");
+    copyScreenshotIcon = LoadIcon("CopyScreenshotIcon");
+    fitToViewIcon = LoadIcon("FitToViewIcon");
+  }
 
-    private static readonly StreamGeometry helpIconGeometry;
+  private static BitmapImage LoadIcon(string name)
+  {
+    Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
 
-    static DefaultContextMenu()
+    BitmapImage icon = new();
+    icon.BeginInit();
+    icon.StreamSource = currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources." + name + ".png");
+    icon.EndInit();
+    icon.Freeze();
+
+    return icon;
+  }
+
+  private static StreamGeometry LoadIconGeometry(string geometryKey)
+  {
+    Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
+    StreamGeometry iconGeometry = new();
+
+    return iconGeometry;
+  }
+
+  /// <summary>
+  /// Initializes a new instance of the <see cref="DefaultContextMenu"/> class.
+  /// </summary>
+  public DefaultContextMenu() { }
+
+  protected ContextMenu PopulateContextMenu(PlotterBase target)
+  {
+    ContextMenu menu = new();
+    //menu.Background = Brushes.Beige;
+    MenuItem fitToViewMenuItem = new()
     {
-      helpIcon = LoadIcon("HelpIcon");
-      helpIconGeometry = new StreamGeometry();
-      saveScreenshotIcon = LoadIcon("SaveIcon");
-      copyScreenshotIcon = LoadIcon("CopyScreenshotIcon");
-      fitToViewIcon = LoadIcon("FitToViewIcon");
+      Header = Strings.UIResources.ContextMenuFitToView,
+      ToolTip = Strings.UIResources.ContextMenuFitToViewTooltip,
+      Icon = new Image { Source = fitToViewIcon },
+      Command = ChartCommands.FitToView,
+      CommandTarget = target
+    };
+
+    MenuItem savePictureMenuItem = new()
+    {
+      Header = Strings.UIResources.ContextMenuSaveScreenshot,
+      ToolTip = Strings.UIResources.ContextMenuSaveScreenshotTooltip,
+      Icon = new Image { Source = saveScreenshotIcon },
+      Command = ChartCommands.SaveScreenshot,
+      CommandTarget = target
+    };
+
+    MenuItem copyPictureMenuItem = new()
+    {
+      Header = Strings.UIResources.ContextMenuCopyScreenshot,
+      ToolTip = Strings.UIResources.ContextMenuCopyScreenshotTooltip,
+      Icon = new Image { Source = copyScreenshotIcon },
+      Command = ChartCommands.CopyScreenshot,
+      CommandTarget = target
+    };
+
+    MenuItem quickHelpMenuItem = new()
+    {
+      Header = Strings.UIResources.ContextMenuQuickHelp,
+      ToolTip = Strings.UIResources.ContextMenuQuickHelpTooltip,
+      Command = ChartCommands.ShowHelp,
+      Icon = new Image { Source = helpIcon },
+      CommandTarget = target
+    };
+
+    MenuItem reportFeedback = new()
+    {
+      Header = Strings.UIResources.ContextMenuReportFeedback,
+      ToolTip = Strings.UIResources.ContextMenuReportFeedbackTooltip,
+      Icon = (Image)plotter.Resources["SendFeedbackIcon"]
+    };
+    reportFeedback.Click += reportFeedback_Click;
+
+    staticMenuItems.Add(fitToViewMenuItem);
+    staticMenuItems.Add(copyPictureMenuItem);
+    staticMenuItems.Add(savePictureMenuItem);
+    staticMenuItems.Add(quickHelpMenuItem);
+    staticMenuItems.Add(reportFeedback);
+
+    menu.ItemsSource = staticMenuItems;
+
+    return menu;
+  }
+
+  private void reportFeedback_Click(object sender, RoutedEventArgs e)
+  {
+    try
+    {
+      using (Process.Start("mailto:" + Strings.UIResources.SendFeedbackEmail + "?Subject=[D3]%20" + typeof(DefaultContextMenu).Assembly.GetName().Version)) { }
     }
-
-    private static BitmapImage LoadIcon(string name)
+    catch (Exception)
     {
-      Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
-
-      BitmapImage icon = new();
-      icon.BeginInit();
-      icon.StreamSource = currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources." + name + ".png");
-      icon.EndInit();
-      icon.Freeze();
-
-      return icon;
+      MessageBox.Show(Strings.UIResources.SendFeedbackError + Strings.UIResources.SendFeedbackEmail, "Error while sending feedback", MessageBoxButton.OK, MessageBoxImage.Information);
     }
+  }
 
-    private static StreamGeometry LoadIconGeometry(string geometryKey)
+  private readonly ObservableCollection<object> staticMenuItems = new();
+
+  // hidden because default menu items' command target is plotter, and serializing this will
+  // cause circular reference
+
+  /// <summary>
+  /// Gets the static menu items.
+  /// </summary>
+  /// <value>The static menu items.</value>
+  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  public ObservableCollection<object> StaticMenuItems
+  {
+    get { return staticMenuItems; }
+  }
+
+  #region IPlotterElement Members
+
+  private PlotterBase plotter;
+  void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
+  {
+    this.plotter = (PlotterBase)plotter;
+
+    ContextMenu menu = PopulateContextMenu(plotter);
+    plotter.ContextMenu = menu;
+
+    plotter.PreviewMouseRightButtonDown += plotter_PreviewMouseRightButtonDown;
+    plotter.PreviewMouseRightButtonUp += plotter_PreviewMouseRightButtonUp;
+    plotter.PreviewMouseLeftButtonDown += plotter_PreviewMouseLeftButtonDown;
+
+    plotter.ContextMenu.Closed += ContextMenu_Closed;
+  }
+
+  private void plotter_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+  {
+    // this will prevent other tools like PointSelector from wrong actuations
+    if (contextMenuOpen)
     {
-      Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
-      StreamGeometry iconGeometry = new();
-
-      return iconGeometry;
+      plotter.Focus();
+      e.Handled = true;
     }
+  }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DefaultContextMenu"/> class.
-    /// </summary>
-    public DefaultContextMenu() { }
+  void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
+  {
+    plotter.ContextMenu.Closed -= ContextMenu_Closed;
 
-    protected ContextMenu PopulateContextMenu(PlotterBase target)
+    plotter.ContextMenu = null;
+    plotter.PreviewMouseRightButtonDown -= plotter_PreviewMouseRightButtonDown;
+    plotter.PreviewMouseRightButtonUp -= plotter_PreviewMouseRightButtonUp;
+
+    this.plotter = null;
+  }
+
+  private void ContextMenu_Closed(object sender, RoutedEventArgs e)
+  {
+    contextMenuOpen = false;
+    foreach (var item in dynamicMenuItems)
     {
-      ContextMenu menu = new();
-      //menu.Background = Brushes.Beige;
-      MenuItem fitToViewMenuItem = new()
-      {
-        Header = Strings.UIResources.ContextMenuFitToView,
-        ToolTip = Strings.UIResources.ContextMenuFitToViewTooltip,
-        Icon = new Image { Source = fitToViewIcon },
-        Command = ChartCommands.FitToView,
-        CommandTarget = target
-      };
-
-      MenuItem savePictureMenuItem = new()
-      {
-        Header = Strings.UIResources.ContextMenuSaveScreenshot,
-        ToolTip = Strings.UIResources.ContextMenuSaveScreenshotTooltip,
-        Icon = new Image { Source = saveScreenshotIcon },
-        Command = ChartCommands.SaveScreenshot,
-        CommandTarget = target
-      };
-
-      MenuItem copyPictureMenuItem = new()
-      {
-        Header = Strings.UIResources.ContextMenuCopyScreenshot,
-        ToolTip = Strings.UIResources.ContextMenuCopyScreenshotTooltip,
-        Icon = new Image { Source = copyScreenshotIcon },
-        Command = ChartCommands.CopyScreenshot,
-        CommandTarget = target
-      };
-
-      MenuItem quickHelpMenuItem = new()
-      {
-        Header = Strings.UIResources.ContextMenuQuickHelp,
-        ToolTip = Strings.UIResources.ContextMenuQuickHelpTooltip,
-        Command = ChartCommands.ShowHelp,
-        Icon = new Image { Source = helpIcon },
-        CommandTarget = target
-      };
-
-      MenuItem reportFeedback = new()
-      {
-        Header = Strings.UIResources.ContextMenuReportFeedback,
-        ToolTip = Strings.UIResources.ContextMenuReportFeedbackTooltip,
-        Icon = (Image)plotter.Resources["SendFeedbackIcon"]
-      };
-      reportFeedback.Click += reportFeedback_Click;
-
-      staticMenuItems.Add(fitToViewMenuItem);
-      staticMenuItems.Add(copyPictureMenuItem);
-      staticMenuItems.Add(savePictureMenuItem);
-      staticMenuItems.Add(quickHelpMenuItem);
-      staticMenuItems.Add(reportFeedback);
-
-      menu.ItemsSource = staticMenuItems;
-
-      return menu;
+      staticMenuItems.Remove(item);
     }
+  }
 
-    private void reportFeedback_Click(object sender, RoutedEventArgs e)
+  private Point mousePos;
+  /// <summary>
+  /// Gets the mouse position when right mouse button was clicked.
+  /// </summary>
+  /// <value>The mouse position on click.</value>
+  public Point MousePositionOnClick
+  {
+    get { return mousePos; }
+  }
+
+  private void plotter_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+  {
+    contextMenuOpen = false;
+    mousePos = e.GetPosition(plotter);
+  }
+
+  private bool contextMenuOpen = false;
+  private readonly ObservableCollection<object> dynamicMenuItems = new();
+  private void plotter_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+  {
+    Point position = e.GetPosition(plotter);
+    if (mousePos == position)
     {
-      try
-      {
-        using (Process.Start("mailto:" + Strings.UIResources.SendFeedbackEmail + "?Subject=[D3]%20" + typeof(DefaultContextMenu).Assembly.GetName().Version)) { }
-      }
-      catch (Exception)
-      {
-        MessageBox.Show(Strings.UIResources.SendFeedbackError + Strings.UIResources.SendFeedbackEmail, "Error while sending feedback", MessageBoxButton.OK, MessageBoxImage.Information);
-      }
-    }
+      hitResults.Clear();
+      VisualTreeHelper.HitTest(plotter, null, CollectAllVisuals_Callback, new PointHitTestParameters(position));
 
-    private readonly ObservableCollection<object> staticMenuItems = new();
-
-    // hidden because default menu items' command target is plotter, and serializing this will
-    // cause circular reference
-
-    /// <summary>
-    /// Gets the static menu items.
-    /// </summary>
-    /// <value>The static menu items.</value>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public ObservableCollection<object> StaticMenuItems
-    {
-      get { return staticMenuItems; }
-    }
-
-    #region IPlotterElement Members
-
-    private PlotterBase plotter;
-    void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
-    {
-      this.plotter = (PlotterBase)plotter;
-
-      ContextMenu menu = PopulateContextMenu(plotter);
-      plotter.ContextMenu = menu;
-
-      plotter.PreviewMouseRightButtonDown += plotter_PreviewMouseRightButtonDown;
-      plotter.PreviewMouseRightButtonUp += plotter_PreviewMouseRightButtonUp;
-      plotter.PreviewMouseLeftButtonDown += plotter_PreviewMouseLeftButtonDown;
-
-      plotter.ContextMenu.Closed += ContextMenu_Closed;
-    }
-
-    private void plotter_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-      // this will prevent other tools like PointSelector from wrong actuations
-      if (contextMenuOpen)
-      {
-        plotter.Focus();
-        e.Handled = true;
-      }
-    }
-
-    void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
-    {
-      plotter.ContextMenu.Closed -= ContextMenu_Closed;
-
-      plotter.ContextMenu = null;
-      plotter.PreviewMouseRightButtonDown -= plotter_PreviewMouseRightButtonDown;
-      plotter.PreviewMouseRightButtonUp -= plotter_PreviewMouseRightButtonUp;
-
-      this.plotter = null;
-    }
-
-    private void ContextMenu_Closed(object sender, RoutedEventArgs e)
-    {
-      contextMenuOpen = false;
       foreach (var item in dynamicMenuItems)
       {
         staticMenuItems.Remove(item);
       }
-    }
-
-    private Point mousePos;
-    /// <summary>
-    /// Gets the mouse position when right mouse button was clicked.
-    /// </summary>
-    /// <value>The mouse position on click.</value>
-    public Point MousePositionOnClick
-    {
-      get { return mousePos; }
-    }
-
-    private void plotter_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
-    {
-      contextMenuOpen = false;
-      mousePos = e.GetPosition(plotter);
-    }
-
-    private bool contextMenuOpen = false;
-    private readonly ObservableCollection<object> dynamicMenuItems = new();
-    private void plotter_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
-    {
-      Point position = e.GetPosition(plotter);
-      if (mousePos == position)
+      dynamicMenuItems.Clear();
+      var dynamicItems = (hitResults.Where(r =>
       {
-        hitResults.Clear();
-        VisualTreeHelper.HitTest(plotter, null, CollectAllVisuals_Callback, new PointHitTestParameters(position));
-
-        foreach (var item in dynamicMenuItems)
+        if (r is IPlotterContextMenuSource menuSource)
         {
-          staticMenuItems.Remove(item);
-        }
-        dynamicMenuItems.Clear();
-        var dynamicItems = (hitResults.Where(r =>
-        {
-          if (r is IPlotterContextMenuSource menuSource)
-          {
-            menuSource.BuildMenu();
-          }
-
-          var items = GetPlotterContextMenu(r);
-          return items != null && items.Count > 0;
-        }).SelectMany(r =>
-        {
-          var menuItems = GetPlotterContextMenu(r);
-
-          if (r is FrameworkElement chart)
-          {
-            foreach (var menuItem in menuItems.OfType<MenuItem>())
-            {
-              menuItem.DataContext = chart.DataContext;
-            }
-          }
-          return menuItems;
-        })).ToList();
-
-        foreach (var item in dynamicItems)
-        {
-          dynamicMenuItems.Add(item);
-          //MenuItem menuItem = item as MenuItem;
-          //if (menuItem != null)
-          //{
-          //    menuItem.CommandTarget = plotter;
-          //}
+          menuSource.BuildMenu();
         }
 
-        staticMenuItems.AddMany(dynamicMenuItems);
+        var items = GetPlotterContextMenu(r);
+        return items != null && items.Count > 0;
+      }).SelectMany(r =>
+      {
+        var menuItems = GetPlotterContextMenu(r);
 
-        plotter.Focus();
-        contextMenuOpen = true;
+        if (r is FrameworkElement chart)
+        {
+          foreach (var menuItem in menuItems.OfType<MenuItem>())
+          {
+            menuItem.DataContext = chart.DataContext;
+          }
+        }
+        return menuItems;
+      })).ToList();
 
-        // in XBAP applications these lines throws a SecurityException, as (as I think)
-        // we are opening "new window" here. So in XBAP we are not opening context menu manually, but
-        // it will be opened by itself as this is right click.
+      foreach (var item in dynamicItems)
+      {
+        dynamicMenuItems.Add(item);
+        //MenuItem menuItem = item as MenuItem;
+        //if (menuItem != null)
+        //{
+        //    menuItem.CommandTarget = plotter;
+        //}
+      }
+
+      staticMenuItems.AddMany(dynamicMenuItems);
+
+      plotter.Focus();
+      contextMenuOpen = true;
+
+      // in XBAP applications these lines throws a SecurityException, as (as I think)
+      // we are opening "new window" here. So in XBAP we are not opening context menu manually, but
+      // it will be opened by itself as this is right click.
 #if !RELEASEXBAP
-        plotter.ContextMenu.IsOpen = true;
-        e.Handled = true;
+      plotter.ContextMenu.IsOpen = true;
+      e.Handled = true;
 #endif
-      }
-      else
-      {
-        // this is to prevent showing menu when RMB was pressed, then moved and now is releasing.
-        e.Handled = true;
-      }
     }
-
-    #region PlotterContextMenu property
-
-    /// <summary>
-    /// Gets the plotter context menu.
-    /// </summary>
-    /// <param name="obj">The obj.</param>
-    /// <returns></returns>
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public static ObservableCollection<object> GetPlotterContextMenu(DependencyObject obj)
+    else
     {
-      return (ObservableCollection<object>)obj.GetValue(PlotterContextMenuProperty);
+      // this is to prevent showing menu when RMB was pressed, then moved and now is releasing.
+      e.Handled = true;
     }
+  }
 
-    /// <summary>
-    /// Sets the plotter context menu.
-    /// </summary>
-    /// <param name="obj">The obj.</param>
-    /// <param name="value">The value.</param>
-    public static void SetPlotterContextMenu(DependencyObject obj, ObservableCollection<object> value)
-    {
-      obj.SetValue(PlotterContextMenuProperty, value);
-    }
+  #region PlotterContextMenu property
 
-    /// <summary>
-    /// Identifies the PlotterContextMenu attached property.
-    /// </summary>
-    public static readonly DependencyProperty PlotterContextMenuProperty = DependencyProperty.RegisterAttached(
-      "PlotterContextMenu",
-      typeof(ObservableCollection<object>),
-      typeof(DefaultContextMenu),
-      new FrameworkPropertyMetadata(null));
-
-    #endregion
-
-    private readonly List<DependencyObject> hitResults = new();
-    private HitTestResultBehavior CollectAllVisuals_Callback(HitTestResult result)
-    {
-      if (result == null || result.VisualHit == null)
-      {
-        return HitTestResultBehavior.Stop;
-      }
-
-      hitResults.Add(result.VisualHit);
-      return HitTestResultBehavior.Continue;
-    }
-
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    PlotterBase IPlotterElement.Plotter
-    {
-      get { return plotter; }
-    }
-
-    #endregion
+  /// <summary>
+  /// Gets the plotter context menu.
+  /// </summary>
+  /// <param name="obj">The obj.</param>
+  /// <returns></returns>
+  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  public static ObservableCollection<object> GetPlotterContextMenu(DependencyObject obj)
+  {
+    return (ObservableCollection<object>)obj.GetValue(PlotterContextMenuProperty);
   }
 
   /// <summary>
-  /// Represents a collection of additional menu items in Plotter's context menu.
+  /// Sets the plotter context menu.
   /// </summary>
-  //public sealed class ObjectCollection : ObservableCollection<Object> { }
+  /// <param name="obj">The obj.</param>
+  /// <param name="value">The value.</param>
+  public static void SetPlotterContextMenu(DependencyObject obj, ObservableCollection<object> value)
+  {
+    obj.SetValue(PlotterContextMenuProperty, value);
+  }
+
+  /// <summary>
+  /// Identifies the PlotterContextMenu attached property.
+  /// </summary>
+  public static readonly DependencyProperty PlotterContextMenuProperty = DependencyProperty.RegisterAttached(
+    "PlotterContextMenu",
+    typeof(ObservableCollection<object>),
+    typeof(DefaultContextMenu),
+    new FrameworkPropertyMetadata(null));
+
+  #endregion
+
+  private readonly List<DependencyObject> hitResults = new();
+  private HitTestResultBehavior CollectAllVisuals_Callback(HitTestResult result)
+  {
+    if (result == null || result.VisualHit == null)
+    {
+      return HitTestResultBehavior.Stop;
+    }
+
+    hitResults.Add(result.VisualHit);
+    return HitTestResultBehavior.Continue;
+  }
+
+  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  PlotterBase IPlotterElement.Plotter
+  {
+    get { return plotter; }
+  }
+
+  #endregion
 }
+
+/// <summary>
+/// Represents a collection of additional menu items in Plotter's context menu.
+/// </summary>
+//public sealed class ObjectCollection : ObservableCollection<Object> { }

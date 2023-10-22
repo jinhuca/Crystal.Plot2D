@@ -1,27 +1,26 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public class LegendItem : Control
 {
-  public class LegendItem : Control
+  static LegendItem()
   {
-    static LegendItem()
-    {
-      var thisType = typeof(LegendItem);
-      DefaultStyleKeyProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(thisType));
-    }
-
-    //public object VisualContent
-    //{
-    //    get { return Legend.GetVisualContent(this); }
-    //    set { Legend.SetVisualContent(this, value); }
-    //}
-
-    //[Bindable(true)]
-    //public object Description
-    //{
-    //    get { return Legend.GetDescription(this); }
-    //    set { Legend.SetDescription(this, value); }
-    //}
+    var thisType = typeof(LegendItem);
+    DefaultStyleKeyProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(thisType));
   }
+
+  //public object VisualContent
+  //{
+  //    get { return Legend.GetVisualContent(this); }
+  //    set { Legend.SetVisualContent(this, value); }
+  //}
+
+  //[Bindable(true)]
+  //public object Description
+  //{
+  //    get { return Legend.GetDescription(this); }
+  //    set { Legend.SetDescription(this, value); }
+  //}
 }

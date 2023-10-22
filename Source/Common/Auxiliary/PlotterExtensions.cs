@@ -1,10 +1,9 @@
-﻿namespace Crystal.Plot2D.Common
+﻿namespace Crystal.Plot2D.Common;
+
+public static class PlotterExtensions
 {
-  public static class PlotterExtensions
+  public static void AddChild(this PlotterBase plotter, IPlotterElement child)
   {
-    public static void AddChild(this PlotterBase plotter, IPlotterElement child)
-    {
-      plotter.Children.Add(child);
-    }
+    plotter.Children.Add(child);
   }
 }

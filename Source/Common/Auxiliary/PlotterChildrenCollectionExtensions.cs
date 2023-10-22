@@ -3,28 +3,27 @@ using System;
 using System.Linq;
 using System.Windows.Threading;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public static class PlotterChildrenCollectionExtensions
 {
-  public static class PlotterChildrenCollectionExtensions
+  public static void RemoveAll<T>(this PlotterChildrenCollection children)
   {
-    public static void RemoveAll<T>(this PlotterChildrenCollection children)
-    {
-      var childrenToDelete = children.OfType<T>().ToList();
+    var childrenToDelete = children.OfType<T>().ToList();
 
-      foreach (var child in childrenToDelete)
-      {
-        children.Remove(child as IPlotterElement);
-      }
-    }
-
-    public static void BeginAdd(this PlotterChildrenCollection children, IPlotterElement child)
+    foreach (var child in childrenToDelete)
     {
-      children.Plotter.Dispatcher.BeginInvoke(((Action)(() => { children.Add(child); })), DispatcherPriority.Send);
+      children.Remove(child as IPlotterElement);
     }
+  }
 
-    public static void BeginRemove(this PlotterChildrenCollection children, IPlotterElement child)
-    {
-      children.Plotter.Dispatcher.BeginInvoke(((Action)(() => { children.Remove(child); })), DispatcherPriority.Send);
-    }
+  public static void BeginAdd(this PlotterChildrenCollection children, IPlotterElement child)
+  {
+    children.Plotter.Dispatcher.BeginInvoke(((Action)(() => { children.Add(child); })), DispatcherPriority.Send);
+  }
+
+  public static void BeginRemove(this PlotterChildrenCollection children, IPlotterElement child)
+  {
+    children.Plotter.Dispatcher.BeginInvoke(((Action)(() => { children.Remove(child); })), DispatcherPriority.Send);
   }
 }

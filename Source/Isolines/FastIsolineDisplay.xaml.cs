@@ -1,47 +1,46 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public partial class FastIsolineDisplay : IsolineGraphBase
 {
-  public partial class FastIsolineDisplay : IsolineGraphBase
+  public FastIsolineDisplay()
   {
-    public FastIsolineDisplay()
+    InitializeComponent();
+  }
+
+  protected override Panel HostPanel
+  {
+    get
     {
-      InitializeComponent();
+      return Plotter2D.CentralGrid;
     }
+  }
 
-    protected override Panel HostPanel
+  public override void OnApplyTemplate()
+  {
+    base.OnApplyTemplate();
+
+    var isolineRenderer = (FastIsolineRenderer)Template.FindName("PART_IsolineRenderer", this);
+    //Binding contentBoundsBinding = new Binding { Path = new PropertyPath("(0)", Viewport2D.ContentBoundsProperty), Source = isolineRenderer };
+    //SetBinding(Viewport2D.ContentBoundsProperty, contentBoundsBinding);
+
+    if (isolineRenderer != null)
     {
-      get
-      {
-        return Plotter2D.CentralGrid;
-      }
+      isolineRenderer.AddHandler(Viewport2D.ContentBoundsChangedEvent, new RoutedEventHandler(OnRendererContentBoundsChanged));
+      UpdateContentBounds(isolineRenderer);
     }
+  }
 
-    public override void OnApplyTemplate()
-    {
-      base.OnApplyTemplate();
+  private void OnRendererContentBoundsChanged(object sender, RoutedEventArgs e)
+  {
+    UpdateContentBounds((DependencyObject)sender);
+  }
 
-      var isolineRenderer = (FastIsolineRenderer)Template.FindName("PART_IsolineRenderer", this);
-      //Binding contentBoundsBinding = new Binding { Path = new PropertyPath("(0)", Viewport2D.ContentBoundsProperty), Source = isolineRenderer };
-      //SetBinding(Viewport2D.ContentBoundsProperty, contentBoundsBinding);
-
-      if (isolineRenderer != null)
-      {
-        isolineRenderer.AddHandler(Viewport2D.ContentBoundsChangedEvent, new RoutedEventHandler(OnRendererContentBoundsChanged));
-        UpdateContentBounds(isolineRenderer);
-      }
-    }
-
-    private void OnRendererContentBoundsChanged(object sender, RoutedEventArgs e)
-    {
-      UpdateContentBounds((DependencyObject)sender);
-    }
-
-    private void UpdateContentBounds(DependencyObject source)
-    {
-      var contentBounds = Viewport2D.GetContentBounds(source);
-      Viewport2D.SetContentBounds(this, contentBounds);
-    }
+  private void UpdateContentBounds(DependencyObject source)
+  {
+    var contentBounds = Viewport2D.GetContentBounds(source);
+    Viewport2D.SetContentBounds(this, contentBounds);
   }
 }

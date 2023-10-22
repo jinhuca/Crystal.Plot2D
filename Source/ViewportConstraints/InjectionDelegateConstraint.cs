@@ -1,32 +1,31 @@
 ﻿using System;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public delegate DataRect ViewportConstraintCallback(DataRect proposedDataRect);
+
+public class InjectionDelegateConstraint : ViewportConstraint
 {
-  public delegate DataRect ViewportConstraintCallback(DataRect proposedDataRect);
-
-  public class InjectionDelegateConstraint : ViewportConstraint
+  public InjectionDelegateConstraint(Viewport2D masterViewport, ViewportConstraintCallback callback)
   {
-    public InjectionDelegateConstraint(Viewport2D masterViewport, ViewportConstraintCallback callback)
-    {
-      Callback = callback ?? throw new ArgumentNullException("callback");
-      MasterViewport = masterViewport ?? throw new ArgumentNullException("masterViewport");
-      masterViewport.PropertyChanged += MasterViewport_PropertyChanged;
-    }
+    Callback = callback ?? throw new ArgumentNullException("callback");
+    MasterViewport = masterViewport ?? throw new ArgumentNullException("masterViewport");
+    masterViewport.PropertyChanged += MasterViewport_PropertyChanged;
+  }
 
-    void MasterViewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
+  void MasterViewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
+  {
+    if (e.PropertyName == "Visible")
     {
-      if (e.PropertyName == "Visible")
-      {
-        RaiseChanged();
-      }
+      RaiseChanged();
     }
+  }
 
-    public ViewportConstraintCallback Callback { get; set; }
-    public Viewport2D MasterViewport { get; set; }
+  public ViewportConstraintCallback Callback { get; set; }
+  public Viewport2D MasterViewport { get; set; }
 
-    public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
-    {
-      return Callback(proposedDataRect);
-    }
+  public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
+  {
+    return Callback(proposedDataRect);
   }
 }

@@ -3,28 +3,27 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Markup;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+[EditorBrowsable(EditorBrowsableState.Never)]
+public class XbapConditionalExpression : MarkupExtension
 {
-  [EditorBrowsable(EditorBrowsableState.Never)]
-  public class XbapConditionalExpression : MarkupExtension
+  public XbapConditionalExpression() { }
+
+  public XbapConditionalExpression(object value)
   {
-    public XbapConditionalExpression() { }
+    Value = value;
+  }
 
-    public XbapConditionalExpression(object value)
-    {
-      Value = value;
-    }
+  [ConstructorArgument("value")]
+  public object Value { get; set; }
 
-    [ConstructorArgument("value")]
-    public object Value { get; set; }
-
-    public override object ProvideValue(IServiceProvider serviceProvider)
-    {
+  public override object ProvideValue(IServiceProvider serviceProvider)
+  {
 #if RELEASEXBAP
 			return null;
 #else
-      return ((ResourceDictionary)Application.LoadComponent(new Uri(Constants.ThemeUri, UriKind.Relative)))[Value];
+    return ((ResourceDictionary)Application.LoadComponent(new Uri(Constants.ThemeUri, UriKind.Relative)))[Value];
 #endif
-    }
   }
 }

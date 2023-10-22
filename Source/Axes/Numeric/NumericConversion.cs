@@ -1,33 +1,32 @@
-﻿namespace Crystal.Plot2D.Charts
+﻿namespace Crystal.Plot2D.Charts;
+
+internal sealed class NumericConversion
 {
-  internal sealed class NumericConversion
+  private readonly double min;
+  private readonly double length;
+  private readonly double minValue;
+  private readonly double valueLength;
+
+  public NumericConversion(double min, double minValue, double max, double maxValue)
   {
-    private readonly double min;
-    private readonly double length;
-    private readonly double minValue;
-    private readonly double valueLength;
+    this.min = min;
+    length = max - min;
 
-    public NumericConversion(double min, double minValue, double max, double maxValue)
-    {
-      this.min = min;
-      length = max - min;
+    this.minValue = minValue;
+    valueLength = maxValue - minValue;
+  }
 
-      this.minValue = minValue;
-      valueLength = maxValue - minValue;
-    }
+  public double FromDouble(double value)
+  {
+    double ratio = (value - min) / length;
 
-    public double FromDouble(double value)
-    {
-      double ratio = (value - min) / length;
+    return minValue + ratio * valueLength;
+  }
 
-      return minValue + ratio * valueLength;
-    }
+  public double ToDouble(double value)
+  {
+    double ratio = (value - minValue) / valueLength;
 
-    public double ToDouble(double value)
-    {
-      double ratio = (value - minValue) / valueLength;
-
-      return min + length * ratio;
-    }
+    return min + length * ratio;
   }
 }

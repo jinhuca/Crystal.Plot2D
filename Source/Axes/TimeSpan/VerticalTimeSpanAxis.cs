@@ -1,31 +1,30 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Represents a vertical axis with values of <see cref="TimeSpan"/> type.
+/// </summary>
+public class VerticalTimeSpanAxis : TimeSpanAxis
 {
   /// <summary>
-  /// Represents a vertical axis with values of <see cref="TimeSpan"/> type.
+  /// Initializes a new instance of the <see cref="VerticalTimeSpanAxis"/> class, placed (by default) on the left side of <see cref="Plotter"/>.
   /// </summary>
-  public class VerticalTimeSpanAxis : TimeSpanAxis
+  public VerticalTimeSpanAxis()
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VerticalTimeSpanAxis"/> class, placed (by default) on the left side of <see cref="Plotter"/>.
-    /// </summary>
-    public VerticalTimeSpanAxis()
-    {
-      Placement = AxisPlacement.Left;
-    }
+    Placement = AxisPlacement.Left;
+  }
 
-    /// <summary>
-    /// Validates the placement - e.g., vertical axis should not be placed from top or bottom, etc.
-    /// If proposed placement is wrong, throws an ArgumentException.
-    /// </summary>
-    /// <param name="newPlacement">The new placement.</param>
-    protected override void ValidatePlacement(AxisPlacement newPlacement)
+  /// <summary>
+  /// Validates the placement - e.g., vertical axis should not be placed from top or bottom, etc.
+  /// If proposed placement is wrong, throws an ArgumentException.
+  /// </summary>
+  /// <param name="newPlacement">The new placement.</param>
+  protected override void ValidatePlacement(AxisPlacement newPlacement)
+  {
+    if (newPlacement == AxisPlacement.Bottom || newPlacement == AxisPlacement.Top)
     {
-      if (newPlacement == AxisPlacement.Bottom || newPlacement == AxisPlacement.Top)
-      {
-        throw new ArgumentException(Strings.Exceptions.VerticalAxisCannotBeHorizontal);
-      }
+      throw new ArgumentException(Strings.Exceptions.VerticalAxisCannotBeHorizontal);
     }
   }
 }

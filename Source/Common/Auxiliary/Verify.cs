@@ -1,65 +1,64 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+internal static class Verify
 {
-  internal static class Verify
+  [DebuggerStepThrough]
+  public static void IsTrue(this bool condition)
   {
-    [DebuggerStepThrough]
-    public static void IsTrue(this bool condition)
+    if (!condition)
     {
-      if (!condition)
-      {
-        throw new ArgumentException(Strings.Exceptions.AssertionFailedSearch);
-      }
+      throw new ArgumentException(Strings.Exceptions.AssertionFailedSearch);
     }
+  }
 
-    [DebuggerStepThrough]
-    public static void IsTrue(this bool condition, string paramName)
+  [DebuggerStepThrough]
+  public static void IsTrue(this bool condition, string paramName)
+  {
+    if (!condition)
     {
-      if (!condition)
-      {
-        throw new ArgumentException(Strings.Exceptions.AssertionFailedSearch, paramName);
-      }
+      throw new ArgumentException(Strings.Exceptions.AssertionFailedSearch, paramName);
     }
+  }
 
-    public static void IsTrueWithMessage(this bool condition, string message)
+  public static void IsTrueWithMessage(this bool condition, string message)
+  {
+    if (!condition)
     {
-      if (!condition)
-      {
-        throw new ArgumentException(message);
-      }
+      throw new ArgumentException(message);
     }
+  }
 
-    [DebuggerStepThrough]
-    public static void AssertNotNull(object obj)
-    {
-      IsTrue(obj != null);
-    }
+  [DebuggerStepThrough]
+  public static void AssertNotNull(object obj)
+  {
+    IsTrue(obj != null);
+  }
 
-    public static void VerifyNotNull(this object obj, string paramName)
+  public static void VerifyNotNull(this object obj, string paramName)
+  {
+    if (obj == null)
     {
-      if (obj == null)
-      {
-        throw new ArgumentNullException(paramName);
-      }
+      throw new ArgumentNullException(paramName);
     }
+  }
 
-    public static void VerifyNotNull(this object obj)
-    {
-      VerifyNotNull(obj, "value");
-    }
+  public static void VerifyNotNull(this object obj)
+  {
+    VerifyNotNull(obj, "value");
+  }
 
-    [DebuggerStepThrough]
-    public static void AssertIsNotNaN(this double d)
-    {
-      IsTrue(!double.IsNaN(d));
-    }
+  [DebuggerStepThrough]
+  public static void AssertIsNotNaN(this double d)
+  {
+    IsTrue(!double.IsNaN(d));
+  }
 
-    [DebuggerStepThrough]
-    public static void AssertIsFinite(this double d)
-    {
-      IsTrue(!double.IsInfinity(d) && !(double.IsNaN(d)));
-    }
+  [DebuggerStepThrough]
+  public static void AssertIsFinite(this double d)
+  {
+    IsTrue(!double.IsInfinity(d) && !(double.IsNaN(d)));
   }
 }

@@ -1,39 +1,38 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public abstract class LabelProvider<T> : LabelProviderBase<T>
 {
-  public abstract class LabelProvider<T> : LabelProviderBase<T>
+  public override UIElement[] CreateLabels(ITicksInfo<T> ticksInfo)
   {
-    public override UIElement[] CreateLabels(ITicksInfo<T> ticksInfo)
+    var ticks = ticksInfo.Ticks;
+
+    UIElement[] res = new UIElement[ticks.Length];
+    LabelTickInfo<T> labelInfo = new() { Info = ticksInfo.Info };
+
+    for (int i = 0; i < res.Length; i++)
     {
-      var ticks = ticksInfo.Ticks;
+      labelInfo.Tick = ticks[i];
+      labelInfo.Index = i;
 
-      UIElement[] res = new UIElement[ticks.Length];
-      LabelTickInfo<T> labelInfo = new() { Info = ticksInfo.Info };
+      string labelText = GetString(labelInfo);
 
-      for (int i = 0; i < res.Length; i++)
+      TextBlock label = (TextBlock)GetResourceFromPool();
+      if (label == null)
       {
-        labelInfo.Tick = ticks[i];
-        labelInfo.Index = i;
-
-        string labelText = GetString(labelInfo);
-
-        TextBlock label = (TextBlock)GetResourceFromPool();
-        if (label == null)
-        {
-          label = new TextBlock();
-        }
-
-        label.Text = labelText;
-        label.ToolTip = ticks[i].ToString();
-
-        res[i] = label;
-
-        ApplyCustomView(labelInfo, label);
+        label = new TextBlock();
       }
 
-      return res;
+      label.Text = labelText;
+      label.ToolTip = ticks[i].ToString();
+
+      res[i] = label;
+
+      ApplyCustomView(labelInfo, label);
     }
+
+    return res;
   }
 }

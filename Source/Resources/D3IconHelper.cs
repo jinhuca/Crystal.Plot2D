@@ -1,37 +1,36 @@
 ﻿using System.Reflection;
 using System.Windows.Media.Imaging;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public static class D3IconHelper
 {
-  public static class D3IconHelper
+  private static BitmapFrame icon = null;
+  public static BitmapFrame TheIcon
   {
-    private static BitmapFrame icon = null;
-    public static BitmapFrame TheIcon
+    get
     {
-      get
+      if (icon == null)
       {
-        if (icon == null)
-        {
-          Assembly currentAssembly = typeof(D3IconHelper).Assembly;
-          icon = BitmapFrame.Create(currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources.D3-icon.ico"));
-        }
-        return icon;
+        Assembly currentAssembly = typeof(D3IconHelper).Assembly;
+        icon = BitmapFrame.Create(currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources.D3-icon.ico"));
       }
+      return icon;
     }
+  }
 
-    private static BitmapFrame whiteIcon = null;
-    public static BitmapFrame WhiteIcon
+  private static BitmapFrame whiteIcon = null;
+  public static BitmapFrame WhiteIcon
+  {
+    get
     {
-      get
+      if (whiteIcon == null)
       {
-        if (whiteIcon == null)
-        {
-          Assembly currentAssembly = typeof(D3IconHelper).Assembly;
-          whiteIcon = BitmapFrame.Create(currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources.D3-icon-white.ico"));
-        }
-
-        return whiteIcon;
+        Assembly currentAssembly = typeof(D3IconHelper).Assembly;
+        whiteIcon = BitmapFrame.Create(currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources.D3-icon-white.ico"));
       }
+
+      return whiteIcon;
     }
   }
 }

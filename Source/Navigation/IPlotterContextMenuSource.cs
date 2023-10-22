@@ -1,7 +1,6 @@
-﻿namespace Crystal.Plot2D.Charts
+﻿namespace Crystal.Plot2D.Charts;
+
+public interface IPlotterContextMenuSource
 {
-  public interface IPlotterContextMenuSource
-  {
-    void BuildMenu();
-  }
+  void BuildMenu();
 }

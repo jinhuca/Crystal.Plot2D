@@ -1,29 +1,28 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public class Header : ContentControl, IPlotterElement
 {
-  public class Header : ContentControl, IPlotterElement
+  public Header()
   {
-    public Header()
-    {
-      FontSize = 12;
-      HorizontalAlignment = HorizontalAlignment.Center;
-      Margin = new Thickness(0, 0, 0, 3);
-    }
+    FontSize = 12;
+    HorizontalAlignment = HorizontalAlignment.Center;
+    Margin = new Thickness(0, 0, 0, 3);
+  }
 
-    public PlotterBase Plotter { get; private set; }
+  public PlotterBase Plotter { get; private set; }
 
-    public void OnPlotterAttached(PlotterBase _plotter)
-    {
-      Plotter = _plotter;
-      _plotter.HeaderPanel.Children.Add(this);
-    }
+  public void OnPlotterAttached(PlotterBase _plotter)
+  {
+    Plotter = _plotter;
+    _plotter.HeaderPanel.Children.Add(this);
+  }
 
-    public void OnPlotterDetaching(PlotterBase _plotter)
-    {
-      Plotter = null;
-      _plotter.HeaderPanel.Children.Remove(this);
-    }
+  public void OnPlotterDetaching(PlotterBase _plotter)
+  {
+    Plotter = null;
+    _plotter.HeaderPanel.Children.Remove(this);
   }
 }

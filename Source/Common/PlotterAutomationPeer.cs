@@ -1,16 +1,15 @@
 ﻿using System.Windows.Automation.Peers;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+public class PlotterAutomationPeer : FrameworkElementAutomationPeer
 {
-  public class PlotterAutomationPeer : FrameworkElementAutomationPeer
+  public PlotterAutomationPeer(PlotterBase owner)
+    : base(owner)
   {
-    public PlotterAutomationPeer(PlotterBase owner)
-      : base(owner)
-    {
-    }
-
-    protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Custom;
-
-    protected override string GetClassNameCore() => "Plotter";
   }
+
+  protected override AutomationControlType GetAutomationControlTypeCore() => AutomationControlType.Custom;
+
+  protected override string GetClassNameCore() => "Plotter";
 }

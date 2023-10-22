@@ -1,69 +1,68 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+///   IsolineTextAnnotater defines methods to annotate isolines - create a list of labels with its position.
+/// </summary>
+public sealed class IsolineTextAnnotater
 {
+  private double wayBeforeText = 10;
+
   /// <summary>
-  ///   IsolineTextAnnotater defines methods to annotate isolines - create a list of labels with its position.
+  ///   Gets or sets the distance between text labels.
   /// </summary>
-  public sealed class IsolineTextAnnotater
+  public double WayBeforeText
   {
-    private double wayBeforeText = 10;
+    get { return wayBeforeText; }
+    set { wayBeforeText = value; }
+  }
 
-    /// <summary>
-    ///   Gets or sets the distance between text labels.
-    /// </summary>
-    public double WayBeforeText
+  /// <summary>
+  /// Annotates the specified isoline collection.
+  /// </summary>
+  /// <param name="collection">The collection.</param>
+  /// <param name="visible">The visible rectangle.</param>
+  /// <returns></returns>
+  public Collection<IsolineTextLabel> Annotate(IsolineCollection collection, DataRect visible)
+  {
+    Collection<IsolineTextLabel> res = new();
+
+    foreach (var line in collection.Lines)
     {
-      get { return wayBeforeText; }
-      set { wayBeforeText = value; }
-    }
+      double way = 0;
 
-    /// <summary>
-    /// Annotates the specified isoline collection.
-    /// </summary>
-    /// <param name="collection">The collection.</param>
-    /// <param name="visible">The visible rectangle.</param>
-    /// <returns></returns>
-    public Collection<IsolineTextLabel> Annotate(IsolineCollection collection, DataRect visible)
-    {
-      Collection<IsolineTextLabel> res = new();
+      var forwardSegments = line.GetSegments();
+      var forwardEnumerator = forwardSegments.GetEnumerator();
+      forwardEnumerator.MoveNext();
 
-      foreach (var line in collection.Lines)
+      foreach (var segment in line.GetSegments())
       {
-        double way = 0;
+        bool hasForwardSegment = forwardEnumerator.MoveNext();
 
-        var forwardSegments = line.GetSegments();
-        var forwardEnumerator = forwardSegments.GetEnumerator();
-        forwardEnumerator.MoveNext();
-
-        foreach (var segment in line.GetSegments())
+        double length = segment.GetLength();
+        way += length;
+        if (way > wayBeforeText)
         {
-          bool hasForwardSegment = forwardEnumerator.MoveNext();
+          way = 0;
 
-          double length = segment.GetLength();
-          way += length;
-          if (way > wayBeforeText)
+          var rotation = (segment.Max - segment.Min).ToAngle();
+          if (hasForwardSegment)
           {
-            way = 0;
-
-            var rotation = (segment.Max - segment.Min).ToAngle();
-            if (hasForwardSegment)
-            {
-              var forwardSegment = forwardEnumerator.Current;
-              rotation = (rotation + (forwardSegment.Max - forwardSegment.Min).ToAngle()) / 2;
-            }
-
-            res.Add(new IsolineTextLabel
-            {
-              Value = line.RealValue,
-              Position = segment.Max,
-              Rotation = rotation
-            });
+            var forwardSegment = forwardEnumerator.Current;
+            rotation = (rotation + (forwardSegment.Max - forwardSegment.Min).ToAngle()) / 2;
           }
+
+          res.Add(new IsolineTextLabel
+          {
+            Value = line.RealValue,
+            Position = segment.Max,
+            Rotation = rotation
+          });
         }
       }
-
-      return res;
     }
+
+    return res;
   }
 }

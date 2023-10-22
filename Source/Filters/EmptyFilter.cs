@@ -1,13 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public sealed class EmptyFilter : PointsFilterBase
 {
-  public sealed class EmptyFilter : PointsFilterBase
+  public override List<Point> Filter(List<Point> points)
   {
-    public override List<Point> Filter(List<Point> points)
-    {
-      return points;
-    }
+    return points;
   }
 }

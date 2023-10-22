@@ -1,13 +1,12 @@
-﻿namespace Crystal.Plot2D.Charts
+﻿namespace Crystal.Plot2D.Charts;
+
+public class NumericAxisControl : AxisControl<double>
 {
-  public class NumericAxisControl : AxisControl<double>
+  public NumericAxisControl()
   {
-    public NumericAxisControl()
-    {
-      LabelProvider = new ExponentialLabelProvider();
-      TicksProvider = new NumericTicksProvider();
-      ConvertToDouble = d => d;
-      Range = new Range<double>(0, 10);
-    }
+    LabelProvider = new ExponentialLabelProvider();
+    TicksProvider = new NumericTicksProvider();
+    ConvertToDouble = d => d;
+    Range = new Range<double>(0, 10);
   }
 }

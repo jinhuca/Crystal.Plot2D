@@ -5,213 +5,212 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public static class LiveToolTipService
 {
-  public static class LiveToolTipService
+
+  #region Properties
+
+  public static object GetToolTip(DependencyObject obj)
   {
+    return (object)obj.GetValue(ToolTipProperty);
+  }
 
-    #region Properties
+  public static void SetToolTip(DependencyObject obj, object value)
+  {
+    obj.SetValue(ToolTipProperty, value);
+  }
 
-    public static object GetToolTip(DependencyObject obj)
+  public static readonly DependencyProperty ToolTipProperty = DependencyProperty.RegisterAttached(
+    "ToolTip",
+    typeof(object),
+    typeof(LiveToolTipService),
+    new FrameworkPropertyMetadata(null, OnToolTipChanged));
+
+  private static LiveToolTip GetLiveToolTip(DependencyObject obj)
+  {
+    return (LiveToolTip)obj.GetValue(LiveToolTipProperty);
+  }
+
+  private static void SetLiveToolTip(DependencyObject obj, LiveToolTip value)
+  {
+    obj.SetValue(LiveToolTipProperty, value);
+  }
+
+  private static readonly DependencyProperty LiveToolTipProperty = DependencyProperty.RegisterAttached(
+    "LiveToolTip",
+    typeof(LiveToolTip),
+    typeof(LiveToolTipService),
+    new FrameworkPropertyMetadata(null));
+
+  #region Opacity
+
+  public static double GetTooltipOpacity(DependencyObject obj)
+  {
+    return (double)obj.GetValue(TooltipOpacityProperty);
+  }
+
+  public static void SetTooltipOpacity(DependencyObject obj, double value)
+  {
+    obj.SetValue(TooltipOpacityProperty, value);
+  }
+
+  public static readonly DependencyProperty TooltipOpacityProperty = DependencyProperty.RegisterAttached(
+    "TooltipOpacity",
+    typeof(double),
+    typeof(LiveToolTipService),
+    new FrameworkPropertyMetadata(1.0, OnTooltipOpacityChanged));
+
+  private static void OnTooltipOpacityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+  {
+    LiveToolTip liveTooltip = GetLiveToolTip(d);
+    if (liveTooltip != null)
     {
-      return (object)obj.GetValue(ToolTipProperty);
+      liveTooltip.Opacity = (double)e.NewValue;
+    }
+  }
+
+  #endregion // end of Opacity
+
+  #region IsPropertyProxy property
+
+  public static bool GetIsPropertyProxy(DependencyObject obj)
+  {
+    return (bool)obj.GetValue(IsPropertyProxyProperty);
+  }
+
+  public static void SetIsPropertyProxy(DependencyObject obj, bool value)
+  {
+    obj.SetValue(IsPropertyProxyProperty, value);
+  }
+
+  public static readonly DependencyProperty IsPropertyProxyProperty = DependencyProperty.RegisterAttached(
+    "IsPropertyProxy",
+    typeof(bool),
+    typeof(LiveToolTipService),
+    new FrameworkPropertyMetadata(false));
+
+  #endregion // end of IsPropertyProxy property
+
+  #endregion
+
+  private static void OnToolTipChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+  {
+    FrameworkElement source = (FrameworkElement)d;
+
+    if (e.NewValue == null)
+    {
+      source.Loaded -= source_Loaded;
+      source.ClearValue(LiveToolTipProperty);
     }
 
-    public static void SetToolTip(DependencyObject obj, object value)
+    if (GetIsPropertyProxy(source))
     {
-      obj.SetValue(ToolTipProperty, value);
+      return;
     }
 
-    public static readonly DependencyProperty ToolTipProperty = DependencyProperty.RegisterAttached(
-      "ToolTip",
-      typeof(object),
-      typeof(LiveToolTipService),
-      new FrameworkPropertyMetadata(null, OnToolTipChanged));
+    var content = e.NewValue;
 
-    private static LiveToolTip GetLiveToolTip(DependencyObject obj)
+    if (content is DataTemplate template)
     {
-      return (LiveToolTip)obj.GetValue(LiveToolTipProperty);
+      content = template.LoadContent();
     }
 
-    private static void SetLiveToolTip(DependencyObject obj, LiveToolTip value)
+    LiveToolTip tooltip = null;
+    if (e.NewValue is LiveToolTip)
     {
-      obj.SetValue(LiveToolTipProperty, value);
+      tooltip = e.NewValue as LiveToolTip;
+    }
+    else
+    {
+      tooltip = new LiveToolTip { Content = content };
     }
 
-    private static readonly DependencyProperty LiveToolTipProperty = DependencyProperty.RegisterAttached(
-      "LiveToolTip",
-      typeof(LiveToolTip),
-      typeof(LiveToolTipService),
-      new FrameworkPropertyMetadata(null));
-
-    #region Opacity
-
-    public static double GetTooltipOpacity(DependencyObject obj)
+    if (tooltip == null && e.OldValue == null)
     {
-      return (double)obj.GetValue(TooltipOpacityProperty);
+      tooltip = new LiveToolTip { Content = content };
     }
 
-    public static void SetTooltipOpacity(DependencyObject obj, double value)
+    if (tooltip != null)
     {
-      obj.SetValue(TooltipOpacityProperty, value);
-    }
-
-    public static readonly DependencyProperty TooltipOpacityProperty = DependencyProperty.RegisterAttached(
-      "TooltipOpacity",
-      typeof(double),
-      typeof(LiveToolTipService),
-      new FrameworkPropertyMetadata(1.0, OnTooltipOpacityChanged));
-
-    private static void OnTooltipOpacityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-      LiveToolTip liveTooltip = GetLiveToolTip(d);
-      if (liveTooltip != null)
+      SetLiveToolTip(source, tooltip);
+      if (!source.IsLoaded)
       {
-        liveTooltip.Opacity = (double)e.NewValue;
-      }
-    }
-
-    #endregion // end of Opacity
-
-    #region IsPropertyProxy property
-
-    public static bool GetIsPropertyProxy(DependencyObject obj)
-    {
-      return (bool)obj.GetValue(IsPropertyProxyProperty);
-    }
-
-    public static void SetIsPropertyProxy(DependencyObject obj, bool value)
-    {
-      obj.SetValue(IsPropertyProxyProperty, value);
-    }
-
-    public static readonly DependencyProperty IsPropertyProxyProperty = DependencyProperty.RegisterAttached(
-      "IsPropertyProxy",
-      typeof(bool),
-      typeof(LiveToolTipService),
-      new FrameworkPropertyMetadata(false));
-
-    #endregion // end of IsPropertyProxy property
-
-    #endregion
-
-    private static void OnToolTipChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-      FrameworkElement source = (FrameworkElement)d;
-
-      if (e.NewValue == null)
-      {
-        source.Loaded -= source_Loaded;
-        source.ClearValue(LiveToolTipProperty);
-      }
-
-      if (GetIsPropertyProxy(source))
-      {
-        return;
-      }
-
-      var content = e.NewValue;
-
-      if (content is DataTemplate template)
-      {
-        content = template.LoadContent();
-      }
-
-      LiveToolTip tooltip = null;
-      if (e.NewValue is LiveToolTip)
-      {
-        tooltip = e.NewValue as LiveToolTip;
+        source.Loaded += source_Loaded;
       }
       else
-      {
-        tooltip = new LiveToolTip { Content = content };
-      }
-
-      if (tooltip == null && e.OldValue == null)
-      {
-        tooltip = new LiveToolTip { Content = content };
-      }
-
-      if (tooltip != null)
-      {
-        SetLiveToolTip(source, tooltip);
-        if (!source.IsLoaded)
-        {
-          source.Loaded += source_Loaded;
-        }
-        else
-        {
-          AddTooltip(source);
-        }
-      }
-    }
-
-    private static void AddTooltipForElement(FrameworkElement source, LiveToolTip tooltip)
-    {
-      AdornerLayer layer = AdornerLayer.GetAdornerLayer(source);
-
-      LiveToolTipAdorner adorner = new(source, tooltip);
-      layer.Add(adorner);
-    }
-
-    private static void source_Loaded(object sender, RoutedEventArgs e)
-    {
-      FrameworkElement source = (FrameworkElement)sender;
-
-      if (source.IsLoaded)
       {
         AddTooltip(source);
       }
     }
+  }
 
-    private static void AddTooltip(FrameworkElement source)
+  private static void AddTooltipForElement(FrameworkElement source, LiveToolTip tooltip)
+  {
+    AdornerLayer layer = AdornerLayer.GetAdornerLayer(source);
+
+    LiveToolTipAdorner adorner = new(source, tooltip);
+    layer.Add(adorner);
+  }
+
+  private static void source_Loaded(object sender, RoutedEventArgs e)
+  {
+    FrameworkElement source = (FrameworkElement)sender;
+
+    if (source.IsLoaded)
     {
-      if (DesignerProperties.GetIsInDesignMode(source))
-      {
-        return;
-      }
+      AddTooltip(source);
+    }
+  }
 
-      LiveToolTip tooltip = GetLiveToolTip(source);
+  private static void AddTooltip(FrameworkElement source)
+  {
+    if (DesignerProperties.GetIsInDesignMode(source))
+    {
+      return;
+    }
 
-      Window window = Window.GetWindow(source);
-      FrameworkElement child = source;
-      FrameworkElement parent = null;
-      if (window != null)
+    LiveToolTip tooltip = GetLiveToolTip(source);
+
+    Window window = Window.GetWindow(source);
+    FrameworkElement child = source;
+    FrameworkElement parent = null;
+    if (window != null)
+    {
+      while (parent != window)
       {
-        while (parent != window)
+        parent = (FrameworkElement)VisualTreeHelper.GetParent(child);
+        child = parent;
+        var nameScope = NameScope.GetNameScope(parent);
+        if (nameScope != null)
         {
-          parent = (FrameworkElement)VisualTreeHelper.GetParent(child);
-          child = parent;
-          var nameScope = NameScope.GetNameScope(parent);
-          if (nameScope != null)
+          string nameScopeName = nameScope.ToString();
+          if (nameScopeName != "System.Windows.TemplateNameScope")
           {
-            string nameScopeName = nameScope.ToString();
-            if (nameScopeName != "System.Windows.TemplateNameScope")
-            {
-              NameScope.SetNameScope(tooltip, nameScope);
-              break;
-            }
+            NameScope.SetNameScope(tooltip, nameScope);
+            break;
           }
         }
       }
-
-      var binding = BindingOperations.GetBinding(tooltip, ContentControl.ContentProperty);
-      if (binding != null)
-      {
-        BindingOperations.ClearBinding(tooltip, ContentControl.ContentProperty);
-        BindingOperations.SetBinding(tooltip, ContentControl.ContentProperty, binding);
-      }
-
-      Binding dataContextBinding = new() { Path = new PropertyPath("DataContext"), Source = source };
-      tooltip.SetBinding(FrameworkElement.DataContextProperty, dataContextBinding);
-
-      tooltip.Owner = source;
-      if (GetTooltipOpacity(source) != (double)TooltipOpacityProperty.DefaultMetadata.DefaultValue)
-      {
-        tooltip.Opacity = GetTooltipOpacity(source);
-      }
-
-      AddTooltipForElement(source, tooltip);
     }
+
+    var binding = BindingOperations.GetBinding(tooltip, ContentControl.ContentProperty);
+    if (binding != null)
+    {
+      BindingOperations.ClearBinding(tooltip, ContentControl.ContentProperty);
+      BindingOperations.SetBinding(tooltip, ContentControl.ContentProperty, binding);
+    }
+
+    Binding dataContextBinding = new() { Path = new PropertyPath("DataContext"), Source = source };
+    tooltip.SetBinding(FrameworkElement.DataContextProperty, dataContextBinding);
+
+    tooltip.Owner = source;
+    if (GetTooltipOpacity(source) != (double)TooltipOpacityProperty.DefaultMetadata.DefaultValue)
+    {
+      tooltip.Opacity = GetTooltipOpacity(source);
+    }
+
+    AddTooltipForElement(source, tooltip);
   }
 }

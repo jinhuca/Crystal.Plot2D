@@ -1,26 +1,25 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Represents a horizontal axis with values of <see cref="TimeSpan"/> type.
+/// </summary>
+public class HorizontalTimeSpanAxis : TimeSpanAxis
 {
   /// <summary>
-  /// Represents a horizontal axis with values of <see cref="TimeSpan"/> type.
+  /// Initializes a new instance of the <see cref="HorizontalTimeSpanAxis"/> class, placed on the bottom of <see cref="Plotter"/>.
   /// </summary>
-  public class HorizontalTimeSpanAxis : TimeSpanAxis
+  public HorizontalTimeSpanAxis()
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="HorizontalTimeSpanAxis"/> class, placed on the bottom of <see cref="Plotter"/>.
-    /// </summary>
-    public HorizontalTimeSpanAxis()
-    {
-      Placement = AxisPlacement.Bottom;
-    }
+    Placement = AxisPlacement.Bottom;
+  }
 
-    protected override void ValidatePlacement(AxisPlacement newPlacement)
+  protected override void ValidatePlacement(AxisPlacement newPlacement)
+  {
+    if (newPlacement == AxisPlacement.Left || newPlacement == AxisPlacement.Right)
     {
-      if (newPlacement == AxisPlacement.Left || newPlacement == AxisPlacement.Right)
-      {
-        throw new ArgumentException(Strings.Exceptions.HorizontalAxisCannotBeVertical);
-      }
+      throw new ArgumentException(Strings.Exceptions.HorizontalAxisCannotBeVertical);
     }
   }
 }

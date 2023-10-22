@@ -1,8 +1,7 @@
-﻿namespace Crystal.Plot2D
+﻿namespace Crystal.Plot2D;
+
+public enum Viewport2DPanningState
 {
-  public enum Viewport2DPanningState
-  {
-    NotPanning = 0,
-    Panning
-  }
+  NotPanning = 0,
+  Panning
 }

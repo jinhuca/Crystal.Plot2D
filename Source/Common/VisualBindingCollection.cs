@@ -2,13 +2,12 @@
 using System.Diagnostics;
 using System.Windows;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+[DebuggerDisplay("Count = {Cache.Count}")]
+public sealed class VisualBindingCollection
 {
-  [DebuggerDisplay("Count = {Cache.Count}")]
-  public sealed class VisualBindingCollection
-  {
-    internal Dictionary<IPlotterElement, UIElement> Cache { get; } = new Dictionary<IPlotterElement, UIElement>();
-    public UIElement this[IPlotterElement element] => Cache[element];
-    public bool Contains(IPlotterElement element) => Cache.ContainsKey(element);
-  }
+  internal Dictionary<IPlotterElement, UIElement> Cache { get; } = new Dictionary<IPlotterElement, UIElement>();
+  public UIElement this[IPlotterElement element] => Cache[element];
+  public bool Contains(IPlotterElement element) => Cache.ContainsKey(element);
 }

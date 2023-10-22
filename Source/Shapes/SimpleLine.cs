@@ -1,58 +1,57 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Represents simple line bound to viewport coordinates.
+/// </summary>
+public abstract class SimpleLine : ViewportShape
 {
   /// <summary>
-  /// Represents simple line bound to viewport coordinates.
+  /// Initializes a new instance of the <see cref="SimpleLine"/> class.
   /// </summary>
-  public abstract class SimpleLine : ViewportShape
+  protected SimpleLine() { }
+
+  /// <summary>
+  /// Gets or sets the value of line - e.g., its horizontal or vertical coordinate.
+  /// </summary>
+  /// <value>The value.</value>
+  public double Value
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="SimpleLine"/> class.
-    /// </summary>
-    protected SimpleLine() { }
+    get { return (double)GetValue(ValueProperty); }
+    set { SetValue(ValueProperty, value); }
+  }
 
-    /// <summary>
-    /// Gets or sets the value of line - e.g., its horizontal or vertical coordinate.
-    /// </summary>
-    /// <value>The value.</value>
-    public double Value
-    {
-      get { return (double)GetValue(ValueProperty); }
-      set { SetValue(ValueProperty, value); }
-    }
+  /// <summary>
+  /// Identifies Value dependency property.
+  /// </summary>
+  public static readonly DependencyProperty ValueProperty =
+    DependencyProperty.Register(
+      "Value",
+      typeof(double),
+      typeof(SimpleLine),
+      new PropertyMetadata(
+        0.0, OnValueChanged));
 
-    /// <summary>
-    /// Identifies Value dependency property.
-    /// </summary>
-    public static readonly DependencyProperty ValueProperty =
-      DependencyProperty.Register(
-        "Value",
-        typeof(double),
-        typeof(SimpleLine),
-        new PropertyMetadata(
-          0.0, OnValueChanged));
+  private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+  {
+    SimpleLine line = (SimpleLine)d;
+    line.OnValueChanged();
+  }
 
-    private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
-    {
-      SimpleLine line = (SimpleLine)d;
-      line.OnValueChanged();
-    }
+  protected virtual void OnValueChanged()
+  {
+    UpdateUIRepresentation();
+  }
 
-    protected virtual void OnValueChanged()
-    {
-      UpdateUIRepresentation();
-    }
-
-    private readonly LineGeometry lineGeometry = new();
-    protected LineGeometry LineGeometry
-    {
-      get { return lineGeometry; }
-    }
-    protected override Geometry DefiningGeometry
-    {
-      get { return lineGeometry; }
-    }
+  private readonly LineGeometry lineGeometry = new();
+  protected LineGeometry LineGeometry
+  {
+    get { return lineGeometry; }
+  }
+  protected override Geometry DefiningGeometry
+  {
+    get { return lineGeometry; }
   }
 }

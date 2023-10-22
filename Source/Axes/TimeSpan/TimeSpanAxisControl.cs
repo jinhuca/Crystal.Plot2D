@@ -1,17 +1,16 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public class TimeSpanAxisControl : AxisControl<TimeSpan>
 {
-  public class TimeSpanAxisControl : AxisControl<TimeSpan>
+  public TimeSpanAxisControl()
   {
-    public TimeSpanAxisControl()
-    {
-      LabelProvider = new TimeSpanLabelProvider();
-      TicksProvider = new TimeSpanTicksProvider();
+    LabelProvider = new TimeSpanLabelProvider();
+    TicksProvider = new TimeSpanTicksProvider();
 
-      ConvertToDouble = time => time.Ticks;
+    ConvertToDouble = time => time.Ticks;
 
-      Range = new Range<TimeSpan>(new TimeSpan(), new TimeSpan(1, 0, 0));
-    }
+    Range = new Range<TimeSpan>(new TimeSpan(), new TimeSpan(1, 0, 0));
   }
 }

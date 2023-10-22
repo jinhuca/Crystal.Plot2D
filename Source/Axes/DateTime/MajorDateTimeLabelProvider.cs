@@ -5,123 +5,122 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Shapes;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Represents a label provider for major ticks of <see cref="System.DateTime"/> type.
+/// </summary>
+public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
 {
   /// <summary>
-  /// Represents a label provider for major ticks of <see cref="System.DateTime"/> type.
+  /// Initializes a new instance of the <see cref="MajorDateTimeLabelProvider"/> class.
   /// </summary>
-  public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
+  public MajorDateTimeLabelProvider() { }
+
+  public override UIElement[] CreateLabels(ITicksInfo<DateTime> ticksInfo)
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MajorDateTimeLabelProvider"/> class.
-    /// </summary>
-    public MajorDateTimeLabelProvider() { }
+    object info = ticksInfo.Info;
+    var ticks = ticksInfo.Ticks;
+    UIElement[] res = new UIElement[ticks.Length - 1];
+    int labelsNum = 3;
 
-    public override UIElement[] CreateLabels(ITicksInfo<DateTime> ticksInfo)
+    if (info is DifferenceIn)
     {
-      object info = ticksInfo.Info;
-      var ticks = ticksInfo.Ticks;
-      UIElement[] res = new UIElement[ticks.Length - 1];
-      int labelsNum = 3;
+      DifferenceIn diff = (DifferenceIn)info;
+      DateFormat = GetDateFormat(diff);
+    }
+    else if (info is MajorLabelsInfo)
+    {
+      MajorLabelsInfo mInfo = (MajorLabelsInfo)info;
+      DifferenceIn diff = (DifferenceIn)mInfo.Info;
+      DateFormat = GetDateFormat(diff);
+      labelsNum = mInfo.MajorLabelsCount + 1;
 
-      if (info is DifferenceIn)
+      //DebugVerify.Is(labelsNum < 100);
+    }
+
+    DebugVerify.Is(ticks.Length < 10);
+
+    LabelTickInfo<DateTime> tickInfo = new();
+    for (int i = 0; i < ticks.Length - 1; i++)
+    {
+      tickInfo.Info = info;
+      tickInfo.Tick = ticks[i];
+
+      string tickText = GetString(tickInfo);
+
+      Grid grid = new() { };
+
+      // doing binding as described at http://sdolha.spaces.live.com/blog/cns!4121802308C5AB4E!3724.entry?wa=wsignin1.0&sa=835372863
+
+      grid.SetBinding(Panel.BackgroundProperty, new Binding { Path = new PropertyPath("(0)", DateTimeAxis.MajorLabelBackgroundBrushProperty), RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
+      Rectangle rect = new()
       {
-        DifferenceIn diff = (DifferenceIn)info;
-        DateFormat = GetDateFormat(diff);
+        StrokeThickness = 2
+      };
+      rect.SetBinding(Shape.StrokeProperty, new Binding { Path = new PropertyPath("(0)", DateTimeAxis.MajorLabelRectangleBorderPropertyProperty), RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
+
+      Grid.SetColumn(rect, 0);
+      Grid.SetColumnSpan(rect, labelsNum);
+
+      for (int j = 0; j < labelsNum; j++)
+      {
+        grid.ColumnDefinitions.Add(new ColumnDefinition());
       }
-      else if (info is MajorLabelsInfo)
+
+      grid.Children.Add(rect);
+
+      for (int j = 0; j < labelsNum; j++)
       {
-        MajorLabelsInfo mInfo = (MajorLabelsInfo)info;
-        DifferenceIn diff = (DifferenceIn)mInfo.Info;
-        DateFormat = GetDateFormat(diff);
-        labelsNum = mInfo.MajorLabelsCount + 1;
-
-        //DebugVerify.Is(labelsNum < 100);
-      }
-
-      DebugVerify.Is(ticks.Length < 10);
-
-      LabelTickInfo<DateTime> tickInfo = new();
-      for (int i = 0; i < ticks.Length - 1; i++)
-      {
-        tickInfo.Info = info;
-        tickInfo.Tick = ticks[i];
-
-        string tickText = GetString(tickInfo);
-
-        Grid grid = new() { };
-
-        // doing binding as described at http://sdolha.spaces.live.com/blog/cns!4121802308C5AB4E!3724.entry?wa=wsignin1.0&sa=835372863
-
-        grid.SetBinding(Panel.BackgroundProperty, new Binding { Path = new PropertyPath("(0)", DateTimeAxis.MajorLabelBackgroundBrushProperty), RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
-        Rectangle rect = new()
+        var tb = new TextBlock
         {
-          StrokeThickness = 2
+          Text = tickText,
+          HorizontalAlignment = HorizontalAlignment.Center,
+          Margin = new Thickness(0, 3, 0, 3)
         };
-        rect.SetBinding(Shape.StrokeProperty, new Binding { Path = new PropertyPath("(0)", DateTimeAxis.MajorLabelRectangleBorderPropertyProperty), RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
-
-        Grid.SetColumn(rect, 0);
-        Grid.SetColumnSpan(rect, labelsNum);
-
-        for (int j = 0; j < labelsNum; j++)
-        {
-          grid.ColumnDefinitions.Add(new ColumnDefinition());
-        }
-
-        grid.Children.Add(rect);
-
-        for (int j = 0; j < labelsNum; j++)
-        {
-          var tb = new TextBlock
-          {
-            Text = tickText,
-            HorizontalAlignment = HorizontalAlignment.Center,
-            Margin = new Thickness(0, 3, 0, 3)
-          };
-          Grid.SetColumn(tb, j);
-          grid.Children.Add(tb);
-        }
-
-        ApplyCustomView(tickInfo, grid);
-
-        res[i] = grid;
+        Grid.SetColumn(tb, j);
+        grid.Children.Add(tb);
       }
 
-      return res;
+      ApplyCustomView(tickInfo, grid);
+
+      res[i] = grid;
     }
 
-    protected override string GetDateFormat(DifferenceIn diff)
+    return res;
+  }
+
+  protected override string GetDateFormat(DifferenceIn diff)
+  {
+    string format = null;
+
+    switch (diff)
     {
-      string format = null;
-
-      switch (diff)
-      {
-        case DifferenceIn.Year:
-          format = "yyyy";
-          break;
-        case DifferenceIn.Month:
-          format = "MMMM yyyy";
-          break;
-        case DifferenceIn.Day:
-          format = "%d MMMM yyyy";
-          break;
-        case DifferenceIn.Hour:
-          format = "HH:mm %d MMMM yyyy";
-          break;
-        case DifferenceIn.Minute:
-          format = "HH:mm %d MMMM yyyy";
-          break;
-        case DifferenceIn.Second:
-          format = "HH:mm:ss %d MMMM yyyy";
-          break;
-        case DifferenceIn.Millisecond:
-          format = "fff";
-          break;
-        default:
-          break;
-      }
-
-      return format;
+      case DifferenceIn.Year:
+        format = "yyyy";
+        break;
+      case DifferenceIn.Month:
+        format = "MMMM yyyy";
+        break;
+      case DifferenceIn.Day:
+        format = "%d MMMM yyyy";
+        break;
+      case DifferenceIn.Hour:
+        format = "HH:mm %d MMMM yyyy";
+        break;
+      case DifferenceIn.Minute:
+        format = "HH:mm %d MMMM yyyy";
+        break;
+      case DifferenceIn.Second:
+        format = "HH:mm:ss %d MMMM yyyy";
+        break;
+      case DifferenceIn.Millisecond:
+        format = "fff";
+        break;
+      default:
+        break;
     }
+
+    return format;
   }
 }

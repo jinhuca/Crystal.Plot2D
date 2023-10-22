@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+internal interface INotifyingPanel
 {
-  internal interface INotifyingPanel
-  {
-    NotifyingUIElementCollection NotifyingChildren { get; }
-    event EventHandler ChildrenCreated;
-  }
+  NotifyingUIElementCollection NotifyingChildren { get; }
+  event EventHandler ChildrenCreated;
 }

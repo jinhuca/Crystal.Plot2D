@@ -2,55 +2,54 @@
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+///<summary>
+/// Helper class to draw semitransparent rectangle over the selection area.
+///</summary>
+public sealed class RectangleSelectionAdorner : Adorner
 {
-  ///<summary>
-  /// Helper class to draw semitransparent rectangle over the selection area.
-  ///</summary>
-  public sealed class RectangleSelectionAdorner : Adorner
+
+  private Rect? border = null;
+  public Rect? Border
   {
+    get { return border; }
+    set { border = value; }
+  }
 
-    private Rect? border = null;
-    public Rect? Border
+  public Brush Fill
+  {
+    get { return (Brush)GetValue(FillProperty); }
+    set { SetValue(FillProperty, value); }
+  }
+
+  public static readonly DependencyProperty FillProperty =
+    DependencyProperty.Register(
+      "InnerBrush",
+      typeof(Brush),
+      typeof(RectangleSelectionAdorner),
+      new FrameworkPropertyMetadata(
+        new SolidColorBrush(Color.FromArgb(60, 100, 100, 100)),
+        FrameworkPropertyMetadataOptions.AffectsRender));
+
+  private Pen pen;
+  public Pen Pen
+  {
+    get { return pen; }
+    set { pen = value; }
+  }
+
+  public RectangleSelectionAdorner(UIElement element)
+    : base(element)
+  {
+    pen = new Pen(Brushes.Black, 1.0);
+  }
+
+  protected override void OnRender(DrawingContext dc)
+  {
+    if (border.HasValue)
     {
-      get { return border; }
-      set { border = value; }
-    }
-
-    public Brush Fill
-    {
-      get { return (Brush)GetValue(FillProperty); }
-      set { SetValue(FillProperty, value); }
-    }
-
-    public static readonly DependencyProperty FillProperty =
-      DependencyProperty.Register(
-        "InnerBrush",
-        typeof(Brush),
-        typeof(RectangleSelectionAdorner),
-        new FrameworkPropertyMetadata(
-          new SolidColorBrush(Color.FromArgb(60, 100, 100, 100)),
-          FrameworkPropertyMetadataOptions.AffectsRender));
-
-    private Pen pen;
-    public Pen Pen
-    {
-      get { return pen; }
-      set { pen = value; }
-    }
-
-    public RectangleSelectionAdorner(UIElement element)
-      : base(element)
-    {
-      pen = new Pen(Brushes.Black, 1.0);
-    }
-
-    protected override void OnRender(DrawingContext dc)
-    {
-      if (border.HasValue)
-      {
-        dc.DrawRectangle(Fill, pen, border.Value);
-      }
+      dc.DrawRectangle(Fill, pen, border.Value);
     }
   }
 }

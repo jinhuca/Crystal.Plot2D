@@ -1,13 +1,12 @@
-﻿namespace Crystal.Plot2D.Common
+﻿namespace Crystal.Plot2D.Common;
+
+internal struct SearchResult1d
 {
-  internal struct SearchResult1d
-  {
-    public static SearchResult1d Empty => new() { Index = -1 };
+  public static SearchResult1d Empty => new() { Index = -1 };
 
-    public int Index { get; internal set; }
+  public int Index { get; internal set; }
 
-    public bool IsEmpty => Index == -1;
+  public bool IsEmpty => Index == -1;
 
-    public override string ToString() => IsEmpty ? "Empty" : $"Index = {Index}";
-  }
+  public override string ToString() => IsEmpty ? "Empty" : $"Index = {Index}";
 }

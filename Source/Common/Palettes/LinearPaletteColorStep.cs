@@ -1,38 +1,37 @@
 ﻿using System.Diagnostics;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+/// <summary>
+/// Represents a color step with its offset in limits [0..1].
+/// </summary>
+[DebuggerDisplay("Color={Color}, Offset={Offset}")]
+public class LinearPaletteColorStep
 {
   /// <summary>
-  /// Represents a color step with its offset in limits [0..1].
+  /// Initializes a new instance of the <see cref="LinearPaletteColorStep"/> class.
   /// </summary>
-  [DebuggerDisplay("Color={Color}, Offset={Offset}")]
-  public class LinearPaletteColorStep
+  public LinearPaletteColorStep() { }
+  /// <summary>
+  /// Initializes a new instance of the <see cref="LinearPaletteColorStep"/> class.
+  /// </summary>
+  /// <param name="color">The color.</param>
+  /// <param name="offset">The offset.</param>
+  public LinearPaletteColorStep(Color color, double offset)
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LinearPaletteColorStep"/> class.
-    /// </summary>
-    public LinearPaletteColorStep() { }
-    /// <summary>
-    /// Initializes a new instance of the <see cref="LinearPaletteColorStep"/> class.
-    /// </summary>
-    /// <param name="color">The color.</param>
-    /// <param name="offset">The offset.</param>
-    public LinearPaletteColorStep(Color color, double offset)
-    {
-      Color = color;
-      Offset = offset;
-    }
-
-    /// <summary>
-    /// Gets or sets the color.
-    /// </summary>
-    /// <value>The color.</value>
-    public Color Color { get; set; }
-    /// <summary>
-    /// Gets or sets the offset.
-    /// </summary>
-    /// <value>The offset.</value>
-    public double Offset { get; set; }
+    Color = color;
+    Offset = offset;
   }
+
+  /// <summary>
+  /// Gets or sets the color.
+  /// </summary>
+  /// <value>The color.</value>
+  public Color Color { get; set; }
+  /// <summary>
+  /// Gets or sets the offset.
+  /// </summary>
+  /// <value>The offset.</value>
+  public double Offset { get; set; }
 }

@@ -2,28 +2,27 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+/// <summary>
+///   Invokes specified delegate for rendering custon marker at every point of graph.
+/// </summary>
+public sealed class DelegatePointMarker : PointMarker
 {
-  /// <summary>
-  ///   Invokes specified delegate for rendering custon marker at every point of graph.
-  /// </summary>
-  public sealed class DelegatePointMarker : PointMarker
+  public MarkerRenderHandler RenderCallback { get; set; }
+
+  public DelegatePointMarker() { }
+  public DelegatePointMarker(MarkerRenderHandler renderCallback)
   {
-    public MarkerRenderHandler RenderCallback { get; set; }
-
-    public DelegatePointMarker() { }
-    public DelegatePointMarker(MarkerRenderHandler renderCallback)
+    if (renderCallback == null)
     {
-      if (renderCallback == null)
-      {
-        throw new ArgumentNullException("renderCallback");
-      }
-      RenderCallback = renderCallback;
+      throw new ArgumentNullException("renderCallback");
     }
+    RenderCallback = renderCallback;
+  }
 
-    public override void Render(DrawingContext dc, Point screenPoint)
-    {
-      RenderCallback(dc, screenPoint);
-    }
+  public override void Render(DrawingContext dc, Point screenPoint)
+  {
+    RenderCallback(dc, screenPoint);
   }
 }

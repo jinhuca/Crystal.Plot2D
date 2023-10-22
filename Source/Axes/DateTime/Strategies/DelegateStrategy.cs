@@ -1,29 +1,28 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public class DelegateDateTimeStrategy : DefaultDateTimeTicksStrategy
 {
-  public class DelegateDateTimeStrategy : DefaultDateTimeTicksStrategy
+  private readonly Func<TimeSpan, DifferenceIn?> function;
+  public DelegateDateTimeStrategy(Func<TimeSpan, DifferenceIn?> function)
   {
-    private readonly Func<TimeSpan, DifferenceIn?> function;
-    public DelegateDateTimeStrategy(Func<TimeSpan, DifferenceIn?> function)
+    if (function == null)
     {
-      if (function == null)
-      {
-        throw new ArgumentNullException("function");
-      }
-
-      this.function = function;
+      throw new ArgumentNullException("function");
     }
 
-    public override DifferenceIn GetDifference(TimeSpan span)
-    {
-      DifferenceIn? customResult = function(span);
+    this.function = function;
+  }
 
-      DifferenceIn result = customResult.HasValue ?
-        customResult.Value :
-        base.GetDifference(span);
+  public override DifferenceIn GetDifference(TimeSpan span)
+  {
+    DifferenceIn? customResult = function(span);
 
-      return result;
-    }
+    DifferenceIn result = customResult.HasValue ?
+      customResult.Value :
+      base.GetDifference(span);
+
+    return result;
   }
 }

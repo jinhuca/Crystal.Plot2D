@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+public class PowerPalette : DecoratorPaletteBase
 {
-  public class PowerPalette : DecoratorPaletteBase
+  public PowerPalette() { }
+
+  public PowerPalette(IPalette palette) : base(palette) { }
+
+  public override Color GetColor(double t)
   {
-    public PowerPalette() { }
-
-    public PowerPalette(IPalette palette) : base(palette) { }
-
-    public override Color GetColor(double t)
-    {
-      // todo create a property for power base setting
-      return base.GetColor(Math.Pow(t, 0.1));
-    }
+    // todo create a property for power base setting
+    return base.GetColor(Math.Pow(t, 0.1));
   }
 }

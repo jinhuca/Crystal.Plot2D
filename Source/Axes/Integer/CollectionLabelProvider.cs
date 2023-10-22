@@ -5,105 +5,104 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public class CollectionLabelProvider<T> : LabelProviderBase<int>
 {
-  public class CollectionLabelProvider<T> : LabelProviderBase<int>
+  private IList<T> collection;
+
+  [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+  public IList<T> Collection
   {
-    private IList<T> collection;
-
-    [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-    public IList<T> Collection
+    get { return collection; }
+    set
     {
-      get { return collection; }
-      set
+      if (value == null)
       {
-        if (value == null)
-        {
-          throw new ArgumentNullException("value");
-        }
+        throw new ArgumentNullException("value");
+      }
 
-        if (collection != value)
-        {
-          DetachCollection();
+      if (collection != value)
+      {
+        DetachCollection();
 
-          collection = value;
+        collection = value;
 
-          AttachCollection();
+        AttachCollection();
 
-          RaiseChanged();
-        }
+        RaiseChanged();
       }
     }
+  }
 
-    #region Collection changed
+  #region Collection changed
 
-    private void AttachCollection()
+  private void AttachCollection()
+  {
+    if (collection is INotifyCollectionChanged observableCollection)
     {
-      if (collection is INotifyCollectionChanged observableCollection)
+      observableCollection.CollectionChanged += OnCollectionChanged;
+    }
+  }
+
+  private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+  {
+    RaiseChanged();
+  }
+
+  private void DetachCollection()
+  {
+    if (collection is INotifyCollectionChanged observableCollection)
+    {
+      observableCollection.CollectionChanged -= OnCollectionChanged;
+    }
+  }
+
+  #endregion
+
+  /// <summary>
+  /// Initializes a new instance of the <see cref="CollectionLabelProvider&lt;T&gt;"/> class with empty labels collection.
+  /// </summary>
+  public CollectionLabelProvider() { }
+
+  public CollectionLabelProvider(IList<T> collection)
+    : this()
+  {
+    Collection = collection;
+  }
+
+  public CollectionLabelProvider(params T[] collection)
+  {
+    Collection = collection;
+  }
+
+  public override UIElement[] CreateLabels(ITicksInfo<int> ticksInfo)
+  {
+    var ticks = ticksInfo.Ticks;
+
+    UIElement[] res = new UIElement[ticks.Length];
+
+    var tickInfo = new LabelTickInfo<int> { Info = ticksInfo.Info };
+
+    for (int i = 0; i < res.Length; i++)
+    {
+      int tick = ticks[i];
+      tickInfo.Tick = tick;
+
+      if (0 <= tick && tick < collection.Count)
       {
-        observableCollection.CollectionChanged += OnCollectionChanged;
-      }
-    }
-
-    private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-    {
-      RaiseChanged();
-    }
-
-    private void DetachCollection()
-    {
-      if (collection is INotifyCollectionChanged observableCollection)
-      {
-        observableCollection.CollectionChanged -= OnCollectionChanged;
-      }
-    }
-
-    #endregion
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="CollectionLabelProvider&lt;T&gt;"/> class with empty labels collection.
-    /// </summary>
-    public CollectionLabelProvider() { }
-
-    public CollectionLabelProvider(IList<T> collection)
-      : this()
-    {
-      Collection = collection;
-    }
-
-    public CollectionLabelProvider(params T[] collection)
-    {
-      Collection = collection;
-    }
-
-    public override UIElement[] CreateLabels(ITicksInfo<int> ticksInfo)
-    {
-      var ticks = ticksInfo.Ticks;
-
-      UIElement[] res = new UIElement[ticks.Length];
-
-      var tickInfo = new LabelTickInfo<int> { Info = ticksInfo.Info };
-
-      for (int i = 0; i < res.Length; i++)
-      {
-        int tick = ticks[i];
-        tickInfo.Tick = tick;
-
-        if (0 <= tick && tick < collection.Count)
+        string text = collection[tick].ToString();
+        res[i] = new TextBlock
         {
-          string text = collection[tick].ToString();
-          res[i] = new TextBlock
-          {
-            Text = text,
-            ToolTip = text
-          };
-        }
-        else
-        {
-          res[i] = null;
-        }
+          Text = text,
+          ToolTip = text
+        };
       }
-      return res;
+      else
+      {
+        res[i] = null;
+      }
     }
+    return res;
   }
 }

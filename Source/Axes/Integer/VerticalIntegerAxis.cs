@@ -1,20 +1,19 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts
-{
-  public class VerticalIntegerAxis : IntegerAxis
-  {
-    public VerticalIntegerAxis()
-    {
-      Placement = AxisPlacement.Left;
-    }
+namespace Crystal.Plot2D.Charts;
 
-    protected override void ValidatePlacement(AxisPlacement newPlacement)
+public class VerticalIntegerAxis : IntegerAxis
+{
+  public VerticalIntegerAxis()
+  {
+    Placement = AxisPlacement.Left;
+  }
+
+  protected override void ValidatePlacement(AxisPlacement newPlacement)
+  {
+    if (newPlacement == AxisPlacement.Bottom || newPlacement == AxisPlacement.Top)
     {
-      if (newPlacement == AxisPlacement.Bottom || newPlacement == AxisPlacement.Top)
-      {
-        throw new ArgumentException(Strings.Exceptions.VerticalAxisCannotBeHorizontal);
-      }
+      throw new ArgumentException(Strings.Exceptions.VerticalAxisCannotBeHorizontal);
     }
   }
 }

@@ -3,37 +3,36 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Interaction logic for AboutWindow.xaml
+/// </summary>
+internal partial class AboutWindow : Window
 {
-  /// <summary>
-  /// Interaction logic for AboutWindow.xaml
-  /// </summary>
-  internal partial class AboutWindow : Window
+  public AboutWindow()
   {
-    public AboutWindow()
-    {
-      InitializeComponent();
-    }
+    InitializeComponent();
+  }
 
-    private void Hyperlink_Click(object sender, RoutedEventArgs e)
-    {
-      Hyperlink source = (Hyperlink)sender;
-      Process.Start(source.NavigateUri.ToString());
-    }
+  private void Hyperlink_Click(object sender, RoutedEventArgs e)
+  {
+    Hyperlink source = (Hyperlink)sender;
+    Process.Start(source.NavigateUri.ToString());
+  }
 
-    private void Window_KeyDown(object sender, KeyEventArgs e)
+  private void Window_KeyDown(object sender, KeyEventArgs e)
+  {
+    // close on Esc or Enter pressed
+    if (e.Key == Key.Escape || e.Key == Key.Enter)
     {
-      // close on Esc or Enter pressed
-      if (e.Key == Key.Escape || e.Key == Key.Enter)
-      {
-        Close();
-      }
+      Close();
     }
+  }
 
-    private void Hyperlink_Click_1(object sender, RoutedEventArgs e)
-    {
-      Hyperlink source = (Hyperlink)sender;
-      Process.Start(source.NavigateUri.ToString());
-    }
+  private void Hyperlink_Click_1(object sender, RoutedEventArgs e)
+  {
+    Hyperlink source = (Hyperlink)sender;
+    Process.Start(source.NavigateUri.ToString());
   }
 }

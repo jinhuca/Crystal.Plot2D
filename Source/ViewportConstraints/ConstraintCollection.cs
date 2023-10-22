@@ -2,62 +2,61 @@
 using System;
 using System.Collections.Specialized;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+/// <summary>
+///   Represents a collection of <see cref="ViewportConstraint"/>s.
+/// </summary>
+/// <remarks>
+///   ViewportConstraint that is being added should not be null.
+/// </remarks>
+public sealed class ConstraintCollection : NotifiableCollection<ViewportConstraint>
 {
-  /// <summary>
-  ///   Represents a collection of <see cref="ViewportConstraint"/>s.
-  /// </summary>
-  /// <remarks>
-  ///   ViewportConstraint that is being added should not be null.
-  /// </remarks>
-  public sealed class ConstraintCollection : NotifiableCollection<ViewportConstraint>
+  public Viewport2D Viewport { get; }
+
+  internal ConstraintCollection(Viewport2D viewport)
   {
-    public Viewport2D Viewport { get; }
+    Viewport = viewport ?? throw new ArgumentNullException("viewport");
+  }
 
-    internal ConstraintCollection(Viewport2D viewport)
+  protected override void OnItemAdding(ViewportConstraint item)
+  {
+    if (item == null)
     {
-      Viewport = viewport ?? throw new ArgumentNullException("viewport");
+      throw new ArgumentNullException("item");
     }
+  }
 
-    protected override void OnItemAdding(ViewportConstraint item)
+  protected override void OnItemAdded(ViewportConstraint item)
+  {
+    item.Changed += OnItemChanged;
+    if (item is ISupportAttachToViewport attachable)
     {
-      if (item == null)
-      {
-        throw new ArgumentNullException("item");
-      }
+      attachable.Attach(Viewport);
     }
+  }
 
-    protected override void OnItemAdded(ViewportConstraint item)
-    {
-      item.Changed += OnItemChanged;
-      if (item is ISupportAttachToViewport attachable)
-      {
-        attachable.Attach(Viewport);
-      }
-    }
+  private void OnItemChanged(object sender, EventArgs e)
+  {
+    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+  }
 
-    private void OnItemChanged(object sender, EventArgs e)
+  protected override void OnItemRemoving(ViewportConstraint item)
+  {
+    if (item is ISupportAttachToViewport attachable)
     {
-      OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+      attachable.Detach(Viewport);
     }
+    item.Changed -= OnItemChanged;
+  }
 
-    protected override void OnItemRemoving(ViewportConstraint item)
+  internal DataRect Apply(DataRect oldVisible, DataRect newVisible, Viewport2D viewport)
+  {
+    DataRect res = newVisible;
+    foreach (var constraint in this)
     {
-      if (item is ISupportAttachToViewport attachable)
-      {
-        attachable.Detach(Viewport);
-      }
-      item.Changed -= OnItemChanged;
+      res = constraint.Apply(oldVisible, res, viewport);
     }
-
-    internal DataRect Apply(DataRect oldVisible, DataRect newVisible, Viewport2D viewport)
-    {
-      DataRect res = newVisible;
-      foreach (var constraint in this)
-      {
-        res = constraint.Apply(oldVisible, res, viewport);
-      }
-      return res;
-    }
+    return res;
   }
 }

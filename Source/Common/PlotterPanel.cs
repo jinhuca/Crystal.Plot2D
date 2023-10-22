@@ -1,7 +1,6 @@
-﻿namespace Crystal.Plot2D.Common
+﻿namespace Crystal.Plot2D.Common;
+
+public enum PlotterPanel
 {
-  public enum PlotterPanel
-  {
-    MainCanvas = 0
-  }
+  MainCanvas = 0
 }

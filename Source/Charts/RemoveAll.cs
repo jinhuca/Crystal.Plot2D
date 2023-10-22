@@ -1,39 +1,38 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public sealed class RemoveAll : IPlotterElement
 {
-  public sealed class RemoveAll : IPlotterElement
+  private Type type;
+  [NotNull]
+  public Type Type
   {
-    private Type type;
-    [NotNull]
-    public Type Type
+    get { return type; }
+    set
     {
-      get { return type; }
-      set
+      if (value == null)
       {
-        if (value == null)
-        {
-          throw new ArgumentNullException(nameof(value));
-        }
-        type = value;
+        throw new ArgumentNullException(nameof(value));
       }
+      type = value;
     }
+  }
 
-    private PlotterBase plotter;
-    public PlotterBase Plotter => plotter;
+  private PlotterBase plotter;
+  public PlotterBase Plotter => plotter;
 
-    public void OnPlotterAttached(PlotterBase plotter)
+  public void OnPlotterAttached(PlotterBase plotter)
+  {
+    this.plotter = plotter;
+    if (type != null)
     {
-      this.plotter = plotter;
-      if (type != null)
-      {
-        plotter.Children.RemoveAll(type);
-      }
+      plotter.Children.RemoveAll(type);
     }
+  }
 
-    public void OnPlotterDetaching(PlotterBase plotter)
-    {
-      this.plotter = null;
-    }
+  public void OnPlotterDetaching(PlotterBase plotter)
+  {
+    this.plotter = null;
   }
 }

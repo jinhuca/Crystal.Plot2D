@@ -5,56 +5,55 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+/// <summary>
+///   Composite point markers renders a specified set of markers at every point of graph.
+/// </summary>
+public sealed class CompositePointMarker : PointMarker
 {
-  /// <summary>
-  ///   Composite point markers renders a specified set of markers at every point of graph.
-  /// </summary>
-  public sealed class CompositePointMarker : PointMarker
+  public CompositePointMarker() { }
+
+  public CompositePointMarker(params PointMarker[] markers)
   {
-    public CompositePointMarker() { }
-
-    public CompositePointMarker(params PointMarker[] markers)
+    if (markers == null)
     {
-      if (markers == null)
-      {
-        throw new ArgumentNullException("markers");
-      }
-
-      foreach (PointMarker m in markers)
-      {
-        Markers.Add(m);
-      }
+      throw new ArgumentNullException("markers");
     }
 
-    public CompositePointMarker(IEnumerable<PointMarker> markers)
+    foreach (PointMarker m in markers)
     {
-      if (markers == null)
-      {
-        throw new ArgumentNullException("markers");
-      }
-
-      foreach (PointMarker m in markers)
-      {
-        Markers.Add(m);
-      }
+      Markers.Add(m);
     }
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public Collection<PointMarker> Markers { get; } = new Collection<PointMarker>();
+  }
 
-    public override void Render(DrawingContext dc, Point screenPoint)
+  public CompositePointMarker(IEnumerable<PointMarker> markers)
+  {
+    if (markers == null)
     {
-      LocalValueEnumerator enumerator = GetLocalValueEnumerator();
-      foreach (var marker in Markers)
-      {
-        enumerator.Reset();
-        while (enumerator.MoveNext())
-        {
-          marker.SetValue(enumerator.Current.Property, enumerator.Current.Value);
-        }
+      throw new ArgumentNullException("markers");
+    }
 
-        marker.Render(dc, screenPoint);
+    foreach (PointMarker m in markers)
+    {
+      Markers.Add(m);
+    }
+  }
+  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+  public Collection<PointMarker> Markers { get; } = new Collection<PointMarker>();
+
+  public override void Render(DrawingContext dc, Point screenPoint)
+  {
+    LocalValueEnumerator enumerator = GetLocalValueEnumerator();
+    foreach (var marker in Markers)
+    {
+      enumerator.Reset();
+      while (enumerator.MoveNext())
+      {
+        marker.SetValue(enumerator.Current.Property, enumerator.Current.Value);
       }
+
+      marker.Render(dc, screenPoint);
     }
   }
 }

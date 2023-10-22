@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
-namespace Crystal.Plot2D.DataSources
+namespace Crystal.Plot2D.DataSources;
+
+internal sealed class EnumerableXDataSource<T> : EnumerableDataSource<T>
 {
-  internal sealed class EnumerableXDataSource<T> : EnumerableDataSource<T>
-  {
-    public EnumerableXDataSource(IEnumerable<T> data) : base(data) { }
-  }
+  public EnumerableXDataSource(IEnumerable<T> data) : base(data) { }
 }

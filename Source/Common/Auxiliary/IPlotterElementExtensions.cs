@@ -1,33 +1,32 @@
 ﻿using System;
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public static class IPlotterElementExtensions
 {
-  public static class IPlotterElementExtensions
+  public static void RemoveFromPlotter(this IPlotterElement element)
   {
-    public static void RemoveFromPlotter(this IPlotterElement element)
+    if (element == null)
     {
-      if (element == null)
-      {
-        throw new ArgumentNullException(nameof(element));
-      }
-
-      if (element.Plotter != null)
-      {
-        element.Plotter.Children.Remove(element);
-      }
+      throw new ArgumentNullException(nameof(element));
     }
 
-    public static void AddToPlotter(this IPlotterElement element, PlotterBase plotter)
+    if (element.Plotter != null)
     {
-      if (element == null)
-      {
-        throw new ArgumentNullException(nameof(element));
-      }
-      if (plotter == null)
-      {
-        throw new ArgumentNullException(nameof(plotter));
-      }
-      plotter.Children.Add(element);
+      element.Plotter.Children.Remove(element);
     }
+  }
+
+  public static void AddToPlotter(this IPlotterElement element, PlotterBase plotter)
+  {
+    if (element == null)
+    {
+      throw new ArgumentNullException(nameof(element));
+    }
+    if (plotter == null)
+    {
+      throw new ArgumentNullException(nameof(plotter));
+    }
+    plotter.Children.Add(element);
   }
 }

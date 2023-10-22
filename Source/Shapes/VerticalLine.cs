@@ -1,36 +1,35 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Represents an infinite vertical line with x viewport coordinate.
+/// </summary>
+public sealed class VerticalLine : SimpleLine
 {
   /// <summary>
-  /// Represents an infinite vertical line with x viewport coordinate.
+  /// Initializes a new instance of the <see cref="VerticalLine"/> class.
   /// </summary>
-  public sealed class VerticalLine : SimpleLine
+  public VerticalLine() { }
+
+  /// <summary>
+  /// Initializes a new instance of the <see cref="VerticalLine"/> class with specified x coordinate.
+  /// </summary>
+  /// <param name="xCoordinate">The x coordinate.</param>
+  public VerticalLine(double xCoordinate)
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VerticalLine"/> class.
-    /// </summary>
-    public VerticalLine() { }
+    Value = xCoordinate;
+  }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="VerticalLine"/> class with specified x coordinate.
-    /// </summary>
-    /// <param name="xCoordinate">The x coordinate.</param>
-    public VerticalLine(double xCoordinate)
-    {
-      Value = xCoordinate;
-    }
+  protected override void UpdateUIRepresentationCore()
+  {
+    var transform = Plotter.Viewport.Transform;
 
-    protected override void UpdateUIRepresentationCore()
-    {
-      var transform = Plotter.Viewport.Transform;
+    Point p1 = new Point(Value, Plotter.Viewport.Visible.YMin).DataToScreen(transform);
+    Point p2 = new Point(Value, Plotter.Viewport.Visible.YMax).DataToScreen(transform);
 
-      Point p1 = new Point(Value, Plotter.Viewport.Visible.YMin).DataToScreen(transform);
-      Point p2 = new Point(Value, Plotter.Viewport.Visible.YMax).DataToScreen(transform);
-
-      LineGeometry.StartPoint = p1;
-      LineGeometry.EndPoint = p2;
-    }
+    LineGeometry.StartPoint = p1;
+    LineGeometry.EndPoint = p2;
   }
 }

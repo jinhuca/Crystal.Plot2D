@@ -18,10 +18,9 @@ using System.Windows.Markup;
 [assembly: XmlnsPrefix(AssemblyConstants.DefaultXmlNamespace, "Plotter2D")]
 [assembly: AllowPartiallyTrustedCallers]
 
-namespace Crystal.Plot2D
+namespace Crystal.Plot2D;
+
+public static class AssemblyConstants
 {
-  public static class AssemblyConstants
-  {
-    public const string DefaultXmlNamespace = "http://schemas.crystal.com/Plot2D";
-  }
+  public const string DefaultXmlNamespace = "http://schemas.crystal.com/Plot2D";
 }

@@ -6,408 +6,407 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public class AxisNavigation : DependencyObject, IPlotterElement
 {
-  public class AxisNavigation : DependencyObject, IPlotterElement
+  public AxisPlacement Placement
   {
-    public AxisPlacement Placement
+    get { return (AxisPlacement)GetValue(PlacementProperty); }
+    set { SetValue(PlacementProperty, value); }
+  }
+
+  public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
+    "Placement",
+    typeof(AxisPlacement),
+    typeof(AxisNavigation),
+    new FrameworkPropertyMetadata(AxisPlacement.Left, OnPlacementChanged));
+
+  private static void OnPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+  {
+    AxisNavigation navigation = (AxisNavigation)d;
+    navigation.OnPlacementChanged();
+  }
+
+  private Panel listeningPanel;
+  protected Panel ListeningPanel
+  {
+    get { return listeningPanel; }
+  }
+
+  private void OnPlacementChanged()
+  {
+    SetListeningPanel();
+  }
+
+  private void SetListeningPanel()
+  {
+    if (plotter == null)
     {
-      get { return (AxisPlacement)GetValue(PlacementProperty); }
-      set { SetValue(PlacementProperty, value); }
+      return;
     }
 
-    public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
-      "Placement",
-      typeof(AxisPlacement),
-      typeof(AxisNavigation),
-      new FrameworkPropertyMetadata(AxisPlacement.Left, OnPlacementChanged));
-
-    private static void OnPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+    AxisPlacement placement = Placement;
+    switch (placement)
     {
-      AxisNavigation navigation = (AxisNavigation)d;
-      navigation.OnPlacementChanged();
+      case AxisPlacement.Left:
+        listeningPanel = plotter.LeftPanel;
+        break;
+      case AxisPlacement.Right:
+        listeningPanel = plotter.RightPanel;
+        break;
+      case AxisPlacement.Top:
+        listeningPanel = plotter.TopPanel;
+        break;
+      case AxisPlacement.Bottom:
+        listeningPanel = plotter.BottomPanel;
+        break;
+      default:
+        break;
     }
+  }
 
-    private Panel listeningPanel;
-    protected Panel ListeningPanel
+  private CoordinateTransform Transform
+  {
+    get { return plotter.Viewport.Transform; }
+  }
+
+  private Panel hostPanel;
+
+  #region IPlotterElement Members
+
+  void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
+  {
+    this.plotter = (PlotterBase)plotter;
+
+    hostPanel = plotter.MainGrid;
+
+    //hostPanel.Background = Brushes.Pink;
+
+    SetListeningPanel();
+
+    if (hostPanel != null)
     {
-      get { return listeningPanel; }
+      hostPanel.MouseLeftButtonUp += OnMouseLeftButtonUp;
+      hostPanel.MouseLeftButtonDown += OnMouseLeftButtonDown;
+      hostPanel.MouseMove += OnMouseMove;
+      hostPanel.MouseWheel += OnMouseWheel;
+
+      hostPanel.MouseRightButtonDown += OnMouseRightButtonDown;
+      hostPanel.MouseRightButtonUp += OnMouseRightButtonUp;
+      hostPanel.LostFocus += OnLostFocus;
     }
+  }
 
-    private void OnPlacementChanged()
+  private void OnLostFocus(object sender, RoutedEventArgs e)
+  {
+    //Debug.WriteLine("Lost Focus");
+    RevertChanges();
+    rmbPressed = false;
+    lmbPressed = false;
+
+    e.Handled = true;
+  }
+
+  #region Right button down
+
+  DataRect rmbDragStartRect;
+  private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+  {
+    OnMouseRightButtonDown(e);
+  }
+
+  protected virtual void OnMouseRightButtonDown(MouseButtonEventArgs e)
+  {
+    rmbInitialPosition = e.GetPosition(listeningPanel);
+
+    var foundActivePlotter = UpdateActivePlotter(e);
+    if (foundActivePlotter)
     {
-      SetListeningPanel();
+      rmbPressed = true;
+      dragStartInViewport = rmbInitialPosition.ScreenToViewport(activePlotter.Transform);
+      rmbDragStartRect = activePlotter.Visible;
+
+      listeningPanel.Background = fillBrush;
+      listeningPanel.CaptureMouse();
+
+      //e.Handled = true;
     }
+  }
 
-    private void SetListeningPanel()
+  #endregion
+
+  #region Right button up
+
+  private void OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
+  {
+    OnMouseRightButtonUp(e);
+  }
+
+  protected virtual void OnMouseRightButtonUp(MouseButtonEventArgs e)
+  {
+    if (rmbPressed)
     {
-      if (plotter == null)
-      {
-        return;
-      }
-
-      AxisPlacement placement = Placement;
-      switch (placement)
-      {
-        case AxisPlacement.Left:
-          listeningPanel = plotter.LeftPanel;
-          break;
-        case AxisPlacement.Right:
-          listeningPanel = plotter.RightPanel;
-          break;
-        case AxisPlacement.Top:
-          listeningPanel = plotter.TopPanel;
-          break;
-        case AxisPlacement.Bottom:
-          listeningPanel = plotter.BottomPanel;
-          break;
-        default:
-          break;
-      }
-    }
-
-    private CoordinateTransform Transform
-    {
-      get { return plotter.Viewport.Transform; }
-    }
-
-    private Panel hostPanel;
-
-    #region IPlotterElement Members
-
-    void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
-    {
-      this.plotter = (PlotterBase)plotter;
-
-      hostPanel = plotter.MainGrid;
-
-      //hostPanel.Background = Brushes.Pink;
-
-      SetListeningPanel();
-
-      if (hostPanel != null)
-      {
-        hostPanel.MouseLeftButtonUp += OnMouseLeftButtonUp;
-        hostPanel.MouseLeftButtonDown += OnMouseLeftButtonDown;
-        hostPanel.MouseMove += OnMouseMove;
-        hostPanel.MouseWheel += OnMouseWheel;
-
-        hostPanel.MouseRightButtonDown += OnMouseRightButtonDown;
-        hostPanel.MouseRightButtonUp += OnMouseRightButtonUp;
-        hostPanel.LostFocus += OnLostFocus;
-      }
-    }
-
-    private void OnLostFocus(object sender, RoutedEventArgs e)
-    {
-      //Debug.WriteLine("Lost Focus");
-      RevertChanges();
       rmbPressed = false;
-      lmbPressed = false;
+      RevertChanges();
 
-      e.Handled = true;
+      //e.Handled = true;
+    }
+  }
+
+  #endregion
+
+  private void RevertChanges()
+  {
+    listeningPanel.ClearValue(FrameworkElement.CursorProperty);
+    listeningPanel.Background = Brushes.Transparent;
+    listeningPanel.ReleaseMouseCapture();
+  }
+
+  private const double wheelZoomSpeed = 1.2;
+  private void OnMouseWheel(object sender, MouseWheelEventArgs e)
+  {
+    Point mousePos = e.GetPosition(listeningPanel);
+
+    Rect listeningPanelBounds = new(listeningPanel.RenderSize);
+    if (!listeningPanelBounds.Contains(mousePos))
+    {
+      return;
     }
 
-    #region Right button down
-
-    DataRect rmbDragStartRect;
-    private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+    var foundActivePlotter = UpdateActivePlotter(e);
+    if (!foundActivePlotter)
     {
-      OnMouseRightButtonDown(e);
+      return;
     }
 
-    protected virtual void OnMouseRightButtonDown(MouseButtonEventArgs e)
-    {
-      rmbInitialPosition = e.GetPosition(listeningPanel);
+    int delta = -e.Delta;
 
-      var foundActivePlotter = UpdateActivePlotter(e);
-      if (foundActivePlotter)
+    Point zoomTo = mousePos.ScreenToViewport(activePlotter.Transform);
+
+    double zoomSpeed = Math.Abs(delta / Mouse.MouseWheelDeltaForOneLine);
+    zoomSpeed *= wheelZoomSpeed;
+    if (delta < 0)
+    {
+      zoomSpeed = 1 / zoomSpeed;
+    }
+
+    DataRect visible = activePlotter.Viewport.Visible.Zoom(zoomTo, zoomSpeed);
+    DataRect oldVisible = activePlotter.Viewport.Visible;
+    if (Placement.IsBottomOrTop())
+    {
+      visible.YMin = oldVisible.YMin;
+      visible.Height = oldVisible.Height;
+    }
+    else
+    {
+      visible.XMin = oldVisible.XMin;
+      visible.Width = oldVisible.Width;
+    }
+    activePlotter.Viewport.Visible = visible;
+
+    e.Handled = true;
+  }
+
+  private const int RmbZoomScale = 200;
+  private void OnMouseMove(object sender, MouseEventArgs e)
+  {
+    if (lmbPressed)
+    {
+      // panning: 
+      if (e.LeftButton == MouseButtonState.Released)
       {
-        rmbPressed = true;
-        dragStartInViewport = rmbInitialPosition.ScreenToViewport(activePlotter.Transform);
-        rmbDragStartRect = activePlotter.Visible;
-
-        listeningPanel.Background = fillBrush;
-        listeningPanel.CaptureMouse();
-
-        //e.Handled = true;
-      }
-    }
-
-    #endregion
-
-    #region Right button up
-
-    private void OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
-    {
-      OnMouseRightButtonUp(e);
-    }
-
-    protected virtual void OnMouseRightButtonUp(MouseButtonEventArgs e)
-    {
-      if (rmbPressed)
-      {
-        rmbPressed = false;
+        lmbPressed = false;
         RevertChanges();
-
-        //e.Handled = true;
-      }
-    }
-
-    #endregion
-
-    private void RevertChanges()
-    {
-      listeningPanel.ClearValue(FrameworkElement.CursorProperty);
-      listeningPanel.Background = Brushes.Transparent;
-      listeningPanel.ReleaseMouseCapture();
-    }
-
-    private const double wheelZoomSpeed = 1.2;
-    private void OnMouseWheel(object sender, MouseWheelEventArgs e)
-    {
-      Point mousePos = e.GetPosition(listeningPanel);
-
-      Rect listeningPanelBounds = new(listeningPanel.RenderSize);
-      if (!listeningPanelBounds.Contains(mousePos))
-      {
         return;
       }
 
-      var foundActivePlotter = UpdateActivePlotter(e);
-      if (!foundActivePlotter)
-      {
-        return;
-      }
-
-      int delta = -e.Delta;
-
-      Point zoomTo = mousePos.ScreenToViewport(activePlotter.Transform);
-
-      double zoomSpeed = Math.Abs(delta / Mouse.MouseWheelDeltaForOneLine);
-      zoomSpeed *= wheelZoomSpeed;
-      if (delta < 0)
-      {
-        zoomSpeed = 1 / zoomSpeed;
-      }
-
-      DataRect visible = activePlotter.Viewport.Visible.Zoom(zoomTo, zoomSpeed);
-      DataRect oldVisible = activePlotter.Viewport.Visible;
+      Point screenMousePos = e.GetPosition(listeningPanel);
+      Point dataMousePos = screenMousePos.ScreenToViewport(activePlotter.Transform);
+      DataRect visible = activePlotter.Viewport.Visible;
+      double delta;
       if (Placement.IsBottomOrTop())
       {
-        visible.YMin = oldVisible.YMin;
-        visible.Height = oldVisible.Height;
+        delta = (dataMousePos - dragStartInViewport).X;
+        visible.XMin -= delta;
       }
       else
       {
-        visible.XMin = oldVisible.XMin;
-        visible.Width = oldVisible.Width;
+        delta = (dataMousePos - dragStartInViewport).Y;
+        visible.YMin -= delta;
       }
+
+      if (screenMousePos != lmbInitialPosition)
+      {
+        listeningPanel.Cursor = Placement.IsBottomOrTop() ? Cursors.ScrollWE : Cursors.ScrollNS;
+      }
+
       activePlotter.Viewport.Visible = visible;
 
       e.Handled = true;
     }
-
-    private const int RmbZoomScale = 200;
-    private void OnMouseMove(object sender, MouseEventArgs e)
+    else if (rmbPressed)
     {
-      if (lmbPressed)
+      // one direction zooming:
+      if (e.RightButton == MouseButtonState.Released)
       {
-        // panning: 
-        if (e.LeftButton == MouseButtonState.Released)
-        {
-          lmbPressed = false;
-          RevertChanges();
-          return;
-        }
-
-        Point screenMousePos = e.GetPosition(listeningPanel);
-        Point dataMousePos = screenMousePos.ScreenToViewport(activePlotter.Transform);
-        DataRect visible = activePlotter.Viewport.Visible;
-        double delta;
-        if (Placement.IsBottomOrTop())
-        {
-          delta = (dataMousePos - dragStartInViewport).X;
-          visible.XMin -= delta;
-        }
-        else
-        {
-          delta = (dataMousePos - dragStartInViewport).Y;
-          visible.YMin -= delta;
-        }
-
-        if (screenMousePos != lmbInitialPosition)
-        {
-          listeningPanel.Cursor = Placement.IsBottomOrTop() ? Cursors.ScrollWE : Cursors.ScrollNS;
-        }
-
-        activePlotter.Viewport.Visible = visible;
-
-        e.Handled = true;
-      }
-      else if (rmbPressed)
-      {
-        // one direction zooming:
-        if (e.RightButton == MouseButtonState.Released)
-        {
-          rmbPressed = false;
-          RevertChanges();
-          return;
-        }
-
-        Point screenMousePos = e.GetPosition(listeningPanel);
-        DataRect visible = activePlotter.Viewport.Visible;
-        double delta;
-
-        bool isHorizontal = Placement.IsBottomOrTop();
-        if (isHorizontal)
-        {
-          delta = (screenMousePos - rmbInitialPosition).X;
-        }
-        else
-        {
-          delta = (screenMousePos - rmbInitialPosition).Y;
-        }
-
-        if (delta < 0)
-        {
-          delta = 1 / Math.Exp(-delta / RmbZoomScale);
-        }
-        else
-        {
-          delta = Math.Exp(delta / RmbZoomScale);
-        }
-
-        Point center = dragStartInViewport;
-
-        if (isHorizontal)
-        {
-          visible = rmbDragStartRect.ZoomX(center, delta);
-        }
-        else
-        {
-          visible = rmbDragStartRect.ZoomY(center, delta);
-        }
-
-        if (screenMousePos != lmbInitialPosition)
-        {
-          listeningPanel.Cursor = Placement.IsBottomOrTop() ? Cursors.ScrollWE : Cursors.ScrollNS;
-        }
-
-
-        activePlotter.Viewport.Visible = visible;
-
-        //e.Handled = true;
-      }
-    }
-
-    private Point lmbInitialPosition;
-    protected Point LmbInitialPosition
-    {
-      get { return lmbInitialPosition; }
-    }
-
-    private Point rmbInitialPosition;
-    private readonly SolidColorBrush fillBrush = new SolidColorBrush(Color.FromRgb(255, 228, 209)).MakeTransparent(0.2);
-    private bool lmbPressed;
-    private bool rmbPressed;
-    private Point dragStartInViewport;
-    private PlotterBase activePlotter;
-
-    #region Left button down
-
-    private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-    {
-      OnMouseLeftButtonDown(e);
-    }
-
-    protected virtual void OnMouseLeftButtonDown(MouseButtonEventArgs e)
-    {
-      lmbInitialPosition = e.GetPosition(listeningPanel);
-
-      var foundActivePlotter = UpdateActivePlotter(e);
-      if (foundActivePlotter)
-      {
-        lmbPressed = true;
-        dragStartInViewport = lmbInitialPosition.ScreenToViewport(activePlotter.Transform);
-
-        listeningPanel.Background = fillBrush;
-        listeningPanel.CaptureMouse();
-
-        e.Handled = true;
-      }
-    }
-
-    #endregion
-
-    private bool UpdateActivePlotter(MouseEventArgs e)
-    {
-      var axes = listeningPanel.Children.OfType<GeneralAxis>();
-
-      foreach (var axis in axes)
-      {
-        var positionInAxis = e.GetPosition(axis);
-        Rect axisBounds = new(axis.RenderSize);
-        if (axisBounds.Contains(positionInAxis))
-        {
-          activePlotter = axis.Plotter;
-
-          return true;
-        }
-      }
-
-      return false;
-    }
-
-    #region Left button up
-
-    private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {
-      OnMouseLeftButtonUp(e);
-    }
-
-    protected virtual void OnMouseLeftButtonUp(MouseButtonEventArgs e)
-    {
-      if (lmbPressed)
-      {
-        lmbPressed = false;
+        rmbPressed = false;
         RevertChanges();
-
-        e.Handled = true;
+        return;
       }
-    }
 
-    #endregion
+      Point screenMousePos = e.GetPosition(listeningPanel);
+      DataRect visible = activePlotter.Viewport.Visible;
+      double delta;
 
-    public void OnPlotterDetaching(PlotterBase plotter)
-    {
-      if (plotter.MainGrid != null)
+      bool isHorizontal = Placement.IsBottomOrTop();
+      if (isHorizontal)
       {
-        hostPanel.MouseLeftButtonUp -= OnMouseLeftButtonUp;
-        hostPanel.MouseLeftButtonDown -= OnMouseLeftButtonDown;
-        hostPanel.MouseMove -= OnMouseMove;
-        hostPanel.MouseWheel -= OnMouseWheel;
-
-        hostPanel.MouseRightButtonDown -= OnMouseRightButtonDown;
-        hostPanel.MouseRightButtonUp -= OnMouseRightButtonUp;
-
-        hostPanel.LostFocus -= OnLostFocus;
+        delta = (screenMousePos - rmbInitialPosition).X;
       }
-      listeningPanel = null;
-      this.plotter = null;
-    }
+      else
+      {
+        delta = (screenMousePos - rmbInitialPosition).Y;
+      }
 
-    private PlotterBase plotter;
-    PlotterBase IPlotterElement.Plotter
+      if (delta < 0)
+      {
+        delta = 1 / Math.Exp(-delta / RmbZoomScale);
+      }
+      else
+      {
+        delta = Math.Exp(delta / RmbZoomScale);
+      }
+
+      Point center = dragStartInViewport;
+
+      if (isHorizontal)
+      {
+        visible = rmbDragStartRect.ZoomX(center, delta);
+      }
+      else
+      {
+        visible = rmbDragStartRect.ZoomY(center, delta);
+      }
+
+      if (screenMousePos != lmbInitialPosition)
+      {
+        listeningPanel.Cursor = Placement.IsBottomOrTop() ? Cursors.ScrollWE : Cursors.ScrollNS;
+      }
+
+
+      activePlotter.Viewport.Visible = visible;
+
+      //e.Handled = true;
+    }
+  }
+
+  private Point lmbInitialPosition;
+  protected Point LmbInitialPosition
+  {
+    get { return lmbInitialPosition; }
+  }
+
+  private Point rmbInitialPosition;
+  private readonly SolidColorBrush fillBrush = new SolidColorBrush(Color.FromRgb(255, 228, 209)).MakeTransparent(0.2);
+  private bool lmbPressed;
+  private bool rmbPressed;
+  private Point dragStartInViewport;
+  private PlotterBase activePlotter;
+
+  #region Left button down
+
+  private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+  {
+    OnMouseLeftButtonDown(e);
+  }
+
+  protected virtual void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+  {
+    lmbInitialPosition = e.GetPosition(listeningPanel);
+
+    var foundActivePlotter = UpdateActivePlotter(e);
+    if (foundActivePlotter)
     {
-      get { return plotter; }
+      lmbPressed = true;
+      dragStartInViewport = lmbInitialPosition.ScreenToViewport(activePlotter.Transform);
+
+      listeningPanel.Background = fillBrush;
+      listeningPanel.CaptureMouse();
+
+      e.Handled = true;
     }
+  }
 
-    #endregion
+  #endregion
 
-    public override string ToString()
+  private bool UpdateActivePlotter(MouseEventArgs e)
+  {
+    var axes = listeningPanel.Children.OfType<GeneralAxis>();
+
+    foreach (var axis in axes)
     {
-      return "AxisNavigation: " + Placement;
+      var positionInAxis = e.GetPosition(axis);
+      Rect axisBounds = new(axis.RenderSize);
+      if (axisBounds.Contains(positionInAxis))
+      {
+        activePlotter = axis.Plotter;
+
+        return true;
+      }
     }
+
+    return false;
+  }
+
+  #region Left button up
+
+  private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+  {
+    OnMouseLeftButtonUp(e);
+  }
+
+  protected virtual void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+  {
+    if (lmbPressed)
+    {
+      lmbPressed = false;
+      RevertChanges();
+
+      e.Handled = true;
+    }
+  }
+
+  #endregion
+
+  public void OnPlotterDetaching(PlotterBase plotter)
+  {
+    if (plotter.MainGrid != null)
+    {
+      hostPanel.MouseLeftButtonUp -= OnMouseLeftButtonUp;
+      hostPanel.MouseLeftButtonDown -= OnMouseLeftButtonDown;
+      hostPanel.MouseMove -= OnMouseMove;
+      hostPanel.MouseWheel -= OnMouseWheel;
+
+      hostPanel.MouseRightButtonDown -= OnMouseRightButtonDown;
+      hostPanel.MouseRightButtonUp -= OnMouseRightButtonUp;
+
+      hostPanel.LostFocus -= OnLostFocus;
+    }
+    listeningPanel = null;
+    this.plotter = null;
+  }
+
+  private PlotterBase plotter;
+  PlotterBase IPlotterElement.Plotter
+  {
+    get { return plotter; }
+  }
+
+  #endregion
+
+  public override string ToString()
+  {
+    return "AxisNavigation: " + Placement;
   }
 }

@@ -1,21 +1,20 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D
-{
-  public static class IPointCollectionExtensions
-  {
-    public static DataRect GetBounds(this IEnumerable<Point> points)
-    {
-      return BoundsHelper.GetViewportBounds(points);
-    }
+namespace Crystal.Plot2D;
 
-    public static IEnumerable<Point> Skip(this IList<Point> points, int skipCount)
+public static class IPointCollectionExtensions
+{
+  public static DataRect GetBounds(this IEnumerable<Point> points)
+  {
+    return BoundsHelper.GetViewportBounds(points);
+  }
+
+  public static IEnumerable<Point> Skip(this IList<Point> points, int skipCount)
+  {
+    for (int i = skipCount; i < points.Count; i++)
     {
-      for (int i = skipCount; i < points.Count; i++)
-      {
-        yield return points[i];
-      }
+      yield return points[i];
     }
   }
 }

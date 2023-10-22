@@ -1,59 +1,58 @@
-﻿namespace Crystal.Plot2D
+﻿namespace Crystal.Plot2D;
+
+/// <summary>
+/// Represents a constraint, which limits the maximal size of <see cref="Viewport"/>'s Visible property.
+/// </summary>
+public class MaximalSizeConstraint : ViewportConstraint
 {
   /// <summary>
-  /// Represents a constraint, which limits the maximal size of <see cref="Viewport"/>'s Visible property.
+  /// Initializes a new instance of the <see cref="MaximalSizeConstraint"/> class.
   /// </summary>
-  public class MaximalSizeConstraint : ViewportConstraint
+  public MaximalSizeConstraint() { }
+
+  /// <summary>
+  /// Initializes a new instance of the <see cref="MaximalSizeConstraint"/> class with the given maximal size of Viewport's Visible.
+  /// </summary>
+  /// <param name="maxSize">Maximal size of Viewport's Visible.</param>
+  public MaximalSizeConstraint(double maxSize)
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MaximalSizeConstraint"/> class.
-    /// </summary>
-    public MaximalSizeConstraint() { }
+    MaxSize = maxSize;
+  }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="MaximalSizeConstraint"/> class with the given maximal size of Viewport's Visible.
-    /// </summary>
-    /// <param name="maxSize">Maximal size of Viewport's Visible.</param>
-    public MaximalSizeConstraint(double maxSize)
+  private double maxSize = 1000;
+  /// <summary>
+  /// Gets or sets the maximal size of Viewport's Visible.
+  /// The default value is 1000.0.
+  /// </summary>
+  /// <value>The size of the max.</value>
+  public double MaxSize
+  {
+    get { return maxSize; }
+    set
     {
-      MaxSize = maxSize;
-    }
-
-    private double maxSize = 1000;
-    /// <summary>
-    /// Gets or sets the maximal size of Viewport's Visible.
-    /// The default value is 1000.0.
-    /// </summary>
-    /// <value>The size of the max.</value>
-    public double MaxSize
-    {
-      get { return maxSize; }
-      set
+      if (maxSize != value)
       {
-        if (maxSize != value)
-        {
-          maxSize = value;
-          RaiseChanged();
-        }
+        maxSize = value;
+        RaiseChanged();
       }
     }
+  }
 
-    /// <summary>
-    /// Applies the specified old data rect.
-    /// </summary>
-    /// <param name="oldDataRect">The old data rect.</param>
-    /// <param name="newDataRect">The new data rect.</param>
-    /// <param name="viewport">The viewport.</param>
-    /// <returns>DataRect</returns>
-    public override DataRect Apply(DataRect oldDataRect, DataRect newDataRect, Viewport2D viewport)
+  /// <summary>
+  /// Applies the specified old data rect.
+  /// </summary>
+  /// <param name="oldDataRect">The old data rect.</param>
+  /// <param name="newDataRect">The new data rect.</param>
+  /// <param name="viewport">The viewport.</param>
+  /// <returns>DataRect</returns>
+  public override DataRect Apply(DataRect oldDataRect, DataRect newDataRect, Viewport2D viewport)
+  {
+    bool decreasing = newDataRect.Width < oldDataRect.Width || newDataRect.Height < oldDataRect.Height;
+    if (!decreasing && (newDataRect.Width > maxSize || newDataRect.Height > maxSize))
     {
-      bool decreasing = newDataRect.Width < oldDataRect.Width || newDataRect.Height < oldDataRect.Height;
-      if (!decreasing && (newDataRect.Width > maxSize || newDataRect.Height > maxSize))
-      {
-        return oldDataRect;
-      }
-
-      return newDataRect;
+      return oldDataRect;
     }
+
+    return newDataRect;
   }
 }

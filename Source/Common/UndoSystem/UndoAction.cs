@@ -1,8 +1,7 @@
-﻿namespace Crystal.Plot2D.Common
+﻿namespace Crystal.Plot2D.Common;
+
+public abstract class UndoAction
 {
-  public abstract class UndoAction
-  {
-    public abstract void Do();
-    public abstract void Undo();
-  }
+  public abstract void Do();
+  public abstract void Undo();
 }

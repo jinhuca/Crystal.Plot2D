@@ -1,44 +1,43 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public static class LegendStyles
 {
-  public static class LegendStyles
+  private static Style defaultStyle;
+  public static Style Default
   {
-    private static Style defaultStyle;
-    public static Style Default
+    get
     {
-      get
+      if (defaultStyle == null)
       {
-        if (defaultStyle == null)
-        {
-          var legendStyles = GetLegendStyles();
-          defaultStyle = (Style)legendStyles[typeof(Legend)];
-        }
-
-        return defaultStyle;
+        var legendStyles = GetLegendStyles();
+        defaultStyle = (Style)legendStyles[typeof(Legend)];
       }
-    }
 
-    private static Style noScrollStyle;
-    public static Style NoScroll
+      return defaultStyle;
+    }
+  }
+
+  private static Style noScrollStyle;
+  public static Style NoScroll
+  {
+    get
     {
-      get
+      if (noScrollStyle == null)
       {
-        if (noScrollStyle == null)
-        {
-          var legendStyles = GetLegendStyles();
-          noScrollStyle = (Style)legendStyles["NoScrollLegendStyle"];
-        }
-
-        return noScrollStyle;
+        var legendStyles = GetLegendStyles();
+        noScrollStyle = (Style)legendStyles["NoScrollLegendStyle"];
       }
-    }
 
-    private static ResourceDictionary GetLegendStyles()
-    {
-      var legendStyles = (ResourceDictionary)Application.LoadComponent(new Uri(Constants.LegendResourceUri, UriKind.Relative));
-      return legendStyles;
+      return noScrollStyle;
     }
+  }
+
+  private static ResourceDictionary GetLegendStyles()
+  {
+    var legendStyles = (ResourceDictionary)Application.LoadComponent(new Uri(Constants.LegendResourceUri, UriKind.Relative));
+    return legendStyles;
   }
 }

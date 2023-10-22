@@ -2,28 +2,27 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+public class TemplateableDraggablePoint : DraggablePoint
 {
-  public class TemplateableDraggablePoint : DraggablePoint
+  private readonly Control marker = new() { Focusable = false };
+  public TemplateableDraggablePoint()
   {
-    private readonly Control marker = new() { Focusable = false };
-    public TemplateableDraggablePoint()
-    {
-      marker.SetBinding(TemplateProperty, new Binding { Source = this, Path = new PropertyPath("MarkerTemplate") });
-      Content = marker;
-    }
-
-    public ControlTemplate MarkerTemplate
-    {
-      get { return (ControlTemplate)GetValue(MarkerTemplateProperty); }
-      set { SetValue(MarkerTemplateProperty, value); }
-    }
-
-    public static readonly DependencyProperty MarkerTemplateProperty = DependencyProperty.Register(
-      "MarkerTemplate",
-      typeof(ControlTemplate),
-      typeof(TemplateableDraggablePoint),
-      new FrameworkPropertyMetadata(null));
-
+    marker.SetBinding(TemplateProperty, new Binding { Source = this, Path = new PropertyPath("MarkerTemplate") });
+    Content = marker;
   }
+
+  public ControlTemplate MarkerTemplate
+  {
+    get { return (ControlTemplate)GetValue(MarkerTemplateProperty); }
+    set { SetValue(MarkerTemplateProperty, value); }
+  }
+
+  public static readonly DependencyProperty MarkerTemplateProperty = DependencyProperty.Register(
+    "MarkerTemplate",
+    typeof(ControlTemplate),
+    typeof(TemplateableDraggablePoint),
+    new FrameworkPropertyMetadata(null));
+
 }

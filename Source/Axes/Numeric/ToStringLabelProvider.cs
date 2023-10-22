@@ -2,47 +2,46 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Represents a simple label provider for double ticks, which simply returns result of .ToString() method, called for rounded ticks.
+/// </summary>
+public class ToStringLabelProvider : NumericLabelProviderBase
 {
   /// <summary>
-  /// Represents a simple label provider for double ticks, which simply returns result of .ToString() method, called for rounded ticks.
+  /// Initializes a new instance of the <see cref="ToStringLabelProvider"/> class.
   /// </summary>
-  public class ToStringLabelProvider : NumericLabelProviderBase
+  public ToStringLabelProvider() { }
+
+  public override UIElement[] CreateLabels(ITicksInfo<double> ticksInfo)
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="ToStringLabelProvider"/> class.
-    /// </summary>
-    public ToStringLabelProvider() { }
+    var ticks = ticksInfo.Ticks;
 
-    public override UIElement[] CreateLabels(ITicksInfo<double> ticksInfo)
+    Init(ticks);
+
+    UIElement[] res = new UIElement[ticks.Length];
+    LabelTickInfo<double> tickInfo = new() { Info = ticksInfo.Info };
+    for (int i = 0; i < res.Length; i++)
     {
-      var ticks = ticksInfo.Ticks;
+      tickInfo.Tick = ticks[i];
+      tickInfo.Index = i;
 
-      Init(ticks);
+      string labelText = GetString(tickInfo);
 
-      UIElement[] res = new UIElement[ticks.Length];
-      LabelTickInfo<double> tickInfo = new() { Info = ticksInfo.Info };
-      for (int i = 0; i < res.Length; i++)
+      TextBlock label = (TextBlock)GetResourceFromPool();
+      if (label == null)
       {
-        tickInfo.Tick = ticks[i];
-        tickInfo.Index = i;
-
-        string labelText = GetString(tickInfo);
-
-        TextBlock label = (TextBlock)GetResourceFromPool();
-        if (label == null)
-        {
-          label = new TextBlock();
-        }
-
-        label.Text = labelText;
-        label.ToolTip = ticks[i].ToString(CultureInfo.InvariantCulture);
-
-        res[i] = label;
-
-        ApplyCustomView(tickInfo, label);
+        label = new TextBlock();
       }
-      return res;
+
+      label.Text = labelText;
+      label.ToolTip = ticks[i].ToString(CultureInfo.InvariantCulture);
+
+      res[i] = label;
+
+      ApplyCustomView(tickInfo, label);
     }
+    return res;
   }
 }

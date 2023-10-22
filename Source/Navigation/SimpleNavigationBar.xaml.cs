@@ -1,15 +1,14 @@
 ﻿using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Interaction logic for SimpleNavigationBar.xaml
+/// </summary>
+public partial class SimpleNavigationBar : UserControl
 {
-  /// <summary>
-  /// Interaction logic for SimpleNavigationBar.xaml
-  /// </summary>
-  public partial class SimpleNavigationBar : UserControl
+  public SimpleNavigationBar()
   {
-    public SimpleNavigationBar()
-    {
-      InitializeComponent();
-    }
+    InitializeComponent();
   }
 }

@@ -2,43 +2,42 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts
+namespace Crystal.Plot2D.Charts;
+
+/// <summary>
+/// Represents a label provider for <see cref="System.DateTime"/> ticks.
+/// </summary>
+public class DateTimeLabelProvider : DateTimeLabelProviderBase
 {
   /// <summary>
-  /// Represents a label provider for <see cref="System.DateTime"/> ticks.
+  /// Initializes a new instance of the <see cref="DateTimeLabelProvider"/> class.
   /// </summary>
-  public class DateTimeLabelProvider : DateTimeLabelProviderBase
+  public DateTimeLabelProvider() { }
+
+  public override UIElement[] CreateLabels(ITicksInfo<DateTime> ticksInfo)
   {
-    /// <summary>
-    /// Initializes a new instance of the <see cref="DateTimeLabelProvider"/> class.
-    /// </summary>
-    public DateTimeLabelProvider() { }
+    object info = ticksInfo.Info;
+    var ticks = ticksInfo.Ticks;
 
-    public override UIElement[] CreateLabels(ITicksInfo<DateTime> ticksInfo)
+    if (info is DifferenceIn)
     {
-      object info = ticksInfo.Info;
-      var ticks = ticksInfo.Ticks;
-
-      if (info is DifferenceIn)
-      {
-        DifferenceIn diff = (DifferenceIn)info;
-        DateFormat = GetDateFormat(diff);
-      }
-
-      LabelTickInfo<DateTime> tickInfo = new() { Info = info };
-
-      UIElement[] res = new UIElement[ticks.Length];
-      for (int i = 0; i < ticks.Length; i++)
-      {
-        tickInfo.Tick = ticks[i];
-
-        string tickText = GetString(tickInfo);
-        UIElement label = new TextBlock { Text = tickText, ToolTip = ticks[i] };
-        ApplyCustomView(tickInfo, label);
-        res[i] = label;
-      }
-
-      return res;
+      DifferenceIn diff = (DifferenceIn)info;
+      DateFormat = GetDateFormat(diff);
     }
+
+    LabelTickInfo<DateTime> tickInfo = new() { Info = info };
+
+    UIElement[] res = new UIElement[ticks.Length];
+    for (int i = 0; i < ticks.Length; i++)
+    {
+      tickInfo.Tick = ticks[i];
+
+      string tickText = GetString(tickInfo);
+      UIElement label = new TextBlock { Text = tickText, ToolTip = ticks[i] };
+      ApplyCustomView(tickInfo, label);
+      res[i] = label;
+    }
+
+    return res;
   }
 }

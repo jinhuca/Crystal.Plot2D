@@ -1,21 +1,20 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Crystal.Plot2D.Common
+namespace Crystal.Plot2D.Common;
+
+internal static class TokenizerHelper
 {
-  internal static class TokenizerHelper
+  public static char GetNumericListSeparator(IFormatProvider provider)
   {
-    public static char GetNumericListSeparator(IFormatProvider provider)
+    char separator = ',';
+
+    NumberFormatInfo numberInfo = NumberFormatInfo.GetInstance(provider);
+    if (numberInfo.NumberDecimalSeparator.Length > 0 && separator == numberInfo.NumberDecimalSeparator[0])
     {
-      char separator = ',';
-
-      NumberFormatInfo numberInfo = NumberFormatInfo.GetInstance(provider);
-      if (numberInfo.NumberDecimalSeparator.Length > 0 && separator == numberInfo.NumberDecimalSeparator[0])
-      {
-        separator = ';';
-      }
-
-      return separator;
+      separator = ';';
     }
+
+    return separator;
   }
 }

@@ -1,6 +1,5 @@
-﻿namespace Crystal.Plot2D.Charts
+﻿namespace Crystal.Plot2D.Charts;
+
+public class UnroundingLabelProvider : LabelProvider<double>
 {
-  public class UnroundingLabelProvider : LabelProvider<double>
-  {
-  }
 }
