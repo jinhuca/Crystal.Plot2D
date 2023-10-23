@@ -11,7 +11,7 @@ public class PhysicalNavigation : IPlotterElement
 
   public PhysicalNavigation()
   {
-    timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(30) };
+    timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(value: 30) };
     timer.Tick += timer_Tick;
   }
 
@@ -25,28 +25,28 @@ public class PhysicalNavigation : IPlotterElement
       animation.LiquidFrictionQuadraticCoeff = 1;
     }
 
-    plotter.Viewport.Visible = animation.GetValue(time);
+    plotter.Viewport.Visible = animation.GetValue(timeSpan: time);
     if (animation.IsFinished && !isMouseDown)
     {
       timer.Stop();
     }
   }
 
-  private bool isMouseDown = false;
+  private bool isMouseDown;
   private PhysicalRectAnimation animation;
   private Point clickPos;
   private void OnMouseDown(object sender, MouseButtonEventArgs e)
   {
     if (e.ChangedButton == MouseButton.Left)
     {
-      clickPos = e.GetPosition(plotter.CentralGrid);
+      clickPos = e.GetPosition(relativeTo: plotter.CentralGrid);
 
       isMouseDown = true;
       startTime = DateTime.Now;
 
       animation = new PhysicalRectAnimation(
-        plotter.Viewport,
-        e.GetPosition(plotter.ViewportPanel));
+        viewport: plotter.Viewport,
+        initialMousePos: e.GetPosition(relativeTo: plotter.ViewportPanel));
 
       timer.Start();
     }
@@ -57,7 +57,7 @@ public class PhysicalNavigation : IPlotterElement
     if (e.ChangedButton == MouseButton.Left)
     {
       isMouseDown = false;
-      if (clickPos == e.GetPosition(plotter.CentralGrid))
+      if (clickPos == e.GetPosition(relativeTo: plotter.CentralGrid))
       {
         timer.Stop();
         animation = null;
@@ -85,8 +85,8 @@ public class PhysicalNavigation : IPlotterElement
   {
     this.plotter = (PlotterBase)plotter;
 
-    Mouse.AddPreviewMouseDownHandler(plotter.CentralGrid, OnMouseDown);
-    Mouse.AddPreviewMouseUpHandler(plotter.CentralGrid, OnMouseUp);
+    Mouse.AddPreviewMouseDownHandler(element: plotter.CentralGrid, handler: OnMouseDown);
+    Mouse.AddPreviewMouseUpHandler(element: plotter.CentralGrid, handler: OnMouseUp);
     plotter.CentralGrid.MouseLeave += CentralGrid_MouseLeave;
   }
 
@@ -98,16 +98,13 @@ public class PhysicalNavigation : IPlotterElement
   void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
   {
     plotter.CentralGrid.MouseLeave -= CentralGrid_MouseLeave;
-    Mouse.RemovePreviewMouseDownHandler(plotter.CentralGrid, OnMouseDown);
-    Mouse.RemovePreviewMouseUpHandler(plotter.CentralGrid, OnMouseUp);
+    Mouse.RemovePreviewMouseDownHandler(element: plotter.CentralGrid, handler: OnMouseDown);
+    Mouse.RemovePreviewMouseUpHandler(element: plotter.CentralGrid, handler: OnMouseUp);
 
     this.plotter = null;
   }
 
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 }

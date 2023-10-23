@@ -25,7 +25,7 @@ public class DependencyPropertyChangedUndoAction : UndoAction
     NewValue = e.NewValue;
   }
 
-  public override void Do() => Target.SetValue(Property, NewValue);
+  public override void Do() => Target.SetValue(dp: Property, value: NewValue);
 
-  public override void Undo() => Target.SetValue(Property, OldValue);
+  public override void Undo() => Target.SetValue(dp: Property, value: OldValue);
 }

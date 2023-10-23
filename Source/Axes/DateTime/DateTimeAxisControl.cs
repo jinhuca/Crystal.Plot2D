@@ -18,6 +18,6 @@ public class DateTimeAxisControl : AxisControl<DateTime>
 
     ConvertToDouble = dt => dt.Ticks;
 
-    Range = new Range<DateTime>(DateTime.Now, DateTime.Now.AddYears(1));
+    Range = new Range<DateTime>(min: DateTime.Now, max: DateTime.Now.AddYears(value: 1));
   }
 }

@@ -23,7 +23,7 @@ public partial class CursorCoordinateGraph : ContentGraph
     InitializeComponent();
   }
 
-  Vector blockShift = new(3, 3);
+  Vector blockShift = new(x: 3, y: 3);
 
   #region Plotter
 
@@ -98,7 +98,7 @@ public partial class CursorCoordinateGraph : ContentGraph
   /// <value><c>true</c> if lines are following mouse cursor position; otherwise, <c>false</c>.</value>
   public bool FollowMouse
   {
-    get { return followMouse; }
+    get => followMouse;
     set
     {
       followMouse = value;
@@ -125,14 +125,14 @@ public partial class CursorCoordinateGraph : ContentGraph
     UpdateUIRepresentation();
   }
 
-  private string customXFormat = null;
+  private string customXFormat;
   /// <summary>
   /// Gets or sets the custom format string of x label.
   /// </summary>
   /// <value>The custom X format.</value>
   public string CustomXFormat
   {
-    get { return customXFormat; }
+    get => customXFormat;
     set
     {
       if (customXFormat != value)
@@ -143,14 +143,14 @@ public partial class CursorCoordinateGraph : ContentGraph
     }
   }
 
-  private string customYFormat = null;
+  private string customYFormat;
   /// <summary>
   /// Gets or sets the custom format string of y label.
   /// </summary>
   /// <value>The custom Y format.</value>
   public string CustomYFormat
   {
-    get { return customYFormat; }
+    get => customYFormat;
     set
     {
       if (customYFormat != value)
@@ -161,14 +161,14 @@ public partial class CursorCoordinateGraph : ContentGraph
     }
   }
 
-  private Func<double, string> xTextMapping = null;
+  private Func<double, string> xTextMapping;
   /// <summary>
   /// Gets or sets the text mapping of x label - function that builds text from x-coordinate of mouse in data.
   /// </summary>
   /// <value>The X text mapping.</value>
   public Func<double, string> XTextMapping
   {
-    get { return xTextMapping; }
+    get => xTextMapping;
     set
     {
       if (xTextMapping != value)
@@ -179,14 +179,14 @@ public partial class CursorCoordinateGraph : ContentGraph
     }
   }
 
-  private Func<double, string> yTextMapping = null;
+  private Func<double, string> yTextMapping;
   /// <summary>
   /// Gets or sets the text mapping of y label - function that builds text from y-coordinate of mouse in data.
   /// </summary>
   /// <value>The Y text mapping.</value>
   public Func<double, string> YTextMapping
   {
-    get { return yTextMapping; }
+    get => yTextMapping;
     set
     {
       if (yTextMapping != value)
@@ -204,7 +204,7 @@ public partial class CursorCoordinateGraph : ContentGraph
   /// <value><c>true</c> if horizontal line is shown; otherwise, <c>false</c>.</value>
   public bool ShowHorizontalLine
   {
-    get { return showHorizontalLine; }
+    get => showHorizontalLine;
     set
     {
       if (showHorizontalLine != value)
@@ -222,7 +222,7 @@ public partial class CursorCoordinateGraph : ContentGraph
   /// <value><c>true</c> if vertical line is shown; otherwise, <c>false</c>.</value>
   public bool ShowVerticalLine
   {
-    get { return showVerticalLine; }
+    get => showVerticalLine;
     set
     {
       if (showVerticalLine != value)
@@ -235,8 +235,8 @@ public partial class CursorCoordinateGraph : ContentGraph
 
   private void UpdateUIRepresentation()
   {
-    Point position = followMouse ? Mouse.GetPosition(this) : Position;
-    UpdateUIRepresentation(position);
+    Point position = followMouse ? Mouse.GetPosition(relativeTo: this) : Position;
+    UpdateUIRepresentation(mousePos: position);
   }
 
   private void UpdateUIRepresentation(Point mousePos)
@@ -250,7 +250,7 @@ public partial class CursorCoordinateGraph : ContentGraph
     DataRect visible = Plotter2D.Viewport.Visible;
     Rect output = Plotter2D.Viewport.Output;
 
-    if (!output.Contains(mousePos))
+    if (!output.Contains(point: mousePos))
     {
       if (AutoHide)
       {
@@ -261,7 +261,7 @@ public partial class CursorCoordinateGraph : ContentGraph
 
     if (!followMouse)
     {
-      mousePos = mousePos.DataToScreen(transform);
+      mousePos = mousePos.DataToScreen(transform: transform);
     }
 
     horizLine.X1 = output.Left;
@@ -280,7 +280,7 @@ public partial class CursorCoordinateGraph : ContentGraph
       vertLine.StrokeDashOffset = (output.Bottom - mousePos.Y) / 2;
     }
 
-    Point mousePosInData = mousePos.ScreenToData(transform);
+    Point mousePosInData = mousePos.ScreenToData(transform: transform);
 
     string text = null;
 
@@ -289,18 +289,18 @@ public partial class CursorCoordinateGraph : ContentGraph
       double xValue = mousePosInData.X;
       if (xTextMapping != null)
       {
-        text = xTextMapping(xValue);
+        text = xTextMapping(arg: xValue);
       }
 
       // doesnot have xTextMapping or it returned null
       if (text == null)
       {
-        text = GetRoundedValue(visible.XMin, visible.XMax, xValue);
+        text = GetRoundedValue(min: visible.XMin, max: visible.XMax, value: xValue);
       }
 
-      if (!string.IsNullOrEmpty(customXFormat))
+      if (!string.IsNullOrEmpty(value: customXFormat))
       {
-        text = string.Format(customXFormat, text);
+        text = string.Format(format: customXFormat, arg0: text);
       }
 
       horizTextBlock.Text = text;
@@ -312,7 +312,7 @@ public partial class CursorCoordinateGraph : ContentGraph
     {
       x = mousePos.X - blockShift.X - width;
     }
-    Canvas.SetLeft(horizGrid, x);
+    Canvas.SetLeft(element: horizGrid, length: x);
 
     if (showHorizontalLine)
     {
@@ -320,17 +320,17 @@ public partial class CursorCoordinateGraph : ContentGraph
       text = null;
       if (yTextMapping != null)
       {
-        text = yTextMapping(yValue);
+        text = yTextMapping(arg: yValue);
       }
 
       if (text == null)
       {
-        text = GetRoundedValue(visible.YMin, visible.YMax, yValue);
+        text = GetRoundedValue(min: visible.YMin, max: visible.YMax, value: yValue);
       }
 
-      if (!string.IsNullOrEmpty(customYFormat))
+      if (!string.IsNullOrEmpty(value: customYFormat))
       {
-        text = string.Format(customYFormat, text);
+        text = string.Format(format: customYFormat, arg0: text);
       }
 
       vertTextBlock.Text = text;
@@ -343,7 +343,7 @@ public partial class CursorCoordinateGraph : ContentGraph
     {
       y = mousePos.Y + blockShift.Y;
     }
-    Canvas.SetTop(vertGrid, y);
+    Canvas.SetTop(element: vertGrid, length: y);
 
     if (followMouse)
     {
@@ -357,31 +357,31 @@ public partial class CursorCoordinateGraph : ContentGraph
   /// <value>The position.</value>
   public Point Position
   {
-    get { return (Point)GetValue(PositionProperty); }
-    set { SetValue(PositionProperty, value); }
+    get => (Point)GetValue(dp: PositionProperty);
+    set => SetValue(dp: PositionProperty, value: value);
   }
 
   /// <summary>
   /// Identifies Position dependency property.
   /// </summary>
   public static readonly DependencyProperty PositionProperty = DependencyProperty.Register(
-    "Position",
-    typeof(Point),
-    typeof(CursorCoordinateGraph),
-    new UIPropertyMetadata(new Point(), OnPositionChanged));
+    name: nameof(Position),
+    propertyType: typeof(Point),
+    ownerType: typeof(CursorCoordinateGraph),
+    typeMetadata: new UIPropertyMetadata(defaultValue: new Point(), propertyChangedCallback: OnPositionChanged));
 
   private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     CursorCoordinateGraph graph = (CursorCoordinateGraph)d;
-    graph.UpdateUIRepresentation((Point)e.NewValue);
+    graph.UpdateUIRepresentation(mousePos: (Point)e.NewValue);
   }
 
   private string GetRoundedValue(double min, double max, double value)
   {
     double roundedValue = value;
-    var log = RoundingHelper.GetDifferenceLog(min, max);
+    var log = RoundingHelper.GetDifferenceLog(min: min, max: max);
     string format = "G3";
-    double diff = Math.Abs(max - min);
+    double diff = Math.Abs(value: max - min);
     if (1E3 < diff && diff < 1E6)
     {
       format = "F0";
@@ -391,22 +391,22 @@ public partial class CursorCoordinateGraph : ContentGraph
       format = "G" + (-log + 2).ToString();
     }
 
-    return roundedValue.ToString(format);
+    return roundedValue.ToString(format: format);
   }
 
   #region UseDashOffset property
 
   public bool UseDashOffset
   {
-    get { return (bool)GetValue(UseDashOffsetProperty); }
-    set { SetValue(UseDashOffsetProperty, value); }
+    get => (bool)GetValue(dp: UseDashOffsetProperty);
+    set => SetValue(dp: UseDashOffsetProperty, value: value);
   }
 
   public static readonly DependencyProperty UseDashOffsetProperty = DependencyProperty.Register(
-    "UseDashOffset",
-    typeof(bool),
-    typeof(CursorCoordinateGraph),
-    new FrameworkPropertyMetadata(true, UpdateUIRepresentation));
+    name: nameof(UseDashOffset),
+    propertyType: typeof(bool),
+    ownerType: typeof(CursorCoordinateGraph),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: true, propertyChangedCallback: UpdateUIRepresentation));
 
   private static void UpdateUIRepresentation(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -417,8 +417,8 @@ public partial class CursorCoordinateGraph : ContentGraph
     }
     else
     {
-      graph.vertLine.ClearValue(Shape.StrokeDashOffsetProperty);
-      graph.horizLine.ClearValue(Shape.StrokeDashOffsetProperty);
+      graph.vertLine.ClearValue(dp: Shape.StrokeDashOffsetProperty);
+      graph.horizLine.ClearValue(dp: Shape.StrokeDashOffsetProperty);
     }
   }
 
@@ -428,15 +428,15 @@ public partial class CursorCoordinateGraph : ContentGraph
 
   public Brush LineStroke
   {
-    get { return (Brush)GetValue(LineStrokeProperty); }
-    set { SetValue(LineStrokeProperty, value); }
+    get => (Brush)GetValue(dp: LineStrokeProperty);
+    set => SetValue(dp: LineStrokeProperty, value: value);
   }
 
   public static readonly DependencyProperty LineStrokeProperty = DependencyProperty.Register(
-    "LineStroke",
-    typeof(Brush),
-    typeof(CursorCoordinateGraph),
-    new PropertyMetadata(new SolidColorBrush(Color.FromArgb(170, 86, 86, 86))));
+    name: nameof(LineStroke),
+    propertyType: typeof(Brush),
+    ownerType: typeof(CursorCoordinateGraph),
+    typeMetadata: new PropertyMetadata(defaultValue: new SolidColorBrush(color: Color.FromArgb(a: 170, r: 86, g: 86, b: 86))));
 
   #endregion
 
@@ -444,32 +444,32 @@ public partial class CursorCoordinateGraph : ContentGraph
 
   public double LineStrokeThickness
   {
-    get { return (double)GetValue(LineStrokeThicknessProperty); }
-    set { SetValue(LineStrokeThicknessProperty, value); }
+    get => (double)GetValue(dp: LineStrokeThicknessProperty);
+    set => SetValue(dp: LineStrokeThicknessProperty, value: value);
   }
 
   public static readonly DependencyProperty LineStrokeThicknessProperty = DependencyProperty.Register(
-    "LineStrokeThickness",
-    typeof(double),
-    typeof(CursorCoordinateGraph),
-    new PropertyMetadata(2.0));
+    name: nameof(LineStrokeThickness),
+    propertyType: typeof(double),
+    ownerType: typeof(CursorCoordinateGraph),
+    typeMetadata: new PropertyMetadata(defaultValue: 2.0));
 
   #endregion
 
   #region LineStrokeDashArray property
 
-  [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+  [SuppressMessage(category: "Microsoft.Usage", checkId: "CA2227:CollectionPropertiesShouldBeReadOnly")]
   public DoubleCollection LineStrokeDashArray
   {
-    get { return (DoubleCollection)GetValue(LineStrokeDashArrayProperty); }
-    set { SetValue(LineStrokeDashArrayProperty, value); }
+    get => (DoubleCollection)GetValue(dp: LineStrokeDashArrayProperty);
+    set => SetValue(dp: LineStrokeDashArrayProperty, value: value);
   }
 
   public static readonly DependencyProperty LineStrokeDashArrayProperty = DependencyProperty.Register(
-    "LineStrokeDashArray",
-    typeof(DoubleCollection),
-    typeof(CursorCoordinateGraph),
-    new FrameworkPropertyMetadata(DoubleCollectionHelper.Create(3, 3)));
+    name: nameof(LineStrokeDashArray),
+    propertyType: typeof(DoubleCollection),
+    ownerType: typeof(CursorCoordinateGraph),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: DoubleCollectionHelper.Create(collection: new double[] { 3, 3 })));
 
   #endregion
 }

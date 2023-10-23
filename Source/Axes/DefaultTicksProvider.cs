@@ -6,6 +6,6 @@ internal static class DefaultTicksProvider
 
   internal static ITicksInfo<T> GetTicks<T>(this ITicksProvider<T> provider, Range<T> range)
   {
-    return provider.GetTicks(range, DefaultTicksCount);
+    return provider.GetTicks(range: range, ticksCount: DefaultTicksCount);
   }
 }

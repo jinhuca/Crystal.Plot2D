@@ -12,6 +12,6 @@ public static class ColorExtensions
 
   public static Color MakeTransparent(this Color color, double opacity)
   {
-    return MakeTransparent(color, (int)(255 * opacity));
+    return MakeTransparent(color: color, alpha: (int)(255 * opacity));
   }
 }

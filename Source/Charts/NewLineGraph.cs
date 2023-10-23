@@ -23,18 +23,18 @@ public class NewLineGraph : Canvas, IPlotterElement
   static NewLineGraph()
   {
     Type thisType = typeof(NewLineGraph);
-    Legend.DescriptionProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata("LineGraph"));
-    Legend.LegendItemsBuilderProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(new LegendItemsBuilder(DefaultLegendItemsBuilder)));
+    Legend.DescriptionProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: "LineGraph"));
+    Legend.LegendItemsBuilderProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: new LegendItemsBuilder(DefaultLegendItemsBuilder)));
   }
 
   private static IEnumerable<FrameworkElement> DefaultLegendItemsBuilder(IPlotterElement plotterElement)
   {
     NewLineGraph lineGraph = (NewLineGraph)plotterElement;
     Line line = new() { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph };
-    line.SetBinding(Shape.StrokeProperty, "Stroke");
-    line.SetBinding(Shape.StrokeThicknessProperty, "StrokeThickness");
-    Legend.SetVisualContent(lineGraph, line);
-    var legendItem = LegendItemsHelper.BuildDefaultLegendItem(lineGraph);
+    line.SetBinding(dp: Shape.StrokeProperty, path: "Stroke");
+    line.SetBinding(dp: Shape.StrokeThicknessProperty, path: "StrokeThickness");
+    Legend.SetVisualContent(obj: lineGraph, value: line);
+    var legendItem = LegendItemsHelper.BuildDefaultLegendItem(chart: lineGraph);
     yield return legendItem;
   }
 
@@ -47,7 +47,7 @@ public class NewLineGraph : Canvas, IPlotterElement
   {
     filters.CollectionChanged += filters_CollectionChanged;
     RenderTransform = layoutTransform;
-    Background = Brushes.Green.MakeTransparent(0.3);
+    Background = Brushes.Green.MakeTransparent(opacity: 0.3);
   }
 
   private void filters_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -69,11 +69,8 @@ public class NewLineGraph : Canvas, IPlotterElement
   /// <summary>
   ///   Provides access to filters collection.
   /// </summary>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-  public FilterCollection Filters
-  {
-    get { return filters; }
-  }
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
+  public FilterCollection Filters => filters;
 
   #region Properties
 
@@ -81,20 +78,20 @@ public class NewLineGraph : Canvas, IPlotterElement
 
   public IPointDataSource DataSource
   {
-    get { return (IPointDataSource)GetValue(DataSourceProperty); }
-    set { SetValue(DataSourceProperty, value); }
+    get => (IPointDataSource)GetValue(dp: DataSourceProperty);
+    set => SetValue(dp: DataSourceProperty, value: value);
   }
 
   public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register(
-    "DataSource",
-    typeof(IPointDataSource),
-    typeof(NewLineGraph),
-    new FrameworkPropertyMetadata(null, OnDataSourceReplaced));
+    name: nameof(DataSource),
+    propertyType: typeof(IPointDataSource),
+    ownerType: typeof(NewLineGraph),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnDataSourceReplaced));
 
   private static void OnDataSourceReplaced(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     NewLineGraph owner = (NewLineGraph)d;
-    owner.OnDataSourceReplaced((IPointDataSource)e.OldValue, (IPointDataSource)e.NewValue);
+    owner.OnDataSourceReplaced(prevDataSource: (IPointDataSource)e.OldValue, currDataSource: (IPointDataSource)e.NewValue);
   }
 
   private void OnDataSourceReplaced(IPointDataSource prevDataSource, IPointDataSource currDataSource)
@@ -122,15 +119,15 @@ public class NewLineGraph : Canvas, IPlotterElement
 
   public Brush Stroke
   {
-    get { return (Brush)GetValue(StrokeProperty); }
-    set { SetValue(StrokeProperty, value); }
+    get => (Brush)GetValue(dp: StrokeProperty);
+    set => SetValue(dp: StrokeProperty, value: value);
   }
 
   public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
-    "Stroke",
-    typeof(Brush),
-    typeof(NewLineGraph),
-    new FrameworkPropertyMetadata(Brushes.Blue));
+    name: nameof(Stroke),
+    propertyType: typeof(Brush),
+    ownerType: typeof(NewLineGraph),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Blue));
 
   #endregion // end of Stroke property
 
@@ -138,15 +135,15 @@ public class NewLineGraph : Canvas, IPlotterElement
 
   public double StrokeThickness
   {
-    get { return (double)GetValue(StrokeThicknessProperty); }
-    set { SetValue(StrokeThicknessProperty, value); }
+    get => (double)GetValue(dp: StrokeThicknessProperty);
+    set => SetValue(dp: StrokeThicknessProperty, value: value);
   }
 
   public static readonly DependencyProperty StrokeThicknessProperty = DependencyProperty.Register(
-    "StrokeThickness",
-    typeof(double),
-    typeof(NewLineGraph),
-    new FrameworkPropertyMetadata(1.0));
+    name: nameof(StrokeThickness),
+    propertyType: typeof(double),
+    ownerType: typeof(NewLineGraph),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: 1.0));
 
   #endregion // end of StrokeThickness property
 
@@ -155,7 +152,7 @@ public class NewLineGraph : Canvas, IPlotterElement
   private bool smoothLinesJoin = true;
   public bool SmoothLinesJoin
   {
-    get { return smoothLinesJoin; }
+    get => smoothLinesJoin;
     set
     {
       smoothLinesJoin = value;
@@ -165,7 +162,7 @@ public class NewLineGraph : Canvas, IPlotterElement
 
   private List<Point> FilterPoints(List<Point> points)
   {
-    var filteredPoints = filters.Filter(points, plotter.Viewport.Output);
+    var filteredPoints = filters.Filter(points: points, screenRect: plotter.Viewport.Output);
 
     return filteredPoints;
   }
@@ -197,14 +194,14 @@ public class NewLineGraph : Canvas, IPlotterElement
   {
     var currentTransform = plotter.Transform;
 
-    var shift = transformWhenCreated.ViewportRect.Location.ViewportToScreen(currentTransform)
-      - currentTransform.ViewportRect.Location.ViewportToScreen(currentTransform);
+    var shift = transformWhenCreated.ViewportRect.Location.ViewportToScreen(transform: currentTransform)
+      - currentTransform.ViewportRect.Location.ViewportToScreen(transform: currentTransform);
 
     layoutTransform.X = shift.X;
     layoutTransform.Y = shift.Y;
 
-    Debug.WriteLine("X=" + shift.X);
-    Debug.WriteLine("Y=" + shift.Y);
+    Debug.WriteLine(message: "X=" + shift.X);
+    Debug.WriteLine(message: "Y=" + shift.Y);
   }
 
   CoordinateTransform transformWhenCreated;
@@ -232,31 +229,31 @@ public class NewLineGraph : Canvas, IPlotterElement
     transformWhenCreated = plotter.Transform;
 
     var contentBounds = dataPoints.GetBounds();
-    Viewport2D.SetContentBounds(this, contentBounds);
+    Viewport2D.SetContentBounds(obj: this, value: contentBounds);
 
     foreach (Polyline polyline in Children)
     {
-      polylinePool.Put(polyline);
+      polylinePool.Put(item: polyline);
     }
 
     Children.Clear();
 
     PointCollection pointCollection = new();
-    foreach (var screenPoint in dataPoints.DataToScreen(plotter.Transform))
+    foreach (var screenPoint in dataPoints.DataToScreen(transform: plotter.Transform))
     {
       if (pointCollection.Count < pointCount)
       {
-        pointCollection.Add(screenPoint);
+        pointCollection.Add(value: screenPoint);
       }
       else
       {
         var polyline = polylinePool.GetOrCreate();
         polyline.Points = pointCollection;
 
-        SetPolylineBindings(polyline);
+        SetPolylineBindings(polyline: polyline);
 
-        Children.Add(polyline);
-        Dispatcher.Invoke(() => { }, DispatcherPriority.ApplicationIdle);
+        Children.Add(element: polyline);
+        Dispatcher.Invoke(callback: () => { }, priority: DispatcherPriority.ApplicationIdle);
         pointCollection = new PointCollection();
       }
     }
@@ -264,8 +261,8 @@ public class NewLineGraph : Canvas, IPlotterElement
 
   private void SetPolylineBindings(Polyline polyline)
   {
-    polyline.SetBinding(Shape.StrokeProperty, new Binding { Source = this, Path = new PropertyPath("Stroke") });
-    polyline.SetBinding(Shape.StrokeThicknessProperty, new Binding { Source = this, Path = new PropertyPath("StrokeThickness") });
+    polyline.SetBinding(dp: Shape.StrokeProperty, binding: new Binding { Source = this, Path = new PropertyPath(path: "Stroke") });
+    polyline.SetBinding(dp: Shape.StrokeThicknessProperty, binding: new Binding { Source = this, Path = new PropertyPath(path: "StrokeThickness") });
   }
 
   #region IPlotterElement Members
@@ -276,22 +273,19 @@ public class NewLineGraph : Canvas, IPlotterElement
     this.plotter = (PlotterBase)plotter;
     this.plotter.Viewport.PropertyChanged += Viewport_PropertyChanged;
 
-    plotter.CentralGrid.Children.Add(this);
+    plotter.CentralGrid.Children.Add(element: this);
 
     Update();
   }
 
   public void OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.CentralGrid.Children.Remove(this);
+    plotter.CentralGrid.Children.Remove(element: this);
     this.plotter.Viewport.PropertyChanged -= Viewport_PropertyChanged;
     this.plotter = null;
   }
 
-  public PlotterBase Plotter
-  {
-    get { return plotter; }
-  }
+  public PlotterBase Plotter => plotter;
 
   #endregion
 }

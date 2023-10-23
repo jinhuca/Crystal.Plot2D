@@ -6,21 +6,21 @@ public class TimeSpanTicksProvider : TimeTicksProviderBase<TimeSpan>
 {
   static TimeSpanTicksProvider()
   {
-    Providers.Add(DifferenceIn.Year, new DayTimeSpanProvider());
-    Providers.Add(DifferenceIn.Month, new DayTimeSpanProvider());
-    Providers.Add(DifferenceIn.Day, new DayTimeSpanProvider());
-    Providers.Add(DifferenceIn.Hour, new HourTimeSpanProvider());
-    Providers.Add(DifferenceIn.Minute, new MinuteTimeSpanProvider());
-    Providers.Add(DifferenceIn.Second, new SecondTimeSpanProvider());
-    Providers.Add(DifferenceIn.Millisecond, new MillisecondTimeSpanProvider());
+    Providers.Add(key: DifferenceIn.Year, value: new DayTimeSpanProvider());
+    Providers.Add(key: DifferenceIn.Month, value: new DayTimeSpanProvider());
+    Providers.Add(key: DifferenceIn.Day, value: new DayTimeSpanProvider());
+    Providers.Add(key: DifferenceIn.Hour, value: new HourTimeSpanProvider());
+    Providers.Add(key: DifferenceIn.Minute, value: new MinuteTimeSpanProvider());
+    Providers.Add(key: DifferenceIn.Second, value: new SecondTimeSpanProvider());
+    Providers.Add(key: DifferenceIn.Millisecond, value: new MillisecondTimeSpanProvider());
 
-    MinorProviders.Add(DifferenceIn.Year, new MinorTimeSpanTicksProvider(new DayTimeSpanProvider()));
-    MinorProviders.Add(DifferenceIn.Month, new MinorTimeSpanTicksProvider(new DayTimeSpanProvider()));
-    MinorProviders.Add(DifferenceIn.Day, new MinorTimeSpanTicksProvider(new DayTimeSpanProvider()));
-    MinorProviders.Add(DifferenceIn.Hour, new MinorTimeSpanTicksProvider(new HourTimeSpanProvider()));
-    MinorProviders.Add(DifferenceIn.Minute, new MinorTimeSpanTicksProvider(new MinuteTimeSpanProvider()));
-    MinorProviders.Add(DifferenceIn.Second, new MinorTimeSpanTicksProvider(new SecondTimeSpanProvider()));
-    MinorProviders.Add(DifferenceIn.Millisecond, new MinorTimeSpanTicksProvider(new MillisecondTimeSpanProvider()));
+    MinorProviders.Add(key: DifferenceIn.Year, value: new MinorTimeSpanTicksProvider(owner: new DayTimeSpanProvider()));
+    MinorProviders.Add(key: DifferenceIn.Month, value: new MinorTimeSpanTicksProvider(owner: new DayTimeSpanProvider()));
+    MinorProviders.Add(key: DifferenceIn.Day, value: new MinorTimeSpanTicksProvider(owner: new DayTimeSpanProvider()));
+    MinorProviders.Add(key: DifferenceIn.Hour, value: new MinorTimeSpanTicksProvider(owner: new HourTimeSpanProvider()));
+    MinorProviders.Add(key: DifferenceIn.Minute, value: new MinorTimeSpanTicksProvider(owner: new MinuteTimeSpanProvider()));
+    MinorProviders.Add(key: DifferenceIn.Second, value: new MinorTimeSpanTicksProvider(owner: new SecondTimeSpanProvider()));
+    MinorProviders.Add(key: DifferenceIn.Millisecond, value: new MinorTimeSpanTicksProvider(owner: new MillisecondTimeSpanProvider()));
   }
 
   protected override TimeSpan GetDifference(TimeSpan start, TimeSpan end)

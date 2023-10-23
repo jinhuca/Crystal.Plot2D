@@ -10,8 +10,8 @@ public static class Viewport2DExtensions
     DataRect visible = viewport.Visible;
     DataRect oldVisible = visible;
     Point center = visible.GetCenter();
-    Vector halfSize = new(visible.Width * factor / 2, visible.Height * factor / 2);
-    viewport.Visible = new DataRect(center - halfSize, center + halfSize);
-    viewport.Plotter.UndoProvider.AddAction(new DependencyPropertyChangedUndoAction(viewport, Viewport2D.VisibleProperty, oldVisible, visible));
+    Vector halfSize = new(x: visible.Width * factor / 2, y: visible.Height * factor / 2);
+    viewport.Visible = new DataRect(point1: center - halfSize, point2: center + halfSize);
+    viewport.Plotter.UndoProvider.AddAction(action: new DependencyPropertyChangedUndoAction(target: viewport, property: Viewport2D.VisibleProperty, oldValue: oldVisible, newValue: visible));
   }
 }

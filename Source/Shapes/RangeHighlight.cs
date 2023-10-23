@@ -24,7 +24,7 @@ public abstract class RangeHighlight : Control, IPlotterElement
     ApplyTemplate();
   }
 
-  bool partsLoaded = false;
+  bool partsLoaded;
   protected bool PartsLoaded => partsLoaded;
 
   public override void OnApplyTemplate()

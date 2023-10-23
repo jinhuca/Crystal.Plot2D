@@ -5,7 +5,7 @@ using System.Windows.Markup;
 
 namespace Crystal.Plot2D.Charts;
 
-[ContentProperty("Content")]
+[ContentProperty(name: "Content")]
 public class ViewportUIContainer : DependencyObject, IPlotterElement
 {
   public ViewportUIContainer() { }
@@ -19,8 +19,8 @@ public class ViewportUIContainer : DependencyObject, IPlotterElement
   [NotNull]
   public FrameworkElement Content
   {
-    get { return content; }
-    set { content = value; }
+    get => content;
+    set => content = value;
   }
 
   #region IPlotterElement Members
@@ -33,7 +33,7 @@ public class ViewportUIContainer : DependencyObject, IPlotterElement
       return;
     }
 
-    var plotterPanel = GetPlotterPanel(Content);
+    var plotterPanel = GetPlotterPanel(obj: Content);
     //Plotter.SetPlotter(Content, _plotter);
 
     if (plotterPanel == PlotterPanel.MainCanvas)
@@ -42,17 +42,17 @@ public class ViewportUIContainer : DependencyObject, IPlotterElement
       // and as we are adding by default content to MainCanvas, 
       // and since I like more when buttons are by default in right down corner - 
       // set bottom and right to 10.
-      var left = Canvas.GetLeft(content);
-      var top = Canvas.GetTop(content);
-      var bottom = Canvas.GetBottom(content);
-      var right = Canvas.GetRight(content);
+      var left = Canvas.GetLeft(element: content);
+      var top = Canvas.GetTop(element: content);
+      var bottom = Canvas.GetBottom(element: content);
+      var right = Canvas.GetRight(element: content);
 
       if (left.IsNaN() && right.IsNaN() && bottom.IsNaN() && top.IsNaN())
       {
-        Canvas.SetBottom(content, 10.0);
-        Canvas.SetRight(content, 10.0);
+        Canvas.SetBottom(element: content, length: 10.0);
+        Canvas.SetRight(element: content, length: 10.0);
       }
-      _plotter.MainCanvas.Children.Add(Content);
+      _plotter.MainCanvas.Children.Add(element: Content);
     }
   }
 
@@ -60,11 +60,11 @@ public class ViewportUIContainer : DependencyObject, IPlotterElement
   {
     if (Content != null)
     {
-      var plotterPanel = GetPlotterPanel(Content);
+      var plotterPanel = GetPlotterPanel(obj: Content);
       //Plotter.SetPlotter(Content, null);
       if (plotterPanel == PlotterPanel.MainCanvas)
       {
-        _plotter.MainCanvas.Children.Remove(Content);
+        _plotter.MainCanvas.Children.Remove(element: Content);
       }
     }
 
@@ -72,27 +72,20 @@ public class ViewportUIContainer : DependencyObject, IPlotterElement
   }
 
   private PlotterBase plotter;
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 
   [AttachedPropertyBrowsableForChildren]
   public static PlotterPanel GetPlotterPanel(DependencyObject obj)
-  {
-    return (PlotterPanel)obj.GetValue(PlotterPanelProperty);
-  }
+    => (PlotterPanel)obj.GetValue(dp: PlotterPanelProperty);
 
-  public static void SetPlotterPanel(DependencyObject obj, PlotterPanel value)
-  {
-    obj.SetValue(PlotterPanelProperty, value);
-  }
+  public static void SetPlotterPanel(DependencyObject obj, PlotterPanel value) 
+    => obj.SetValue(dp: PlotterPanelProperty, value: value);
 
   public static readonly DependencyProperty PlotterPanelProperty = DependencyProperty.RegisterAttached(
-    "PlotterPanel",
-    typeof(PlotterPanel),
-    typeof(ViewportUIContainer),
-    new FrameworkPropertyMetadata(PlotterPanel.MainCanvas));
+    name: "PlotterPanel",
+    propertyType: typeof(PlotterPanel),
+    ownerType: typeof(ViewportUIContainer),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: PlotterPanel.MainCanvas));
 }

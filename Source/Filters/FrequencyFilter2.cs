@@ -31,7 +31,7 @@ public class FrequencyFilter2 : PointsFilterBase
         Point currPoint = enumerator.Current;
         double x = currPoint.X;
         double y = currPoint.Y;
-        double xInt = Math.Floor(x);
+        double xInt = Math.Floor(d: x);
         if (xInt == currentX)
         {
           if (x > maxX)
@@ -55,24 +55,24 @@ public class FrequencyFilter2 : PointsFilterBase
         {
           if (!isFirstPoint)
           {
-            result.Add(left);
+            result.Add(item: left);
 
             Point leftY = top.X < bottom.X ? top : bottom;
             Point rightY = top.X > bottom.X ? top : bottom;
 
             if (top != bottom)
             {
-              result.Add(leftY);
-              result.Add(rightY);
+              result.Add(item: leftY);
+              result.Add(item: rightY);
             }
             else if (top != left)
             {
-              result.Add(top);
+              result.Add(item: top);
             }
 
             if (right != rightY)
             {
-              result.Add(right);
+              result.Add(item: right);
             }
           }
 

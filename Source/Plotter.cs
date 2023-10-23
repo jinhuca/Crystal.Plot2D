@@ -14,7 +14,7 @@ public class Plotter : PlotterBase
   private GeneralAxis _horizontalAxis = new HorizontalAxis();       // Default to axis of numeric??
   private GeneralAxis _verticalAxis = new VerticalAxis();
 
-  public Legend Legend { get; set; } = new Legend();
+  public Legend Legend { get; set; } = new();
 
   public ItemsPanelTemplate LegendPanelTemplate
   {
@@ -36,8 +36,8 @@ public class Plotter : PlotterBase
     _horizontalAxis.TicksChanged += OnHorizontalAxisTicksChanged;
     _verticalAxis.TicksChanged += OnVerticalAxisTicksChanged;
 
-    SetIsDefaultAxis(_horizontalAxis, true);
-    SetIsDefaultAxis(_verticalAxis, true);
+    SetIsDefaultAxis(obj: _horizontalAxis, value: true);
+    SetIsDefaultAxis(obj: _verticalAxis, value: true);
 
     _mouseNavigation = new MouseNavigation();
     _keyboardNavigation = new KeyboardNavigation();
@@ -46,25 +46,28 @@ public class Plotter : PlotterBase
     verticalAxisNavigation = new AxisNavigation { Placement = AxisPlacement.Left };
 
     Children.AddMany(
-      _horizontalAxis,
-      _verticalAxis,
-      AxisGrid,
-      _mouseNavigation,
-      _keyboardNavigation,
-      _defaultContextMenu,
-      horizontalAxisNavigation,
-      verticalAxisNavigation,
-      new LongOperationsIndicator(),
-      Legend);
+      children: new IPlotterElement[]
+      {
+        _horizontalAxis,
+        _verticalAxis,
+        AxisGrid,
+        _mouseNavigation,
+        _keyboardNavigation,
+        _defaultContextMenu,
+        horizontalAxisNavigation,
+        verticalAxisNavigation,
+        new LongOperationsIndicator(),
+        Legend
+      });
 
 #if DEBUG
-    Children.Add(new DebugMenu());
+    Children.Add(item: new DebugMenu());
 #endif
 
     SetAllChildrenAsDefault();
   }
 
-  protected Plotter(PlotterLoadMode loadMode) : base(loadMode) { }
+  protected Plotter(PlotterLoadMode loadMode) : base(loadMode: loadMode) { }
 
   #region Default charts
 
@@ -73,7 +76,7 @@ public class Plotter : PlotterBase
   /// Gets the default mouse navigation of Plotter.
   /// </summary>
   /// <value>The mouse navigation.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public MouseNavigation MouseNavigation => _mouseNavigation;
 
   private readonly KeyboardNavigation _keyboardNavigation;
@@ -81,7 +84,7 @@ public class Plotter : PlotterBase
   /// Gets the default keyboard navigation of Plotter.
   /// </summary>
   /// <value>The keyboard navigation.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public KeyboardNavigation KeyboardNavigation => _keyboardNavigation;
 
   private readonly DefaultContextMenu _defaultContextMenu;
@@ -89,7 +92,7 @@ public class Plotter : PlotterBase
   /// Gets the default context menu of Plotter.
   /// </summary>
   /// <value>The default context menu.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public DefaultContextMenu DefaultContextMenu => _defaultContextMenu;
 
   private readonly AxisNavigation horizontalAxisNavigation;
@@ -97,7 +100,7 @@ public class Plotter : PlotterBase
   /// Gets the default horizontal axis navigation of Plotter.
   /// </summary>
   /// <value>The horizontal axis navigation.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public AxisNavigation HorizontalAxisNavigation => horizontalAxisNavigation;
 
   private readonly AxisNavigation verticalAxisNavigation;
@@ -105,22 +108,22 @@ public class Plotter : PlotterBase
   /// Gets the default vertical axis navigation of Plotter.
   /// </summary>
   /// <value>The vertical axis navigation.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public AxisNavigation VerticalAxisNavigation => verticalAxisNavigation;
 
   /// <summary>
   /// Gets the default axis grid of Plotter.
   /// </summary>
   /// <value>The axis grid.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  public AxisGrid AxisGrid { get; } = new AxisGrid();
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  public AxisGrid AxisGrid { get; } = new();
 
   #endregion
 
   private void OnHorizontalAxisTicksChanged(object sender, EventArgs e)
   {
     GeneralAxis axis = (GeneralAxis)sender;
-    UpdateHorizontalTicks(axis);
+    UpdateHorizontalTicks(axis: axis);
   }
 
   private void UpdateHorizontalTicks(GeneralAxis axis)
@@ -144,7 +147,7 @@ public class Plotter : PlotterBase
   private void OnVerticalAxisTicksChanged(object sender, EventArgs e)
   {
     GeneralAxis axis = (GeneralAxis)sender;
-    UpdateVerticalTicks(axis);
+    UpdateVerticalTicks(axis: axis);
   }
 
   private void UpdateVerticalTicks(GeneralAxis axis)
@@ -165,8 +168,8 @@ public class Plotter : PlotterBase
     AxisGrid.EndTicksUpdate();
   }
 
-  bool _keepOldAxis = false;
-  bool _updatingAxis = false;
+  bool _keepOldAxis;
+  bool _updatingAxis;
 
   /// <summary>
   /// Gets or sets the main vertical axis of Plotter.
@@ -174,7 +177,7 @@ public class Plotter : PlotterBase
   /// Value can be set to null to completely remove main vertical axis.
   /// </summary>
   /// <value>The main vertical axis.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public GeneralAxis MainVerticalAxis
   {
     get => _verticalAxis;
@@ -189,40 +192,40 @@ public class Plotter : PlotterBase
       {
         if (!_keepOldAxis)
         {
-          Children.Remove(_verticalAxis);
+          Children.Remove(item: _verticalAxis);
         }
         _verticalAxis.TicksChanged -= OnVerticalAxisTicksChanged;
         _verticalAxis = null;
-        UpdateVerticalTicks(_verticalAxis);
+        UpdateVerticalTicks(axis: _verticalAxis);
         return;
       }
 
-      VerifyAxisType(value.Placement, AxisType.Vertical);
+      VerifyAxisType(axisPlacement: value.Placement, axisType: AxisType.Vertical);
 
       if (value != _verticalAxis)
       {
-        ValidateVerticalAxis(value);
+        ValidateVerticalAxis(axis: value);
         _updatingAxis = true;
         if (_verticalAxis != null)
         {
           _verticalAxis.TicksChanged -= OnVerticalAxisTicksChanged;
-          SetIsDefaultAxis(_verticalAxis, false);
+          SetIsDefaultAxis(obj: _verticalAxis, value: false);
           if (!_keepOldAxis)
           {
-            Children.Remove(_verticalAxis);
+            Children.Remove(item: _verticalAxis);
           }
           value.Visibility = _verticalAxis.Visibility;
         }
-        SetIsDefaultAxis(value, true);
+        SetIsDefaultAxis(obj: value, value: true);
         _verticalAxis = value;
         _verticalAxis.TicksChanged += OnVerticalAxisTicksChanged;
 
-        if (!Children.Contains(value))
+        if (!Children.Contains(item: value))
         {
-          Children.Add(value);
+          Children.Add(content: value);
         }
 
-        UpdateVerticalTicks(value);
+        UpdateVerticalTicks(axis: value);
         OnVerticalAxisChanged();
         _updatingAxis = false;
       }
@@ -240,7 +243,7 @@ public class Plotter : PlotterBase
   /// </value>
   public Visibility MainHorizontalAxisVisibility
   {
-    get { return MainHorizontalAxis?.Visibility ?? Visibility.Hidden; }
+    get => MainHorizontalAxis?.Visibility ?? Visibility.Hidden;
     set
     {
       if (MainHorizontalAxis != null)
@@ -258,7 +261,7 @@ public class Plotter : PlotterBase
   /// </value>
   public Visibility MainVerticalAxisVisibility
   {
-    get { return MainVerticalAxis?.Visibility ?? Visibility.Hidden; }
+    get => MainVerticalAxis?.Visibility ?? Visibility.Hidden;
     set
     {
       if (MainVerticalAxis != null)
@@ -276,7 +279,7 @@ public class Plotter : PlotterBase
   /// <value>
   ///   The main horizontal axis.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public GeneralAxis MainHorizontalAxis
   {
     get => _horizontalAxis;
@@ -289,39 +292,39 @@ public class Plotter : PlotterBase
 
       if (value == null && _horizontalAxis != null)
       {
-        Children.Remove(_horizontalAxis);
+        Children.Remove(item: _horizontalAxis);
         _horizontalAxis.TicksChanged -= OnHorizontalAxisTicksChanged;
         _horizontalAxis = null;
-        UpdateHorizontalTicks(_horizontalAxis);
+        UpdateHorizontalTicks(axis: _horizontalAxis);
         return;
       }
 
-      VerifyAxisType(value.Placement, AxisType.Horizontal);
+      VerifyAxisType(axisPlacement: value.Placement, axisType: AxisType.Horizontal);
 
       if (value != _horizontalAxis)
       {
-        ValidateHorizontalAxis(value);
+        ValidateHorizontalAxis(axis: value);
         _updatingAxis = true;
         if (_horizontalAxis != null)
         {
           _horizontalAxis.TicksChanged -= OnHorizontalAxisTicksChanged;
-          SetIsDefaultAxis(_horizontalAxis, false);
+          SetIsDefaultAxis(obj: _horizontalAxis, value: false);
           if (!_keepOldAxis)
           {
-            Children.Remove(_horizontalAxis);
+            Children.Remove(item: _horizontalAxis);
           }
           value.Visibility = _horizontalAxis.Visibility;
         }
-        SetIsDefaultAxis(value, true);
+        SetIsDefaultAxis(obj: value, value: true);
         _horizontalAxis = value;
         _horizontalAxis.TicksChanged += OnHorizontalAxisTicksChanged;
 
-        if (!Children.Contains(value))
+        if (!Children.Contains(item: value))
         {
-          Children.Add(value);
+          Children.Add(content: value);
         }
 
-        UpdateHorizontalTicks(value);
+        UpdateHorizontalTicks(axis: value);
         OnHorizontalAxisChanged();
         _updatingAxis = false;
       }
@@ -348,7 +351,7 @@ public class Plotter : PlotterBase
 
     if (!result)
     {
-      throw new ArgumentException(Strings.Exceptions.InvalidAxisPlacement);
+      throw new ArgumentException(message: Strings.Exceptions.InvalidAxisPlacement);
     }
   }
 

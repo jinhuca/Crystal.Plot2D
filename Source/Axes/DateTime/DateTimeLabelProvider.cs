@@ -19,10 +19,9 @@ public class DateTimeLabelProvider : DateTimeLabelProviderBase
     object info = ticksInfo.Info;
     var ticks = ticksInfo.Ticks;
 
-    if (info is DifferenceIn)
+    if (info is DifferenceIn diff)
     {
-      DifferenceIn diff = (DifferenceIn)info;
-      DateFormat = GetDateFormat(diff);
+      DateFormat = GetDateFormat(diff: diff);
     }
 
     LabelTickInfo<DateTime> tickInfo = new() { Info = info };
@@ -32,9 +31,9 @@ public class DateTimeLabelProvider : DateTimeLabelProviderBase
     {
       tickInfo.Tick = ticks[i];
 
-      string tickText = GetString(tickInfo);
+      string tickText = GetString(tickInfo: tickInfo);
       UIElement label = new TextBlock { Text = tickText, ToolTip = ticks[i] };
-      ApplyCustomView(tickInfo, label);
+      ApplyCustomView(info: tickInfo, label: label);
       res[i] = label;
     }
 

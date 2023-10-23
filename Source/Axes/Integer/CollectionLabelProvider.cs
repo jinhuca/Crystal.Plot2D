@@ -11,15 +11,15 @@ public class CollectionLabelProvider<T> : LabelProviderBase<int>
 {
   private IList<T> collection;
 
-  [SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+  [SuppressMessage(category: "Microsoft.Usage", checkId: "CA2227:CollectionPropertiesShouldBeReadOnly")]
   public IList<T> Collection
   {
-    get { return collection; }
+    get => collection;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: "value");
       }
 
       if (collection != value)
@@ -91,7 +91,7 @@ public class CollectionLabelProvider<T> : LabelProviderBase<int>
 
       if (0 <= tick && tick < collection.Count)
       {
-        string text = collection[tick].ToString();
+        string text = collection[index: tick].ToString();
         res[i] = new TextBlock
         {
           Text = text,

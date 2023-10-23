@@ -9,10 +9,10 @@ public sealed class CollectionRemoveAction<T> : UndoAction
   {
     if (item == null)
     {
-      throw new ArgumentNullException("addedItem");
+      throw new ArgumentNullException(paramName: "addedItem");
     }
 
-    Collection = collection ?? throw new ArgumentNullException("collection");
+    Collection = collection ?? throw new ArgumentNullException(paramName: "collection");
     Item = item;
     Index = index;
   }
@@ -20,6 +20,6 @@ public sealed class CollectionRemoveAction<T> : UndoAction
   public IList<T> Collection { get; }
   public T Item { get; }
   public int Index { get; }
-  public override void Do() => Collection.Remove(Item);
-  public override void Undo() => Collection.Insert(Index, Item);
+  public override void Do() => Collection.Remove(item: Item);
+  public override void Undo() => Collection.Insert(index: Index, item: Item);
 }

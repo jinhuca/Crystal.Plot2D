@@ -16,7 +16,7 @@ public static class CoordinateTransformExtensions
   /// <returns>Point in screen coordinates</returns>
   public static Point DataToScreen(this Point dataPoint, CoordinateTransform transform)
   {
-    return transform.DataToScreen(dataPoint);
+    return transform.DataToScreen(dataPoint: dataPoint);
   }
 
   /// <summary>
@@ -27,7 +27,7 @@ public static class CoordinateTransformExtensions
   /// <returns>Point in data coordinates</returns>
   public static Point ScreenToData(this Point screenPoint, CoordinateTransform transform)
   {
-    return transform.ScreenToData(screenPoint);
+    return transform.ScreenToData(screenPoint: screenPoint);
   }
 
   /// <summary>
@@ -38,7 +38,7 @@ public static class CoordinateTransformExtensions
   /// <returns>Point in viewport coordinates</returns>
   public static Point ScreenToViewport(this Point screenPoint, CoordinateTransform transform)
   {
-    return transform.ScreenToViewport(screenPoint);
+    return transform.ScreenToViewport(screenPoint: screenPoint);
   }
 
   /// <summary>
@@ -49,7 +49,7 @@ public static class CoordinateTransformExtensions
   /// <returns>Point in screen coordinates</returns>
   public static Point ViewportToScreen(this Point viewportPoint, CoordinateTransform transform)
   {
-    return transform.ViewportToScreen(viewportPoint);
+    return transform.ViewportToScreen(viewportPoint: viewportPoint);
   }
 
   /// <summary>
@@ -60,7 +60,7 @@ public static class CoordinateTransformExtensions
   /// <returns>Point in data coordinates</returns>
   public static Point ViewportToData(this Point viewportPoint, CoordinateTransform transform)
   {
-    return transform.DataTransform.ViewportToData(viewportPoint);
+    return transform.DataTransform.ViewportToData(pt: viewportPoint);
   }
 
   /// <summary>
@@ -71,7 +71,7 @@ public static class CoordinateTransformExtensions
   /// <returns>Point in viewport coordinates</returns>
   public static Point DataToViewport(this Point dataPoint, CoordinateTransform transform)
   {
-    return transform.DataTransform.DataToViewport(dataPoint);
+    return transform.DataTransform.DataToViewport(pt: dataPoint);
   }
 
   /// <summary>
@@ -82,7 +82,7 @@ public static class CoordinateTransformExtensions
   /// <returns>Point in viewport coordinates</returns>
   public static Point DataToViewport(this Point dataPoint, DataTransform transform)
   {
-    return transform.DataToViewport(dataPoint);
+    return transform.DataToViewport(pt: dataPoint);
   }
 
   #endregion
@@ -100,7 +100,7 @@ public static class CoordinateTransformExtensions
     Point p1 = screenRect.BottomLeft.ScreenToData(transform);
     Point p2 = screenRect.TopRight.ScreenToData(transform);
 
-    return new Rect(p1, p2);
+    return new Rect(point1: p1, point2: p2);
   }
 
   /// <summary>
@@ -111,10 +111,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in screen coordinates</returns>
   public static Rect DataToScreen(this DataRect dataRect, CoordinateTransform transform)
   {
-    Point p1 = dataRect.XMaxYMax.DataToScreen(transform);
-    Point p2 = dataRect.XMinYMin.DataToScreen(transform);
+    Point p1 = dataRect.XMaxYMax.DataToScreen(transform: transform);
+    Point p2 = dataRect.XMinYMin.DataToScreen(transform: transform);
 
-    return new Rect(p1, p2);
+    return new Rect(point1: p1, point2: p2);
   }
 
   /// <summary>
@@ -128,7 +128,7 @@ public static class CoordinateTransformExtensions
     Point p1 = screenRect.BottomLeft.ScreenToViewport(transform);
     Point p2 = screenRect.TopRight.ScreenToViewport(transform);
 
-    return new DataRect(p1, p2);
+    return new DataRect(point1: p1, point2: p2);
   }
 
   /// <summary>
@@ -142,7 +142,7 @@ public static class CoordinateTransformExtensions
     Point p1 = viewportRect.XMaxYMax.ViewportToScreen(transform);
     Point p2 = viewportRect.XMinYMin.ViewportToScreen(transform);
 
-    return new Rect(p1, p2);
+    return new Rect(point1: p1, point2: p2);
   }
 
   /// <summary>
@@ -156,7 +156,7 @@ public static class CoordinateTransformExtensions
     Point p1 = viewportRect.XMaxYMax.ViewportToData(transform);
     Point p2 = viewportRect.XMinYMin.ViewportToData(transform);
 
-    return new DataRect(p1, p2);
+    return new DataRect(point1: p1, point2: p2);
   }
 
   /// <summary>
@@ -178,10 +178,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in data coordinates</returns>
   public static DataRect ViewportToData(this DataRect viewportRect, DataTransform transform)
   {
-    Point p1 = transform.ViewportToData(viewportRect.XMaxYMax);
-    Point p2 = transform.ViewportToData(viewportRect.XMinYMin);
+    Point p1 = transform.ViewportToData(pt: viewportRect.XMaxYMax);
+    Point p2 = transform.ViewportToData(pt: viewportRect.XMinYMin);
 
-    return new DataRect(p1, p2);
+    return new DataRect(point1: p1, point2: p2);
   }
 
   /// <summary>
@@ -192,10 +192,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in viewport coordinates</returns>
   public static DataRect DataToViewport(this DataRect dataRect, DataTransform transform)
   {
-    Point p1 = transform.DataToViewport(dataRect.XMinYMin);
-    Point p2 = transform.DataToViewport(dataRect.XMaxYMax);
+    Point p1 = transform.DataToViewport(pt: dataRect.XMinYMin);
+    Point p2 = transform.DataToViewport(pt: dataRect.XMaxYMax);
 
-    return new DataRect(p1, p2);
+    return new DataRect(point1: p1, point2: p2);
   }
 
   #endregion
@@ -214,7 +214,7 @@ public static class CoordinateTransformExtensions
   {
     foreach (var point in dataPoints)
     {
-      yield return point.DataToScreen(transform);
+      yield return point.DataToScreen(transform: transform);
     }
   }
 
@@ -230,7 +230,7 @@ public static class CoordinateTransformExtensions
 
     if (dataPoints is ICollection<Point> iCollection)
     {
-      res = new List<Point>(iCollection.Count);
+      res = new List<Point>(capacity: iCollection.Count);
     }
     else
     {
@@ -239,7 +239,7 @@ public static class CoordinateTransformExtensions
 
     foreach (var point in dataPoints)
     {
-      res.Add(transform.DataToScreen(point));
+      res.Add(item: transform.DataToScreen(dataPoint: point));
     }
 
     return res;
@@ -251,7 +251,7 @@ public static class CoordinateTransformExtensions
   /// <param name="transform">Coordinate transform used to perform transformation</param>
   /// <param name="dataPoints">Points in data coordinates</param>
   /// <returns>List of points in screen coordinates</returns>
-  [SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists")]
+  [SuppressMessage(category: "Microsoft.Design", checkId: "CA1002:DoNotExposeGenericLists")]
   public static List<Point> DataToScreenAsList(this CoordinateTransform transform, IEnumerable<Point> dataPoints)
   {
     return dataPoints.DataToScreenAsList(transform);

@@ -27,7 +27,7 @@ public class MaximalSizeConstraint : ViewportConstraint
   /// <value>The size of the max.</value>
   public double MaxSize
   {
-    get { return maxSize; }
+    get => maxSize;
     set
     {
       if (maxSize != value)

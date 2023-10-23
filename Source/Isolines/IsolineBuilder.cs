@@ -42,14 +42,8 @@ public sealed class IsolineBuilder
 
   public double MissingValue
   {
-    get
-    {
-      return missingValue;
-    }
-    set
-    {
-      missingValue = value;
-    }
+    get => missingValue;
+    set => missingValue = value;
   }
 
   #region Private methods
@@ -58,78 +52,117 @@ public sealed class IsolineBuilder
   private static void SetCellDictionaries()
   {
     var bottomDict = new Dictionary<int, Edge>();
-    bottomDict.Add((int)CellBitmask.RightBottom, Edge.Right);
-    bottomDict.Add(Edge.Left,
-      CellBitmask.LeftTop,
-      CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.RightTop,
-      CellBitmask.LeftTop | CellBitmask.RightBottom | CellBitmask.RightTop,
-      CellBitmask.LeftBottom);
-    bottomDict.Add(Edge.Right,
-      CellBitmask.RightTop,
-      CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.LeftTop,
-      CellBitmask.LeftBottom | CellBitmask.LeftTop | CellBitmask.RightTop);
-    bottomDict.Add(Edge.Top,
-      CellBitmask.RightBottom | CellBitmask.RightTop,
-      CellBitmask.LeftBottom | CellBitmask.LeftTop);
+    bottomDict.Add(key: (int)CellBitmask.RightBottom, value: Edge.Right);
+    bottomDict.Add(value: Edge.Left,
+      keys: new[]
+      {
+        CellBitmask.LeftTop,
+        CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.RightTop,
+        CellBitmask.LeftTop | CellBitmask.RightBottom | CellBitmask.RightTop,
+        CellBitmask.LeftBottom
+      });
+    bottomDict.Add(value: Edge.Right,
+      keys: new[]
+      {
+        CellBitmask.RightTop,
+        CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.LeftTop,
+        CellBitmask.LeftBottom | CellBitmask.LeftTop | CellBitmask.RightTop
+      });
+    bottomDict.Add(value: Edge.Top,
+      keys: new[]
+      {
+        CellBitmask.RightBottom | CellBitmask.RightTop,
+        CellBitmask.LeftBottom | CellBitmask.LeftTop
+      });
 
     var leftDict = new Dictionary<int, Edge>();
-    leftDict.Add(Edge.Top,
-      CellBitmask.LeftTop,
-      CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.RightTop);
-    leftDict.Add(Edge.Right,
-      CellBitmask.LeftTop | CellBitmask.RightTop,
-      CellBitmask.LeftBottom | CellBitmask.RightBottom);
-    leftDict.Add(Edge.Bottom,
-      CellBitmask.RightBottom | CellBitmask.RightTop | CellBitmask.LeftTop,
-      CellBitmask.LeftBottom);
+    leftDict.Add(value: Edge.Top,
+      keys: new[]
+      {
+        CellBitmask.LeftTop,
+        CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.RightTop
+      });
+    leftDict.Add(value: Edge.Right,
+      keys: new[]
+      {
+        CellBitmask.LeftTop | CellBitmask.RightTop,
+        CellBitmask.LeftBottom | CellBitmask.RightBottom
+      });
+    leftDict.Add(value: Edge.Bottom,
+      keys: new[]
+      {
+        CellBitmask.RightBottom | CellBitmask.RightTop | CellBitmask.LeftTop,
+        CellBitmask.LeftBottom
+      });
 
     var topDict = new Dictionary<int, Edge>();
-    topDict.Add(Edge.Right,
-      CellBitmask.RightTop,
-      CellBitmask.LeftTop | CellBitmask.LeftBottom | CellBitmask.RightBottom);
-    topDict.Add(Edge.Right,
-      CellBitmask.RightBottom,
-      CellBitmask.LeftTop | CellBitmask.LeftBottom | CellBitmask.RightTop);
-    topDict.Add(Edge.Left,
-      CellBitmask.RightBottom | CellBitmask.RightTop | CellBitmask.LeftTop,
-      CellBitmask.LeftBottom,
-      CellBitmask.LeftTop,
-      CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.RightTop);
-    topDict.Add(Edge.Bottom,
-      CellBitmask.RightBottom | CellBitmask.RightTop,
-      CellBitmask.LeftTop | CellBitmask.LeftBottom);
+    topDict.Add(value: Edge.Right,
+      keys: new[]
+      {
+        CellBitmask.RightTop,
+        CellBitmask.LeftTop | CellBitmask.LeftBottom | CellBitmask.RightBottom
+      });
+    topDict.Add(value: Edge.Right,
+      keys: new[]
+      {
+        CellBitmask.RightBottom,
+        CellBitmask.LeftTop | CellBitmask.LeftBottom | CellBitmask.RightTop
+      });
+    topDict.Add(value: Edge.Left,
+      keys: new[]
+      {
+        CellBitmask.RightBottom | CellBitmask.RightTop | CellBitmask.LeftTop,
+        CellBitmask.LeftBottom,
+        CellBitmask.LeftTop,
+        CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.RightTop
+      });
+    topDict.Add(value: Edge.Bottom,
+      keys: new[]
+      {
+        CellBitmask.RightBottom | CellBitmask.RightTop,
+        CellBitmask.LeftTop | CellBitmask.LeftBottom
+      });
 
     var rightDict = new Dictionary<int, Edge>();
-    rightDict.Add(Edge.Top,
-      CellBitmask.RightTop,
-      CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.LeftTop);
-    rightDict.Add(Edge.Left,
-      CellBitmask.LeftTop | CellBitmask.RightTop,
-      CellBitmask.LeftBottom | CellBitmask.RightBottom);
-    rightDict.Add(Edge.Bottom,
-      CellBitmask.RightBottom,
-      CellBitmask.LeftTop | CellBitmask.LeftBottom | CellBitmask.RightTop);
+    rightDict.Add(value: Edge.Top,
+      keys: new[]
+      {
+        CellBitmask.RightTop,
+        CellBitmask.LeftBottom | CellBitmask.RightBottom | CellBitmask.LeftTop
+      });
+    rightDict.Add(value: Edge.Left,
+      keys: new[]
+      {
+        CellBitmask.LeftTop | CellBitmask.RightTop,
+        CellBitmask.LeftBottom | CellBitmask.RightBottom
+      });
+    rightDict.Add(value: Edge.Bottom,
+      keys: new[]
+      {
+        CellBitmask.RightBottom,
+        CellBitmask.LeftTop | CellBitmask.LeftBottom | CellBitmask.RightTop
+      });
 
-    dictChooser.Add((int)Edge.Left, leftDict);
-    dictChooser.Add((int)Edge.Right, rightDict);
-    dictChooser.Add((int)Edge.Bottom, bottomDict);
-    dictChooser.Add((int)Edge.Top, topDict);
+    dictChooser.Add(key: (int)Edge.Left, value: leftDict);
+    dictChooser.Add(key: (int)Edge.Right, value: rightDict);
+    dictChooser.Add(key: (int)Edge.Bottom, value: bottomDict);
+    dictChooser.Add(key: (int)Edge.Top, value: topDict);
   }
 
   private Edge GetOutEdge(Edge inEdge, ValuesInCell cv, IrregularCell rect, double value)
   {
     // value smaller than all values in corners or 
     // value greater than all values in corners
-    if (!cv.ValueBelongTo(value))
+    if (!cv.ValueBelongTo(value: value))
     {
-      throw new IsolineGenerationException(Strings.Exceptions.IsolinesValueIsOutOfCell);
+      throw new IsolineGenerationException(message: Strings.Exceptions.IsolinesValueIsOutOfCell);
     }
 
-    CellBitmask cellVal = cv.GetCellValue(value);
-    var dict = dictChooser[(int)inEdge];
-    if (dict.ContainsKey((int)cellVal))
+    CellBitmask cellVal = cv.GetCellValue(value: value);
+    var dict = dictChooser[key: (int)inEdge];
+    if (dict.ContainsKey(key: (int)cellVal))
     {
-      Edge result = dict[(int)cellVal];
+      Edge result = dict[key: (int)cellVal];
       switch (result)
       {
         case Edge.Left:
@@ -165,7 +198,7 @@ public sealed class IsolineBuilder
     }
     else if (cellVal.IsDiagonal())
     {
-      return GetOutForOpposite(inEdge, cellVal, value, cv, rect);
+      return GetOutForOpposite(inEdge: inEdge, cellVal: cellVal, value: value, cellValues: cv, rect: rect);
     }
 
     const double near_zero = 0.0001;
@@ -252,31 +285,31 @@ public sealed class IsolineBuilder
 
   private Edge GetOutForOpposite(Edge inEdge, CellBitmask cellVal, double value, ValuesInCell cellValues, IrregularCell rect)
   {
-	    SubCell subCell = GetSubCell(inEdge, value, cellValues);
+	    SubCell subCell = GetSubCell(inEdge: inEdge, value: value, vc: cellValues);
 
     int iters = 1000; // max number of iterations
     do
     {
-      ValuesInCell subValues = cellValues.GetSubCell(subCell);
-      IrregularCell subRect = rect.GetSubRect(subCell);
-      var outEdge = GetOutEdge(inEdge, subValues, subRect, value);
+      ValuesInCell subValues = cellValues.GetSubCell(subCell: subCell);
+      IrregularCell subRect = rect.GetSubRect(sub: subCell);
+      var outEdge = GetOutEdge(inEdge: inEdge, cv: subValues, rect: subRect, value: value);
       if (outEdge == Edge.None)
       {
         return Edge.None;
       }
 
-      bool isAppropriate = subCell.IsAppropriate(outEdge);
+      bool isAppropriate = subCell.IsAppropriate(edge: outEdge);
       if (isAppropriate)
       {
-        ValuesInCell sValues = subValues.GetSubCell(subCell);
+        ValuesInCell sValues = subValues.GetSubCell(subCell: subCell);
 
-        Point point = GetPointXY(outEdge, value, subValues, subRect);
-        segments.AddPoint(point);
+        Point point = GetPointXY(edge: outEdge, value: value, vc: subValues, rect: subRect);
+        segments.AddPoint(p: point);
         return outEdge;
       }
       else
       {
-        subCell = GetAdjacentEdge(subCell, outEdge);
+        subCell = GetAdjacentEdge(sub: subCell, edge: outEdge);
       }
 
       byte e = (byte)outEdge;
@@ -284,7 +317,7 @@ public sealed class IsolineBuilder
       iters--;
     } while (iters >= 0);
 
-    throw new IsolineGenerationException(Strings.Exceptions.IsolinesDataIsUndetailized);
+    throw new IsolineGenerationException(message: Strings.Exceptions.IsolinesDataIsUndetailized);
   }
 
   private static SubCell GetAdjacentEdge(SubCell sub, Edge edge)
@@ -322,25 +355,25 @@ public sealed class IsolineBuilder
     switch (inEdge)
     {
       case Edge.Left:
-        res = (Math.Abs(value - lb) < Math.Abs(value - lt)) ? SubCell.LeftBottom : SubCell.LeftTop;
+        res = (Math.Abs(value: value - lb) < Math.Abs(value: value - lt)) ? SubCell.LeftBottom : SubCell.LeftTop;
         break;
       case Edge.Top:
-        res = (Math.Abs(value - lt) < Math.Abs(value - rt)) ? SubCell.LeftTop : SubCell.RightTop;
+        res = (Math.Abs(value: value - lt) < Math.Abs(value: value - rt)) ? SubCell.LeftTop : SubCell.RightTop;
         break;
       case Edge.Right:
-        res = (Math.Abs(value - rb) < Math.Abs(value - rt)) ? SubCell.RightBottom : SubCell.RightTop;
+        res = (Math.Abs(value: value - rb) < Math.Abs(value: value - rt)) ? SubCell.RightBottom : SubCell.RightTop;
         break;
       case Edge.Bottom:
       default:
-        res = (Math.Abs(value - lb) < Math.Abs(value - rb)) ? SubCell.LeftBottom : SubCell.RightBottom;
+        res = (Math.Abs(value: value - lb) < Math.Abs(value: value - rb)) ? SubCell.LeftBottom : SubCell.RightBottom;
         break;
     }
 
-    ValuesInCell subValues = vc.GetSubCell(res);
-    bool valueInside = subValues.ValueBelongTo(value);
+    ValuesInCell subValues = vc.GetSubCell(subCell: res);
+    bool valueInside = subValues.ValueBelongTo(value: value);
     if (!valueInside)
     {
-      throw new IsolineGenerationException(Strings.Exceptions.IsolinesDataIsUndetailized);
+      throw new IsolineGenerationException(message: Strings.Exceptions.IsolinesDataIsUndetailized);
     }
 
     return res;
@@ -350,10 +383,10 @@ public sealed class IsolineBuilder
   {
     double ratio = (value - a1) / (a2 - a1);
 
-    Verify.IsTrue(0 <= ratio && ratio <= 1);
+    Verify.IsTrue(condition: 0 <= ratio && ratio <= 1);
 
     Vector r = (1 - ratio) * v1 + ratio * v2;
-    return new Point(r.X, r.Y);
+    return new Point(x: r.X, y: r.Y);
   }
 
   private Point GetPointXY(Edge edge, double value, ValuesInCell vc, IrregularCell rect)
@@ -366,13 +399,13 @@ public sealed class IsolineBuilder
     switch (edge)
     {
       case Edge.Left:
-        return GetPoint(value, lb, lt, rect.LeftBottom, rect.LeftTop);
+        return GetPoint(value: value, a1: lb, a2: lt, v1: rect.LeftBottom, v2: rect.LeftTop);
       case Edge.Top:
-        return GetPoint(value, lt, rt, rect.LeftTop, rect.RightTop);
+        return GetPoint(value: value, a1: lt, a2: rt, v1: rect.LeftTop, v2: rect.RightTop);
       case Edge.Right:
-        return GetPoint(value, rb, rt, rect.RightBottom, rect.RightTop);
+        return GetPoint(value: value, a1: rb, a2: rt, v1: rect.RightBottom, v2: rect.RightTop);
       case Edge.Bottom:
-        return GetPoint(value, lb, rb, rect.LeftBottom, rect.RightBottom);
+        return GetPoint(value: value, a1: lb, a2: rb, v1: rect.LeftBottom, v2: rect.RightBottom);
       default:
         throw new InvalidOperationException();
     }
@@ -380,7 +413,7 @@ public sealed class IsolineBuilder
 
   private bool BelongsToEdge(double value, double edgeValue1, double edgeValue2, bool onBoundary)
   {
-    if (!double.IsNaN(missingValue) && (edgeValue1 == missingValue || edgeValue2 == missingValue))
+    if (!double.IsNaN(d: missingValue) && (edgeValue1 == missingValue || edgeValue2 == missingValue))
     {
       return false;
     }
@@ -406,9 +439,9 @@ public sealed class IsolineBuilder
       case Edge.Bottom:
         return (j == 0) || (edges[i, j] & (byte)edge) != 0;
       case Edge.Top:
-        return (j == edges.GetLength(1) - 2) || (edges[i, j + 1] & (byte)Edge.Bottom) != 0;
+        return (j == edges.GetLength(dimension: 1) - 2) || (edges[i, j + 1] & (byte)Edge.Bottom) != 0;
       case Edge.Right:
-        return (i == edges.GetLength(0) - 2) || (edges[i + 1, j] & (byte)Edge.Left) != 0;
+        return (i == edges.GetLength(dimension: 0) - 2) || (edges[i + 1, j] & (byte)Edge.Left) != 0;
       default:
         throw new InvalidOperationException();
     }
@@ -437,23 +470,23 @@ public sealed class IsolineBuilder
   {
     // Getting output edge
     ValuesInCell vc = (missingValue.IsNaN()) ?
-      (new ValuesInCell(values[x, y],
-        values[x + 1, y],
-        values[x + 1, y + 1],
-        values[x, y + 1])) :
-      (new ValuesInCell(values[x, y],
-        values[x + 1, y],
-        values[x + 1, y + 1],
-        values[x, y + 1],
-        missingValue));
+      (new ValuesInCell(leftBottom: values[x, y],
+        rightBottom: values[x + 1, y],
+        rightTop: values[x + 1, y + 1],
+        leftTop: values[x, y + 1])) :
+      (new ValuesInCell(leftBottom: values[x, y],
+        rightBottom: values[x + 1, y],
+        rightTop: values[x + 1, y + 1],
+        leftTop: values[x, y + 1],
+        missingValue: missingValue));
 
     IrregularCell rect = new(
-      grid[x, y],
-      grid[x + 1, y],
-      grid[x + 1, y + 1],
-      grid[x, y + 1]);
+      lb: grid[x, y],
+      rb: grid[x + 1, y],
+      rt: grid[x + 1, y + 1],
+      lt: grid[x, y + 1]);
 
-    Edge outEdge = GetOutEdge(inEdge, vc, rect, value);
+    Edge outEdge = GetOutEdge(inEdge: inEdge, cv: vc, rect: rect, value: value);
     if (outEdge == Edge.None)
     {
       newX = newY = -1; // Impossible cell indices
@@ -461,21 +494,21 @@ public sealed class IsolineBuilder
     }
 
     // Drawing new segment
-    Point point = GetPointXY(outEdge, value, vc, rect);
+    Point point = GetPointXY(edge: outEdge, value: value, vc: vc, rect: rect);
     newX = point.X;
     newY = point.Y;
-    segments.AddPoint(point);
+    segments.AddPoint(p: point);
     processed[x, y] = true;
 
     // Whether out-edge already was passed?
-    if (IsPassed(outEdge, x, y, edges)) // line is closed
+    if (IsPassed(edge: outEdge, i: x, j: y, edges: edges)) // line is closed
     {
       //MakeEdgePassed(outEdge, x, y); // boundaries should be marked as passed too
       return Edge.None;
     }
 
     // Make this edge passed
-    MakeEdgePassed(outEdge, x, y);
+    MakeEdgePassed(edge: outEdge, i: x, j: y);
 
     // Getting next cell's indices
     switch (outEdge)
@@ -502,34 +535,34 @@ public sealed class IsolineBuilder
     int s = x, t = y;
 
     ValuesInCell vc = (missingValue.IsNaN()) ?
-      (new ValuesInCell(values[x, y],
-        values[x + 1, y],
-        values[x + 1, y + 1],
-        values[x, y + 1])) :
-      (new ValuesInCell(values[x, y],
-        values[x + 1, y],
-        values[x + 1, y + 1],
-        values[x, y + 1],
-        missingValue));
+      (new ValuesInCell(leftBottom: values[x, y],
+        rightBottom: values[x + 1, y],
+        rightTop: values[x + 1, y + 1],
+        leftTop: values[x, y + 1])) :
+      (new ValuesInCell(leftBottom: values[x, y],
+        rightBottom: values[x + 1, y],
+        rightTop: values[x + 1, y + 1],
+        leftTop: values[x, y + 1],
+        missingValue: missingValue));
 
     IrregularCell rect = new(
-      grid[x, y],
-      grid[x + 1, y],
-      grid[x + 1, y + 1],
-      grid[x, y + 1]);
+      lb: grid[x, y],
+      rb: grid[x + 1, y],
+      rt: grid[x + 1, y + 1],
+      lt: grid[x, y + 1]);
 
-    Point point = GetPointXY(inEdge, value, vc, rect);
+    Point point = GetPointXY(edge: inEdge, value: value, vc: vc, rect: rect);
 
-    segments.StartLine(point, (value - minMax.Min) / (minMax.Max - minMax.Min), value);
+    segments.StartLine(p: point, value01: (value - minMax.Min) / (minMax.Max - minMax.Min), realValue: value);
 
-    MakeEdgePassed(inEdge, x, y);
+    MakeEdgePassed(edge: inEdge, i: x, j: y);
 
     //processed[x, y] = true;
 
     double x2, y2;
     do
     {
-      inEdge = TrackLine(inEdge, value, ref s, ref t, out x2, out y2);
+      inEdge = TrackLine(inEdge: inEdge, value: value, x: ref s, y: ref t, newX: out x2, newY: out y2);
     } while (inEdge != Edge.None);
   }
 
@@ -538,8 +571,8 @@ public sealed class IsolineBuilder
   private bool HasIsoline(int x, int y)
   {
     return (edges[x, y] != 0 &&
-      ((x < edges.GetLength(0) - 1 && edges[x + 1, y] != 0) ||
-       (y < edges.GetLength(1) - 1 && edges[x, y + 1] != 0)));
+      ((x < edges.GetLength(dimension: 0) - 1 && edges[x + 1, y] != 0) ||
+       (y < edges.GetLength(dimension: 1) - 1 && edges[x, y + 1] != 0)));
   }
 
   /// <summary>Finds isoline for specified reference value</summary>
@@ -570,20 +603,20 @@ public sealed class IsolineBuilder
     // left
     for (y = 1; y < ySize; y++)
     {
-      if (BelongsToEdge(value, values[0, y - 1], values[0, y], true) &&
+      if (BelongsToEdge(value: value, edgeValue1: values[0, y - 1], edgeValue2: values[0, y], onBoundary: true) &&
         (edges[0, y - 1] & (byte)Edge.Left) == 0)
       {
-        TrackLineNonRecursive(Edge.Left, value, 0, y - 1);
+        TrackLineNonRecursive(inEdge: Edge.Left, value: value, x: 0, y: y - 1);
       }
     }
 
     // bottom
     for (x = 0; x < xSize - 1; x++)
     {
-      if (BelongsToEdge(value, values[x, 0], values[x + 1, 0], true)
+      if (BelongsToEdge(value: value, edgeValue1: values[x, 0], edgeValue2: values[x + 1, 0], onBoundary: true)
         && (edges[x, 0] & (byte)Edge.Bottom) == 0)
       {
-        TrackLineNonRecursive(Edge.Bottom, value, x, 0);
+        TrackLineNonRecursive(inEdge: Edge.Bottom, value: value, x: x, y: 0);
       }
     }
 
@@ -598,10 +631,10 @@ public sealed class IsolineBuilder
       //    TrackLineNonRecursive(Edge.Left, value, 0, y - 1);
       //};
 
-      if (BelongsToEdge(value, values[x, y - 1], values[x, y], true) &&
+      if (BelongsToEdge(value: value, edgeValue1: values[x, y - 1], edgeValue2: values[x, y], onBoundary: true) &&
         (edges[x, y - 1] & (byte)Edge.Left) == 0)
       {
-        TrackLineNonRecursive(Edge.Right, value, x - 1, y - 1);
+        TrackLineNonRecursive(inEdge: Edge.Right, value: value, x: x - 1, y: y - 1);
       }
     }
 
@@ -611,28 +644,28 @@ public sealed class IsolineBuilder
       for (y = 1; y < ySize - 1; y++)
       {
         if ((edges[x, y] & (byte)Edge.Bottom) == 0 &&
-          BelongsToEdge(value, values[x, y], values[x + 1, y], false) &&
+          BelongsToEdge(value: value, edgeValue1: values[x, y], edgeValue2: values[x + 1, y], onBoundary: false) &&
           !processed[x, y - 1])
         {
-          TrackLineNonRecursive(Edge.Top, value, x, y - 1);
+          TrackLineNonRecursive(inEdge: Edge.Top, value: value, x: x, y: y - 1);
         }
         if ((edges[x, y] & (byte)Edge.Bottom) == 0 &&
-          BelongsToEdge(value, values[x, y], values[x + 1, y], false) &&
+          BelongsToEdge(value: value, edgeValue1: values[x, y], edgeValue2: values[x + 1, y], onBoundary: false) &&
           !processed[x, y])
         {
-          TrackLineNonRecursive(Edge.Bottom, value, x, y);
+          TrackLineNonRecursive(inEdge: Edge.Bottom, value: value, x: x, y: y);
         }
         if ((edges[x, y] & (byte)Edge.Left) == 0 &&
-          BelongsToEdge(value, values[x, y], values[x, y - 1], false) &&
+          BelongsToEdge(value: value, edgeValue1: values[x, y], edgeValue2: values[x, y - 1], onBoundary: false) &&
           !processed[x - 1, y - 1])
         {
-          TrackLineNonRecursive(Edge.Right, value, x - 1, y - 1);
+          TrackLineNonRecursive(inEdge: Edge.Right, value: value, x: x - 1, y: y - 1);
         }
         if ((edges[x, y] & (byte)Edge.Left) == 0 &&
-          BelongsToEdge(value, values[x, y], values[x, y - 1], false) &&
+          BelongsToEdge(value: value, edgeValue1: values[x, y], edgeValue2: values[x, y - 1], onBoundary: false) &&
           !processed[x, y - 1])
         {
-          TrackLineNonRecursive(Edge.Left, value, x, y - 1);
+          TrackLineNonRecursive(inEdge: Edge.Left, value: value, x: x, y: y - 1);
         }
       }
     }
@@ -663,12 +696,12 @@ public sealed class IsolineBuilder
 
       foreach (double level in levels)
       {
-        PrepareCells(level);
+        PrepareCells(value: level);
       }
 
-      if (segments.Lines.Count > 0 && segments.Lines[segments.Lines.Count - 1].OtherPoints.Count == 0)
+      if (segments.Lines.Count > 0 && segments.Lines[index: segments.Lines.Count - 1].OtherPoints.Count == 0)
       {
-        segments.Lines.RemoveAt(segments.Lines.Count - 1);
+        segments.Lines.RemoveAt(index: segments.Lines.Count - 1);
       }
     }
     return segments;
@@ -682,7 +715,7 @@ public sealed class IsolineBuilder
     }
     else
     {
-      minMax = (double.IsNaN(missingValue) ? dataSource.GetMinMax() : dataSource.GetMinMax(missingValue));
+      minMax = (double.IsNaN(d: missingValue) ? dataSource.GetMinMax() : dataSource.GetMinMax(missingValue: missingValue));
     }
 
     if (dataSource.MissingValue.HasValue)
@@ -712,11 +745,11 @@ public sealed class IsolineBuilder
       values = dataSource.Data;
 
 
-      PrepareCells(level);
+      PrepareCells(value: level);
 
-      if (segments.Lines.Count > 0 && segments.Lines[segments.Lines.Count - 1].OtherPoints.Count == 0)
+      if (segments.Lines.Count > 0 && segments.Lines[index: segments.Lines.Count - 1].OtherPoints.Count == 0)
       {
-        segments.Lines.RemoveAt(segments.Lines.Count - 1);
+        segments.Lines.RemoveAt(index: segments.Lines.Count - 1);
       }
     }
     return segments;
@@ -726,7 +759,7 @@ public sealed class IsolineBuilder
   {
     if (dataSource == null)
     {
-      throw new InvalidOperationException(Strings.Exceptions.IsolinesDataSourceShouldBeSet);
+      throw new InvalidOperationException(message: Strings.Exceptions.IsolinesDataSourceShouldBeSet);
     }
   }
 
@@ -744,12 +777,12 @@ public sealed class IsolineBuilder
   /// <value>The data source.</value>
   public IDataSource2D<double> DataSource
   {
-    get { return dataSource; }
+    get => dataSource;
     set
     {
       if (dataSource != value)
       {
-        value.VerifyNotNull("value");
+        value.VerifyNotNull(paramName: "value");
 
         dataSource = value;
         grid = dataSource.Grid;

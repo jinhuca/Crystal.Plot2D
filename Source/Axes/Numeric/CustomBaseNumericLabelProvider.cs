@@ -12,17 +12,17 @@ public class CustomBaseNumericLabelProvider : LabelProvider<double>
   /// <value>The custom base.</value>
   public double CustomBase
   {
-    get { return customBase; }
+    get => customBase;
     set
     {
-      if (double.IsNaN(value))
+      if (double.IsNaN(d: value))
       {
-        throw new ArgumentException(Strings.Exceptions.CustomBaseTicksProviderBaseIsNaN);
+        throw new ArgumentException(message: Strings.Exceptions.CustomBaseTicksProviderBaseIsNaN);
       }
 
       if (value <= 0)
       {
-        throw new ArgumentOutOfRangeException(Strings.Exceptions.CustomBaseTicksProviderBaseIsTooSmall);
+        throw new ArgumentOutOfRangeException(paramName: Strings.Exceptions.CustomBaseTicksProviderBaseIsTooSmall);
       }
 
       customBase = value;
@@ -49,19 +49,19 @@ public class CustomBaseNumericLabelProvider : LabelProvider<double>
   /// <param name="customBase">The custom base.</param>
   /// <param name="customBaseString">The custom base string.</param>
   public CustomBaseNumericLabelProvider(double customBase, string customBaseString)
-    : this(customBase)
+    : this(customBase: customBase)
   {
     CustomBaseString = customBaseString;
   }
 
-  private string customBaseString = null;
+  private string customBaseString;
   /// <summary>
   /// Gets or sets the custom base string.
   /// </summary>
   /// <value>The custom base string.</value>
   public string CustomBaseString
   {
-    get { return customBaseString; }
+    get => customBaseString;
     set
     {
       if (customBaseString != value)
@@ -76,7 +76,7 @@ public class CustomBaseNumericLabelProvider : LabelProvider<double>
   {
     double value = tickInfo.Tick / customBase;
 
-    string customBaseStr = customBaseString ?? customBase.ToString(CultureInfo.InvariantCulture);
+    string customBaseStr = customBaseString ?? customBase.ToString(provider: CultureInfo.InvariantCulture);
     string result;
     if (value == 1)
     {
@@ -88,7 +88,7 @@ public class CustomBaseNumericLabelProvider : LabelProvider<double>
     }
     else
     {
-      result = value.ToString(CultureInfo.InvariantCulture) + customBaseStr;
+      result = value.ToString(provider: CultureInfo.InvariantCulture) + customBaseStr;
     }
 
     return result;

@@ -22,7 +22,7 @@ public partial class DraggablePoint : PositionalViewportUIContainer
   /// <param name="position">The position of DraggablePoint.</param>
   public DraggablePoint(Point position) : this() { Position = position; }
 
-  bool dragging = false;
+  bool dragging;
   Point dragStart;
   Vector shift;
   protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
@@ -32,7 +32,7 @@ public partial class DraggablePoint : PositionalViewportUIContainer
       return;
     }
 
-    dragStart = e.GetPosition(Plotter.ViewportPanel).ScreenToData(Plotter.Viewport.Transform);
+    dragStart = e.GetPosition(relativeTo: Plotter.ViewportPanel).ScreenToData(transform: Plotter.Viewport.Transform);
     shift = Position - dragStart;
     dragging = true;
   }
@@ -60,7 +60,7 @@ public partial class DraggablePoint : PositionalViewportUIContainer
       CaptureMouse();
     }
 
-    Point mouseInData = e.GetPosition(Plotter.ViewportPanel).ScreenToData(Plotter.Viewport.Transform);
+    Point mouseInData = e.GetPosition(relativeTo: Plotter.ViewportPanel).ScreenToData(transform: Plotter.Viewport.Transform);
 
     if (mouseInData != dragStart)
     {

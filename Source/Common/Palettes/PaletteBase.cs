@@ -17,7 +17,7 @@ public abstract class PaletteBase : IPalette
   /// <returns>Color.</returns>
   public abstract Color GetColor(double t);
 
-  protected void RaiseChanged() => Changed.Raise(this);
+  protected void RaiseChanged() => Changed.Raise(sender: this);
 
   /// <summary>
   /// Occurs when palette changes.

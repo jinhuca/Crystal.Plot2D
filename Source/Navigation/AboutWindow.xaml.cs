@@ -18,7 +18,7 @@ internal partial class AboutWindow : Window
   private void Hyperlink_Click(object sender, RoutedEventArgs e)
   {
     Hyperlink source = (Hyperlink)sender;
-    Process.Start(source.NavigateUri.ToString());
+    Process.Start(fileName: source.NavigateUri.ToString());
   }
 
   private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -33,6 +33,6 @@ internal partial class AboutWindow : Window
   private void Hyperlink_Click_1(object sender, RoutedEventArgs e)
   {
     Hyperlink source = (Hyperlink)sender;
-    Process.Start(source.NavigateUri.ToString());
+    Process.Start(fileName: source.NavigateUri.ToString());
   }
 }

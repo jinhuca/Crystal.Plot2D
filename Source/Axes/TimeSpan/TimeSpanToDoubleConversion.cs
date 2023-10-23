@@ -5,7 +5,7 @@ namespace Crystal.Plot2D.Charts;
 internal sealed class TimeSpanToDoubleConversion
 {
   public TimeSpanToDoubleConversion(TimeSpan minSpan, TimeSpan maxSpan)
-    : this(0, minSpan, 1, maxSpan)
+    : this(min: 0, minSpan: minSpan, max: 1, maxSpan: maxSpan)
   { }
 
   public TimeSpanToDoubleConversion(double min, TimeSpan minSpan, double max, TimeSpan maxSpan)
@@ -26,9 +26,9 @@ internal sealed class TimeSpanToDoubleConversion
     double ratio = (d - min) / length;
     long ticks = (long)(ticksMin + ticksLength * ratio);
 
-    ticks = MathHelper.Clamp(ticks, TimeSpan.MinValue.Ticks, TimeSpan.MaxValue.Ticks);
+    ticks = MathHelper.Clamp(value: ticks, min: TimeSpan.MinValue.Ticks, max: TimeSpan.MaxValue.Ticks);
 
-    return new TimeSpan(ticks);
+    return new TimeSpan(ticks: ticks);
   }
 
   internal double ToDouble(TimeSpan span)

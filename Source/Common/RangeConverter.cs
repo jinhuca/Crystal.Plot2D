@@ -9,49 +9,49 @@ public sealed class RangeConverter : TypeConverter
 {
   public override bool CanConvertFrom(ITypeDescriptorContext context, Type sourceType)
   {
-    return (sourceType == typeof(string)) || base.CanConvertFrom(context, sourceType);
+    return (sourceType == typeof(string)) || base.CanConvertFrom(context: context, sourceType: sourceType);
   }
 
   public override bool CanConvertTo(ITypeDescriptorContext context, Type destinationType)
   {
-    return (destinationType == typeof(string)) || base.CanConvertTo(context, destinationType);
+    return (destinationType == typeof(string)) || base.CanConvertTo(context: context, destinationType: destinationType);
   }
 
   public override object ConvertFrom(ITypeDescriptorContext context, CultureInfo culture, object value)
   {
     if (value == null)
     {
-      throw GetConvertFromException(value);
+      throw GetConvertFromException(value: value);
     }
 
     if (value is string source)
     {
-      var parts = source.Split('-');
+      var parts = source.Split(separator: '-');
       var minStr = parts[0];
       var maxStr = parts[1];
 
       int minInt32 = 0;
       double minDouble = 0;
       DateTime minDateTime = DateTime.Now;
-      if (int.TryParse(minStr, NumberStyles.Integer, culture, out minInt32))
+      if (int.TryParse(s: minStr, style: NumberStyles.Integer, provider: culture, result: out minInt32))
       {
-        int maxInt32 = int.Parse(maxStr, NumberStyles.Integer, culture);
+        int maxInt32 = int.Parse(s: maxStr, style: NumberStyles.Integer, provider: culture);
 
-        return new Range<int>(minInt32, maxInt32);
+        return new Range<int>(min: minInt32, max: maxInt32);
       }
-      else if (double.TryParse(minStr, NumberStyles.Float, culture, out minDouble))
+      else if (double.TryParse(s: minStr, style: NumberStyles.Float, provider: culture, result: out minDouble))
       {
-        double maxDouble = double.Parse(maxStr, NumberStyles.Float, culture);
-        return new Range<double>(minDouble, maxDouble);
+        double maxDouble = double.Parse(s: maxStr, style: NumberStyles.Float, provider: culture);
+        return new Range<double>(min: minDouble, max: maxDouble);
       }
-      else if (DateTime.TryParse(minStr, culture, DateTimeStyles.None, out minDateTime))
+      else if (DateTime.TryParse(s: minStr, provider: culture, styles: DateTimeStyles.None, result: out minDateTime))
       {
-        DateTime maxDateTime = DateTime.Parse(maxStr, culture);
-        return new Range<DateTime>(minDateTime, maxDateTime);
+        DateTime maxDateTime = DateTime.Parse(s: maxStr, provider: culture);
+        return new Range<DateTime>(min: minDateTime, max: maxDateTime);
       }
     }
 
-    return base.ConvertFrom(context, culture, value);
+    return base.ConvertFrom(context: context, culture: culture, value: value);
   }
 
   public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
@@ -61,9 +61,9 @@ public sealed class RangeConverter : TypeConverter
       DataRect rect = (DataRect)value;
       if (destinationType == typeof(string))
       {
-        return rect.ConvertToString(null, culture);
+        return rect.ConvertToString(format: null, provider: culture);
       }
     }
-    return base.ConvertTo(context, culture, value, destinationType);
+    return base.ConvertTo(context: context, culture: culture, value: value, destinationType: destinationType);
   }
 }

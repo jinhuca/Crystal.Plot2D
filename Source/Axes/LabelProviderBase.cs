@@ -46,20 +46,15 @@ public sealed class LabelTickInfo<T>
 /// </remarks>
 public abstract class LabelProviderBase<T>
 {
-
   #region Private
 
-  private string labelStringFormat = null;
-  private Func<LabelTickInfo<T>, string> customFormatter = null;
-  private Action<LabelTickInfo<T>, UIElement> customView = null;
+  private string labelStringFormat;
+  private Func<LabelTickInfo<T>, string> customFormatter;
+  private Action<LabelTickInfo<T>, UIElement> customView;
 
   #endregion
 
-  private static readonly UIElement[] emptyLabelsArray = new UIElement[0];
-  protected static UIElement[] EmptyLabelsArray
-  {
-    get { return emptyLabelsArray; }
-  }
+  protected static UIElement[] EmptyLabelsArray { get; } = Array.Empty<UIElement>();
 
   /// <summary>
   /// Creates labels by given ticks info.
@@ -67,7 +62,7 @@ public abstract class LabelProviderBase<T>
   /// </summary>
   /// <param name="ticksInfo">The ticks info.</param>
   /// <returns>Array of <see cref="UIElement"/>s, which are axis labels for specified axis ticks.</returns>
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public abstract UIElement[] CreateLabels(ITicksInfo<T> ticksInfo);
 
   /// <summary>
@@ -76,7 +71,7 @@ public abstract class LabelProviderBase<T>
   /// <value>The label string format.</value>
   public string LabelStringFormat
   {
-    get { return labelStringFormat; }
+    get => labelStringFormat;
     set
     {
       if (labelStringFormat != value)
@@ -93,7 +88,7 @@ public abstract class LabelProviderBase<T>
   /// <value>The custom formatter.</value>
   public Func<LabelTickInfo<T>, string> CustomFormatter
   {
-    get { return customFormatter; }
+    get => customFormatter;
     set
     {
       if (customFormatter != value)
@@ -111,7 +106,7 @@ public abstract class LabelProviderBase<T>
   /// <value>The custom view.</value>
   public Action<LabelTickInfo<T>, UIElement> CustomView
   {
-    get { return customView; }
+    get => customView;
     set
     {
       if (customView != value)
@@ -149,20 +144,20 @@ public abstract class LabelProviderBase<T>
     string text = null;
     if (CustomFormatter != null)
     {
-      text = CustomFormatter(tickInfo);
+      text = CustomFormatter(arg: tickInfo);
     }
     if (text == null)
     {
-      text = GetStringCore(tickInfo);
+      text = GetStringCore(tickInfo: tickInfo);
 
       if (text == null)
       {
-        throw new ArgumentNullException(Strings.Exceptions.TextOfTickShouldNotBeNull);
+        throw new ArgumentNullException(paramName: Strings.Exceptions.TextOfTickShouldNotBeNull);
       }
     }
     if (LabelStringFormat != null)
     {
-      text = string.Format(LabelStringFormat, text);
+      text = string.Format(format: LabelStringFormat, arg0: text);
     }
 
     return text;
@@ -177,7 +172,7 @@ public abstract class LabelProviderBase<T>
   {
     if (CustomView != null)
     {
-      CustomView(info, label);
+      CustomView(arg1: info, arg2: label);
     }
   }
 
@@ -188,15 +183,15 @@ public abstract class LabelProviderBase<T>
   public event EventHandler Changed;
   protected void RaiseChanged()
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
 
   private readonly ResourcePool<UIElement> pool = new();
   internal void ReleaseLabel(UIElement label)
   {
-    if (ReleaseCore(label))
+    if (ReleaseCore(label: label))
     {
-      pool.Put(label);
+      pool.Put(item: label);
     }
   }
 

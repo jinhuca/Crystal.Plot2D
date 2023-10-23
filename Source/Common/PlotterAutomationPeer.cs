@@ -5,7 +5,7 @@ namespace Crystal.Plot2D.Common;
 public class PlotterAutomationPeer : FrameworkElementAutomationPeer
 {
   public PlotterAutomationPeer(PlotterBase owner)
-    : base(owner)
+    : base(owner: owner)
   {
   }
 

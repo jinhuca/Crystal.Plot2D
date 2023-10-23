@@ -35,7 +35,7 @@ public class GenericLabelProvider<T> : LabelProviderBase<T>
       tickInfo.Tick = ticks[i];
       tickInfo.Info = info;
 
-      string text = GetString(tickInfo);
+      string text = GetString(tickInfo: tickInfo);
 
       res[i] = new TextBlock
       {

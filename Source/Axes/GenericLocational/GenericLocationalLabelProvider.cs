@@ -14,12 +14,12 @@ public class GenericLocationalLabelProvider<TItem, TAxis> : LabelProviderBase<TA
   {
     if (collection == null)
     {
-      throw new ArgumentNullException("collection");
+      throw new ArgumentNullException(paramName: "collection");
     }
 
     if (displayMemberMapping == null)
     {
-      throw new ArgumentNullException("displayMemberMapping");
+      throw new ArgumentNullException(paramName: "displayMemberMapping");
     }
 
     this.collection = collection;
@@ -48,11 +48,11 @@ public class GenericLocationalLabelProvider<TItem, TAxis> : LabelProviderBase<TA
       labelInfo.Tick = tick;
       labelInfo.Index = i;
 
-      string labelText = GetString(labelInfo);
+      string labelText = GetString(tickInfo: labelInfo);
 
       TextBlock label = new() { Text = labelText };
 
-      ApplyCustomView(labelInfo, label);
+      ApplyCustomView(info: labelInfo, label: label);
 
       result[i] = label;
     }
@@ -62,6 +62,6 @@ public class GenericLocationalLabelProvider<TItem, TAxis> : LabelProviderBase<TA
 
   protected override string GetStringCore(LabelTickInfo<TAxis> tickInfo)
   {
-    return displayMemberMapping(collection[tickInfo.Index + startIndex]);
+    return displayMemberMapping(arg: collection[index: tickInfo.Index + startIndex]);
   }
 }

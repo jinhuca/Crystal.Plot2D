@@ -5,13 +5,13 @@ namespace Crystal.Plot2D;
 public static class CoordinateUtilities
 {
   public static Rect RectZoom(Rect rect, double ratio)
-    => RectZoom(rect, rect.GetCenter(), ratio);
+    => RectZoom(rect: rect, zoomCenter: rect.GetCenter(), ratio: ratio);
 
   public static Rect RectZoom(Rect rect, double horizontalRatio, double verticalRatio)
-    => RectZoom(rect, rect.GetCenter(), horizontalRatio, verticalRatio);
+    => RectZoom(rect: rect, zoomCenter: rect.GetCenter(), horizontalRatio: horizontalRatio, verticalRatio: verticalRatio);
 
   public static Rect RectZoom(Rect rect, Point zoomCenter, double ratio)
-    => RectZoom(rect, zoomCenter, ratio, ratio);
+    => RectZoom(rect: rect, zoomCenter: zoomCenter, horizontalRatio: ratio, verticalRatio: ratio);
 
   public static Rect RectZoom(Rect rect, Point zoomCenter, double horizontalRatio, double verticalRatio)
   {
@@ -24,13 +24,13 @@ public static class CoordinateUtilities
   }
 
   public static DataRect RectZoom(DataRect rect, double ratio)
-    => RectZoom(rect, rect.GetCenter(), ratio);
+    => RectZoom(rect: rect, zoomCenter: rect.GetCenter(), ratio: ratio);
 
   public static DataRect RectZoom(DataRect rect, double horizontalRatio, double verticalRatio)
-    => RectZoom(rect, rect.GetCenter(), horizontalRatio, verticalRatio);
+    => RectZoom(rect: rect, zoomCenter: rect.GetCenter(), horizontalRatio: horizontalRatio, verticalRatio: verticalRatio);
 
   public static DataRect RectZoom(DataRect rect, Point zoomCenter, double ratio)
-    => RectZoom(rect, zoomCenter, ratio, ratio);
+    => RectZoom(rect: rect, zoomCenter: zoomCenter, horizontalRatio: ratio, verticalRatio: ratio);
 
   public static DataRect RectZoom(DataRect rect, Point zoomCenter, double horizontalRatio, double verticalRatio)
   {

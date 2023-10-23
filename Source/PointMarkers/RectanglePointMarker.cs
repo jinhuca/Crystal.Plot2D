@@ -7,7 +7,7 @@ public class RectanglePointMarker : ShapePointMarker
 {
   public override void Render(DrawingContext dc, Point screenPoint)
   {
-    var rec = new Rect(screenPoint, new Size(this.Diameter / 2, this.Diameter / 2));
-    dc.DrawRectangle(FillBrush, OutlinePen, rec);
+    var rec = new Rect(location: screenPoint, size: new Size(width: this.Diameter / 2, height: this.Diameter / 2));
+    dc.DrawRectangle(brush: FillBrush, pen: OutlinePen, rectangle: rec);
   }
 }

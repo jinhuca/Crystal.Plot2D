@@ -19,7 +19,7 @@ public abstract class FourValuesMultiConverter<T1, T2, T3, T4> : IMultiValueConv
         T3 param3 = (T3)values[2];
         T4 param4 = (T4)values[3];
 
-        var result = ConvertCore(param1, param2, param3, param4, targetType, parameter, culture);
+        var result = ConvertCore(value1: param1, value2: param2, value3: param3, value4: param4, targetType: targetType, parameter: parameter, culture: culture);
         return result;
       }
     }

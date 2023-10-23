@@ -44,13 +44,13 @@ public sealed class CoordinateTransform
 
   internal static CoordinateTransform FromRects(DataRect visibleRect, Rect screenRect)
   {
-    CoordinateTransform result = new(visibleRect, screenRect);
+    CoordinateTransform result = new(visibleRect: visibleRect, screenRect: screenRect);
     return result;
   }
 
   internal CoordinateTransform WithRects(DataRect visibleRect, Rect screenRect)
   {
-    CoordinateTransform copy = new(visibleRect, screenRect);
+    CoordinateTransform copy = new(visibleRect: visibleRect, screenRect: screenRect);
     copy.dataTransform = dataTransform;
     return copy;
   }
@@ -62,21 +62,21 @@ public sealed class CoordinateTransform
   /// <returns></returns>
   public CoordinateTransform WithDataTransform(DataTransform dataTransform)
   {
-    return new CoordinateTransform(VisibleRect, ScreenRect1)
+    return new CoordinateTransform(visibleRect: VisibleRect, screenRect: ScreenRect1)
     {
-      dataTransform = dataTransform ?? throw new ArgumentNullException("dataTransform")
+      dataTransform = dataTransform ?? throw new ArgumentNullException(paramName: "dataTransform")
     };
   }
 
   internal CoordinateTransform WithScreenOffset(double x, double y)
   {
     Rect screenCopy = ScreenRect1;
-    screenCopy.Offset(x, y);
-    CoordinateTransform copy = new(VisibleRect, screenCopy);
+    screenCopy.Offset(offsetX: x, offsetY: y);
+    CoordinateTransform copy = new(visibleRect: VisibleRect, screenRect: screenCopy);
     return copy;
   }
 
-  internal static CoordinateTransform CreateDefault() => new(new Rect(0, 0, 1, 1), new Rect(0, 0, 1, 1));
+  internal static CoordinateTransform CreateDefault() => new(visibleRect: new Rect(x: 0, y: 0, width: 1, height: 1), screenRect: new Rect(x: 0, y: 0, width: 1, height: 1));
 
   #endregion
 
@@ -89,10 +89,10 @@ public sealed class CoordinateTransform
   /// <returns></returns>
   public Point DataToScreen(Point dataPoint)
   {
-    Point viewportPoint = dataTransform.DataToViewport(dataPoint);
+    Point viewportPoint = dataTransform.DataToViewport(pt: dataPoint);
 
-    Point screenPoint = new(viewportPoint.X * rxToScreen - cxToScreen,
-        cyToScreen - viewportPoint.Y * ryToScreen);
+    Point screenPoint = new(x: viewportPoint.X * rxToScreen - cxToScreen,
+        y: cyToScreen - viewportPoint.Y * ryToScreen);
 
     return screenPoint;
   }
@@ -104,10 +104,10 @@ public sealed class CoordinateTransform
   /// <returns></returns>
   public Point ScreenToData(Point screenPoint)
   {
-    Point viewportPoint = new(screenPoint.X * rxToData - cxToData,
-        cyToData - screenPoint.Y * ryToData);
+    Point viewportPoint = new(x: screenPoint.X * rxToData - cxToData,
+        y: cyToData - screenPoint.Y * ryToData);
 
-    Point dataPoint = dataTransform.ViewportToData(viewportPoint);
+    Point dataPoint = dataTransform.ViewportToData(pt: viewportPoint);
 
     return dataPoint;
   }
@@ -119,8 +119,8 @@ public sealed class CoordinateTransform
   /// <returns></returns>
   public Point ViewportToScreen(Point viewportPoint)
   {
-    Point screenPoint = new(viewportPoint.X * rxToScreen - cxToScreen,
-        cyToScreen - viewportPoint.Y * ryToScreen);
+    Point screenPoint = new(x: viewportPoint.X * rxToScreen - cxToScreen,
+        y: cyToScreen - viewportPoint.Y * ryToScreen);
 
     return screenPoint;
   }
@@ -132,15 +132,15 @@ public sealed class CoordinateTransform
   /// <returns></returns>
   public Point ScreenToViewport(Point screenPoint)
   {
-    Point viewportPoint = new(screenPoint.X * rxToData - cxToData,
-        cyToData - screenPoint.Y * ryToData);
+    Point viewportPoint = new(x: screenPoint.X * rxToData - cxToData,
+        y: cyToData - screenPoint.Y * ryToData);
 
     return viewportPoint;
   }
 
   #endregion
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private DataRect visibleRect;
   /// <summary>
   /// Gets the viewport rectangle.
@@ -148,7 +148,7 @@ public sealed class CoordinateTransform
   /// <value>The viewport rect.</value>
   public DataRect ViewportRect => VisibleRect;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private Rect screenRect;
 
   /// <summary>
@@ -157,7 +157,7 @@ public sealed class CoordinateTransform
   /// <value>The screen rect.</value>
   public Rect ScreenRect => ScreenRect1;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private DataTransform dataTransform = DataTransforms.Identity;
   /// <summary>
   /// Gets the data transform.

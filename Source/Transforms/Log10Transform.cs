@@ -25,10 +25,10 @@ public sealed class Log10Transform : DataTransform
     double x = pt.X;
     double y = pt.Y;
 
-    x = x < 0 ? double.MinValue : Math.Log10(x);
-    y = y < 0 ? double.MinValue : Math.Log10(y);
+    x = x < 0 ? double.MinValue : Math.Log10(d: x);
+    y = y < 0 ? double.MinValue : Math.Log10(d: y);
 
-    return new Point(x, y);
+    return new Point(x: x, y: y);
   }
 
   /// <summary>
@@ -36,7 +36,7 @@ public sealed class Log10Transform : DataTransform
   /// </summary>
   /// <param name="pt">The point in viewport coordinates.</param>
   /// <returns>Transformed point in data coordinates.</returns>
-  public override Point ViewportToData(Point pt) => new(Math.Pow(10, pt.X), Math.Pow(10, pt.Y));
+  public override Point ViewportToData(Point pt) => new(x: Math.Pow(x: 10, y: pt.X), y: Math.Pow(x: 10, y: pt.Y));
 
   /// <summary>
   /// Gets the data domain of this dataTransform.

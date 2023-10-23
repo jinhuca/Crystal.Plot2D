@@ -8,13 +8,13 @@ public abstract class ContentGraph : ContentControl, IPlotterElement
 {
   static ContentGraph()
   {
-    EventManager.RegisterClassHandler(typeof(ContentGraph), PlotterBase.PlotterChangedEvent, new PlotterChangedEventHandler(OnPlotterChanged));
+    EventManager.RegisterClassHandler(classType: typeof(ContentGraph), routedEvent: PlotterBase.PlotterChangedEvent, handler: new PlotterChangedEventHandler(OnPlotterChanged));
   }
 
   private static void OnPlotterChanged(object sender, PlotterChangedEventArgs e)
   {
     ContentGraph owner = (ContentGraph)sender;
-    owner.OnPlotterChanged(e);
+    owner.OnPlotterChanged(e: e);
   }
 
   private void OnPlotterChanged(PlotterChangedEventArgs e)
@@ -40,7 +40,7 @@ public abstract class ContentGraph : ContentControl, IPlotterElement
 
   private void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
-    OnViewportPropertyChanged(e);
+    OnViewportPropertyChanged(e: e);
   }
 
   protected virtual void OnViewportPropertyChanged(ExtendedPropertyChangedEventArgs e) { }
@@ -50,7 +50,7 @@ public abstract class ContentGraph : ContentControl, IPlotterElement
   void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
   {
     this.plotter = (PlotterBase)plotter;
-    HostPanel.Children.Add(this);
+    HostPanel.Children.Add(element: this);
     this.plotter.Viewport.PropertyChanged += Viewport_PropertyChanged;
     OnPlotterAttached();
   }
@@ -61,7 +61,7 @@ public abstract class ContentGraph : ContentControl, IPlotterElement
   {
     OnPlotterDetaching();
     this.plotter.Viewport.PropertyChanged -= Viewport_PropertyChanged;
-    HostPanel.Children.Remove(this);
+    HostPanel.Children.Remove(element: this);
     this.plotter = null;
   }
 

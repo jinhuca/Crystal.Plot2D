@@ -28,7 +28,7 @@ public sealed class PhysicalProportionsConstraint : ViewportConstraint
   /// <value>The proportion ratio.</value>
   public double ProportionRatio
   {
-    get { return proportionRatio; }
+    get => proportionRatio;
     set
     {
       if (proportionRatio != value)
@@ -58,7 +58,7 @@ public sealed class PhysicalProportionsConstraint : ViewportConstraint
         (proposedDataRect.Height * output.Width);
 
     // Don't modify rect if new ratio differs only slightly 
-    if (Math.Abs(newRatio - proportionRatio) < 1e-3)
+    if (Math.Abs(value: newRatio - proportionRatio) < 1e-3)
     {
       return proposedDataRect;
     }
@@ -68,8 +68,8 @@ public sealed class PhysicalProportionsConstraint : ViewportConstraint
     double square = proposedDataRect.Width * proposedDataRect.Height;
     if (square > 0)
     {
-      width = Math.Sqrt(proportionRatio * output.Width * square / output.Height);
-      height = Math.Sqrt(output.Height * square / (proportionRatio * output.Width));
+      width = Math.Sqrt(d: proportionRatio * output.Width * square / output.Height);
+      height = Math.Sqrt(d: output.Height * square / (proportionRatio * output.Width));
     }
 
     // Finally ensure we have correct aspect ratio

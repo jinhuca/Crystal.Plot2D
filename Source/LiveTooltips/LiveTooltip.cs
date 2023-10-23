@@ -6,18 +6,18 @@ namespace Crystal.Plot2D.Charts;
 
 public class LiveToolTip : ContentControl
 {
-  static int nameCounter = 0;
+  static int nameCounter;
   static LiveToolTip()
   {
     var thisType = typeof(LiveToolTip);
 
-    DefaultStyleKeyProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(thisType));
-    FocusableProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(false));
-    IsHitTestVisibleProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(false));
-    BackgroundProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(Brushes.White));
-    OpacityProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(1.0));
-    BorderBrushProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(Brushes.DarkGray));
-    BorderThicknessProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(new Thickness(1.0)));
+    DefaultStyleKeyProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: thisType));
+    FocusableProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: false));
+    IsHitTestVisibleProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: false));
+    BackgroundProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.White));
+    OpacityProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: 1.0));
+    BorderBrushProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.DarkGray));
+    BorderThicknessProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: new Thickness(uniformLength: 1.0)));
   }
 
   public LiveToolTip()
@@ -30,15 +30,15 @@ public class LiveToolTip : ContentControl
 
   public FrameworkElement Owner
   {
-    get { return (FrameworkElement)GetValue(OwnerProperty); }
-    set { SetValue(OwnerProperty, value); }
+    get => (FrameworkElement)GetValue(dp: OwnerProperty);
+    set => SetValue(dp: OwnerProperty, value: value);
   }
 
   public static readonly DependencyProperty OwnerProperty = DependencyProperty.Register(
-    "Owner",
-    typeof(FrameworkElement),
-    typeof(LiveToolTip),
-    new FrameworkPropertyMetadata(null));
+    name: nameof(Owner),
+    propertyType: typeof(FrameworkElement),
+    ownerType: typeof(LiveToolTip),
+    typeMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   #endregion // end of Properties
 }

@@ -13,7 +13,7 @@ public static class LegendStyles
       if (defaultStyle == null)
       {
         var legendStyles = GetLegendStyles();
-        defaultStyle = (Style)legendStyles[typeof(Legend)];
+        defaultStyle = (Style)legendStyles[key: typeof(Legend)];
       }
 
       return defaultStyle;
@@ -28,7 +28,7 @@ public static class LegendStyles
       if (noScrollStyle == null)
       {
         var legendStyles = GetLegendStyles();
-        noScrollStyle = (Style)legendStyles["NoScrollLegendStyle"];
+        noScrollStyle = (Style)legendStyles[key: "NoScrollLegendStyle"];
       }
 
       return noScrollStyle;
@@ -37,7 +37,7 @@ public static class LegendStyles
 
   private static ResourceDictionary GetLegendStyles()
   {
-    var legendStyles = (ResourceDictionary)Application.LoadComponent(new Uri(Constants.LegendResourceUri, UriKind.Relative));
+    var legendStyles = (ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.LegendResourceUri, uriKind: UriKind.Relative));
     return legendStyles;
   }
 }

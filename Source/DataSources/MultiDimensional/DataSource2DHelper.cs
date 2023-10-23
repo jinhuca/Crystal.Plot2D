@@ -7,7 +7,7 @@ public static class DataSource2DHelper
 {
   public static Point[,] CreateUniformGrid(int width, int height, double gridWidth, double gridHeight)
   {
-    return CreateUniformGrid(width, height, 0, 0, gridWidth / width, gridHeight / height);
+    return CreateUniformGrid(width: width, height: height, xStart: 0, yStart: 0, xStep: gridWidth / width, yStep: gridHeight / height);
   }
 
   public static Point[,] CreateUniformGrid(int width, int height, double xStart, double yStart, double xStep, double yStep)
@@ -20,7 +20,7 @@ public static class DataSource2DHelper
       double y = yStart;
       for (int iy = 0; iy < height; iy++)
       {
-        result[ix, iy] = new Point(x, y);
+        result[ix, iy] = new Point(x: x, y: y);
         y += yStep;
       }
       x += xStep;
@@ -37,7 +37,7 @@ public static class DataSource2DHelper
     {
       for (int iy = 0; iy < height; iy++)
       {
-        result[ix, iy] = generator(ix, iy);
+        result[ix, iy] = generator(arg1: ix, arg2: iy);
       }
     }
 

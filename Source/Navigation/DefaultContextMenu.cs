@@ -28,11 +28,11 @@ public class DefaultContextMenu : IPlotterElement
 
   static DefaultContextMenu()
   {
-    helpIcon = LoadIcon("HelpIcon");
+    helpIcon = LoadIcon(name: "HelpIcon");
     helpIconGeometry = new StreamGeometry();
-    saveScreenshotIcon = LoadIcon("SaveIcon");
-    copyScreenshotIcon = LoadIcon("CopyScreenshotIcon");
-    fitToViewIcon = LoadIcon("FitToViewIcon");
+    saveScreenshotIcon = LoadIcon(name: "SaveIcon");
+    copyScreenshotIcon = LoadIcon(name: "CopyScreenshotIcon");
+    fitToViewIcon = LoadIcon(name: "FitToViewIcon");
   }
 
   private static BitmapImage LoadIcon(string name)
@@ -41,7 +41,7 @@ public class DefaultContextMenu : IPlotterElement
 
     BitmapImage icon = new();
     icon.BeginInit();
-    icon.StreamSource = currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources." + name + ".png");
+    icon.StreamSource = currentAssembly.GetManifestResourceStream(name: "Crystal.Plot2D.Resources." + name + ".png");
     icon.EndInit();
     icon.Freeze();
 
@@ -105,15 +105,15 @@ public class DefaultContextMenu : IPlotterElement
     {
       Header = Strings.UIResources.ContextMenuReportFeedback,
       ToolTip = Strings.UIResources.ContextMenuReportFeedbackTooltip,
-      Icon = (Image)plotter.Resources["SendFeedbackIcon"]
+      Icon = (Image)plotter.Resources[key: "SendFeedbackIcon"]
     };
     reportFeedback.Click += reportFeedback_Click;
 
-    staticMenuItems.Add(fitToViewMenuItem);
-    staticMenuItems.Add(copyPictureMenuItem);
-    staticMenuItems.Add(savePictureMenuItem);
-    staticMenuItems.Add(quickHelpMenuItem);
-    staticMenuItems.Add(reportFeedback);
+    staticMenuItems.Add(item: fitToViewMenuItem);
+    staticMenuItems.Add(item: copyPictureMenuItem);
+    staticMenuItems.Add(item: savePictureMenuItem);
+    staticMenuItems.Add(item: quickHelpMenuItem);
+    staticMenuItems.Add(item: reportFeedback);
 
     menu.ItemsSource = staticMenuItems;
 
@@ -124,11 +124,11 @@ public class DefaultContextMenu : IPlotterElement
   {
     try
     {
-      using (Process.Start("mailto:" + Strings.UIResources.SendFeedbackEmail + "?Subject=[D3]%20" + typeof(DefaultContextMenu).Assembly.GetName().Version)) { }
+      using (Process.Start(fileName: "mailto:" + Strings.UIResources.SendFeedbackEmail + "?Subject=[D3]%20" + typeof(DefaultContextMenu).Assembly.GetName().Version)) { }
     }
     catch (Exception)
     {
-      MessageBox.Show(Strings.UIResources.SendFeedbackError + Strings.UIResources.SendFeedbackEmail, "Error while sending feedback", MessageBoxButton.OK, MessageBoxImage.Information);
+      MessageBox.Show(messageBoxText: Strings.UIResources.SendFeedbackError + Strings.UIResources.SendFeedbackEmail, caption: "Error while sending feedback", button: MessageBoxButton.OK, icon: MessageBoxImage.Information);
     }
   }
 
@@ -141,11 +141,8 @@ public class DefaultContextMenu : IPlotterElement
   /// Gets the static menu items.
   /// </summary>
   /// <value>The static menu items.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  public ObservableCollection<object> StaticMenuItems
-  {
-    get { return staticMenuItems; }
-  }
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  public ObservableCollection<object> StaticMenuItems => staticMenuItems;
 
   #region IPlotterElement Members
 
@@ -154,7 +151,7 @@ public class DefaultContextMenu : IPlotterElement
   {
     this.plotter = (PlotterBase)plotter;
 
-    ContextMenu menu = PopulateContextMenu(plotter);
+    ContextMenu menu = PopulateContextMenu(target: plotter);
     plotter.ContextMenu = menu;
 
     plotter.PreviewMouseRightButtonDown += plotter_PreviewMouseRightButtonDown;
@@ -190,7 +187,7 @@ public class DefaultContextMenu : IPlotterElement
     contextMenuOpen = false;
     foreach (var item in dynamicMenuItems)
     {
-      staticMenuItems.Remove(item);
+      staticMenuItems.Remove(item: item);
     }
   }
 
@@ -199,44 +196,41 @@ public class DefaultContextMenu : IPlotterElement
   /// Gets the mouse position when right mouse button was clicked.
   /// </summary>
   /// <value>The mouse position on click.</value>
-  public Point MousePositionOnClick
-  {
-    get { return mousePos; }
-  }
+  public Point MousePositionOnClick => mousePos;
 
   private void plotter_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
   {
     contextMenuOpen = false;
-    mousePos = e.GetPosition(plotter);
+    mousePos = e.GetPosition(relativeTo: plotter);
   }
 
-  private bool contextMenuOpen = false;
+  private bool contextMenuOpen;
   private readonly ObservableCollection<object> dynamicMenuItems = new();
   private void plotter_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
   {
-    Point position = e.GetPosition(plotter);
+    Point position = e.GetPosition(relativeTo: plotter);
     if (mousePos == position)
     {
       hitResults.Clear();
-      VisualTreeHelper.HitTest(plotter, null, CollectAllVisuals_Callback, new PointHitTestParameters(position));
+      VisualTreeHelper.HitTest(reference: plotter, filterCallback: null, resultCallback: CollectAllVisuals_Callback, hitTestParameters: new PointHitTestParameters(point: position));
 
       foreach (var item in dynamicMenuItems)
       {
-        staticMenuItems.Remove(item);
+        staticMenuItems.Remove(item: item);
       }
       dynamicMenuItems.Clear();
-      var dynamicItems = (hitResults.Where(r =>
+      var dynamicItems = (hitResults.Where(predicate: r =>
       {
         if (r is IPlotterContextMenuSource menuSource)
         {
           menuSource.BuildMenu();
         }
 
-        var items = GetPlotterContextMenu(r);
+        var items = GetPlotterContextMenu(obj: r);
         return items != null && items.Count > 0;
-      }).SelectMany(r =>
+      }).SelectMany(selector: r =>
       {
-        var menuItems = GetPlotterContextMenu(r);
+        var menuItems = GetPlotterContextMenu(obj: r);
 
         if (r is FrameworkElement chart)
         {
@@ -250,7 +244,7 @@ public class DefaultContextMenu : IPlotterElement
 
       foreach (var item in dynamicItems)
       {
-        dynamicMenuItems.Add(item);
+        dynamicMenuItems.Add(item: item);
         //MenuItem menuItem = item as MenuItem;
         //if (menuItem != null)
         //{
@@ -258,7 +252,7 @@ public class DefaultContextMenu : IPlotterElement
         //}
       }
 
-      staticMenuItems.AddMany(dynamicMenuItems);
+      staticMenuItems.AddMany(addingItems: dynamicMenuItems);
 
       plotter.Focus();
       contextMenuOpen = true;
@@ -285,10 +279,10 @@ public class DefaultContextMenu : IPlotterElement
   /// </summary>
   /// <param name="obj">The obj.</param>
   /// <returns></returns>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public static ObservableCollection<object> GetPlotterContextMenu(DependencyObject obj)
   {
-    return (ObservableCollection<object>)obj.GetValue(PlotterContextMenuProperty);
+    return (ObservableCollection<object>)obj.GetValue(dp: PlotterContextMenuProperty);
   }
 
   /// <summary>
@@ -298,17 +292,17 @@ public class DefaultContextMenu : IPlotterElement
   /// <param name="value">The value.</param>
   public static void SetPlotterContextMenu(DependencyObject obj, ObservableCollection<object> value)
   {
-    obj.SetValue(PlotterContextMenuProperty, value);
+    obj.SetValue(dp: PlotterContextMenuProperty, value: value);
   }
 
   /// <summary>
   /// Identifies the PlotterContextMenu attached property.
   /// </summary>
   public static readonly DependencyProperty PlotterContextMenuProperty = DependencyProperty.RegisterAttached(
-    "PlotterContextMenu",
-    typeof(ObservableCollection<object>),
-    typeof(DefaultContextMenu),
-    new FrameworkPropertyMetadata(null));
+    name: "PlotterContextMenu",
+    propertyType: typeof(ObservableCollection<object>),
+    ownerType: typeof(DefaultContextMenu),
+    defaultMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   #endregion
 
@@ -320,15 +314,12 @@ public class DefaultContextMenu : IPlotterElement
       return HitTestResultBehavior.Stop;
     }
 
-    hitResults.Add(result.VisualHit);
+    hitResults.Add(item: result.VisualHit);
     return HitTestResultBehavior.Continue;
   }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 }

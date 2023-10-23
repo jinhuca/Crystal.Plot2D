@@ -12,13 +12,13 @@ public partial class ViewportPanel : IndividualArrangePanel
   static ViewportPanel()
   {
     Type thisType = typeof(ViewportPanel);
-    PlotterBase.PlotterProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata { PropertyChangedCallback = OnPlotterChanged });
+    PlotterBase.PlotterProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata { PropertyChangedCallback = OnPlotterChanged });
   }
 
   private static void OnPlotterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     ViewportPanel panel = (ViewportPanel)d;
-    panel.OnPlotterChanged((PlotterBase)e.NewValue, (PlotterBase)e.OldValue);
+    panel.OnPlotterChanged(currPlotter: (PlotterBase)e.NewValue, prevPlotter: (PlotterBase)e.OldValue);
   }
 
   private void OnPlotterChanged(PlotterBase currPlotter, PlotterBase prevPlotter)
@@ -43,7 +43,7 @@ public partial class ViewportPanel : IndividualArrangePanel
 
   protected internal override void OnChildAdded(FrameworkElement child)
   {
-    InvalidatePosition(child);
+    InvalidatePosition(child: child);
   }
 
   protected virtual void InvalidatePosition(FrameworkElement child)
@@ -53,37 +53,37 @@ public partial class ViewportPanel : IndividualArrangePanel
       return;
     }
 
-    var transform = GetTransform(availableSize);
+    var transform = GetTransform(size: availableSize);
 
-    Size elementSize = GetElementSize(child, AvailableSize, transform);
-    child.Measure(elementSize);
+    Size elementSize = GetElementSize(child: child, availableSize: AvailableSize, transform: transform);
+    child.Measure(availableSize: elementSize);
 
-    Rect bounds = GetElementScreenBounds(transform, child);
+    Rect bounds = GetElementScreenBounds(transform: transform, child: child);
     if (!bounds.IsNaN())
     {
-      child.Arrange(bounds);
+      child.Arrange(finalRect: bounds);
     }
   }
 
   private Size availableSize;
   protected Size AvailableSize
   {
-    get { return availableSize; }
-    set { availableSize = value; }
+    get => availableSize;
+    set => availableSize = value;
   }
 
   protected override Size MeasureOverride(Size _availableSize)
   {
     availableSize = _availableSize;
 
-    var transform = GetTransform(_availableSize);
+    var transform = GetTransform(size: _availableSize);
 
     foreach (FrameworkElement child in InternalChildren)
     {
       if (child != null)
       {
-        Size elementSize = GetElementSize(child, _availableSize, transform);
-        child.Measure(elementSize);
+        Size elementSize = GetElementSize(child: child, availableSize: _availableSize, transform: transform);
+        child.Measure(availableSize: elementSize);
       }
     }
 
@@ -101,19 +101,19 @@ public partial class ViewportPanel : IndividualArrangePanel
   protected virtual Size GetElementSize(FrameworkElement child, Size availableSize, CoordinateTransform transform)
   {
     Size res = availableSize;
-    DataRect ownViewportBounds = GetViewportBounds(child);
+    DataRect ownViewportBounds = GetViewportBounds(obj: child);
 
     if (!ownViewportBounds.IsEmpty)
     {
-      res = ownViewportBounds.ViewportToScreen(transform).Size;
+      res = ownViewportBounds.ViewportToScreen(transform: transform).Size;
     }
     else
     {
-      double viewportWidth = GetViewportWidth(child);
-      double viewportHeight = GetViewportHeight(child);
+      double viewportWidth = GetViewportWidth(obj: child);
+      double viewportHeight = GetViewportHeight(obj: child);
       bool hasViewportWidth = viewportWidth.IsNotNaN();
       bool hasViewportHeight = viewportHeight.IsNotNaN();
-      double minScreenWidth = GetMinScreenWidth(child);
+      double minScreenWidth = GetMinScreenWidth(obj: child);
       bool hasMinScreenWidth = minScreenWidth.IsNotNaN();
 
       double selfWidth = child.Width.IsNotNaN() ? child.Width : availableSize.Width;
@@ -131,11 +131,11 @@ public partial class ViewportPanel : IndividualArrangePanel
         height = 0;
       }
 
-      DataRect bounds = new(new Size(width, height));
-      Rect screenBounds = bounds.ViewportToScreen(transform);
+      DataRect bounds = new(size: new Size(width: width, height: height));
+      Rect screenBounds = bounds.ViewportToScreen(transform: transform);
 
-      res = new Size(hasViewportWidth ? screenBounds.Width : selfWidth,
-        hasViewportHeight ? screenBounds.Height : selfHeight);
+      res = new Size(width: hasViewportWidth ? screenBounds.Width : selfWidth,
+        height: hasViewportHeight ? screenBounds.Height : selfHeight);
 
       if (hasMinScreenWidth && res.Width < minScreenWidth)
       {
@@ -157,28 +157,28 @@ public partial class ViewportPanel : IndividualArrangePanel
 
   protected Rect GetElementScreenBounds(CoordinateTransform transform, UIElement child)
   {
-    Rect screenBounds = GetElementScreenBoundsCore(transform, child);
-    DataRect viewportBounds = screenBounds.ScreenToViewport(transform);
-    DataRect prevViewportBounds = GetActualViewportBounds(child);
-    SetPrevActualViewportBounds(child, prevViewportBounds);
-    SetActualViewportBounds(child, viewportBounds);
+    Rect screenBounds = GetElementScreenBoundsCore(transform: transform, child: child);
+    DataRect viewportBounds = screenBounds.ScreenToViewport(transform: transform);
+    DataRect prevViewportBounds = GetActualViewportBounds(obj: child);
+    SetPrevActualViewportBounds(obj: child, value: prevViewportBounds);
+    SetActualViewportBounds(obj: child, value: viewportBounds);
 
     return screenBounds;
   }
 
   protected virtual Rect GetElementScreenBoundsCore(CoordinateTransform transform, UIElement child)
   {
-    Rect bounds = new(0, 0, 1, 1);
+    Rect bounds = new(x: 0, y: 0, width: 1, height: 1);
 
-    DataRect ownViewportBounds = GetViewportBounds(child);
+    DataRect ownViewportBounds = GetViewportBounds(obj: child);
     if (!ownViewportBounds.IsEmpty)
     {
-      bounds = ownViewportBounds.ViewportToScreen(transform);
+      bounds = ownViewportBounds.ViewportToScreen(transform: transform);
     }
     else
     {
-      double viewportX = GetX(child);
-      double viewportY = GetY(child);
+      double viewportX = GetX(obj: child);
+      double viewportY = GetY(obj: child);
 
       if (viewportX.IsNaN() || viewportY.IsNaN())
       {
@@ -186,12 +186,12 @@ public partial class ViewportPanel : IndividualArrangePanel
         return bounds;
       }
 
-      double viewportWidth = GetViewportWidth(child);
+      double viewportWidth = GetViewportWidth(obj: child);
       if (viewportWidth < 0)
       {
         viewportWidth = 0;
       }
-      double viewportHeight = GetViewportHeight(child);
+      double viewportHeight = GetViewportHeight(obj: child);
       if (viewportHeight < 0)
       {
         viewportHeight = 0;
@@ -200,14 +200,14 @@ public partial class ViewportPanel : IndividualArrangePanel
       bool hasViewportWidth = viewportWidth.IsNotNaN();
       bool hasViewportHeight = viewportHeight.IsNotNaN();
 
-      DataRect r = new(new Size(hasViewportWidth ? viewportWidth : child.DesiredSize.Width,
-                     hasViewportHeight ? viewportHeight : child.DesiredSize.Height));
-      r = r.ViewportToScreen(transform);
+      DataRect r = new(size: new Size(width: hasViewportWidth ? viewportWidth : child.DesiredSize.Width,
+                     height: hasViewportHeight ? viewportHeight : child.DesiredSize.Height));
+      r = r.ViewportToScreen(transform: transform);
 
       double screenWidth = hasViewportWidth ? r.Width : child.DesiredSize.Width;
       double screenHeight = hasViewportHeight ? r.Height : child.DesiredSize.Height;
 
-      double minScreenWidth = GetMinScreenWidth(child);
+      double minScreenWidth = GetMinScreenWidth(obj: child);
       bool hasMinScreemWidth = minScreenWidth.IsNotNaN();
 
       if (hasViewportWidth && screenWidth < minScreenWidth)
@@ -215,11 +215,11 @@ public partial class ViewportPanel : IndividualArrangePanel
         screenWidth = minScreenWidth;
       }
 
-      Point location = new Point(viewportX, viewportY).ViewportToScreen(transform);
+      Point location = new Point(x: viewportX, y: viewportY).ViewportToScreen(transform: transform);
       double screenX = location.X;
       double screenY = location.Y;
 
-      HorizontalAlignment horizAlignment = GetViewportHorizontalAlignment(child);
+      HorizontalAlignment horizAlignment = GetViewportHorizontalAlignment(obj: child);
       switch (horizAlignment)
       {
         case HorizontalAlignment.Stretch:
@@ -233,7 +233,7 @@ public partial class ViewportPanel : IndividualArrangePanel
           break;
       }
 
-      VerticalAlignment vertAlignment = GetViewportVerticalAlignment(child);
+      VerticalAlignment vertAlignment = GetViewportVerticalAlignment(obj: child);
       switch (vertAlignment)
       {
         case VerticalAlignment.Bottom:
@@ -245,42 +245,40 @@ public partial class ViewportPanel : IndividualArrangePanel
           break;
         case VerticalAlignment.Top:
           break;
-        default:
-          break;
       }
 
-      bounds = new Rect(screenX, screenY, screenWidth, screenHeight);
+      bounds = new Rect(x: screenX, y: screenY, width: screenWidth, height: screenHeight);
     }
 
     // applying screen offset
-    double screenOffsetX = GetScreenOffsetX(child);
+    double screenOffsetX = GetScreenOffsetX(obj: child);
     if (screenOffsetX.IsNaN())
     {
       screenOffsetX = 0;
     }
-    double screenOffsetY = GetScreenOffsetY(child);
+    double screenOffsetY = GetScreenOffsetY(obj: child);
     if (screenOffsetY.IsNaN())
     {
       screenOffsetY = 0;
     }
 
-    Vector screenOffset = new(screenOffsetX, screenOffsetY);
-    bounds.Offset(screenOffset);
+    Vector screenOffset = new(x: screenOffsetX, y: screenOffsetY);
+    bounds.Offset(offsetVector: screenOffset);
     return bounds;
   }
 
   protected override Size ArrangeOverride(Size finalSize)
   {
-    var transform = GetTransform(finalSize);
+    var transform = GetTransform(size: finalSize);
 
     foreach (UIElement child in InternalChildren)
     {
       if (child != null)
       {
-        Rect bounds = GetElementScreenBounds(transform, child);
+        Rect bounds = GetElementScreenBounds(transform: transform, child: child);
         if (!bounds.IsNaN())
         {
-          child.Arrange(bounds);
+          child.Arrange(finalRect: bounds);
         }
       }
     }
@@ -288,10 +286,8 @@ public partial class ViewportPanel : IndividualArrangePanel
     return finalSize;
   }
 
-  private CoordinateTransform GetTransform(Size size)
-  {
-    return viewport.Transform.WithRects(GetViewportBounds(this), new Rect(size));
-  }
+  private CoordinateTransform GetTransform(Size size) 
+    => viewport.Transform.WithRects(visibleRect: GetViewportBounds(obj: this), screenRect: new Rect(size: size));
 
   #endregion
 

@@ -34,7 +34,7 @@ internal static class ScreenshotHelper
       case "wmp":
         return new WmpBitmapEncoder();
       default:
-        throw new ArgumentException(Strings.Exceptions.CannotDetermineImageTypeByExtension, "extension");
+        throw new ArgumentException(message: Strings.Exceptions.CannotDetermineImageTypeByExtension, paramName: "extension");
     }
   }
 
@@ -44,10 +44,10 @@ internal static class ScreenshotHelper
   /// <returns></returns>
   internal static BitmapSource CreateScreenshot(UIElement uiElement, Int32Rect screenshotSource)
   {
-    Window window = Window.GetWindow(uiElement);
+    Window window = Window.GetWindow(dependencyObject: uiElement);
     if (window == null)
     {
-      return CreateElementScreenshot(uiElement);
+      return CreateElementScreenshot(uiElement: uiElement);
     }
     Size size = window.RenderSize;
 
@@ -56,17 +56,17 @@ internal static class ScreenshotHelper
     double dpiCoeff = 1;
     int dpi = 96;
 
-    RenderTargetBitmap bmp = new((int)(size.Width * dpiCoeff), (int)(size.Height * dpiCoeff), dpi, dpi, PixelFormats.Default);
+    RenderTargetBitmap bmp = new(pixelWidth: (int)(size.Width * dpiCoeff), pixelHeight: (int)(size.Height * dpiCoeff), dpiX: dpi, dpiY: dpi, pixelFormat: PixelFormats.Default);
 
     // white background
     Rectangle whiteRect = new() { Width = size.Width, Height = size.Height, Fill = Brushes.White };
-    whiteRect.Measure(size);
-    whiteRect.Arrange(new Rect(size));
-    bmp.Render(whiteRect);
+    whiteRect.Measure(availableSize: size);
+    whiteRect.Arrange(finalRect: new Rect(size: size));
+    bmp.Render(visual: whiteRect);
     // the very element
-    bmp.Render(uiElement);
+    bmp.Render(visual: uiElement);
 
-    CroppedBitmap croppedBmp = new(bmp, screenshotSource);
+    CroppedBitmap croppedBmp = new(source: bmp, sourceRect: screenshotSource);
     return croppedBmp;
   }
 
@@ -81,38 +81,38 @@ internal static class ScreenshotHelper
 
       if (uiElement is FrameworkElement frElement)
       {
-        if (!double.IsNaN(frElement.Width))
+        if (!double.IsNaN(d: frElement.Width))
         {
           width = frElement.Width;
         }
-        if (!double.IsNaN(frElement.Height))
+        if (!double.IsNaN(d: frElement.Height))
         {
           height = frElement.Height;
         }
       }
 
-      Size size = new(width, height);
-      uiElement.Measure(size);
-      uiElement.Arrange(new Rect(size));
+      Size size = new(width: width, height: height);
+      uiElement.Measure(availableSize: size);
+      uiElement.Arrange(finalRect: new Rect(size: size));
     }
 
     RenderTargetBitmap bmp = new(
-      (int)uiElement.RenderSize.Width,
-      (int)uiElement.RenderSize.Height,
-      96,
-      96,
-      PixelFormats.Default);
+      pixelWidth: (int)uiElement.RenderSize.Width,
+      pixelHeight: (int)uiElement.RenderSize.Height,
+      dpiX: 96,
+      dpiY: 96,
+      pixelFormat: PixelFormats.Default);
 
     // this is waiting for dispatcher to perform measure, arrange and render passes
-    uiElement.Dispatcher.Invoke(((Action)(() => { })), DispatcherPriority.Background);
+    uiElement.Dispatcher.Invoke(callback: ((Action)(() => { })), priority: DispatcherPriority.Background);
 
     Size elementSize = uiElement.DesiredSize;
     // white background
     Rectangle whiteRect = new() { Width = elementSize.Width, Height = elementSize.Height, Fill = Brushes.White };
-    whiteRect.Measure(elementSize);
-    whiteRect.Arrange(new Rect(elementSize));
-    bmp.Render(whiteRect);
-    bmp.Render(uiElement);
+    whiteRect.Measure(availableSize: elementSize);
+    whiteRect.Arrange(finalRect: new Rect(size: elementSize));
+    bmp.Render(visual: whiteRect);
+    bmp.Render(visual: uiElement);
     return bmp;
   }
 
@@ -122,83 +122,83 @@ internal static class ScreenshotHelper
   {
     if (bitmap == null)
     {
-      throw new ArgumentNullException("bitmap");
+      throw new ArgumentNullException(paramName: "bitmap");
     }
     if (stream == null)
     {
-      throw new ArgumentNullException("stream");
+      throw new ArgumentNullException(paramName: "stream");
     }
-    if (string.IsNullOrEmpty(fileExtension))
+    if (string.IsNullOrEmpty(value: fileExtension))
     {
-      throw new ArgumentException(Strings.Exceptions.ExtensionCannotBeNullOrEmpty, fileExtension);
+      throw new ArgumentException(message: Strings.Exceptions.ExtensionCannotBeNullOrEmpty, paramName: fileExtension);
     }
-    BitmapEncoder encoder = GetEncoderByExtension(fileExtension);
-    encoder.Frames.Add(BitmapFrame.Create(bitmap, null, new BitmapMetadata(fileExtension.Trim('.')), null));
-    encoder.Save(stream);
+    BitmapEncoder encoder = GetEncoderByExtension(extension: fileExtension);
+    encoder.Frames.Add(item: BitmapFrame.Create(source: bitmap, thumbnail: null, metadata: new BitmapMetadata(containerFormat: fileExtension.Trim(trimChar: '.')), colorContexts: null));
+    encoder.Save(stream: stream);
   }
 
   internal static void SaveBitmapToFile(BitmapSource bitmap, string filePath)
   {
-    if (string.IsNullOrEmpty(filePath))
+    if (string.IsNullOrEmpty(value: filePath))
     {
-      throw new ArgumentException(Strings.Exceptions.FilePathCannotbeNullOrEmpty, "filePath");
+      throw new ArgumentException(message: Strings.Exceptions.FilePathCannotbeNullOrEmpty, paramName: "filePath");
     }
 
     if (bitmap.IsDownloading)
     {
-      pendingBitmaps[bitmap] = filePath;
+      pendingBitmaps[key: bitmap] = filePath;
       bitmap.DownloadCompleted += OnBitmapDownloadCompleted;
       return;
     }
 
-    string dirPath = System.IO.Path.GetDirectoryName(filePath);
-    if (!string.IsNullOrEmpty(dirPath) && !Directory.Exists(dirPath))
+    string dirPath = System.IO.Path.GetDirectoryName(path: filePath);
+    if (!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
     {
-      Directory.CreateDirectory(dirPath);
+      Directory.CreateDirectory(path: dirPath);
     }
 
-    bool fileExistedBefore = File.Exists(filePath);
+    bool fileExistedBefore = File.Exists(path: filePath);
     try
     {
-      using (FileStream fs = new(filePath, FileMode.Create, FileAccess.Write))
+      using (FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write))
       {
-        string extension = System.IO.Path.GetExtension(filePath).TrimStart('.');
-        SaveBitmapToStream(bitmap, fs, extension);
+        string extension = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
+        SaveBitmapToStream(bitmap: bitmap, stream: fs, fileExtension: extension);
       }
     }
     catch (ArgumentException)
     {
-      if (!fileExistedBefore && File.Exists(filePath))
+      if (!fileExistedBefore && File.Exists(path: filePath))
       {
         try
         {
-          File.Delete(filePath);
+          File.Delete(path: filePath);
         }
         catch { }
       }
     }
     catch (IOException exc)
     {
-      Debug.WriteLine("Exception while saving bitmap to file: " + exc.Message);
+      Debug.WriteLine(message: "Exception while saving bitmap to file: " + exc.Message);
     }
   }
 
   public static void SaveStreamToFile(Stream stream, string filePath)
   {
-    string dirPath = System.IO.Path.GetDirectoryName(filePath);
-    if (!string.IsNullOrEmpty(dirPath) && !Directory.Exists(dirPath))
+    string dirPath = System.IO.Path.GetDirectoryName(path: filePath);
+    if (!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
     {
-      Directory.CreateDirectory(dirPath);
+      Directory.CreateDirectory(path: dirPath);
     }
 
-    using (FileStream fs = new(filePath, FileMode.Create, FileAccess.Write))
+    using (FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write))
     {
-      string extension = System.IO.Path.GetExtension(filePath).TrimStart('.');
+      string extension = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
       if (stream.CanSeek)
       {
-        stream.Seek(0, SeekOrigin.Begin);
+        stream.Seek(offset: 0, origin: SeekOrigin.Begin);
       }
-      stream.CopyTo(fs);
+      stream.CopyTo(destination: fs);
     }
 
     stream.Dispose();
@@ -208,8 +208,8 @@ internal static class ScreenshotHelper
   {
     BitmapSource bmp = (BitmapSource)sender;
     bmp.DownloadCompleted -= OnBitmapDownloadCompleted;
-    string filePath = pendingBitmaps[bmp];
-    pendingBitmaps.Remove(bmp);
-    SaveBitmapToFile(bmp, filePath);
+    string filePath = pendingBitmaps[key: bmp];
+    pendingBitmaps.Remove(key: bmp);
+    SaveBitmapToFile(bitmap: bmp, filePath: filePath);
   }
 }

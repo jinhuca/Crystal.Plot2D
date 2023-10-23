@@ -20,7 +20,7 @@ public class MouseNavigation : NavigationBase
     {
       if (adornerLayer == null)
       {
-        adornerLayer = AdornerLayer.GetAdornerLayer(this);
+        adornerLayer = AdornerLayer.GetAdornerLayer(visual: this);
         if (adornerLayer != null)
         {
           adornerLayer.IsHitTestVisible = false;
@@ -33,26 +33,26 @@ public class MouseNavigation : NavigationBase
 
   protected override void OnPlotterAttached(PlotterBase plotter)
   {
-    base.OnPlotterAttached(plotter);
+    base.OnPlotterAttached(plotter: plotter);
 
-    Mouse.AddMouseDownHandler(Parent, OnMouseDown);
-    Mouse.AddMouseMoveHandler(Parent, OnMouseMove);
-    Mouse.AddMouseUpHandler(Parent, OnMouseUp);
-    Mouse.AddMouseWheelHandler(Parent, OnMouseWheel);
+    Mouse.AddMouseDownHandler(element: Parent, handler: OnMouseDown);
+    Mouse.AddMouseMoveHandler(element: Parent, handler: OnMouseMove);
+    Mouse.AddMouseUpHandler(element: Parent, handler: OnMouseUp);
+    Mouse.AddMouseWheelHandler(element: Parent, handler: OnMouseWheel);
 
-    plotter.KeyDown += new KeyEventHandler(OnParentKeyDown);
+    plotter.KeyDown += OnParentKeyDown;
   }
 
   protected override void OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.KeyDown -= new KeyEventHandler(OnParentKeyDown);
+    plotter.KeyDown -= OnParentKeyDown;
 
-    Mouse.RemoveMouseDownHandler(Parent, OnMouseDown);
-    Mouse.RemoveMouseMoveHandler(Parent, OnMouseMove);
-    Mouse.RemoveMouseUpHandler(Parent, OnMouseUp);
-    Mouse.RemoveMouseWheelHandler(Parent, OnMouseWheel);
+    Mouse.RemoveMouseDownHandler(element: Parent, handler: OnMouseDown);
+    Mouse.RemoveMouseMoveHandler(element: Parent, handler: OnMouseMove);
+    Mouse.RemoveMouseUpHandler(element: Parent, handler: OnMouseUp);
+    Mouse.RemoveMouseWheelHandler(element: Parent, handler: OnMouseWheel);
 
-    base.OnPlotterDetaching(plotter);
+    base.OnPlotterDetaching(plotter: plotter);
   }
 
   private void OnParentKeyDown(object sender, KeyEventArgs e)
@@ -75,9 +75,9 @@ public class MouseNavigation : NavigationBase
   {
     if (!e.Handled)
     {
-      Point mousePos = e.GetPosition(this);
+      Point mousePos = e.GetPosition(relativeTo: this);
       int delta = -e.Delta;
-      MouseWheelZoom(mousePos, delta);
+      MouseWheelZoom(mousePos: mousePos, wheelRotationDelta: delta);
 
       e.Handled = true;
     }
@@ -86,7 +86,7 @@ public class MouseNavigation : NavigationBase
 #if DEBUG
   public override string ToString()
   {
-    if (!string.IsNullOrEmpty(Name))
+    if (!string.IsNullOrEmpty(value: Name))
     {
       return Name;
     }
@@ -103,9 +103,9 @@ public class MouseNavigation : NavigationBase
       AdornerLayer layer = AdornerLayer;
       if (layer != null)
       {
-        selectionAdorner = new RectangleSelectionAdorner(this) { Border = zoomRect };
+        selectionAdorner = new RectangleSelectionAdorner(element: this) { Border = zoomRect };
 
-        layer.Add(selectionAdorner);
+        layer.Add(adorner: selectionAdorner);
         adornerAdded = true;
       }
     }
@@ -116,7 +116,7 @@ public class MouseNavigation : NavigationBase
     AdornerLayer layer = AdornerLayer;
     if (layer != null)
     {
-      layer.Remove(selectionAdorner);
+      layer.Remove(adorner: selectionAdorner);
       adornerAdded = false;
     }
   }
@@ -127,27 +127,18 @@ public class MouseNavigation : NavigationBase
     selectionAdorner.InvalidateVisual();
   }
 
-  Rect? zoomRect = null;
+  Rect? zoomRect;
   private const double wheelZoomSpeed = 1.2;
   private bool shouldKeepRatioWhileZooming;
 
-  private bool isZooming = false;
-  protected bool IsZooming
-  {
-    get { return isZooming; }
-  }
+  private bool isZooming;
+  protected bool IsZooming => isZooming;
 
-  private bool isPanning = false;
-  protected bool IsPanning
-  {
-    get { return isPanning; }
-  }
+  private bool isPanning;
+  protected bool IsPanning => isPanning;
 
   private Point panningStartPointInViewport;
-  protected Point PanningStartPointInViewport
-  {
-    get { return panningStartPointInViewport; }
-  }
+  protected Point PanningStartPointInViewport => panningStartPointInViewport;
 
   private Point zoomStartPoint;
 
@@ -174,10 +165,10 @@ public class MouseNavigation : NavigationBase
   Point panningStartPointInScreen;
   protected virtual void StartPanning(MouseButtonEventArgs e)
   {
-    panningStartPointInScreen = e.GetPosition(this);
-    panningStartPointInViewport = panningStartPointInScreen.ScreenToViewport(Viewport.Transform);
+    panningStartPointInScreen = e.GetPosition(relativeTo: this);
+    panningStartPointInViewport = panningStartPointInScreen.ScreenToViewport(transform: Viewport.Transform);
 
-    Plotter.UndoProvider.CaptureOldValue(Viewport, Viewport2D.VisibleProperty, Viewport.Visible);
+    Plotter.UndoProvider.CaptureOldValue(target: Viewport, property: Viewport2D.VisibleProperty, oldValue: Viewport.Visible);
 
     isPanning = true;
 
@@ -193,8 +184,8 @@ public class MouseNavigation : NavigationBase
 
   protected virtual void StartZoom(MouseButtonEventArgs e)
   {
-    zoomStartPoint = e.GetPosition(this);
-    if (Viewport.Output.Contains(zoomStartPoint))
+    zoomStartPoint = e.GetPosition(relativeTo: this);
+    if (Viewport.Output.Contains(point: zoomStartPoint))
     {
       isZooming = true;
       AddSelectionAdorner();
@@ -208,17 +199,17 @@ public class MouseNavigation : NavigationBase
   private void OnMouseDown(object sender, MouseButtonEventArgs e)
   {
     // dragging
-    bool shouldStartDrag = ShouldStartPanning(e);
+    bool shouldStartDrag = ShouldStartPanning(e: e);
     if (shouldStartDrag)
     {
-      StartPanning(e);
+      StartPanning(e: e);
     }
 
     // zooming
-    bool shouldStartZoom = ShouldStartZoom(e);
+    bool shouldStartZoom = ShouldStartZoom(e: e);
     if (shouldStartZoom)
     {
-      StartZoom(e);
+      StartZoom(e: e);
     }
 
     if (!Plotter.IsFocused)
@@ -254,7 +245,7 @@ public class MouseNavigation : NavigationBase
         CaptureMouse();
       }
 
-      Point endPoint = e.GetPosition(this).ScreenToViewport(Viewport.Transform);
+      Point endPoint = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Viewport.Transform);
 
       Point loc = Viewport.Visible.Location;
       Vector shift = panningStartPointInViewport - endPoint;
@@ -276,8 +267,8 @@ public class MouseNavigation : NavigationBase
     // zooming
     else if (isZooming && e.LeftButton == MouseButtonState.Pressed)
     {
-      Point zoomEndPoint = e.GetPosition(this);
-      UpdateZoomRect(zoomEndPoint);
+      Point zoomEndPoint = e.GetPosition(relativeTo: this);
+      UpdateZoomRect(zoomEndPoint: zoomEndPoint);
 
       e.Handled = true;
     }
@@ -285,14 +276,14 @@ public class MouseNavigation : NavigationBase
 
   private static bool IsShiftPressed()
   {
-    return Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.RightShift);
+    return Keyboard.IsKeyDown(key: Key.LeftShift) || Keyboard.IsKeyDown(key: Key.RightShift);
   }
 
   private void UpdateZoomRect(Point zoomEndPoint)
   {
     Rect output = Viewport.Output;
-    Rect tmpZoomRect = new(zoomStartPoint, zoomEndPoint);
-    tmpZoomRect = Rect.Intersect(tmpZoomRect, output);
+    Rect tmpZoomRect = new(point1: zoomStartPoint, point2: zoomEndPoint);
+    tmpZoomRect = Rect.Intersect(rect1: tmpZoomRect, rect2: output);
 
     shouldKeepRatioWhileZooming = IsShiftPressed();
     if (shouldKeepRatioWhileZooming)
@@ -304,9 +295,9 @@ public class MouseNavigation : NavigationBase
         double oldHeight = tmpZoomRect.Height;
         double height = tmpZoomRect.Width / zoomRatio;
         tmpZoomRect.Height = height;
-        if (!tmpZoomRect.Contains(zoomStartPoint))
+        if (!tmpZoomRect.Contains(point: zoomStartPoint))
         {
-          tmpZoomRect.Offset(0, oldHeight - height);
+          tmpZoomRect.Offset(offsetX: 0, offsetY: oldHeight - height);
         }
       }
       else
@@ -314,9 +305,9 @@ public class MouseNavigation : NavigationBase
         double oldWidth = tmpZoomRect.Width;
         double width = tmpZoomRect.Height * zoomRatio;
         tmpZoomRect.Width = width;
-        if (!tmpZoomRect.Contains(zoomStartPoint))
+        if (!tmpZoomRect.Contains(point: zoomStartPoint))
         {
-          tmpZoomRect.Offset(oldWidth - width, 0);
+          tmpZoomRect.Offset(offsetX: oldWidth - width, offsetY: 0);
         }
       }
     }
@@ -327,7 +318,7 @@ public class MouseNavigation : NavigationBase
 
   private void OnMouseUp(object sender, MouseButtonEventArgs e)
   {
-    OnParentMouseUp(e);
+    OnParentMouseUp(e: e);
   }
 
   protected virtual void OnParentMouseUp(MouseButtonEventArgs e)
@@ -335,7 +326,7 @@ public class MouseNavigation : NavigationBase
     if (isPanning && e.ChangedButton == MouseButton.Left)
     {
       isPanning = false;
-      StopPanning(e);
+      StopPanning(e: e);
     }
     else if (isZooming && e.ChangedButton == MouseButton.Left)
     {
@@ -350,9 +341,9 @@ public class MouseNavigation : NavigationBase
     {
       Rect output = Viewport.Output;
 
-      Point p1 = zoomRect.Value.TopLeft.ScreenToViewport(Viewport.Transform);
-      Point p2 = zoomRect.Value.BottomRight.ScreenToViewport(Viewport.Transform);
-      DataRect newVisible = new(p1, p2);
+      Point p1 = zoomRect.Value.TopLeft.ScreenToViewport(transform: Viewport.Transform);
+      Point p2 = zoomRect.Value.BottomRight.ScreenToViewport(transform: Viewport.Transform);
+      DataRect newVisible = new(point1: p1, point2: p2);
       Viewport.Visible = newVisible;
 
       zoomRect = null;
@@ -363,7 +354,7 @@ public class MouseNavigation : NavigationBase
 
   protected virtual void StopPanning(MouseButtonEventArgs e)
   {
-    Plotter.UndoProvider.CaptureNewValue(Plotter.Viewport, Viewport2D.VisibleProperty, Viewport.Visible);
+    Plotter.UndoProvider.CaptureNewValue(target: Plotter.Viewport, property: Viewport2D.VisibleProperty, newValue: Viewport.Visible);
 
     if (!Plotter.IsFocused)
     {
@@ -373,7 +364,7 @@ public class MouseNavigation : NavigationBase
     Plotter.Viewport.PanningState = Viewport2DPanningState.NotPanning;
 
     ReleaseMouseCapture();
-    ClearValue(CursorProperty);
+    ClearValue(dp: CursorProperty);
   }
 
   protected override void OnLostFocus(RoutedEventArgs e)
@@ -389,19 +380,19 @@ public class MouseNavigation : NavigationBase
       isPanning = false;
     }
     ReleaseMouseCapture();
-    base.OnLostFocus(e);
+    base.OnLostFocus(e: e);
   }
 
   private void MouseWheelZoom(Point mousePos, double wheelRotationDelta)
   {
-    Point zoomTo = mousePos.ScreenToViewport(Viewport.Transform);
+    Point zoomTo = mousePos.ScreenToViewport(transform: Viewport.Transform);
 
-    double zoomSpeed = Math.Abs(wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
+    double zoomSpeed = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed *= wheelZoomSpeed;
     if (wheelRotationDelta < 0)
     {
       zoomSpeed = 1 / zoomSpeed;
     }
-    Viewport.Visible = Viewport.Visible.Zoom(zoomTo, zoomSpeed);
+    Viewport.Visible = Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
   }
 }

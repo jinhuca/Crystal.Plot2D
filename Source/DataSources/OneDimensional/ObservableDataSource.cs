@@ -28,11 +28,11 @@ public class ObservableDataSource<T> : IPointDataSource
   {
     if (data == null)
     {
-      throw new ArgumentNullException(nameof(data));
+      throw new ArgumentNullException(paramName: nameof(data));
     }
     foreach (T item in data)
     {
-      Collection.Add(item);
+      Collection.Add(item: item);
     }
   }
 
@@ -60,11 +60,11 @@ public class ObservableDataSource<T> : IPointDataSource
     }
   }
 
-  public ObservableCollection<T> Collection { get; } = new ObservableCollection<T>();
-  public bool CollectionChanged { get; set; } = false;
+  public ObservableCollection<T> Collection { get; } = new();
+  public bool CollectionChanged { get; set; }
   public bool UpdatesEnabled { get; set; } = true;
 
-  internal List<Mapping<T>> Mappings { get; } = new List<Mapping<T>>();
+  internal List<Mapping<T>> Mappings { get; } = new();
   public Func<T, double> XMapping { get; set; }
   public Func<T, double> YMapping { get; set; }
   public Func<T, Point> XyMapping { get; set; }
@@ -73,12 +73,12 @@ public class ObservableDataSource<T> : IPointDataSource
   {
     if (data == null)
     {
-      throw new ArgumentNullException(nameof(data));
+      throw new ArgumentNullException(paramName: nameof(data));
     }
     UpdatesEnabled = false;
     foreach (var p in data)
     {
-      Collection.Add(p);
+      Collection.Add(item: p);
     }
     UpdatesEnabled = true;
     RaiseDataChanged();
@@ -86,17 +86,17 @@ public class ObservableDataSource<T> : IPointDataSource
 
   public void AppendAsync(Dispatcher dispatcher, T item)
   {
-    dispatcher.Invoke(DispatcherPriority.Normal,
-      new Action(() =>
+    dispatcher.Invoke(priority: DispatcherPriority.Normal,
+      method: new Action(() =>
       {
-        Collection.Add(item);
+        Collection.Add(item: item);
         RaiseDataChanged();
       }));
   }
 
-  public void SetXMapping(Func<T, double> mapping) => XMapping = mapping ?? throw new ArgumentNullException(nameof(mapping));
-  public void SetYMapping(Func<T, double> mapping) => YMapping = mapping ?? throw new ArgumentNullException(nameof(mapping));
-  public void SetXYMapping(Func<T, Point> mapping) => XyMapping = mapping ?? throw new ArgumentNullException(nameof(mapping));
+  public void SetXMapping(Func<T, double> mapping) => XMapping = mapping ?? throw new ArgumentNullException(paramName: nameof(mapping));
+  public void SetYMapping(Func<T, double> mapping) => YMapping = mapping ?? throw new ArgumentNullException(paramName: nameof(mapping));
+  public void SetXYMapping(Func<T, Point> mapping) => XyMapping = mapping ?? throw new ArgumentNullException(paramName: nameof(mapping));
 
   #region IChartDataSource Members
 
@@ -116,14 +116,14 @@ public class ObservableDataSource<T> : IPointDataSource
 
     public bool MoveNext() => Enumerator.MoveNext();
 
-    public void GetCurrent(ref Point p) => DataSource.FillPoint(Enumerator.Current, ref p);
+    public void GetCurrent(ref Point p) => DataSource.FillPoint(elem: Enumerator.Current, point: ref p);
 
-    public void ApplyMappings(DependencyObject target) => DataSource.ApplyMappings(target, Enumerator.Current);
+    public void ApplyMappings(DependencyObject target) => DataSource.ApplyMappings(target: target, elem: Enumerator.Current);
 
     public void Dispose()
     {
       Enumerator.Dispose();
-      GC.SuppressFinalize(this);
+      GC.SuppressFinalize(obj: this);
     }
 
     #endregion
@@ -133,17 +133,17 @@ public class ObservableDataSource<T> : IPointDataSource
   {
     if (XyMapping != null)
     {
-      point = XyMapping(elem);
+      point = XyMapping(arg: elem);
     }
     else
     {
       if (XMapping != null)
       {
-        point.X = XMapping(elem);
+        point.X = XMapping(arg: elem);
       }
       if (YMapping != null)
       {
-        point.Y = YMapping(elem);
+        point.Y = YMapping(arg: elem);
       }
     }
   }
@@ -154,18 +154,18 @@ public class ObservableDataSource<T> : IPointDataSource
     {
       foreach (var mapping in Mappings)
       {
-        target.SetValue(mapping.Property, mapping.F(elem));
+        target.SetValue(dp: mapping.Property, value: mapping.F(arg: elem));
       }
     }
   }
 
   public IPointEnumerator GetEnumerator(DependencyObject context)
   {
-    return new ObservableIterator(this);
+    return new ObservableIterator(dataSource: this);
   }
 
   public event EventHandler DataChanged;
-  private void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
+  private void RaiseDataChanged() => DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
 
   #endregion
 }

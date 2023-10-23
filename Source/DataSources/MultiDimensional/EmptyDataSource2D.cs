@@ -13,7 +13,7 @@ public sealed class EmptyDataSource2D<T> : IDataSource2D<T> where T : struct
   public Point[,] Grid { get; } = new Point[0, 0];
   public int Width => 0;
   public int Height => 0;
-  private void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
+  private void RaiseChanged() => Changed?.Invoke(sender: this, e: EventArgs.Empty);
   public event EventHandler Changed;
 
   #region IDataSource2D<T> Members

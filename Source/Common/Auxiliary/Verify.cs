@@ -10,7 +10,7 @@ internal static class Verify
   {
     if (!condition)
     {
-      throw new ArgumentException(Strings.Exceptions.AssertionFailedSearch);
+      throw new ArgumentException(message: Strings.Exceptions.AssertionFailedSearch);
     }
   }
 
@@ -19,7 +19,7 @@ internal static class Verify
   {
     if (!condition)
     {
-      throw new ArgumentException(Strings.Exceptions.AssertionFailedSearch, paramName);
+      throw new ArgumentException(message: Strings.Exceptions.AssertionFailedSearch, paramName: paramName);
     }
   }
 
@@ -27,38 +27,38 @@ internal static class Verify
   {
     if (!condition)
     {
-      throw new ArgumentException(message);
+      throw new ArgumentException(message: message);
     }
   }
 
   [DebuggerStepThrough]
   public static void AssertNotNull(object obj)
   {
-    IsTrue(obj != null);
+    IsTrue(condition: obj != null);
   }
 
   public static void VerifyNotNull(this object obj, string paramName)
   {
     if (obj == null)
     {
-      throw new ArgumentNullException(paramName);
+      throw new ArgumentNullException(paramName: paramName);
     }
   }
 
   public static void VerifyNotNull(this object obj)
   {
-    VerifyNotNull(obj, "value");
+    VerifyNotNull(obj: obj, paramName: "value");
   }
 
   [DebuggerStepThrough]
   public static void AssertIsNotNaN(this double d)
   {
-    IsTrue(!double.IsNaN(d));
+    IsTrue(condition: !double.IsNaN(d: d));
   }
 
   [DebuggerStepThrough]
   public static void AssertIsFinite(this double d)
   {
-    IsTrue(!double.IsInfinity(d) && !(double.IsNaN(d)));
+    IsTrue(condition: !double.IsInfinity(d: d) && !(double.IsNaN(d: d)));
   }
 }

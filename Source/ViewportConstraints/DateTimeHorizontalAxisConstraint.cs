@@ -4,15 +4,15 @@ namespace Crystal.Plot2D;
 
 public sealed class DateTimeHorizontalAxisConstraint : ViewportConstraint
 {
-  private readonly double minSeconds = new TimeSpan(DateTime.MinValue.Ticks).TotalSeconds;
-  private readonly double maxSeconds = new TimeSpan(DateTime.MaxValue.Ticks).TotalSeconds;
+  private readonly double minSeconds = new TimeSpan(ticks: DateTime.MinValue.Ticks).TotalSeconds;
+  private readonly double maxSeconds = new TimeSpan(ticks: DateTime.MaxValue.Ticks).TotalSeconds;
 
   public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
   {
-    var borderRect = DataRect.Create(minSeconds, proposedDataRect.YMin, maxSeconds, proposedDataRect.YMax);
-    if (proposedDataRect.IntersectsWith(borderRect))
+    var borderRect = DataRect.Create(xMin: minSeconds, yMin: proposedDataRect.YMin, xMax: maxSeconds, yMax: proposedDataRect.YMax);
+    if (proposedDataRect.IntersectsWith(rect: borderRect))
     {
-      return DataRect.Intersect(proposedDataRect, borderRect);
+      return DataRect.Intersect(rect1: proposedDataRect, rect2: borderRect);
     }
 
     return previousDataRect;

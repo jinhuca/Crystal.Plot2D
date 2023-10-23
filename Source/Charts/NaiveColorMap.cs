@@ -16,15 +16,15 @@ public class NaiveColorMap
   {
     if (Data == null)
     {
-      throw new ArgumentNullException("Data");
+      throw new ArgumentNullException(paramName: "Data");
     }
     if (Palette == null)
     {
-      throw new ArgumentNullException("Palette");
+      throw new ArgumentNullException(paramName: "Palette");
     }
 
-    int width = Data.GetLength(0);
-    int height = Data.GetLength(1);
+    int width = Data.GetLength(dimension: 0);
+    int height = Data.GetLength(dimension: 1);
 
     int[] pixels = new int[width * height];
     var minMax = Data.GetMinMax();
@@ -38,16 +38,16 @@ public class NaiveColorMap
       {
         double value = Data[ix, height - 1 - iy];
         double ratio = (value - min) / rangeDelta;
-        Color color = Palette.GetColor(ratio);
+        Color color = Palette.GetColor(t: ratio);
         int argb = color.ToArgb();
         pixels[pointer++] = argb;
       }
     }
 
-    WriteableBitmap bitmap = new(width, height, 96, 96, PixelFormats.Pbgra32, null);
+    WriteableBitmap bitmap = new(pixelWidth: width, pixelHeight: height, dpiX: 96, dpiY: 96, pixelFormat: PixelFormats.Pbgra32, palette: null);
     int bpp = (bitmap.Format.BitsPerPixel + 7) / 8;
     int stride = bitmap.PixelWidth * bpp;
-    bitmap.WritePixels(new Int32Rect(0, 0, width, height), pixels, stride, 0);
+    bitmap.WritePixels(sourceRect: new Int32Rect(x: 0, y: 0, width: width, height: height), pixels: pixels, stride: stride, offset: 0);
     return bitmap;
   }
 }

@@ -8,7 +8,7 @@ namespace Crystal.Plot2D.Charts;
 /// Contains information about one minor tick - its value (relative size) and its tick.
 /// </summary>
 /// <typeparam name="T"></typeparam>
-[DebuggerDisplay("{Value} @ {Tick}")]
+[DebuggerDisplay(value: "{Value} @ {Tick}")]
 public readonly struct MinorTickInfo<T>
 {
   internal MinorTickInfo(double value, T tick)
@@ -20,12 +20,12 @@ public readonly struct MinorTickInfo<T>
   private readonly double value;
   private readonly T tick;
 
-  public double Value { get { return value; } }
-  public T Tick { get { return tick; } }
+  public double Value => value;
+  public T Tick => tick;
 
   public override string ToString()
   {
-    return string.Format("{0} @ {1}", value, tick);
+    return string.Format(format: "{0} @ {1}", arg0: value, arg1: tick);
   }
 }
 
@@ -62,8 +62,8 @@ internal class TicksInfo<T> : ITicksInfo<T>
   /// <value>The ticks.</value>
   public T[] Ticks
   {
-    get { return ticks; }
-    internal set { ticks = value; }
+    get => ticks;
+    internal set => ticks = value;
   }
 
   private double[] tickSizes = { };
@@ -77,30 +77,27 @@ internal class TicksInfo<T> : ITicksInfo<T>
     {
       if (tickSizes.Length != ticks.Length)
       {
-        tickSizes = ArrayExtensions.CreateArray(ticks.Length, 1.0);
+        tickSizes = ArrayExtensions.CreateArray(length: ticks.Length, defaultValue: 1.0);
       }
 
       return tickSizes;
     }
-    internal set { tickSizes = value; }
+    internal set => tickSizes = value;
   }
 
-  private object info = null;
+  private object info;
   /// <summary>
   /// Gets the additional information, added to ticks info and specifying range's features.
   /// </summary>
   /// <value>The info.</value>
   public object Info
   {
-    get { return info; }
-    internal set { info = value; }
+    get => info;
+    internal set => info = value;
   }
 
-  private static readonly TicksInfo<T> empty = new() { info = null, ticks = new T[0], tickSizes = new double[0] };
-  internal static TicksInfo<T> Empty
-  {
-    get { return empty; }
-  }
+  private static readonly TicksInfo<T> empty = new() { info = null, ticks = Array.Empty<T>(), tickSizes = Array.Empty<double>() };
+  internal static TicksInfo<T> Empty => empty;
 }
 
 /// <summary>

@@ -7,13 +7,13 @@ namespace Crystal.Plot2D.DataSources;
 
 public static class DataSourceHelper
 {
-  public static IEnumerable<Point> GetPoints(IPointDataSource dataSource) => GetPoints(dataSource, null);
+  public static IEnumerable<Point> GetPoints(IPointDataSource dataSource) => GetPoints(dataSource: dataSource, context: null);
 
   public static IEnumerable<Point> GetPoints(IPointDataSource dataSource, DependencyObject context)
   {
     if (dataSource == null)
     {
-      throw new ArgumentNullException(nameof(dataSource));
+      throw new ArgumentNullException(paramName: nameof(dataSource));
     }
 
     if (context == null)
@@ -21,11 +21,11 @@ public static class DataSourceHelper
       context = new DataSource2dContext();
     }
 
-    using IPointEnumerator enumerator = dataSource.GetEnumerator(context);
+    using IPointEnumerator enumerator = dataSource.GetEnumerator(context: context);
     Point p = new();
     while (enumerator.MoveNext())
     {
-      enumerator.GetCurrent(ref p);
+      enumerator.GetCurrent(p: ref p);
       yield return p;
       p = new Point();
     }

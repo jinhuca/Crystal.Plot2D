@@ -36,69 +36,45 @@ internal sealed class IrregularCell : ICell
   #region ICell Members
 
   private readonly Vector leftTop;
-  public Vector LeftTop
-  {
-    get { return leftTop; }
-  }
+  public Vector LeftTop => leftTop;
 
   private readonly Vector leftBottom;
-  public Vector LeftBottom
-  {
-    get { return leftBottom; }
-  }
+  public Vector LeftBottom => leftBottom;
 
   private readonly Vector rightTop;
-  public Vector RightTop
-  {
-    get { return rightTop; }
-  }
+  public Vector RightTop => rightTop;
 
   private readonly Vector rightBottom;
-  public Vector RightBottom
-  {
-    get { return rightBottom; }
-  }
+  public Vector RightBottom => rightBottom;
 
   #endregion
 
   #region Sides
-  public Vector LeftSide
-  {
-    get { return (leftBottom + leftTop) / 2; }
-  }
+  public Vector LeftSide => (leftBottom + leftTop) / 2;
 
-  public Vector RightSide
-  {
-    get { return (rightBottom + rightTop) / 2; }
-  }
-  public Vector TopSide
-  {
-    get { return (leftTop + rightTop) / 2; }
-  }
-  public Vector BottomSide
-  {
-    get { return (leftBottom + rightBottom) / 2; }
-  }
+  public Vector RightSide => (rightBottom + rightTop) / 2;
+
+  public Vector TopSide => (leftTop + rightTop) / 2;
+
+  public Vector BottomSide => (leftBottom + rightBottom) / 2;
+
   #endregion
 
-  public Point Center
-  {
-    get { return ((LeftSide + RightSide) / 2).ToPoint(); }
-  }
+  public Point Center => ((LeftSide + RightSide) / 2).ToPoint();
 
   public IrregularCell GetSubRect(SubCell sub)
   {
     switch (sub)
     {
       case SubCell.LeftBottom:
-        return new IrregularCell(LeftBottom, BottomSide, Center.ToVector(), LeftSide);
+        return new IrregularCell(leftBottom: LeftBottom, rightBottom: BottomSide, rightTop: Center.ToVector(), leftTop: LeftSide);
       case SubCell.LeftTop:
-        return new IrregularCell(LeftSide, Center.ToVector(), TopSide, LeftTop);
+        return new IrregularCell(leftBottom: LeftSide, rightBottom: Center.ToVector(), rightTop: TopSide, leftTop: LeftTop);
       case SubCell.RightBottom:
-        return new IrregularCell(BottomSide, RightBottom, RightSide, Center.ToVector());
+        return new IrregularCell(leftBottom: BottomSide, rightBottom: RightBottom, rightTop: RightSide, leftTop: Center.ToVector());
       case SubCell.RightTop:
       default:
-        return new IrregularCell(Center.ToVector(), RightSide, RightTop, TopSide);
+        return new IrregularCell(leftBottom: Center.ToVector(), rightBottom: RightSide, rightTop: RightTop, leftTop: TopSide);
     }
   }
 }
@@ -130,7 +106,7 @@ internal class ValuesInCell
     this.rightBottom = rightBottom;
 
     // Find max and min values (with respect to possible NaN values)
-    if (!double.IsNaN(leftTop))
+    if (!double.IsNaN(d: leftTop))
     {
       if (min > leftTop)
       {
@@ -143,7 +119,7 @@ internal class ValuesInCell
       }
     }
 
-    if (!double.IsNaN(leftBottom))
+    if (!double.IsNaN(d: leftBottom))
     {
       if (min > leftBottom)
       {
@@ -156,7 +132,7 @@ internal class ValuesInCell
       }
     }
 
-    if (!double.IsNaN(rightTop))
+    if (!double.IsNaN(d: rightTop))
     {
       if (min > rightTop)
       {
@@ -169,7 +145,7 @@ internal class ValuesInCell
       }
     }
 
-    if (!double.IsNaN(rightBottom))
+    if (!double.IsNaN(d: rightBottom))
     {
       if (min > rightBottom)
       {
@@ -190,10 +166,10 @@ internal class ValuesInCell
 
   public ValuesInCell(double leftBottom, double rightBottom, double rightTop, double leftTop, double missingValue)
   {
-    DebugVerify.IsNotNaN(leftBottom);
-    DebugVerify.IsNotNaN(rightBottom);
-    DebugVerify.IsNotNaN(rightTop);
-    DebugVerify.IsNotNaN(leftTop);
+    DebugVerify.IsNotNaN(d: leftBottom);
+    DebugVerify.IsNotNaN(d: rightBottom);
+    DebugVerify.IsNotNaN(d: rightTop);
+    DebugVerify.IsNotNaN(d: leftTop);
 
     // Copy values and find min and max with respect to possible missing values
     if (leftTop != missingValue)
@@ -316,84 +292,53 @@ internal class ValuesInCell
   }
 
   #region Edges
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double leftTop;
-  public double LeftTop { get { return leftTop; } }
+  public double LeftTop => leftTop;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double leftBottom;
-  public double LeftBottom { get { return leftBottom; } }
+  public double LeftBottom => leftBottom;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double rightTop;
-  public double RightTop
-  {
-    get { return rightTop; }
-  }
+  public double RightTop => rightTop;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double rightBottom;
-  public double RightBottom
-  {
-    get { return rightBottom; }
-  }
+  public double RightBottom => rightBottom;
+
   #endregion
 
   #region Sides & center
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double left;
-  public double Left
-  {
-    get { return left; }
-  }
+  public double Left => left;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double right;
-  public double Right
-  {
-    get { return right; }
-  }
+  public double Right => right;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double top;
-  public double Top
-  {
-    get { return top; }
-  }
+  public double Top => top;
 
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly double bottom;
-  public double Bottom
-  {
-    get { return bottom; }
-  }
+  public double Bottom => bottom;
 
-  public double Center
-  {
-    get { return (Left + Right) * 0.5; }
-  }
+  public double Center => (Left + Right) * 0.5;
+
   #endregion
 
   #region SubCells
-  public ValuesInCell LeftTopCell
-  {
-    get { return new ValuesInCell(Left, Center, Top, LeftTop); }
-  }
+  public ValuesInCell LeftTopCell => new(leftBottom: Left, rightBottom: Center, rightTop: Top, leftTop: LeftTop);
 
-  public ValuesInCell RightTopCell
-  {
-    get { return new ValuesInCell(Center, Right, RightTop, Top); }
-  }
+  public ValuesInCell RightTopCell => new(leftBottom: Center, rightBottom: Right, rightTop: RightTop, leftTop: Top);
 
-  public ValuesInCell RightBottomCell
-  {
-    get { return new ValuesInCell(Bottom, RightBottom, Right, Center); }
-  }
+  public ValuesInCell RightBottomCell => new(leftBottom: Bottom, rightBottom: RightBottom, rightTop: Right, leftTop: Center);
 
-  public ValuesInCell LeftBottomCell
-  {
-    get { return new ValuesInCell(LeftBottom, Bottom, Center, Left); }
-  }
+  public ValuesInCell LeftBottomCell => new(leftBottom: LeftBottom, rightBottom: Bottom, rightTop: Center, leftTop: Left);
 
   public ValuesInCell GetSubCell(SubCell subCell)
   {
@@ -429,22 +374,22 @@ internal class ValuesInCell
   public CellBitmask GetCellValue(double value)
   {
     CellBitmask n = CellBitmask.None;
-    if (!double.IsNaN(leftTop) && leftTop > value)
+    if (!double.IsNaN(d: leftTop) && leftTop > value)
     {
       n |= CellBitmask.LeftTop;
     }
 
-    if (!double.IsNaN(leftBottom) && leftBottom > value)
+    if (!double.IsNaN(d: leftBottom) && leftBottom > value)
     {
       n |= CellBitmask.LeftBottom;
     }
 
-    if (!double.IsNaN(rightBottom) && rightBottom > value)
+    if (!double.IsNaN(d: rightBottom) && rightBottom > value)
     {
       n |= CellBitmask.RightBottom;
     }
 
-    if (!double.IsNaN(rightTop) && rightTop > value)
+    if (!double.IsNaN(d: rightTop) && rightTop > value)
     {
       n |= CellBitmask.RightTop;
     }

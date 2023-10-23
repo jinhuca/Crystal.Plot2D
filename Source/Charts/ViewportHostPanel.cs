@@ -10,7 +10,7 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
 {
   static ViewportHostPanel()
   {
-    EventManager.RegisterClassHandler(typeof(ViewportHostPanel), PlotterBase.PlotterChangedEvent, new PlotterChangedEventHandler(OnPlotterChanged));
+    EventManager.RegisterClassHandler(classType: typeof(ViewportHostPanel), routedEvent: PlotterBase.PlotterChangedEvent, handler: new PlotterChangedEventHandler(OnPlotterChanged));
   }
 
   public ViewportHostPanel()
@@ -46,10 +46,7 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
   readonly TranslateTransform translateTransform = new();
 
   private readonly Canvas hostingCanvas = new();
-  internal Canvas HostingCanvas
-  {
-    get { return hostingCanvas; }
-  }
+  internal Canvas HostingCanvas => hostingCanvas;
 
   #region IPlotterElement Members
 
@@ -63,11 +60,11 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
     viewport = this.plotter.Viewport;
     if (!IsMarkersHost)
     {
-      plotter.CentralGrid.Children.Add(hostingCanvas);
+      plotter.CentralGrid.Children.Add(element: hostingCanvas);
     }
     if (Parent == null)
     {
-      hostingCanvas.Children.Add(this);
+      hostingCanvas.Children.Add(element: this);
     }
     this.plotter.Viewport.PropertyChanged += Viewport_PropertyChanged;
   }
@@ -77,9 +74,9 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
     plotter.Viewport.PropertyChanged -= Viewport_PropertyChanged;
     if (!IsMarkersHost)
     {
-      _plotter.CentralGrid.Children.Remove(hostingCanvas);
+      _plotter.CentralGrid.Children.Remove(element: hostingCanvas);
     }
-    hostingCanvas.Children.Remove(this);
+    hostingCanvas.Children.Remove(element: this);
     plotter = null;
   }
 
@@ -87,7 +84,7 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
 
   protected override void OnChildDesiredSizeChanged(UIElement child)
   {
-    InvalidatePosition((FrameworkElement)child);
+    InvalidatePosition(child: (FrameworkElement)child);
   }
 
   Vector prevVisualOffset;
@@ -100,11 +97,11 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       DataRect visible = (DataRect)e.NewValue;
       DataRect prevVisible = (DataRect)e.OldValue;
 
-      if (prevVisible.Size.EqualsApproximately(visible.Size) && !sizeChanged)
+      if (prevVisible.Size.EqualsApproximately(size2: visible.Size) && !sizeChanged)
       {
         var transform = viewport.Transform;
-        Point prevLocation = prevVisible.Location.ViewportToScreen(transform);
-        Point location = visible.Location.ViewportToScreen(transform);
+        Point prevLocation = prevVisible.Location.ViewportToScreen(transform: transform);
+        Point location = visible.Location.ViewportToScreen(transform: transform);
 
         Vector offset = prevLocation - location;
         translateTransform.X += offset.X;
@@ -140,22 +137,22 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       return;
     }
 
-    InvalidatePosition(child);
+    InvalidatePosition(child: child);
     //Dispatcher.BeginInvoke(((Action)(()=> InvalidatePosition(child))), DispatcherPriority.ApplicationIdle);
   }
 
   private DataRect overallViewportBounds = DataRect.Empty;
   internal DataRect OverallViewportBounds
   {
-    get { return overallViewportBounds; }
-    set { overallViewportBounds = value; }
+    get => overallViewportBounds;
+    set => overallViewportBounds = value;
   }
 
   private BoundsUnionMode boundsUnionMode;
   internal BoundsUnionMode BoundsUnionMode
   {
-    get { return boundsUnionMode; }
-    set { boundsUnionMode = value; }
+    get => boundsUnionMode;
+    set => boundsUnionMode = value;
   }
 
   protected override void InvalidatePosition(FrameworkElement child)
@@ -172,42 +169,42 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       return;
     }
 
-    var transform = viewport.Transform.WithScreenOffset(-translateTransform.X, -translateTransform.Y);
-    Size elementSize = GetElementSize(child, AvailableSize, transform);
-    child.Measure(elementSize);
+    var transform = viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
+    Size elementSize = GetElementSize(child: child, availableSize: AvailableSize, transform: transform);
+    child.Measure(availableSize: elementSize);
 
-    Rect bounds = GetElementScreenBounds(transform, child);
-    child.Arrange(bounds);
+    Rect bounds = GetElementScreenBounds(transform: transform, child: child);
+    child.Arrange(finalRect: bounds);
 
-    var viewportBounds = Viewport2D.GetContentBounds(this);
+    var viewportBounds = Viewport2D.GetContentBounds(obj: this);
     if (!viewportBounds.IsEmpty)
     {
       overallViewportBounds = viewportBounds;
     }
 
-    UniteWithBounds(transform, bounds);
+    UniteWithBounds(transform: transform, bounds: bounds);
 
     if (!InBatchAdd)
     {
-      Viewport2D.SetContentBounds(this, overallViewportBounds);
-      ContentBoundsChanged.Raise(this);
+      Viewport2D.SetContentBounds(obj: this, value: overallViewportBounds);
+      ContentBoundsChanged.Raise(sender: this);
     }
   }
 
   private void UniteWithBounds(CoordinateTransform transform, Rect bounds)
   {
-    var childViewportBounds = bounds.ScreenToViewport(transform);
+    var childViewportBounds = bounds.ScreenToViewport(transform: transform);
     if (boundsUnionMode == BoundsUnionMode.Bounds)
     {
-      overallViewportBounds.Union(childViewportBounds);
+      overallViewportBounds.Union(rect: childViewportBounds);
     }
     else
     {
-      overallViewportBounds.Union(childViewportBounds.GetCenter());
+      overallViewportBounds.Union(point: childViewportBounds.GetCenter());
     }
   }
 
-  int invalidatePositionCalls = 0;
+  int invalidatePositionCalls;
   internal override void BeginBatchAdd()
   {
     base.BeginBatchAdd();
@@ -222,19 +219,19 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       return;
     }
 
-    UpdateContentBounds(Children.Count > 0 && invalidatePositionCalls == 0);
+    UpdateContentBounds(recalculate: Children.Count > 0 && invalidatePositionCalls == 0);
   }
 
   public void UpdateContentBounds()
   {
-    UpdateContentBounds(true);
+    UpdateContentBounds(recalculate: true);
   }
 
   private void UpdateContentBounds(bool recalculate)
   {
     if (recalculate)
     {
-      var transform = plotter.Viewport.Transform.WithScreenOffset(-translateTransform.X, -translateTransform.Y);
+      var transform = plotter.Viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
       overallViewportBounds = DataRect.Empty;
       foreach (FrameworkElement child in Children)
       {
@@ -245,14 +242,14 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
             continue;
           }
 
-          Rect bounds = GetElementScreenBounds(transform, child);
-          UniteWithBounds(transform, bounds);
+          Rect bounds = GetElementScreenBounds(transform: transform, child: child);
+          UniteWithBounds(transform: transform, bounds: bounds);
         }
       }
     }
 
-    Viewport2D.SetContentBounds(this, overallViewportBounds);
-    ContentBoundsChanged.Raise(this);
+    Viewport2D.SetContentBounds(obj: this, value: overallViewportBounds);
+    ContentBoundsChanged.Raise(sender: this);
   }
 
   protected override Size ArrangeOverride(Size finalSize)
@@ -262,7 +259,7 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       return finalSize;
     }
 
-    var transform = plotter.Viewport.Transform.WithScreenOffset(-translateTransform.X, -translateTransform.Y);
+    var transform = plotter.Viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
 
     overallViewportBounds = DataRect.Empty;
     foreach (UIElement child in InternalChildren)
@@ -274,16 +271,16 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
           continue;
         }
 
-        Rect bounds = GetElementScreenBounds(transform, child);
-        child.Arrange(bounds);
-        UniteWithBounds(transform, bounds);
+        Rect bounds = GetElementScreenBounds(transform: transform, child: child);
+        child.Arrange(finalRect: bounds);
+        UniteWithBounds(transform: transform, bounds: bounds);
       }
     }
 
     if (!InBatchAdd)
     {
-      Viewport2D.SetContentBounds(this, overallViewportBounds);
-      ContentBoundsChanged.Raise(this);
+      Viewport2D.SetContentBounds(obj: this, value: overallViewportBounds);
+      ContentBoundsChanged.Raise(sender: this);
     }
 
     return finalSize;
@@ -310,8 +307,8 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
     {
       if (child != null)
       {
-        Size elementSize = GetElementSize(child, availableSize, transform);
-        child.Measure(elementSize);
+        Size elementSize = GetElementSize(child: child, availableSize: availableSize, transform: transform);
+        child.Measure(availableSize: elementSize);
       }
     }
 

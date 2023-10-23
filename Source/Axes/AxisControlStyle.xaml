@@ -2,7 +2,7 @@
 										xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
 										xmlns:local="clr-namespace:Crystal.Plot2D.Charts">
 	<Style TargetType="{x:Type Grid}" x:Key="gridStyle">
-		<Setter Property="Grid.ClipToBounds" Value="False"/>
+		<Setter Property="ClipToBounds" Value="False"/>
 	</Style>
 
 	<RotateTransform Angle="-90" x:Key="additionalLabelsTransformLeft"/>

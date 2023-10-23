@@ -8,7 +8,7 @@ public class LegendItem : Control
   static LegendItem()
   {
     var thisType = typeof(LegendItem);
-    DefaultStyleKeyProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(thisType));
+    DefaultStyleKeyProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: thisType));
   }
 
   //public object VisualContent

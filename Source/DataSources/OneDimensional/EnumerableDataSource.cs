@@ -7,8 +7,8 @@ namespace Crystal.Plot2D.DataSources;
 
 public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
 {
-  public EnumerableDataSource(IEnumerable<T> data) : base(data) { }
-  public EnumerableDataSource(IEnumerable data) : base(data) { }
+  public EnumerableDataSource(IEnumerable<T> data) : base(data: data) { }
+  public EnumerableDataSource(IEnumerable data) : base(data: data) { }
 
   #region Property XYMapping
 
@@ -18,7 +18,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     get => _xyMapping;
     set
     {
-      _xyMapping = value ?? throw new ArgumentNullException(nameof(XYMapping));
+      _xyMapping = value ?? throw new ArgumentNullException(paramName: nameof(XYMapping));
       RaiseDataChanged();
     }
   }
@@ -35,7 +35,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     get => _xMapping;
     set
     {
-      _xMapping = value ?? throw new ArgumentNullException(nameof(XMapping));
+      _xMapping = value ?? throw new ArgumentNullException(paramName: nameof(XMapping));
       RaiseDataChanged();
     }
   }
@@ -52,7 +52,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     get => _yMapping;
     set
     {
-      _yMapping = value ?? throw new ArgumentNullException(nameof(YMapping));
+      _yMapping = value ?? throw new ArgumentNullException(paramName: nameof(YMapping));
       RaiseDataChanged();
     }
   }
@@ -68,34 +68,34 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   {
     if (property == null)
     {
-      throw new ArgumentNullException(nameof(property));
+      throw new ArgumentNullException(paramName: nameof(property));
     }
     if (mapping == null)
     {
-      throw new ArgumentNullException(nameof(mapping));
+      throw new ArgumentNullException(paramName: nameof(mapping));
     }
-    Mappings.Add(new Mapping<T> { Property = property, F = mapping });
+    Mappings.Add(item: new Mapping<T> { Property = property, F = mapping });
   }
 
-  public override IPointEnumerator GetEnumerator(DependencyObject context) => new EnumerablePointEnumerator<T>(this);
+  public override IPointEnumerator GetEnumerator(DependencyObject context) => new EnumerablePointEnumerator<T>(_dataSource: this);
 
-  internal List<Mapping<T>> Mappings { get; } = new List<Mapping<T>>();
+  internal List<Mapping<T>> Mappings { get; } = new();
 
   internal void FillPoint(T elem, ref Point point)
   {
     if (XYMapping != null)
     {
-      point = XYMapping(elem);
+      point = XYMapping(arg: elem);
     }
     else
     {
       if (XMapping != null)
       {
-        point.X = XMapping(elem);
+        point.X = XMapping(arg: elem);
       }
       if (YMapping != null)
       {
-        point.Y = YMapping(elem);
+        point.Y = YMapping(arg: elem);
       }
     }
   }
@@ -106,7 +106,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     {
       foreach (var mapping in Mappings)
       {
-        target.SetValue(mapping.Property, mapping.F(elem));
+        target.SetValue(dp: mapping.Property, value: mapping.F(arg: elem));
       }
     }
   }

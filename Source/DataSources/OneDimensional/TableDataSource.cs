@@ -7,7 +7,7 @@ namespace Crystal.Plot2D.DataSources;
 /// </summary>
 public class TableDataSource : EnumerableDataSource<DataRow>
 {
-  public TableDataSource(DataTable table) : base(table.Rows)
+  public TableDataSource(DataTable table) : base(data: table.Rows)
   {
     // Subscribe to DataTable events
     table.TableNewRow += NewRowInsertedHandler;

@@ -14,16 +14,16 @@ internal static class ObservableCollectionHelper
 
       for (int i = 0; i < newItems.Count; i++)
       {
-        T addedItem = (T)newItems[i];
-        collection.Insert(startingIndex + i, addedItem);
+        T addedItem = (T)newItems[index: i];
+        collection.Insert(index: startingIndex + i, item: addedItem);
       }
     }
     if (args.OldItems != null)
     {
       for (int i = 0; i < args.OldItems.Count; i++)
       {
-        T removedItem = (T)args.OldItems[i];
-        collection.Remove(removedItem);
+        T removedItem = (T)args.OldItems[index: i];
+        collection.Remove(item: removedItem);
       }
     }
   }

@@ -15,29 +15,29 @@ internal static class ListExtensions
   {
     if (list == null)
     {
-      throw new ArgumentNullException("list");
+      throw new ArgumentNullException(paramName: nameof(list));
     }
     if (list.Count == 0)
     {
-      throw new InvalidOperationException(Strings.Exceptions.CannotGetLastElement);
+      throw new InvalidOperationException(message: Strings.Exceptions.CannotGetLastElement);
     }
-    return list[list.Count - 1];
+    return list[index: list.Count - 1];
   }
 
   internal static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
   {
     if (action == null)
     {
-      throw new ArgumentNullException("action");
+      throw new ArgumentNullException(paramName: nameof(action));
     }
     if (source == null)
     {
-      throw new ArgumentNullException("source");
+      throw new ArgumentNullException(paramName: nameof(source));
     }
 
     foreach (var item in source)
     {
-      action(item);
+      action(obj: item);
     }
   }
 }

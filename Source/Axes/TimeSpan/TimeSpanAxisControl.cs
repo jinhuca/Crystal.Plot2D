@@ -11,6 +11,6 @@ public class TimeSpanAxisControl : AxisControl<TimeSpan>
 
     ConvertToDouble = time => time.Ticks;
 
-    Range = new Range<TimeSpan>(new TimeSpan(), new TimeSpan(1, 0, 0));
+    Range = new Range<TimeSpan>(min: new TimeSpan(), max: new TimeSpan(hours: 1, minutes: 0, seconds: 0));
   }
 }

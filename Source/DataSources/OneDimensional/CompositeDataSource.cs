@@ -27,12 +27,12 @@ public class CompositeDataSource : IPointDataSource
   {
     if (dataSources == null)
     {
-      throw new ArgumentNullException(nameof(dataSources));
+      throw new ArgumentNullException(paramName: nameof(dataSources));
     }
 
     foreach (var dataSource in dataSources)
     {
-      AddDataPart(dataSource);
+      AddDataPart(dataPart: dataSource);
     }
   }
 
@@ -54,10 +54,10 @@ public class CompositeDataSource : IPointDataSource
   {
     if (dataPart == null)
     {
-      throw new ArgumentNullException(nameof(dataPart));
+      throw new ArgumentNullException(paramName: nameof(dataPart));
     }
 
-    dataParts.Add(dataPart);
+    dataParts.Add(item: dataPart);
     dataPart.DataChanged += OnPartDataChanged;
   }
 
@@ -70,10 +70,10 @@ public class CompositeDataSource : IPointDataSource
   public event EventHandler DataChanged;
   protected void RaiseDataChanged()
   {
-    DataChanged?.Invoke(this, EventArgs.Empty);
+    DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
   }
 
-  public IPointEnumerator GetEnumerator(DependencyObject context) => new CompositeEnumerator(this, context);
+  public IPointEnumerator GetEnumerator(DependencyObject context) => new CompositeEnumerator(dataSource: this, context: context);
 
   #endregion
 
@@ -83,7 +83,7 @@ public class CompositeDataSource : IPointDataSource
 
     public CompositeEnumerator(CompositeDataSource dataSource, DependencyObject context)
     {
-      enumerators = dataSource.dataParts.Select(part => part.GetEnumerator(context)).ToList();
+      enumerators = dataSource.dataParts.Select(selector: part => part.GetEnumerator(context: context)).ToList();
     }
 
     #region IChartPointEnumerator Members
@@ -102,7 +102,7 @@ public class CompositeDataSource : IPointDataSource
     {
       foreach (var enumerator in enumerators)
       {
-        enumerator.ApplyMappings(glyph);
+        enumerator.ApplyMappings(target: glyph);
       }
     }
 
@@ -110,7 +110,7 @@ public class CompositeDataSource : IPointDataSource
     {
       foreach (var enumerator in enumerators)
       {
-        enumerator.GetCurrent(ref p);
+        enumerator.GetCurrent(p: ref p);
       }
     }
 

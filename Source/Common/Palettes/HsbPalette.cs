@@ -11,32 +11,32 @@ public sealed class HsbPalette : IPalette
   /// </summary>
   public HsbPalette() { }
 
-  private double start = 0;
-  [DefaultValue(0.0)]
+  private double start;
+  [DefaultValue(value: 0.0)]
   public double Start
   {
-    get { return start; }
+    get => start;
     set
     {
       if (start != value)
       {
         start = value;
-        Changed.Raise(this);
+        Changed.Raise(sender: this);
       }
     }
   }
 
   private double width = 360;
-  [DefaultValue(360.0)]
+  [DefaultValue(value: 360.0)]
   public double Width
   {
-    get { return width; }
+    get => width;
     set
     {
       if (width != value)
       {
         width = value;
-        Changed.Raise(this);
+        Changed.Raise(sender: this);
       }
     }
   }
@@ -45,8 +45,8 @@ public sealed class HsbPalette : IPalette
 
   public Color GetColor(double t)
   {
-    Verify.IsTrue(0 <= t && t <= 1);
-    return new HsbColor(start + t * width, 1, 1).ToArgbColor();
+    Verify.IsTrue(condition: 0 <= t && t <= 1);
+    return new HsbColor(hue: start + t * width, saturation: 1, brightness: 1).ToArgbColor();
   }
 
   public event EventHandler Changed;

@@ -7,13 +7,13 @@ public abstract class DateTimeLabelProviderBase : LabelProviderBase<DateTime>
   private string dateFormat;
   protected string DateFormat
   {
-    get { return dateFormat; }
-    set { dateFormat = value; }
+    get => dateFormat;
+    set => dateFormat = value;
   }
 
   protected override string GetStringCore(LabelTickInfo<DateTime> tickInfo)
   {
-    return tickInfo.Tick.ToString(dateFormat);
+    return tickInfo.Tick.ToString(format: dateFormat);
   }
 
   protected virtual string GetDateFormat(DifferenceIn diff)
@@ -42,8 +42,6 @@ public abstract class DateTimeLabelProviderBase : LabelProviderBase<DateTime>
         break;
       case DifferenceIn.Millisecond:
         format = "fff";
-        break;
-      default:
         break;
     }
 

@@ -50,7 +50,7 @@ public class ExtendedDaysStrategy : IDateTimeTicksStrategy
   {
     lowerDiff = diff;
 
-    int index = Array.IndexOf(diffs, diff);
+    int index = Array.IndexOf(array: diffs, value: diff);
     if (index == -1)
     {
       return false;
@@ -69,7 +69,7 @@ public class ExtendedDaysStrategy : IDateTimeTicksStrategy
   {
     biggerDiff = diff;
 
-    int index = Array.IndexOf(diffs, diff);
+    int index = Array.IndexOf(array: diffs, value: diff);
     if (index == -1 || index == 0)
     {
       return false;

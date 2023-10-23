@@ -8,7 +8,7 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
   private double yEnlargeCoeff = 1.1;
   public double YEnlargeCoeff
   {
-    get { return yEnlargeCoeff; }
+    get => yEnlargeCoeff;
     set
     {
       if (yEnlargeCoeff != value)
@@ -26,15 +26,15 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
     foreach (var chart in viewport.ContentBoundsHosts)
     {
       var plotterElement = chart as IPlotterElement;
-      var visual = viewport.Plotter.VisualBindings[plotterElement];
-      var points = PointsGraphBase.GetVisiblePoints(visual);
+      var visual = viewport.Plotter.VisualBindings[element: plotterElement];
+      var points = PointsGraphBase.GetVisiblePoints(obj: visual);
       if (points != null)
       {
         // searching for indices of chart's visible points which are near left and right borders of newDataRect
         double startX = newDataRect.XMin;
         double endX = newDataRect.XMax;
 
-        if (points[0].X > endX || points[points.Count - 1].X < startX)
+        if (points[index: 0].X > endX || points[index: points.Count - 1].X < startX)
         {
           continue;
         }
@@ -42,7 +42,7 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
         int startIndex = -1;
 
         // we assume that points are sorted by x values ascending
-        if (startX <= points[0].X)
+        if (startX <= points[index: 0].X)
         {
           startIndex = 0;
         }
@@ -50,7 +50,7 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
         {
           for (int i = 1; i < points.Count - 1; i++)
           {
-            if (points[i].X <= startX && startX < points[i + 1].X)
+            if (points[index: i].X <= startX && startX < points[index: i + 1].X)
             {
               startIndex = i;
               break;
@@ -60,7 +60,7 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
 
         int endIndex = points.Count;
 
-        if (points[points.Count - 1].X < endX)
+        if (points[index: points.Count - 1].X < endX)
         {
           endIndex = points.Count;
         }
@@ -68,7 +68,7 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
         {
           for (int i = points.Count - 1; i >= 1; i--)
           {
-            if (points[i - 1].X <= endX && endX < points[i].X)
+            if (points[index: i - 1].X <= endX && endX < points[index: i].X)
             {
               endIndex = i;
               break;
@@ -79,20 +79,20 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
         Rect bounds = Rect.Empty;
         for (int i = startIndex; i < endIndex; i++)
         {
-          bounds.Union(points[i]);
+          bounds.Union(point: points[index: i]);
         }
         if (startIndex > 0)
         {
-          Point pt = GetInterpolatedPoint(startX, points[startIndex], points[startIndex - 1]);
-          bounds.Union(pt);
+          Point pt = GetInterpolatedPoint(x: startX, p1: points[index: startIndex], p2: points[index: startIndex - 1]);
+          bounds.Union(point: pt);
         }
         if (endIndex < points.Count - 1)
         {
-          Point pt = GetInterpolatedPoint(endX, points[endIndex], points[endIndex + 1]);
-          bounds.Union(pt);
+          Point pt = GetInterpolatedPoint(x: endX, p1: points[index: endIndex], p2: points[index: endIndex + 1]);
+          bounds.Union(point: pt);
         }
 
-        overallBounds.Union(bounds);
+        overallBounds.Union(rect: bounds);
       }
     }
 
@@ -107,8 +107,8 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
         y -= height / 2;
       }
 
-      newDataRect = new DataRect(newDataRect.XMin, y, newDataRect.Width, height);
-      newDataRect = DataRectExtensions.ZoomY(newDataRect, newDataRect.GetCenter(), yEnlargeCoeff);
+      newDataRect = new DataRect(xMin: newDataRect.XMin, yMin: y, width: newDataRect.Width, height: height);
+      newDataRect = DataRectExtensions.ZoomY(rect: newDataRect, to: newDataRect.GetCenter(), ratio: yEnlargeCoeff);
     }
 
     return newDataRect;
@@ -119,7 +119,7 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
     double xRatio = (x - p1.X) / (p2.X - p1.X);
     double y = (1 - xRatio) * p1.Y + xRatio * p2.Y;
 
-    return new Point(x, y);
+    return new Point(x: x, y: y);
   }
 
   #region ISupportAttach Members

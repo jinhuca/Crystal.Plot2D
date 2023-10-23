@@ -9,12 +9,12 @@ public static class IDataSource2DExtensions
 {
   public static Range<double> GetMinMax(this double[,] data)
   {
-    data.VerifyNotNull("data");
+    data.VerifyNotNull(paramName: "data");
 
-    int width = data.GetLength(0);
-    int height = data.GetLength(1);
-    Verify.IsTrueWithMessage(width > 0, Strings.Exceptions.ArrayWidthShouldBePositive);
-    Verify.IsTrueWithMessage(height > 0, Strings.Exceptions.ArrayHeightShouldBePositive);
+    int width = data.GetLength(dimension: 0);
+    int height = data.GetLength(dimension: 1);
+    Verify.IsTrueWithMessage(condition: width > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
+    Verify.IsTrueWithMessage(condition: height > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
 
     double min = data[0, 0];
     double max = data[0, 0];
@@ -33,18 +33,18 @@ public static class IDataSource2DExtensions
       }
     }
 
-    Range<double> res = new(min, max);
+    Range<double> res = new(min: min, max: max);
     return res;
   }
 
   public static Range<double> GetMinMax(this double[,] data, double missingValue)
   {
-    data.VerifyNotNull("data");
+    data.VerifyNotNull(paramName: "data");
 
-    int width = data.GetLength(0);
-    int height = data.GetLength(1);
-    Verify.IsTrueWithMessage(width > 0, Strings.Exceptions.ArrayWidthShouldBePositive);
-    Verify.IsTrueWithMessage(height > 0, Strings.Exceptions.ArrayHeightShouldBePositive);
+    int width = data.GetLength(dimension: 0);
+    int height = data.GetLength(dimension: 1);
+    Verify.IsTrueWithMessage(condition: width > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
+    Verify.IsTrueWithMessage(condition: height > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
 
     double min = double.MaxValue;
     double max = double.MinValue;
@@ -63,27 +63,27 @@ public static class IDataSource2DExtensions
       }
     }
 
-    Range<double> res = new(min, max);
+    Range<double> res = new(min: min, max: max);
     return res;
   }
 
   public static Range<double> GetMinMax(this IDataSource2D<double> dataSource)
   {
-    dataSource.VerifyNotNull("dataSource");
-    return GetMinMax(dataSource.Data);
+    dataSource.VerifyNotNull(paramName: "dataSource");
+    return GetMinMax(data: dataSource.Data);
   }
 
   public static Range<double> GetMinMax(this IDataSource2D<double> dataSource, double missingValue)
   {
-    dataSource.VerifyNotNull("dataSource");
-    return GetMinMax(dataSource.Data, missingValue);
+    dataSource.VerifyNotNull(paramName: "dataSource");
+    return GetMinMax(data: dataSource.Data, missingValue: missingValue);
   }
 
   public static Range<double> GetMinMax(this IDataSource2D<double> dataSource, DataRect area)
   {
     if (dataSource == null)
     {
-      throw new ArgumentNullException("dataSource");
+      throw new ArgumentNullException(paramName: "dataSource");
     }
 
     double min = double.PositiveInfinity;
@@ -96,7 +96,7 @@ public static class IDataSource2DExtensions
     {
       for (int iy = 0; iy < height; iy++)
       {
-        if (area.Contains(grid[ix, iy]))
+        if (area.Contains(point: grid[ix, iy]))
         {
           var value = data[ix, iy];
           if (value < min)
@@ -111,14 +111,7 @@ public static class IDataSource2DExtensions
       }
     }
 
-    if (min < max)
-    {
-      return new Range<double>(min, max);
-    }
-    else
-    {
-      return new Range<double>();
-    }
+    return min < max ? new Range<double>(min: min, max: max) : new Range<double>();
   }
 
 
@@ -129,8 +122,8 @@ public static class IDataSource2DExtensions
     double minY = grid[0, 0].Y;
     double maxY = minY;
 
-    int width = grid.GetLength(0);
-    int height = grid.GetLength(1);
+    int width = grid.GetLength(dimension: 0);
+    int height = grid.GetLength(dimension: 1);
     for (int ix = 0; ix < width; ix++)
     {
       for (int iy = 0; iy < height; iy++)
@@ -157,7 +150,7 @@ public static class IDataSource2DExtensions
         }
       }
     }
-    return new DataRect(new Point(minX, minY), new Point(maxX, maxY));
+    return new DataRect(point1: new Point(x: minX, y: minY), point2: new Point(x: maxX, y: maxY));
   }
 
   public static DataRect GetGridBounds<T>(this IDataSource2D<T> dataSource) where T : struct => dataSource.Grid.GetGridBounds();
@@ -172,7 +165,7 @@ public static class IDataSource2DExtensions
     var yMin = yCoordinates[0];
     var yMax = yCoordinates[yCoordinates.Length - 1];
 
-    var contentBounds = DataRect.FromPoints(xMin, yMin, xMax, yMax);
+    var contentBounds = DataRect.FromPoints(x1: xMin, y1: yMin, x2: xMax, y2: yMax);
     return contentBounds;
   }
 }

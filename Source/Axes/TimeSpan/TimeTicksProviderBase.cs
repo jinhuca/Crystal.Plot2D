@@ -11,25 +11,19 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
   {
     if (Changed != null)
     {
-      Changed(this, EventArgs.Empty);
+      Changed(sender: this, e: EventArgs.Empty);
     }
   }
 
   private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> providers =
       new();
 
-  protected static Dictionary<DifferenceIn, ITicksProvider<T>> Providers
-  {
-    get { return providers; }
-  }
+  protected static Dictionary<DifferenceIn, ITicksProvider<T>> Providers => providers;
 
   private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> minorProviders =
       new();
 
-  protected static Dictionary<DifferenceIn, ITicksProvider<T>> MinorProviders
-  {
-    get { return minorProviders; }
-  }
+  protected static Dictionary<DifferenceIn, ITicksProvider<T>> MinorProviders => minorProviders;
 
   protected abstract TimeSpan GetDifference(T start, T end);
 
@@ -38,7 +32,7 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
   private IDateTimeTicksStrategy strategy = new DefaultDateTimeTicksStrategy();
   public IDateTimeTicksStrategy Strategy
   {
-    get { return strategy; }
+    get => strategy;
     set
     {
       if (strategy != value)
@@ -54,34 +48,34 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
 
   public ITicksInfo<T> GetTicks(Range<T> range, int ticksCount)
   {
-    Verify.IsTrue(ticksCount > 0);
+    Verify.IsTrue(condition: ticksCount > 0);
 
     T start = range.Min;
     T end = range.Max;
-    TimeSpan length = GetDifference(start, end);
+    TimeSpan length = GetDifference(start: start, end: end);
 
-    diff = strategy.GetDifference(length);
+    diff = strategy.GetDifference(span: length);
 
     TicksInfo<T> result = new() { Info = diff };
-    if (providers.ContainsKey(diff))
+    if (providers.TryGetValue(key: diff, value: out var provider))
     {
-      ITicksInfo<T> innerResult = providers[diff].GetTicks(range, ticksCount);
-      T[] ticks = ModifyTicksGuard(innerResult.Ticks, diff);
+      ITicksInfo<T> innerResult = provider.GetTicks(range: range, ticksCount: ticksCount);
+      T[] ticks = ModifyTicksGuard(ticks: innerResult.Ticks, info: diff);
 
       result.Ticks = ticks;
       this.result = result;
       return result;
     }
 
-    throw new InvalidOperationException(Strings.Exceptions.UnsupportedRangeInAxis);
+    throw new InvalidOperationException(message: Strings.Exceptions.UnsupportedRangeInAxis);
   }
 
   private T[] ModifyTicksGuard(T[] ticks, object info)
   {
-    var result = ModifyTicks(ticks, info);
+    var result = ModifyTicks(ticks: ticks, info: info);
     if (result == null)
     {
-      throw new ArgumentNullException("ticks");
+      throw new ArgumentNullException(paramName: "ticks");
     }
 
     return result;
@@ -99,9 +93,9 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
   /// <returns></returns>
   public int DecreaseTickCount(int ticksCount)
   {
-    if (providers.ContainsKey(diff))
+    if (providers.TryGetValue(diff, out var provider))
     {
-      return providers[diff].DecreaseTickCount(ticksCount);
+      return provider.DecreaseTickCount(ticksCount: ticksCount);
     }
 
     int res = ticksCount / 2;
@@ -120,11 +114,11 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
   /// <returns></returns>
   public int IncreaseTickCount(int ticksCount)
   {
-    DebugVerify.Is(ticksCount < 2000);
+    DebugVerify.Is(condition: ticksCount < 2000);
 
-    if (providers.ContainsKey(diff))
+    if (providers.TryGetValue(diff, out var provider))
     {
-      return providers[diff].IncreaseTickCount(ticksCount);
+      return provider.IncreaseTickCount(ticksCount: ticksCount);
     }
 
     return ticksCount * 2;
@@ -135,10 +129,10 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
     get
     {
       DifferenceIn smallerDiff = DifferenceIn.Smallest;
-      if (strategy.TryGetLowerDiff(diff, out smallerDiff) && minorProviders.ContainsKey(smallerDiff))
+      if (strategy.TryGetLowerDiff(diff: diff, lowerDiff: out smallerDiff) && minorProviders.TryGetValue(smallerDiff, out var provider))
       {
-        var minorProvider = (MinorTimeProviderBase<T>)minorProviders[smallerDiff];
-        minorProvider.SetTicks(result.Ticks);
+        var minorProvider = (MinorTimeProviderBase<T>)provider;
+        minorProvider.SetTicks(ticks: result.Ticks);
         return minorProvider;
       }
 
@@ -152,9 +146,9 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
     get
     {
       DifferenceIn biggerDiff = DifferenceIn.Smallest;
-      if (strategy.TryGetBiggerDiff(diff, out biggerDiff))
+      if (strategy.TryGetBiggerDiff(diff: diff, biggerDiff: out biggerDiff))
       {
-        return providers[biggerDiff];
+        return providers[key: biggerDiff];
       }
 
       return null;

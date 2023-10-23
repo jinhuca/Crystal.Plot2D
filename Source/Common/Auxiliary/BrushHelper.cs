@@ -29,7 +29,7 @@ public static class BrushHelper
   {
     Color color = brush.Color;
     color.A = (byte)alpha;
-    return new SolidColorBrush(color);
+    return new SolidColorBrush(color: color);
   }
 
   /// <summary>
@@ -44,13 +44,13 @@ public static class BrushHelper
   /// <returns></returns>
   public static SolidColorBrush MakeTransparent(this SolidColorBrush brush, double opacity)
   {
-    return MakeTransparent(brush, (int)(opacity * 255));
+    return MakeTransparent(brush: brush, alpha: (int)(opacity * 255));
   }
 
   public static SolidColorBrush ChangeLightness(this SolidColorBrush brush, double lightnessFactor)
   {
     var color = brush.Color;
-    var hsbColor = HsbColor.FromArgbColor(color);
+    var hsbColor = HsbColor.FromArgbColor(color: color);
     hsbColor.Brightness *= lightnessFactor;
 
     if (hsbColor.Brightness > 1.0)
@@ -58,14 +58,14 @@ public static class BrushHelper
       hsbColor.Brightness = 1.0;
     }
 
-    var result = new SolidColorBrush(hsbColor.ToArgbColor());
+    var result = new SolidColorBrush(color: hsbColor.ToArgbColor());
     return result;
   }
 
   public static SolidColorBrush ChangeSaturation(this SolidColorBrush brush, double saturationFactor)
   {
     var color = brush.Color;
-    var hsbColor = HsbColor.FromArgbColor(color);
+    var hsbColor = HsbColor.FromArgbColor(color: color);
     hsbColor.Saturation *= saturationFactor;
 
     if (hsbColor.Saturation > 1.0)
@@ -73,7 +73,7 @@ public static class BrushHelper
       hsbColor.Saturation = 1.0;
     }
 
-    var result = new SolidColorBrush(hsbColor.ToArgbColor());
+    var result = new SolidColorBrush(color: hsbColor.ToArgbColor());
     return result;
   }
 }

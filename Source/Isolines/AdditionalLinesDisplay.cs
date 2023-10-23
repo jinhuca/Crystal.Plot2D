@@ -56,11 +56,11 @@ public sealed class AdditionalLinesDisplay : IsolineGraphBase
 
     if (lengthsRatio > 16)
     {
-      double log = Math.Round(Math.Log(lengthsRatio, 2));
-      double number = 2 * Math.Pow(2, log);
+      double log = Math.Round(a: Math.Log(a: lengthsRatio, newBase: 2));
+      double number = 2 * Math.Pow(x: 2, y: log);
       double delta = globalMinMax.GetLength() / number;
 
-      double start = Math.Floor((localMinMax.Min - globalMinMax.Min) / delta) * delta + globalMinMax.Min;
+      double start = Math.Floor(d: (localMinMax.Min - globalMinMax.Min) / delta) * delta + globalMinMax.Min;
       double end = localMinMax.Max;
 
       var transform = Plotter2D.Transform;
@@ -69,22 +69,22 @@ public sealed class AdditionalLinesDisplay : IsolineGraphBase
       double x = start;
       while (x < end)
       {
-        var collection = IsolineBuilder.BuildIsoline(x);
+        var collection = IsolineBuilder.BuildIsoline(level: x);
 
         foreach (LevelLine line in collection)
         {
           StreamGeometry lineGeometry = new();
           using (var context = lineGeometry.Open())
           {
-            context.BeginFigure(line.StartPoint.ViewportToScreen(transform), false, false);
-            context.PolyLineTo(line.OtherPoints.ViewportToScreen(transform).ToArray(), true, true);
+            context.BeginFigure(startPoint: line.StartPoint.ViewportToScreen(transform: transform), isFilled: false, isClosed: false);
+            context.PolyLineTo(points: line.OtherPoints.ViewportToScreen(transform: transform).ToArray(), isStroked: true, isSmoothJoin: true);
           }
           lineGeometry.Freeze();
 
           var paletteRatio = (line.RealValue - globalMinMax.Min) / globalMinMax.GetLength();
-          Pen pen = new(new SolidColorBrush(Palette.GetColor(paletteRatio)), strokeThickness);
+          Pen pen = new(brush: new SolidColorBrush(color: Palette.GetColor(t: paletteRatio)), thickness: strokeThickness);
 
-          dc.DrawGeometry(null, pen, lineGeometry);
+          dc.DrawGeometry(brush: null, pen: pen, geometry: lineGeometry);
         }
 
         x += delta;

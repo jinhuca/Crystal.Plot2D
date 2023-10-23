@@ -8,8 +8,8 @@
 // "In Project Suppression File". 
 // You do not need to add suppressions to this file manually. 
 
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Isolines", Scope = "namespace", Target = "Crystal.Plot2D.Charts.Isolines")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiDimensional", Scope = "namespace", Target = "Crystal.Plot2D.DataSources.MultiDimensional")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "namespace", Target = "Crystal.Plot2D.DataSources.MultiDimensional")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1805:DoNotInitializeUnnecessarily")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1002:DoNotExposeGenericLists", Scope = "member")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(category: "Microsoft.Naming", checkId: "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Isolines", Scope = "namespace", Target = "Crystal.Plot2D.Charts.Isolines")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(category: "Microsoft.Naming", checkId: "CA1702:CompoundWordsShouldBeCasedCorrectly", MessageId = "MultiDimensional", Scope = "namespace", Target = "Crystal.Plot2D.DataSources.MultiDimensional")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(category: "Microsoft.Naming", checkId: "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Multi", Scope = "namespace", Target = "Crystal.Plot2D.DataSources.MultiDimensional")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(category: "Microsoft.Performance", checkId: "CA1805:DoNotInitializeUnnecessarily")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage(category: "Microsoft.Design", checkId: "CA1002:DoNotExposeGenericLists", Scope = "member")]

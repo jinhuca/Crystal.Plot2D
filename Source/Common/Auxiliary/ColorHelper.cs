@@ -5,7 +5,7 @@ namespace Crystal.Plot2D;
 
 public static class ColorHelper
 {
-  private readonly static Random random = new();
+  private static readonly Random random = new();
 
   /// <summary>
   ///   Creates color from HSB color space with random hue and saturation and brighness equal to 1.
@@ -14,7 +14,7 @@ public static class ColorHelper
   public static Color CreateColorWithRandomHue()
   {
     double hue = random.NextDouble() * 360;
-    HsbColor hsbColor = new(hue, 1, 1);
+    HsbColor hsbColor = new(hue: hue, saturation: 1, brightness: 1);
     return hsbColor.ToArgbColor();
   }
 
@@ -27,7 +27,7 @@ public static class ColorHelper
     for (int i = 0; i < res.Length; i++)
     {
       double hue = startHue + i * hueStep;
-      res[i] = new HsbColor(hue, 1, 1).ToArgbColor();
+      res[i] = new HsbColor(hue: hue, saturation: 1, brightness: 1).ToArgbColor();
     }
 
     return res;
@@ -42,7 +42,7 @@ public static class ColorHelper
     double h = random.NextDouble() * 360;
     double s = random.NextDouble() * 0.5 + 0.5;
     double b = random.NextDouble() * 0.25 + 0.75;
-    return new HsbColor(h, s, b).ToArgbColor();
+    return new HsbColor(hue: h, saturation: s, brightness: b).ToArgbColor();
   }
 
   /// <summary>
@@ -58,7 +58,7 @@ public static class ColorHelper
   public static Color CreateColorWithRandomHue(double saturation, double brightness)
   {
     double h = random.NextDouble() * 360;
-    return new HsbColor(h, saturation, brightness).ToArgbColor();
+    return new HsbColor(hue: h, saturation: saturation, brightness: brightness).ToArgbColor();
   }
 
   /// <summary>
@@ -73,8 +73,8 @@ public static class ColorHelper
   /// <returns></returns>
   public static Brush CreateBrushWithRandomHue(double saturation, double brightness)
   {
-    Color color = CreateColorWithRandomHue(saturation, brightness);
-    return new SolidColorBrush(color);
+    Color color = CreateColorWithRandomHue(saturation: saturation, brightness: brightness);
+    return new SolidColorBrush(color: color);
   }
 
   /// <summary>
@@ -83,10 +83,7 @@ public static class ColorHelper
   /// <value>
   ///   The random color.
   /// </value>
-  public static Color RandomColor
-  {
-    get { return CreateRandomHsbColor(); }
-  }
+  public static Color RandomColor => CreateRandomHsbColor();
 
   /// <summary>
   ///   Gets the random brush.
@@ -94,7 +91,7 @@ public static class ColorHelper
   /// <value>
   ///   The random brush.
   /// </value>
-  public static SolidColorBrush RandomBrush => new(CreateRandomHsbColor());
+  public static SolidColorBrush RandomBrush => new(color: CreateRandomHsbColor());
 
   public static int ToArgb(this Color color) => color.A << 24 | color.R << 16 | color.G << 8 | color.B;
 }

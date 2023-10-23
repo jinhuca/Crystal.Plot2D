@@ -8,12 +8,12 @@ public sealed class RemoveAll : IPlotterElement
   [NotNull]
   public Type Type
   {
-    get { return type; }
+    get => type;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException(nameof(value));
+        throw new ArgumentNullException(paramName: nameof(value));
       }
       type = value;
     }
@@ -27,7 +27,7 @@ public sealed class RemoveAll : IPlotterElement
     this.plotter = plotter;
     if (type != null)
     {
-      plotter.Children.RemoveAll(type);
+      plotter.Children.RemoveAll(type: type);
     }
   }
 

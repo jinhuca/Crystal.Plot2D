@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -10,7 +9,7 @@ namespace Crystal.Plot2D.Charts;
 
 /// <summary>
 /// Represents a base class for all axes in Plotter.
-/// Contains a real UI representation of axis - AxisControl, and means to adjust number of ticks, algorythms of their generating and 
+/// Contains a real UI representation of axis - AxisControl, and means to adjust number of ticks, algorithms of their generating and 
 /// look of ticks' labels.
 /// </summary>
 /// <typeparam name="T">Type of each tick's value</typeparam>
@@ -24,16 +23,16 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// <param name="convertToDouble">The convert to double.</param>
   protected AxisBase(AxisControl<T> axisControl, Func<double, T> convertFromDouble, Func<T, double> convertToDouble)
   {
-    this.convertToDouble = convertToDouble ?? throw new ArgumentNullException("convertToDouble");
-    this.convertFromDouble = convertFromDouble ?? throw new ArgumentNullException("convertFromDouble");
-    this.axisControl = axisControl ?? throw new ArgumentNullException("axisControl");
+    this.convertToDouble = convertToDouble ?? throw new ArgumentNullException(paramName: nameof(convertToDouble));
+    this.convertFromDouble = convertFromDouble ?? throw new ArgumentNullException(paramName: nameof(convertFromDouble));
+    this.axisControl = axisControl ?? throw new ArgumentNullException(paramName: nameof(axisControl));
 
     axisControl.MakeDependent();
     axisControl.ConvertToDouble = convertToDouble;
     axisControl.ScreenTicksChanged += axisControl_ScreenTicksChanged;
 
     Content = axisControl;
-    axisControl.SetBinding(BackgroundProperty, new Binding("Background") { Source = this });
+    axisControl.SetBinding(dp: BackgroundProperty, binding: new Binding(path: "Background") { Source = this });
 
     Focusable = false;
 
@@ -53,8 +52,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// </value>
   public bool IsDefaultAxis
   {
-    get => PlotterBase.GetIsDefaultAxis(this);
-    set => PlotterBase.SetIsDefaultAxis(this, value);
+    get => PlotterBase.GetIsDefaultAxis(obj: this);
+    set => PlotterBase.SetIsDefaultAxis(obj: this, value: value);
   }
 
   private void OnLoaded(object sender, RoutedEventArgs e) => RaiseTicksChanged();
@@ -63,16 +62,16 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// Gets the screen coordinates of axis ticks.
   /// </summary>
   /// <value>The screen ticks.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public override double[] ScreenTicks => axisControl.ScreenTicks;
 
   /// <summary>
   /// Gets the screen coordinates of minor ticks.
   /// </summary>
   /// <value>The minor screen ticks.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public override MinorTickInfo<double>[] MinorScreenTicks => axisControl.MinorScreenTicks;
 
   private readonly AxisControl<T> axisControl;
@@ -80,14 +79,14 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// Gets the axis control - actual UI representation of axis.
   /// </summary>
   /// <value>The axis control.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public AxisControl<T> AxisControl => axisControl;
 
   /// <summary>
   /// Gets or sets the ticks provider, which is used to generate ticks in given range.
   /// </summary>
   /// <value>The ticks provider.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public ITicksProvider<T> TicksProvider
   {
     get => axisControl.TicksProvider;
@@ -100,7 +99,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// Should not be null.
   /// </summary>
   /// <value>The label provider.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   [NotNull]
   public LabelProviderBase<T> LabelProvider
   {
@@ -153,27 +152,27 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     set => axisControl.DrawMajorLabels = value;
   }
 
-  protected override void OnPlotterAttached(PlotterBase plotter_)
+  protected override void OnPlotterAttached(PlotterBase thePlotter)
   {
-    plotter_.Viewport.PropertyChanged += OnViewportPropertyChanged;
+    thePlotter.Viewport.PropertyChanged += OnViewportPropertyChanged;
 
-    Panel panel = GetPanelByPlacement(Placement);
+    var panel = GetPanelByPlacement(placement: Placement);
     if (panel != null)
     {
-      int index = GetInsertionIndexByPlacement(Placement, panel);
-      panel.Children.Insert(index, this);
+      var index = GetInsertionIndexByPlacement(placement: Placement, panel: panel);
+      panel.Children.Insert(index: index, element: this);
     }
 
-    using (axisControl.OpenUpdateRegion(true))
+    using (axisControl.OpenUpdateRegion(forceUpdate: true))
     {
-      UpdateAxisControl(plotter_);
+      UpdateAxisControl(plotter2d: thePlotter);
     }
   }
 
   private void UpdateAxisControl(PlotterBase plotter2d)
   {
     axisControl.Transform = plotter2d.Viewport.Transform;
-    axisControl.Range = CreateRangeFromRect(plotter2d.Visible.ViewportToData(plotter2d.Viewport.Transform));
+    axisControl.Range = CreateRangeFromRect(visible: plotter2d.Visible.ViewportToData(transform: plotter2d.Viewport.Transform));
   }
 
   private int GetInsertionIndexByPlacement(AxisPlacement placement, Panel panel)
@@ -194,7 +193,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   }
 
   ExtendedPropertyChangedEventArgs visibleChangedEventArgs;
-  int viewportPropertyChangedEnters = 0;
+  int viewportPropertyChangedEnters;
   DataRect prevDataRect = DataRect.Empty;
   private void OnViewportPropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
@@ -213,27 +212,27 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
 
     DataRect visible = viewport.Visible;
 
-    DataRect dataRect = visible.ViewportToData(viewport.Transform);
+    DataRect dataRect = visible.ViewportToData(transform: viewport.Transform);
     bool forceUpdate = dataRect != prevDataRect;
     prevDataRect = dataRect;
 
-    Range<T> range = CreateRangeFromRect(dataRect);
+    Range<T> range = CreateRangeFromRect(visible: dataRect);
 
-    using (axisControl.OpenUpdateRegion(false)) // todo was forceUpdate
+    using (axisControl.OpenUpdateRegion(forceUpdate: false)) // todo was forceUpdate
     {
       axisControl.Range = range;
       axisControl.Transform = viewport.Transform;
     }
 
-    Dispatcher.BeginInvoke(() =>
+    Dispatcher.BeginInvoke(method: () =>
     {
       viewportPropertyChangedEnters--;
       if (visibleChangedEventArgs != null)
       {
-        OnViewportPropertyChanged(Plotter.Viewport, visibleChangedEventArgs);
+        OnViewportPropertyChanged(sender: Plotter.Viewport, e: visibleChangedEventArgs);
       }
       visibleChangedEventArgs = null;
-    }, DispatcherPriority.Render);
+    }, priority: DispatcherPriority.Render);
   }
 
   private Func<double, T> convertFromDouble;
@@ -244,16 +243,16 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// Should not be null.
   /// </summary>
   /// <value>The convert from double.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   [NotNull]
   public Func<double, T> ConvertFromDouble
   {
-    get { return convertFromDouble; }
+    get => convertFromDouble;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: nameof(value));
       }
 
       if (convertFromDouble != value)
@@ -261,7 +260,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
         convertFromDouble = value;
         if (ParentPlotter != null)
         {
-          UpdateAxisControl(ParentPlotter);
+          UpdateAxisControl(plotter2d: ParentPlotter);
         }
       }
     }
@@ -275,16 +274,16 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// Should not be null.
   /// </summary>
   /// <value>The convert to double.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   [NotNull]
   public Func<T, double> ConvertToDouble
   {
-    get { return convertToDouble; }
+    get => convertToDouble;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: nameof(value));
       }
 
       if (convertToDouble != value)
@@ -316,20 +315,20 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     {
       case AxisPlacement.Left:
       case AxisPlacement.Right:
-        min = ConvertFromDouble(visible.YMin);
-        max = ConvertFromDouble(visible.YMax);
+        min = ConvertFromDouble(arg: visible.YMin);
+        max = ConvertFromDouble(arg: visible.YMax);
         break;
       case AxisPlacement.Top:
       case AxisPlacement.Bottom:
-        min = ConvertFromDouble(visible.XMin);
-        max = ConvertFromDouble(visible.XMax);
+        min = ConvertFromDouble(arg: visible.XMin);
+        max = ConvertFromDouble(arg: visible.XMax);
         break;
       default:
         throw new NotSupportedException();
     }
 
-    TrySort(ref min, ref max);
-    var range = new Range<T>(min, max);
+    TrySort(min: ref min, max: ref max);
+    var range = new Range<T>(min: min, max: max);
     return range;
   }
 
@@ -339,7 +338,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     {
       IComparable c1 = (IComparable)min;
       // if min > max
-      if (c1.CompareTo(max) > 0)
+      if (c1.CompareTo(obj: max) > 0)
       {
         TS temp = min;
         min = max;
@@ -353,29 +352,29 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     axisControl.Placement = Placement;
     if (ParentPlotter != null)
     {
-      Panel panel = GetPanelByPlacement(oldPlacement);
-      panel.Children.Remove(this);
+      Panel panel = GetPanelByPlacement(placement: oldPlacement);
+      panel.Children.Remove(element: this);
 
-      Panel newPanel = GetPanelByPlacement(newPlacement);
-      int index = GetInsertionIndexByPlacement(newPlacement, newPanel);
-      newPanel.Children.Insert(index, this);
+      Panel newPanel = GetPanelByPlacement(placement: newPlacement);
+      int index = GetInsertionIndexByPlacement(placement: newPlacement, panel: newPanel);
+      newPanel.Children.Insert(index: index, element: this);
     }
   }
 
-  protected override void OnPlotterDetaching(PlotterBase plotter)
+  protected override void OnPlotterDetaching(PlotterBase thePlotter)
   {
-    if (plotter == null)
+    if (thePlotter == null)
     {
       return;
     }
 
-    Panel panel = GetPanelByPlacement(Placement);
+    Panel panel = GetPanelByPlacement(placement: Placement);
     if (panel != null)
     {
-      panel.Children.Remove(this);
+      panel.Children.Remove(element: this);
     }
 
-    plotter.Viewport.PropertyChanged -= OnViewportPropertyChanged;
+    thePlotter.Viewport.PropertyChanged -= OnViewportPropertyChanged;
     axisControl.Transform = null;
   }
 }

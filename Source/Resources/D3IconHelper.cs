@@ -5,7 +5,7 @@ namespace Crystal.Plot2D;
 
 public static class D3IconHelper
 {
-  private static BitmapFrame icon = null;
+  private static BitmapFrame icon;
   public static BitmapFrame TheIcon
   {
     get
@@ -13,13 +13,13 @@ public static class D3IconHelper
       if (icon == null)
       {
         Assembly currentAssembly = typeof(D3IconHelper).Assembly;
-        icon = BitmapFrame.Create(currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources.D3-icon.ico"));
+        icon = BitmapFrame.Create(bitmapStream: currentAssembly.GetManifestResourceStream(name: "Crystal.Plot2D.Resources.D3-icon.ico"));
       }
       return icon;
     }
   }
 
-  private static BitmapFrame whiteIcon = null;
+  private static BitmapFrame whiteIcon;
   public static BitmapFrame WhiteIcon
   {
     get
@@ -27,7 +27,7 @@ public static class D3IconHelper
       if (whiteIcon == null)
       {
         Assembly currentAssembly = typeof(D3IconHelper).Assembly;
-        whiteIcon = BitmapFrame.Create(currentAssembly.GetManifestResourceStream("Crystal.Plot2D.Resources.D3-icon-white.ico"));
+        whiteIcon = BitmapFrame.Create(bitmapStream: currentAssembly.GetManifestResourceStream(name: "Crystal.Plot2D.Resources.D3-icon-white.ico"));
       }
 
       return whiteIcon;

@@ -14,7 +14,7 @@ public sealed class ValueStoreConverter : IValueConverter
     ValueStore store = (ValueStore)value;
     string key = (string)parameter;
 
-    return store[key];
+    return store[propertyName: key];
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

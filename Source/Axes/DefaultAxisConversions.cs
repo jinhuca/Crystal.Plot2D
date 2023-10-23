@@ -10,16 +10,10 @@ public static class DefaultAxisConversions
   #region double
 
   private static readonly Func<double, double> doubleToDouble = d => d;
-  public static Func<double, double> DoubleToDouble
-  {
-    get { return doubleToDouble; }
-  }
+  public static Func<double, double> DoubleToDouble => doubleToDouble;
 
   private static readonly Func<double, double> doubleFromDouble = d => d;
-  public static Func<double, double> DoubleFromDouble
-  {
-    get { return doubleFromDouble; }
-  }
+  public static Func<double, double> DoubleFromDouble => doubleFromDouble;
 
   #endregion
 
@@ -27,7 +21,7 @@ public static class DefaultAxisConversions
 
   private static readonly long minDateTimeTicks = DateTime.MinValue.Ticks;
   private static readonly long maxDateTimeTicks = DateTime.MaxValue.Ticks;
-  private static readonly Func<double, System.DateTime> dateTimeFromDouble = d =>
+  private static readonly Func<double, DateTime> dateTimeFromDouble = d =>
   {
     long ticks = (long)(d * 10000000000L);
 
@@ -41,18 +35,12 @@ public static class DefaultAxisConversions
       ticks = maxDateTimeTicks;
     }
 
-    return new DateTime(ticks);
+    return new DateTime(ticks: ticks);
   };
-  public static Func<double, DateTime> DateTimeFromDouble
-  {
-    get { return dateTimeFromDouble; }
-  }
+  public static Func<double, DateTime> DateTimeFromDouble => dateTimeFromDouble;
 
   private static readonly Func<DateTime, double> dateTimeToDouble = dt => dt.Ticks / 10000000000.0;
-  public static Func<DateTime, double> DateTimeToDouble
-  {
-    get { return dateTimeToDouble; }
-  }
+  public static Func<DateTime, double> DateTimeToDouble => dateTimeToDouble;
 
   #endregion
 
@@ -75,39 +63,27 @@ public static class DefaultAxisConversions
       ticks = maxTimeSpanTicks;
     }
 
-    return new TimeSpan(ticks);
+    return new TimeSpan(ticks: ticks);
   };
 
-  public static Func<double, TimeSpan> TimeSpanFromDouble
-  {
-    get { return timeSpanFromDouble; }
-  }
+  public static Func<double, TimeSpan> TimeSpanFromDouble => timeSpanFromDouble;
 
   private static readonly Func<TimeSpan, double> timeSpanToDouble = timeSpan =>
   {
     return timeSpan.Ticks / 10000000000.0;
   };
 
-  public static Func<TimeSpan, double> TimeSpanToDouble
-  {
-    get { return timeSpanToDouble; }
-  }
+  public static Func<TimeSpan, double> TimeSpanToDouble => timeSpanToDouble;
 
   #endregion
 
   #region integer
 
-  private readonly static Func<double, int> intFromDouble = d => (int)d;
-  public static Func<double, int> IntFromDouble
-  {
-    get { return intFromDouble; }
-  }
+  private static readonly Func<double, int> intFromDouble = d => (int)d;
+  public static Func<double, int> IntFromDouble => intFromDouble;
 
-  private readonly static Func<int, double> intToDouble = i => (double)i;
-  public static Func<int, double> IntToDouble
-  {
-    get { return intToDouble; }
-  }
+  private static readonly Func<int, double> intToDouble = i => i;
+  public static Func<int, double> IntToDouble => intToDouble;
 
   #endregion
 }

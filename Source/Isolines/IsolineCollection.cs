@@ -33,10 +33,7 @@ public sealed class LevelLine
   /// Gets other points of line, except first point.
   /// </summary>
   /// <value>The other points.</value>
-  public List<Point> OtherPoints
-  {
-    get { return otherPoints; }
-  }
+  public List<Point> OtherPoints => otherPoints;
 
   /// <summary>
   /// Gets all points of line, including start point.
@@ -49,7 +46,7 @@ public sealed class LevelLine
       yield return StartPoint;
       for (int i = 0; i < otherPoints.Count; i++)
       {
-        yield return otherPoints[i];
+        yield return otherPoints[index: i];
       }
     }
   }
@@ -65,10 +62,10 @@ public sealed class LevelLine
       yield break;
     }
 
-    yield return new Range<Point>(StartPoint, otherPoints[0]);
+    yield return new Range<Point>(min: StartPoint, max: otherPoints[index: 0]);
     for (int i = 1; i < otherPoints.Count; i++)
     {
-      yield return new Range<Point>(otherPoints[i - 1], otherPoints[i]);
+      yield return new Range<Point>(min: otherPoints[index: i - 1], max: otherPoints[index: i]);
     }
   }
 }
@@ -103,15 +100,15 @@ public sealed class IsolineCollection : IEnumerable<LevelLine>
   private double min;
   public double Min
   {
-    get { return min; }
-    set { min = value; }
+    get => min;
+    set => min = value;
   }
 
   private double max;
   public double Max
   {
-    get { return max; }
-    set { max = value; }
+    get => max;
+    set => max = value;
   }
 
   private readonly List<LevelLine> lines = new();
@@ -119,27 +116,24 @@ public sealed class IsolineCollection : IEnumerable<LevelLine>
   /// Gets the list of isoline lines.
   /// </summary>
   /// <value>The lines.</value>
-  public List<LevelLine> Lines
-  {
-    get { return lines; }
-  }
+  public List<LevelLine> Lines => lines;
 
   internal void StartLine(Point p, double value01, double realValue)
   {
     LevelLine segment = new() { StartPoint = p, Value01 = value01, RealValue = realValue };
-    if (lines.Count == 0 || lines[lines.Count - 1].OtherPoints.Count > 0)
+    if (lines.Count == 0 || lines[index: lines.Count - 1].OtherPoints.Count > 0)
     {
-      lines.Add(segment);
+      lines.Add(item: segment);
     }
     else
     {
-      lines[lines.Count - 1] = segment;
+      lines[index: lines.Count - 1] = segment;
     }
   }
 
   internal void AddPoint(Point p)
   {
-    lines[lines.Count - 1].OtherPoints.Add(p);
+    lines[index: lines.Count - 1].OtherPoints.Add(item: p);
   }
 
   #region IEnumerable<LevelLine> Members

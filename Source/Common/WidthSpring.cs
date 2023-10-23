@@ -24,20 +24,20 @@ public class WidthSpring : FrameworkElement, IPlotterElement
   /// <value>The source panel.</value>
   public Panel SourcePanel
   {
-    get { return (Panel)GetValue(SourcePanelProperty); }
-    set { SetValue(SourcePanelProperty, value); }
+    get => (Panel)GetValue(dp: SourcePanelProperty);
+    set => SetValue(dp: SourcePanelProperty, value: value);
   }
 
   public static readonly DependencyProperty SourcePanelProperty = DependencyProperty.Register(
-    "SourcePanel",
-    typeof(Panel),
-    typeof(WidthSpring),
-    new FrameworkPropertyMetadata(null, OnSourcePanelReplaced));
+    name: nameof(SourcePanel),
+    propertyType: typeof(Panel),
+    ownerType: typeof(WidthSpring),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnSourcePanelReplaced));
 
   private static void OnSourcePanelReplaced(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     WidthSpring owner = (WidthSpring)d;
-    owner.OnSourcePanelReplaced((Panel)e.OldValue, (Panel)e.NewValue);
+    owner.OnSourcePanelReplaced(prevPanel: (Panel)e.OldValue, currPanel: (Panel)e.NewValue);
   }
 
   private void OnSourcePanelReplaced(Panel prevPanel, Panel currPanel)
@@ -62,7 +62,7 @@ public class WidthSpring : FrameworkElement, IPlotterElement
   {
     if (Parent is Panel parentPanel && SourcePanel != null)
     {
-      Width = Math.Max(SourcePanel.ActualWidth - (parentPanel.ActualWidth - ActualWidth), 0);
+      Width = Math.Max(val1: SourcePanel.ActualWidth - (parentPanel.ActualWidth - ActualWidth), val2: 0);
     }
   }
 
@@ -73,12 +73,12 @@ public class WidthSpring : FrameworkElement, IPlotterElement
   public void OnPlotterAttached(PlotterBase plotter)
   {
     Plotter = plotter;
-    plotter.LeftPanel.Children.Insert(0, this);
+    plotter.LeftPanel.Children.Insert(index: 0, element: this);
   }
 
   public void OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.LeftPanel.Children.Remove(this);
+    plotter.LeftPanel.Children.Remove(element: this);
     Plotter = null;
   }
 

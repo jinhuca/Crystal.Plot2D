@@ -7,7 +7,7 @@ internal static class VectorExtensions
 {
   public static Point ToPoint(this Vector vector)
   {
-    return new Point(vector.X, vector.Y);
+    return new Point(x: vector.X, y: vector.Y);
   }
 
   public static Vector DecreaseLength(this Vector vector, double width, double heigth)
@@ -20,7 +20,7 @@ internal static class VectorExtensions
 
   public static Vector Perpendicular(this Vector v)
   {
-    var result = Vector3D.CrossProduct(new Vector3D(v.X, v.Y, 0), new Vector3D(0, 0, 1));
-    return new Vector(result.X, result.Y);
+    var result = Vector3D.CrossProduct(vector1: new Vector3D(x: v.X, y: v.Y, z: 0), vector2: new Vector3D(x: 0, y: 0, z: 1));
+    return new Vector(x: result.X, y: result.Y);
   }
 }

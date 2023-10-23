@@ -28,7 +28,7 @@ public abstract class IndividualArrangePanel : Panel
   /// <returns>
   ///   An ordered collection of elements that have the specified logical parent.
   /// </returns>
-  protected sealed override UIElementCollection CreateUIElementCollection(FrameworkElement logicalParent) => new UIChildrenCollection(this, logicalParent);
+  protected sealed override UIElementCollection CreateUIElementCollection(FrameworkElement logicalParent) => new UIChildrenCollection(visualParent: this, logicalParent: logicalParent);
 
   internal bool InBatchAdd => Children1.IsAddingMany;
 
@@ -56,7 +56,7 @@ public abstract class IndividualArrangePanel : Panel
   /// <returns>
   ///   The requested child element. This should not return null; if the provided index is out of range, an exception is thrown.
   /// </returns>
-  protected sealed override Visual GetVisualChild(int index) => Children[index];
+  protected sealed override Visual GetVisualChild(int index) => Children[index: index];
 
   /// <summary>
   ///   Gets the number of visual child elements within this element.

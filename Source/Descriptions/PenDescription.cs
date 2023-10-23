@@ -15,45 +15,45 @@ public sealed class PenDescription : StandardDescription
   /// Initializes a new instance of the <see cref="PenDescription"/> class.
   /// </summary>
   /// <param name="description">Custom description.</param>
-  public PenDescription(string description) : base(description) { }
+  public PenDescription(string description) : base(description: description) { }
 
   protected override LegendItem CreateLegendItemCore()
   {
-    return new LineLegendItem(this);
+    return new LineLegendItem(description: this);
   }
 
   protected override void AttachCore(UIElement graph)
   {
-    base.AttachCore(graph);
+    base.AttachCore(element: graph);
     if (graph is LineGraph g)
     {
-      SetBinding(StrokeProperty, new Binding(nameof(g.LinePen.Brush)) { Source = g });
-      SetBinding(StrokeThicknessProperty, new Binding(nameof(g.LinePen.Thickness)) { Source = g });
+      SetBinding(dp: StrokeProperty, binding: new Binding(path: nameof(g.LinePen.Brush)) { Source = g });
+      SetBinding(dp: StrokeThicknessProperty, binding: new Binding(path: nameof(g.LinePen.Thickness)) { Source = g });
     }
   }
 
   public Brush Stroke
   {
-    get => (Brush)GetValue(StrokeProperty);
-    set => SetValue(StrokeProperty, value);
+    get => (Brush)GetValue(dp: StrokeProperty);
+    set => SetValue(dp: StrokeProperty, value: value);
   }
 
   public static readonly DependencyProperty StrokeProperty = DependencyProperty.Register(
     name: nameof(Stroke),
-    typeof(Brush),
-    typeof(PenDescription),
-    new FrameworkPropertyMetadata(null));
+    propertyType: typeof(Brush),
+    ownerType: typeof(PenDescription),
+    typeMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   public double StrokeThickness
   {
-    get => (double)GetValue(StrokeThicknessProperty);
-    set => SetValue(StrokeThicknessProperty, value);
+    get => (double)GetValue(dp: StrokeThicknessProperty);
+    set => SetValue(dp: StrokeThicknessProperty, value: value);
   }
 
   public static readonly DependencyProperty StrokeThicknessProperty = DependencyProperty.Register(
     name: nameof(StrokeThickness),
-    typeof(double),
-    typeof(PenDescription),
-    new FrameworkPropertyMetadata(0.0));
+    propertyType: typeof(double),
+    ownerType: typeof(PenDescription),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: 0.0));
 
 }

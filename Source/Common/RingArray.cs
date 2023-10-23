@@ -27,16 +27,16 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
 
     array[index] = item;
 
-    CollectionChanged.Raise(this);
+    CollectionChanged.Raise(sender: this);
   }
 
   public T this[int index]
   {
-    get { return array[(startIndex + index) % Capacity]; }
+    get => array[(startIndex + index) % Capacity];
     set
     {
       array[(startIndex + index) % Capacity] = value;
-      CollectionChanged.Raise(this);
+      CollectionChanged.Raise(sender: this);
     }
   }
 
@@ -51,13 +51,13 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
   {
     for (int i = 0; i < Count; i++)
     {
-      yield return this[i];
+      yield return this[index: i];
     }
   }
   public int Count { get; private set; }
   private T[] array;
   public int Capacity { get; }
-  private int startIndex = 0;
+  private int startIndex;
 
   #region INotifyCollectionChanged Members
 
@@ -69,7 +69,7 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
 
   public int IndexOf(T item)
   {
-    int index = Array.IndexOf(array, item);
+    int index = Array.IndexOf(array: array, value: item);
 
     if (index == -1)
     {
@@ -95,7 +95,7 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
 
   public bool Contains(T item)
   {
-    return Array.IndexOf(array, item) > -1;
+    return Array.IndexOf(array: array, value: item) > -1;
   }
 
   public void CopyTo(T[] array, int arrayIndex)
@@ -103,10 +103,7 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
     throw new NotImplementedException();
   }
 
-  public bool IsReadOnly
-  {
-    get { throw new NotImplementedException(); }
-  }
+  public bool IsReadOnly => throw new NotImplementedException();
 
   public bool Remove(T item)
   {

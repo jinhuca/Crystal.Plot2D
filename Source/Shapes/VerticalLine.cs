@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using System.Windows.Media;
 
 namespace Crystal.Plot2D.Charts;
 
@@ -26,8 +25,8 @@ public sealed class VerticalLine : SimpleLine
   {
     var transform = Plotter.Viewport.Transform;
 
-    Point p1 = new Point(Value, Plotter.Viewport.Visible.YMin).DataToScreen(transform);
-    Point p2 = new Point(Value, Plotter.Viewport.Visible.YMax).DataToScreen(transform);
+    Point p1 = new Point(x: Value, y: Plotter.Viewport.Visible.YMin).DataToScreen(transform: transform);
+    Point p2 = new Point(x: Value, y: Plotter.Viewport.Visible.YMax).DataToScreen(transform: transform);
 
     LineGeometry.StartPoint = p1;
     LineGeometry.EndPoint = p2;

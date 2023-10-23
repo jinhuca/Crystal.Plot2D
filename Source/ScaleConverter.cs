@@ -17,9 +17,9 @@ public sealed class ScaleConverter : GenericValueConverter<DataRect>
     yShift = childMin - parentMin;
   }
 
-  private double xShift = 0;
+  private double xShift;
   private double xScale = 1;
-  private double yShift = 0;
+  private double yShift;
   private double yScale = 1;
 
   public override object ConvertCore(DataRect value, Type targetType, object parameter, CultureInfo culture)
@@ -30,7 +30,7 @@ public sealed class ScaleConverter : GenericValueConverter<DataRect>
     double ymin = parentVisible.YMin * yScale + yShift;
     double ymax = parentVisible.YMax * yScale + yShift;
 
-    return DataRect.Create(xmin, ymin, xmax, ymax);
+    return DataRect.Create(xMin: xmin, yMin: ymin, xMax: xmax, yMax: ymax);
   }
 
   public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
@@ -43,8 +43,8 @@ public sealed class ScaleConverter : GenericValueConverter<DataRect>
       double ymin = (childVisible.YMin - yShift) / yScale;
       double ymax = (childVisible.YMax - yShift) / yScale;
 
-      return DataRect.Create(xmin, ymin, xmax, ymax);
+      return DataRect.Create(xMin: xmin, yMin: ymin, xMax: xmax, yMax: ymax);
     }
-    return base.ConvertBack(value, targetType, parameter, culture);
+    return base.ConvertBack(value: value, targetType: targetType, parameter: parameter, culture: culture);
   }
 }

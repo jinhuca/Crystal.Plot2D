@@ -7,12 +7,7 @@ public class ScaleInjectionConstraint : ViewportConstraint
   private readonly Viewport2D parentViewport;
   public ScaleInjectionConstraint(Viewport2D parentViewport)
   {
-    if (parentViewport == null)
-    {
-      throw new ArgumentNullException("parentViewport");
-    }
-
-    this.parentViewport = parentViewport;
+    this.parentViewport = parentViewport ?? throw new ArgumentNullException(paramName: nameof(parentViewport));
     parentViewport.PropertyChanged += parentViewport_PropertyChanged;
   }
 
@@ -36,9 +31,9 @@ public class ScaleInjectionConstraint : ViewportConstraint
     yShift = childMin - parentMin;
   }
 
-  private double xShift = 0;
+  private double xShift;
   private double xScale = 1;
-  private double yShift = 0;
+  private double yShift;
   private double yScale = 1;
 
   public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
@@ -50,6 +45,6 @@ public class ScaleInjectionConstraint : ViewportConstraint
     double ymin = parentVisible.YMin * yScale + yShift;
     double ymax = parentVisible.YMax * yScale + yShift;
 
-    return DataRect.Create(xmin, ymin, xmax, ymax);
+    return DataRect.Create(xMin: xmin, yMin: ymin, xMax: xmax, yMax: ymax);
   }
 }

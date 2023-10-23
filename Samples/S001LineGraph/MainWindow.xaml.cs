@@ -22,7 +22,7 @@ namespace S001LineGraph
 
       for (int i = 0; i < N; i++)
       {
-        xA[i] = .01 * i;
+        xA[i] = .02 * i;
         yA[i] = Math.Cos(xA[i]);
       }
 

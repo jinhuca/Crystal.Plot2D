@@ -9,7 +9,7 @@ internal static class DictionaryExtensions
   {
     foreach (var key in keys)
     {
-      dict.Add(key, value);
+      dict.Add(key: key, value: value);
     }
   }
 
@@ -17,7 +17,7 @@ internal static class DictionaryExtensions
   {
     foreach (var key in keys)
     {
-      dict.Add((int)key, value);
+      dict.Add(key: (int)key, value: value);
     }
   }
 }

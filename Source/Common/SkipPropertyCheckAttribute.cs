@@ -3,8 +3,8 @@ using System.Diagnostics;
 
 namespace Crystal.Plot2D.Common;
 
-[Conditional("DEBUG")]
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+[Conditional(conditionString: "DEBUG")]
+[AttributeUsage(validOn: AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
 internal sealed class SkipPropertyCheckAttribute : Attribute
 {
 }

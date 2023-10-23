@@ -22,20 +22,20 @@ public sealed class WarpedDataSource2D<T> : IDataSource2D<T> where T : struct
   {
     if (data == null)
     {
-      throw new ArgumentNullException(nameof(data));
+      throw new ArgumentNullException(paramName: nameof(data));
     }
     if (grid == null)
     {
-      throw new ArgumentNullException(nameof(grid));
+      throw new ArgumentNullException(paramName: nameof(grid));
     }
 
-    Verify.IsTrue(data.GetLength(0) == grid.GetLength(0));
-    Verify.IsTrue(data.GetLength(1) == grid.GetLength(1));
+    Verify.IsTrue(condition: data.GetLength(dimension: 0) == grid.GetLength(dimension: 0));
+    Verify.IsTrue(condition: data.GetLength(dimension: 1) == grid.GetLength(dimension: 1));
 
     Data = data;
     Grid = grid;
-    Width = data.GetLength(0);
-    Height = data.GetLength(1);
+    Width = data.GetLength(dimension: 0);
+    Height = data.GetLength(dimension: 1);
   }
 
   /// <summary>
@@ -71,7 +71,7 @@ public sealed class WarpedDataSource2D<T> : IDataSource2D<T> where T : struct
   public int Height { get; }
 
   public IDataSource2D<T> GetSubset(int x0, int y0, int countX, int countY, int stepX, int stepY) => throw new NotImplementedException();
-  private void RaiseChanged() => Changed?.Invoke(this, EventArgs.Empty);
+  private void RaiseChanged() => Changed?.Invoke(sender: this, e: EventArgs.Empty);
 
   /// <summary>
   /// Occurs when data source changes.

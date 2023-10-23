@@ -40,7 +40,7 @@ public abstract class PopupTipElement : IPlotterElement
       Placement = PlacementMode.Relative,
       PlacementTarget = plotter.CentralGrid
     };
-    Plotter.Children.Add(popup);
+    Plotter.Children.Add(content: popup);
     return popup;
   }
 
@@ -57,10 +57,10 @@ public abstract class PopupTipElement : IPlotterElement
       popup.Hide();
     }
 
-    Point screenPoint = e.GetPosition(plotter.CentralGrid);
-    Point viewportPoint = screenPoint.ScreenToData(plotter.Transform);
+    Point screenPoint = e.GetPosition(relativeTo: plotter.CentralGrid);
+    Point viewportPoint = screenPoint.ScreenToData(transform: plotter.Transform);
 
-    var tooltip = GetTooltipForPoint(viewportPoint);
+    var tooltip = GetTooltipForPoint(viewportPosition: viewportPoint);
     if (tooltip == null)
     {
       return;
@@ -68,7 +68,7 @@ public abstract class PopupTipElement : IPlotterElement
 
     popup.VerticalOffset = screenPoint.Y + 20;
     popup.HorizontalOffset = screenPoint.X;
-    popup.ShowDelayed(TimeSpan.FromSeconds(0));
+    popup.ShowDelayed(delay: TimeSpan.FromSeconds(value: 0));
 
     Grid grid = new();
     Rectangle rect = new()
@@ -79,19 +79,19 @@ public abstract class PopupTipElement : IPlotterElement
 
     StackPanel panel = new();
     panel.Orientation = Orientation.Vertical;
-    panel.Children.Add(tooltip);
-    panel.Margin = new Thickness(4, 2, 4, 2);
+    panel.Children.Add(element: tooltip);
+    panel.Margin = new Thickness(left: 4, top: 2, right: 4, bottom: 2);
 
     var textBlock = new TextBlock
     {
-      Text = string.Format("Location: {0:F2}, {1:F2}", viewportPoint.X, viewportPoint.Y),
+      Text = $"Location: {viewportPoint.X:F2}, {viewportPoint.Y:F2}",
       Foreground = SystemColors.GrayTextBrush
     };
-    panel.Children.Add(textBlock);
+    panel.Children.Add(element: textBlock);
 
-    grid.Children.Add(rect);
-    grid.Children.Add(panel);
-    grid.Measure(SizeHelper.CreateInfiniteSize());
+    grid.Children.Add(element: rect);
+    grid.Children.Add(element: panel);
+    grid.Measure(availableSize: SizeHelper.CreateInfiniteSize());
     popup.Child = grid;
   }
 

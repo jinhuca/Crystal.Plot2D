@@ -21,12 +21,12 @@ public sealed class HorizontalScrollBar : PlotterScrollBar
   {
     if (viewport != null && !viewport.Domain.IsEmpty)
     {
-      var visibleRange = new Range<double>(viewport.Visible.XMin, viewport.Visible.XMax);
+      var visibleRange = new Range<double>(min: viewport.Visible.XMin, max: viewport.Visible.XMax);
 
       double size = visibleRange.Max - visibleRange.Min;
       ScrollBar.ViewportSize = size;
 
-      var domainRange = new Range<double>(viewport.Domain.XMin, viewport.Domain.XMax);
+      var domainRange = new Range<double>(min: viewport.Domain.XMin, max: viewport.Domain.XMax);
       ScrollBar.Minimum = domainRange.Min;
       ScrollBar.Maximum = domainRange.Max - size;
 

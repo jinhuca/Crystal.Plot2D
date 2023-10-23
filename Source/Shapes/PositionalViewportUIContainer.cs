@@ -24,13 +24,13 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
     Type type = typeof(PositionalViewportUIContainer);
 
     // todo subscribe for properties changes
-    HorizontalContentAlignmentProperty.AddOwner(type, new FrameworkPropertyMetadata(HorizontalAlignment.Center));
-    VerticalContentAlignmentProperty.AddOwner(type, new FrameworkPropertyMetadata(VerticalAlignment.Center));
+    HorizontalContentAlignmentProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: HorizontalAlignment.Center));
+    VerticalContentAlignmentProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: VerticalAlignment.Center));
   }
 
   public PositionalViewportUIContainer()
   {
-    PlotterEvents.PlotterChangedEvent.Subscribe(this, OnPlotterChanged);
+    PlotterEvents.PlotterChangedEvent.Subscribe(target: this, handler: OnPlotterChanged);
 
     //SetBinding(ViewportPanel.XProperty, new Binding("Position.X") { Source = this, Mode = BindingMode.TwoWay });
     //SetBinding(ViewportPanel.YProperty, new Binding("Position.Y") { Source = this, Mode = BindingMode.TwoWay });
@@ -40,26 +40,26 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
   {
     if (e.CurrentPlotter != null)
     {
-      OnPlotterAttached(e.CurrentPlotter);
+      OnPlotterAttached(plotter: e.CurrentPlotter);
     }
     else if (e.PreviousPlotter != null)
     {
-      OnPlotterDetaching(e.PreviousPlotter);
+      OnPlotterDetaching(plotter: e.PreviousPlotter);
     }
   }
 
   public Point Position
   {
-    get { return (Point)GetValue(PositionProperty); }
-    set { SetValue(PositionProperty, value); }
+    get => (Point)GetValue(dp: PositionProperty);
+    set => SetValue(dp: PositionProperty, value: value);
   }
 
   public static readonly DependencyProperty PositionProperty =
     DependencyProperty.Register(
-      "Position",
-      typeof(Point),
-      typeof(PositionalViewportUIContainer),
-      new FrameworkPropertyMetadata(new Point(0, 0), OnPositionChanged, CoercePosition));
+      name: nameof(Position),
+      propertyType: typeof(Point),
+      ownerType: typeof(PositionalViewportUIContainer),
+      typeMetadata: new FrameworkPropertyMetadata(defaultValue: new Point(x: 0, y: 0), propertyChangedCallback: OnPositionChanged, coerceValueCallback: CoercePosition));
 
   private static object CoercePosition(DependencyObject d, object value)
   {
@@ -69,7 +69,7 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
       Point position = (Point)value;
       foreach (var callback in owner.positionCoerceCallbacks)
       {
-        position = callback(owner, position);
+        position = callback(container: owner, position: position);
       }
       value = position;
     }
@@ -81,25 +81,22 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
   /// Gets the list of callbacks which are called every time Position changes to coerce it.
   /// </summary>
   /// <value>The position coerce callbacks.</value>
-  public ObservableCollection<PositionCoerceCallback> PositionCoerceCallbacks
-  {
-    get { return positionCoerceCallbacks; }
-  }
+  public ObservableCollection<PositionCoerceCallback> PositionCoerceCallbacks => positionCoerceCallbacks;
 
   private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     PositionalViewportUIContainer container = (PositionalViewportUIContainer)d;
-    container.OnPositionChanged(e);
+    container.OnPositionChanged(e: e);
   }
 
   public event EventHandler<PositionChangedEventArgs> PositionChanged;
 
   private void OnPositionChanged(DependencyPropertyChangedEventArgs e)
   {
-    PositionChanged.Raise(this, new PositionChangedEventArgs { Position = (Point)e.NewValue, PreviousPosition = (Point)e.OldValue });
+    PositionChanged.Raise(sender: this, args: new PositionChangedEventArgs { Position = (Point)e.NewValue, PreviousPosition = (Point)e.OldValue });
 
-    ViewportPanel.SetX(this, Position.X);
-    ViewportPanel.SetY(this, Position.Y);
+    ViewportPanel.SetX(obj: this, value: Position.X);
+    ViewportPanel.SetY(obj: this, value: Position.Y);
   }
 
   #region IPlotterElement Members
@@ -112,13 +109,13 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
     if (Parent == null)
     {
       hostPanel = new ViewportHostPanel();
-      Viewport2D.SetIsContentBoundsHost(hostPanel, false);
-      hostPanel.Children.Add(this);
+      Viewport2D.SetIsContentBoundsHost(obj: hostPanel, value: false);
+      hostPanel.Children.Add(element: this);
 
-      plotter.Dispatcher.BeginInvoke(() =>
+      plotter.Dispatcher.BeginInvoke(method: () =>
       {
-        plotter.Children.Add(hostPanel);
-      }, DispatcherPriority.Send);
+        plotter.Children.Add(content: hostPanel);
+      }, priority: DispatcherPriority.Send);
     }
 #if !old
 			Canvas hostCanvas = (Canvas)hostPanel.FindName(canvasName);
@@ -162,26 +159,20 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
 #else
     if (hostPanel != null)
     {
-      hostPanel.Children.Remove(this);
+      hostPanel.Children.Remove(element: this);
     }
-    plotter.Dispatcher.BeginInvoke(() =>
+    plotter.Dispatcher.BeginInvoke(method: () =>
     {
-      plotter.Children.Remove(hostPanel);
-    }, DispatcherPriority.Send);
+      plotter.Children.Remove(item: hostPanel);
+    }, priority: DispatcherPriority.Send);
 #endif
 
     this.plotter = null;
   }
 
-  public PlotterBase Plotter
-  {
-    get { return plotter; }
-  }
+  public PlotterBase Plotter => plotter;
 
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 }

@@ -14,13 +14,13 @@ namespace Crystal.Plot2D;
 /// </typeparam>
 public readonly struct GenericRect<THorizontal, TVertical> : IEquatable<GenericRect<THorizontal, TVertical>>
 {
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly THorizontal _xMin;
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly TVertical _yMin;
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly THorizontal _xMax;
-  [DebuggerBrowsable(DebuggerBrowsableState.Never)]
+  [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly TVertical _yMax;
 
   /// <summary>
@@ -85,7 +85,7 @@ public readonly struct GenericRect<THorizontal, TVertical> : IEquatable<GenericR
 
     GenericRect<THorizontal, TVertical> other = (GenericRect<THorizontal, TVertical>)obj;
 
-    return Equals(other);
+    return Equals(other: other);
   }
 
   /// <summary>
@@ -118,10 +118,10 @@ public readonly struct GenericRect<THorizontal, TVertical> : IEquatable<GenericR
   public bool Equals(GenericRect<THorizontal, TVertical> other)
   {
     return
-      _xMin.Equals(other._xMin) &&
-      _xMax.Equals(other._xMax) &&
-      _yMin.Equals(other._yMin) &&
-      _yMax.Equals(other._yMax);
+      _xMin.Equals(obj: other._xMin) &&
+      _xMax.Equals(obj: other._xMax) &&
+      _yMin.Equals(obj: other._yMin) &&
+      _yMax.Equals(obj: other._yMax);
   }
 
   #endregion
@@ -132,7 +132,7 @@ public readonly struct GenericRect<THorizontal, TVertical> : IEquatable<GenericR
   /// <param name="rect1">The rect1.</param>
   /// <param name="rect2">The rect2.</param>
   /// <returns>The result of the operator.</returns>
-  public static bool operator ==(GenericRect<THorizontal, TVertical> rect1, GenericRect<THorizontal, TVertical> rect2) => rect1.Equals(rect2);
+  public static bool operator ==(GenericRect<THorizontal, TVertical> rect1, GenericRect<THorizontal, TVertical> rect2) => rect1.Equals(other: rect2);
 
   /// <summary>
   /// Implements the operator !=.
@@ -140,5 +140,5 @@ public readonly struct GenericRect<THorizontal, TVertical> : IEquatable<GenericR
   /// <param name="rect1">The rect1.</param>
   /// <param name="rect2">The rect2.</param>
   /// <returns>The result of the operator.</returns>
-  public static bool operator !=(GenericRect<THorizontal, TVertical> rect1, GenericRect<THorizontal, TVertical> rect2) => !rect1.Equals(rect2);
+  public static bool operator !=(GenericRect<THorizontal, TVertical> rect1, GenericRect<THorizontal, TVertical> rect2) => !rect1.Equals(other: rect2);
 }

@@ -31,7 +31,7 @@ public abstract class Description : FrameworkElement
   private LegendItem CreateLegendItem()
   {
     LegendItem item = CreateLegendItemCore();
-    return RaiseResolveLegendItem(item);
+    return RaiseResolveLegendItem(uncustomizedLegendItem: item);
   }
 
   protected virtual LegendItem CreateLegendItemCore()
@@ -44,8 +44,8 @@ public abstract class Description : FrameworkElement
   {
     if (ResolveLegendItem != null)
     {
-      ResolveLegendItemEventArgs e = new(uncustomizedLegendItem);
-      ResolveLegendItem(this, e);
+      ResolveLegendItemEventArgs e = new(legendItem: uncustomizedLegendItem);
+      ResolveLegendItem(sender: this, e: e);
       return e.LegendItem;
     }
     else
@@ -58,7 +58,7 @@ public abstract class Description : FrameworkElement
   internal void Attach(UIElement element)
   {
     ViewportElement = element;
-    AttachCore(element);
+    AttachCore(element: element);
   }
 
   protected virtual void AttachCore(UIElement element) { }

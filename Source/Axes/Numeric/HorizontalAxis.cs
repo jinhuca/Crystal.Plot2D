@@ -28,7 +28,7 @@ public class HorizontalAxis : NumericAxis
   {
     if (newPlacement == AxisPlacement.Left || newPlacement == AxisPlacement.Right)
     {
-      throw new ArgumentException(Strings.Exceptions.HorizontalAxisCannotBeVertical);
+      throw new ArgumentException(message: Strings.Exceptions.HorizontalAxisCannotBeVertical);
     }
   }
 }

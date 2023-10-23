@@ -8,8 +8,8 @@ namespace Crystal.Plot2D;
 /// <summary>
 /// Represents color in Hue Saturation Brightness color space.
 /// </summary>
-[SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Hsb")]
-[DebuggerDisplay("HSBColor A={Alpha} H={Hue} S={Saturation} B={Brightness}")]
+[SuppressMessage(category: "Microsoft.Naming", checkId: "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Hsb")]
+[DebuggerDisplay(value: "HSBColor A={Alpha} H={Hue} S={Saturation} B={Brightness}")]
 public struct HsbColor
 {
   private double hue;
@@ -20,7 +20,7 @@ public struct HsbColor
   /// <summary>Hue; [0, 360]</summary>
   public double Hue
   {
-    get { return hue; }
+    get => hue;
     set
     {
       if (value < 0)
@@ -35,22 +35,22 @@ public struct HsbColor
   /// <summary>Saturation; [0, 1]</summary>
   public double Saturation
   {
-    get { return saturation; }
-    set { saturation = value; }
+    get => saturation;
+    set => saturation = value;
   }
 
   /// <summary>Brightness; [0, 1]</summary>
   public double Brightness
   {
-    get { return brightness; }
-    set { brightness = value; }
+    get => brightness;
+    set => brightness = value;
   }
 
   /// <summary>Alpha; [0, 1]</summary>
   public double Alpha
   {
-    get { return alpha; }
-    set { alpha = value; }
+    get => alpha;
+    set => alpha = value;
   }
 
   /// <summary>
@@ -95,8 +95,8 @@ public struct HsbColor
     double g = color.G / limit255;
     double b = color.B / limit255;
 
-    double max = Math.Max(Math.Max(r, g), b);
-    double min = Math.Min(Math.Min(r, g), b);
+    double max = Math.Max(val1: Math.Max(val1: r, val2: g), val2: b);
+    double min = Math.Min(val1: Math.Min(val1: r, val2: g), val2: b);
 
     double len = max - min;
 
@@ -146,7 +146,7 @@ public struct HsbColor
     byte r = (byte)((argb >> 16) & 0xFF);
     byte g = (byte)((argb >> 8) & 0xFF);
     byte b = (byte)(argb & 0xFF);
-    return FromArgbColor(Color.FromArgb(a, r, g, b));
+    return FromArgbColor(color: Color.FromArgb(a: a, r: r, g: g, b: b));
   }
 
   /// <summary>
@@ -166,7 +166,7 @@ public struct HsbColor
     else
     {
       double smallHue = hue / 60.0;
-      int smallHueInt = (int)Math.Floor(smallHue);
+      int smallHueInt = (int)Math.Floor(d: smallHue);
       double smallHueFrac = smallHue - smallHueInt;
       double val1 = brightness * (1.0 - saturation);
       double val2 = brightness * (1.0 - (saturation * smallHueFrac));
@@ -213,10 +213,10 @@ public struct HsbColor
 
 
     return Color.FromArgb(
-      (byte)(Math.Round(alpha * 255)),
-      (byte)(Math.Round(r * 255)),
-      (byte)(Math.Round(g * 255)),
-      (byte)(Math.Round(b * 255)));
+      a: (byte)(Math.Round(a: alpha * 255)),
+      r: (byte)(Math.Round(a: r * 255)),
+      g: (byte)(Math.Round(a: g * 255)),
+      b: (byte)(Math.Round(a: b * 255)));
   }
 
   public int ToArgb()
@@ -267,13 +267,11 @@ public struct HsbColor
   /// <param name="first">The first.</param>
   /// <param name="second">The second.</param>
   /// <returns>The result of the operator.</returns>
-  public static bool operator ==(HsbColor first, HsbColor second)
-  {
-    return (first.alpha == second.alpha &&
-      first.brightness == second.brightness &&
-      first.hue == second.hue &&
-      first.saturation == second.saturation);
-  }
+  public static bool operator ==(HsbColor first, HsbColor second) =>
+    (first.alpha == second.alpha &&
+     first.brightness == second.brightness &&
+     first.hue == second.hue &&
+     first.saturation == second.saturation);
 
   /// <summary>
   /// Implements the operator !=.
@@ -281,13 +279,11 @@ public struct HsbColor
   /// <param name="first">The first.</param>
   /// <param name="second">The second.</param>
   /// <returns>The result of the operator.</returns>
-  public static bool operator !=(HsbColor first, HsbColor second)
-  {
-    return (first.alpha != second.alpha ||
-      first.brightness != second.brightness ||
-      first.hue != second.hue ||
-      first.saturation != second.saturation);
-  }
+  public static bool operator !=(HsbColor first, HsbColor second) =>
+    (first.alpha != second.alpha ||
+     first.brightness != second.brightness ||
+     first.hue != second.hue ||
+     first.saturation != second.saturation);
 }
 
 public static class ColorExtensions
@@ -297,9 +293,9 @@ public static class ColorExtensions
   /// </summary>
   /// <param name="color">The color.</param>
   /// <returns></returns>
-  [SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Hsb")]
+  [SuppressMessage(category: "Microsoft.Naming", checkId: "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Hsb")]
   public static HsbColor ToHsbColor(this Color color)
   {
-    return HsbColor.FromArgbColor(color);
+    return HsbColor.FromArgbColor(color: color);
   }
 }

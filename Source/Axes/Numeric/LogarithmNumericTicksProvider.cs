@@ -13,7 +13,7 @@ public class LogarithmNumericTicksProvider : ITicksProvider<double>
   /// </summary>
   public LogarithmNumericTicksProvider()
   {
-    minorProvider = new MinorNumericTicksProvider(this);
+    minorProvider = new MinorNumericTicksProvider(parent: this);
     minorProvider.Changed += ticksProvider_Changed;
   }
 
@@ -29,18 +29,18 @@ public class LogarithmNumericTicksProvider : ITicksProvider<double>
 
   private void ticksProvider_Changed(object sender, EventArgs e)
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
 
   private double logarithmBase = 10;
   public double LogarithmBase
   {
-    get { return logarithmBase; }
+    get => logarithmBase;
     set
     {
       if (value <= 0)
       {
-        throw new ArgumentOutOfRangeException(Strings.Exceptions.LogarithmBaseShouldBePositive);
+        throw new ArgumentOutOfRangeException(paramName: Strings.Exceptions.LogarithmBaseShouldBePositive);
       }
 
       logarithmBase = value;
@@ -49,7 +49,7 @@ public class LogarithmNumericTicksProvider : ITicksProvider<double>
 
   private double LogByBase(double d)
   {
-    return Math.Log10(d) / Math.Log10(logarithmBase);
+    return Math.Log10(d: d) / Math.Log10(d: logarithmBase);
   }
 
   #region ITicksProvider<double> Members
@@ -57,30 +57,30 @@ public class LogarithmNumericTicksProvider : ITicksProvider<double>
   private double[] ticks;
   public ITicksInfo<double> GetTicks(Range<double> range, int ticksCount)
   {
-    double min = LogByBase(range.Min);
-    double max = LogByBase(range.Max);
+    double min = LogByBase(d: range.Min);
+    double max = LogByBase(d: range.Max);
 
-    double minDown = Math.Floor(min);
-    double maxUp = Math.Ceiling(max);
+    double minDown = Math.Floor(d: min);
+    double maxUp = Math.Ceiling(a: max);
 
-    double logLength = LogByBase(range.GetLength());
+    double logLength = LogByBase(d: range.GetLength());
 
-    ticks = CreateTicks(range);
+    ticks = CreateTicks(range: range);
 
-    int log = RoundingHelper.GetDifferenceLog(range.Min, range.Max);
-    TicksInfo<double> result = new() { Ticks = ticks, TickSizes = ArrayExtensions.CreateArray(ticks.Length, 1.0), Info = log };
+    int log = RoundingHelper.GetDifferenceLog(min: range.Min, max: range.Max);
+    TicksInfo<double> result = new() { Ticks = ticks, TickSizes = ArrayExtensions.CreateArray(length: ticks.Length, defaultValue: 1.0), Info = log };
     return result;
   }
 
   private double[] CreateTicks(Range<double> range)
   {
-    double min = LogByBase(range.Min);
-    double max = LogByBase(range.Max);
+    double min = LogByBase(d: range.Min);
+    double max = LogByBase(d: range.Max);
 
-    double minDown = Math.Floor(min);
-    double maxUp = Math.Ceiling(max);
+    double minDown = Math.Floor(d: min);
+    double maxUp = Math.Ceiling(a: max);
 
-    int intStart = (int)Math.Floor(minDown);
+    int intStart = (int)Math.Floor(d: minDown);
     int count = (int)(maxUp - minDown + 1);
 
     var ticks = new double[count];
@@ -91,7 +91,7 @@ public class LogarithmNumericTicksProvider : ITicksProvider<double>
 
     for (int i = 0; i < ticks.Length; i++)
     {
-      ticks[i] = Math.Pow(logarithmBase, ticks[i]);
+      ticks[i] = Math.Pow(x: logarithmBase, y: ticks[i]);
     }
 
     return ticks;
@@ -112,15 +112,12 @@ public class LogarithmNumericTicksProvider : ITicksProvider<double>
   {
     get
     {
-      minorProvider.SetRanges(ArrayExtensions.GetPairs(ticks));
+      minorProvider.SetRanges(ranges: ArrayExtensions.GetPairs(array: ticks));
       return minorProvider;
     }
   }
 
-  public ITicksProvider<double> MajorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<double> MajorProvider => null;
 
   public event EventHandler Changed;
 

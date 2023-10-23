@@ -9,7 +9,7 @@ public class DelegateDateTimeStrategy : DefaultDateTimeTicksStrategy
   {
     if (function == null)
     {
-      throw new ArgumentNullException("function");
+      throw new ArgumentNullException(paramName: "function");
     }
 
     this.function = function;
@@ -17,11 +17,11 @@ public class DelegateDateTimeStrategy : DefaultDateTimeTicksStrategy
 
   public override DifferenceIn GetDifference(TimeSpan span)
   {
-    DifferenceIn? customResult = function(span);
+    DifferenceIn? customResult = function(arg: span);
 
     DifferenceIn result = customResult.HasValue ?
       customResult.Value :
-      base.GetDifference(span);
+      base.GetDifference(span: span);
 
     return result;
   }

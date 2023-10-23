@@ -17,7 +17,7 @@ public abstract class LabelProvider<T> : LabelProviderBase<T>
       labelInfo.Tick = ticks[i];
       labelInfo.Index = i;
 
-      string labelText = GetString(labelInfo);
+      string labelText = GetString(tickInfo: labelInfo);
 
       TextBlock label = (TextBlock)GetResourceFromPool();
       if (label == null)
@@ -30,7 +30,7 @@ public abstract class LabelProvider<T> : LabelProviderBase<T>
 
       res[i] = label;
 
-      ApplyCustomView(labelInfo, label);
+      ApplyCustomView(info: labelInfo, label: label);
     }
 
     return res;

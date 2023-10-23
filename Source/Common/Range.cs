@@ -11,8 +11,8 @@ namespace Crystal.Plot2D.Charts;
 /// </summary>
 /// <typeparam name="T">Type of each of two values of range.</typeparam>
 [Serializable]
-[DebuggerDisplay(@"{Min} — {Max}")]
-[TypeConverter(typeof(RangeConverter))]
+[DebuggerDisplay(value: @"{Min} — {Max}")]
+[TypeConverter(type: typeof(RangeConverter))]
 public struct Range<T> : IEquatable<Range<T>>
 {
   /// <summary>
@@ -31,7 +31,7 @@ public struct Range<T> : IEquatable<Range<T>>
       IComparable c1 = (IComparable)min;
       IComparable c2 = (IComparable)max;
 
-      DebugVerify.Is(c1.CompareTo(c2) <= 0);
+      DebugVerify.Is(condition: c1.CompareTo(obj: c2) <= 0);
     }
 #endif
   }
@@ -54,12 +54,12 @@ public struct Range<T> : IEquatable<Range<T>>
 #pragma warning restore CS0414 // The field 'Range<T>.doubleEps' is assigned but its value is never used
 
 
-  public static bool operator ==(Range<T> first, Range<T> second) => (first.Min.Equals(second.Min) && first.Max.Equals(second.Max) || first.IsEmpty && second.IsEmpty);
+  public static bool operator ==(Range<T> first, Range<T> second) => (first.Min.Equals(obj: second.Min) && first.Max.Equals(obj: second.Max) || first.IsEmpty && second.IsEmpty);
   public static bool operator !=(Range<T> first, Range<T> second) => !(first == second);
   public static bool EqualEps(Range<double> first, Range<double> second, double eps)
   {
-    double delta = Math.Min(first.GetLength(), second.GetLength());
-    return Abs(first.Min - second.Min) < eps * delta && Abs(first.Max - second.Max) < eps * delta;
+    double delta = Math.Min(val1: first.GetLength(), val2: second.GetLength());
+    return Abs(value: first.Min - second.Min) < eps * delta && Abs(value: first.Max - second.Max) < eps * delta;
   }
 
   /// <summary>
@@ -74,7 +74,7 @@ public struct Range<T> : IEquatable<Range<T>>
     if (obj is Range<T>)
     {
       Range<T> other = (Range<T>)obj;
-      return (Min.Equals(other.Min) && Max.Equals(other.Max) || IsEmpty && other.IsEmpty);
+      return (Min.Equals(obj: other.Min) && Max.Equals(obj: other.Max) || IsEmpty && other.IsEmpty);
     }
     else
     {
@@ -102,7 +102,7 @@ public struct Range<T> : IEquatable<Range<T>>
   /// Gets a value indicating whether this range is empty.
   /// </summary>
   /// <value><c>true</c> if this instance is empty; otherwise, <c>false</c>.</value>
-  public bool IsEmpty => typeof(T) is IComparable ? ((IComparable)Min).CompareTo(Max) >= 0 : Min.Equals(Max);
+  public bool IsEmpty => typeof(T) is IComparable ? ((IComparable)Min).CompareTo(obj: Max) >= 0 : Min.Equals(obj: Max);
 
   /// <summary>
   /// Indicates whether the current object is equal to another object of the same type.

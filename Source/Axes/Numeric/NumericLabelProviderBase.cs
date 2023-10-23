@@ -25,10 +25,10 @@ public abstract class NumericLabelProviderBase : LabelProviderBase<double>
 
     double delta = finish - start;
 
-    rounding = (int)Math.Round(Math.Log10(delta));
+    rounding = (int)Math.Round(a: Math.Log10(d: delta));
 
-    double newStart = RoundingHelper.Round(start, rounding);
-    double newFinish = RoundingHelper.Round(finish, rounding);
+    double newStart = RoundingHelper.Round(number: start, rem: rounding);
+    double newFinish = RoundingHelper.Round(number: finish, rem: rounding);
     if (newStart == newFinish)
     {
       rounding--;
@@ -40,12 +40,12 @@ public abstract class NumericLabelProviderBase : LabelProviderBase<double>
     string res;
     if (!shouldRound)
     {
-      res = tickInfo.Tick.ToString(CultureInfo.InvariantCulture);
+      res = tickInfo.Tick.ToString(provider: CultureInfo.InvariantCulture);
     }
     else
     {
-      int round = Math.Min(15, Math.Max(-15, rounding - 3)); // was rounding - 2
-      res = RoundingHelper.Round(tickInfo.Tick, round).ToString(CultureInfo.InvariantCulture);
+      int round = Math.Min(val1: 15, val2: Math.Max(val1: -15, val2: rounding - 3)); // was rounding - 2
+      res = RoundingHelper.Round(number: tickInfo.Tick, rem: round).ToString(provider: CultureInfo.InvariantCulture);
     }
 
     return res;

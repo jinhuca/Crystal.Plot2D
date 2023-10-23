@@ -6,55 +6,55 @@ namespace Crystal.Plot2D.Charts;
 
 internal sealed class PhysicalRectAnimation
 {
-  Vector position = new();
-  Vector velocity = new();
+  Vector position;
+  Vector velocity;
   public Vector Velocity
   {
-    get { return velocity; }
-    set { velocity = value; }
+    get => velocity;
+    set => velocity = value;
   }
 
-  Vector acceleration = new();
+  Vector acceleration;
   private double mass = 1; // kilogramms
   public double Mass
   {
-    get { return mass; }
-    set { mass = value; }
+    get => mass;
+    set => mass = value;
   }
 
-  private double frictionCalmCoeff = 0.0;
+  private double frictionCalmCoeff;
   public double FrictionCalmCoeff
   {
-    get { return frictionCalmCoeff; }
-    set { frictionCalmCoeff = value; }
+    get => frictionCalmCoeff;
+    set => frictionCalmCoeff = value;
   }
 
   double frictionMovementCoeff = 0.1;
   public double FrictionMovementCoeff
   {
-    get { return frictionMovementCoeff; }
-    set { frictionMovementCoeff = value; }
+    get => frictionMovementCoeff;
+    set => frictionMovementCoeff = value;
   }
 
   double springCoeff = 50;
   public double SpringCoeff
   {
-    get { return springCoeff; }
-    set { springCoeff = value; }
+    get => springCoeff;
+    set => springCoeff = value;
   }
 
   double liquidFrictionCoeff = 1;
   public double LiquidFrictionCoeff
   {
-    get { return liquidFrictionCoeff; }
-    set { liquidFrictionCoeff = value; }
+    get => liquidFrictionCoeff;
+    set => liquidFrictionCoeff = value;
   }
 
   double liquidFrictionQuadraticCoeff = 10;
   public double LiquidFrictionQuadraticCoeff
   {
-    get { return liquidFrictionQuadraticCoeff; }
-    set { liquidFrictionQuadraticCoeff = value; }
+    get => liquidFrictionQuadraticCoeff;
+    set => liquidFrictionQuadraticCoeff = value;
   }
 
   const double G = 9.81;
@@ -77,17 +77,14 @@ internal sealed class PhysicalRectAnimation
 
   double prevTime;
 
-  private bool isFinished = false;
-  public bool IsFinished
-  {
-    get { return isFinished; }
-  }
+  private bool isFinished;
+  public bool IsFinished => isFinished;
 
   private bool useMouse = true;
   public bool UseMouse
   {
-    get { return useMouse; }
-    set { useMouse = value; }
+    get => useMouse;
+    set => useMouse = value;
   }
 
   public DataRect GetValue(TimeSpan timeSpan)
@@ -101,7 +98,7 @@ internal sealed class PhysicalRectAnimation
     velocity += acceleration * dtime;
     var shift = velocity * dtime;
 
-    double viewportSize = Math.Sqrt(from.Width * from.Width + from.Height * from.Height);
+    double viewportSize = Math.Sqrt(d: from.Width * from.Width + from.Height * from.Height);
     if (!(shift.Length < viewportSize * 0.002 && time > 0.5))
     {
       position += shift;
@@ -113,8 +110,8 @@ internal sealed class PhysicalRectAnimation
 
     prevTime = time;
 
-    Point pos = new(position.X, position.Y);
-    DataRect bounds = new(pos, from.Size);
+    Point pos = new(x: position.X, y: position.Y);
+    DataRect bounds = new(location: pos, size: from.Size);
 
     return bounds;
   }
@@ -127,8 +124,8 @@ internal sealed class PhysicalRectAnimation
       Point mousePos = GetMousePosition();
       if (!mousePos.IsFinite()) { }
 
-      Point p1 = initialMousePos.ScreenToData(initialTransform);
-      Point p2 = mousePos.ScreenToData(viewport.Transform);
+      Point p1 = initialMousePos.ScreenToData(transform: initialTransform);
+      Point p2 = mousePos.ScreenToData(transform: viewport.Transform);
 
       var transform = viewport.Transform;
 
@@ -136,7 +133,7 @@ internal sealed class PhysicalRectAnimation
       springForce = -diff * springCoeff;
     }
 
-    Vector frictionForce = GetFrictionForce(springForce);
+    Vector frictionForce = GetFrictionForce(springForce: springForce);
 
     Vector liquidFriction = -liquidFrictionCoeff * velocity - liquidFrictionQuadraticCoeff * velocity * velocity.Length;
 
@@ -162,6 +159,6 @@ internal sealed class PhysicalRectAnimation
 
   private Point GetMousePosition()
   {
-    return Mouse.GetPosition(viewport.Plotter.ViewportPanel);
+    return Mouse.GetPosition(relativeTo: viewport.Plotter.ViewportPanel);
   }
 }

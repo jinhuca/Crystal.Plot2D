@@ -21,7 +21,7 @@ public abstract class ViewportConstraint
   /// </summary>
   protected void RaiseChanged()
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
   /// <summary>
   /// Occurs when constraint changes.

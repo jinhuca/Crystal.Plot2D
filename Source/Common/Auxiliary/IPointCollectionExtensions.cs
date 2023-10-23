@@ -7,14 +7,14 @@ public static class IPointCollectionExtensions
 {
   public static DataRect GetBounds(this IEnumerable<Point> points)
   {
-    return BoundsHelper.GetViewportBounds(points);
+    return BoundsHelper.GetViewportBounds(viewportPoints: points);
   }
 
   public static IEnumerable<Point> Skip(this IList<Point> points, int skipCount)
   {
     for (int i = skipCount; i < points.Count; i++)
     {
-      yield return points[i];
+      yield return points[index: i];
     }
   }
 }

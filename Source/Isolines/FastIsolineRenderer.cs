@@ -24,8 +24,8 @@ public class FastIsolineRenderer : IsolineRenderer
     base.OnPlotterAttached();
 
     FrameworkElement parent = (FrameworkElement)Parent;
-    Binding collectionBinding = new("IsolineCollection") { Source = this };
-    parent.SetBinding(IsolineCollectionProperty, collectionBinding);
+    Binding collectionBinding = new(path: "IsolineCollection") { Source = this };
+    parent.SetBinding(dp: IsolineCollectionProperty, binding: collectionBinding);
   }
 
   protected override void OnRender(DrawingContext drawingContext)
@@ -64,12 +64,12 @@ public class FastIsolineRenderer : IsolineRenderer
     {
       foreach (Point point in line.AllPoints)
       {
-        bounds.Union(point);
+        bounds.Union(point: point);
       }
     }
 
-    Viewport2D.SetContentBounds(this, bounds);
-    ViewportPanel.SetViewportBounds(this, bounds);
+    Viewport2D.SetContentBounds(obj: this, value: bounds);
+    ViewportPanel.SetViewportBounds(obj: this, value: bounds);
 
     if (bounds.IsEmpty)
     {
@@ -77,10 +77,10 @@ public class FastIsolineRenderer : IsolineRenderer
     }
 
     // custom transform with output set to renderSize of this control
-    var transform = Plotter2D.Transform.WithRects(bounds, new Rect(RenderSize));
+    var transform = Plotter2D.Transform.WithRects(visibleRect: bounds, screenRect: new Rect(size: RenderSize));
 
     // actual drawing of isolines
-    RenderIsolineCollection(dc, strokeThickness, collection, transform);
+    RenderIsolineCollection(dc: dc, strokeThickness: strokeThickness, collection: collection, transform: transform);
 
     //var additionalLevels = GetAdditionalIsolines(collection);
 
@@ -91,7 +91,7 @@ public class FastIsolineRenderer : IsolineRenderer
     //    RenderIsolineCollection(dc, strokeThickness, additionalCollection, transform);
     //}
 
-    RenderLabels(dc, collection);
+    RenderLabels(dc: dc, collection: collection);
 
     //    foreach (var additionalCollection in additionalIsolineCollections)
     //    {
@@ -102,17 +102,17 @@ public class FastIsolineRenderer : IsolineRenderer
   private IEnumerable<double> GetAdditionalIsolines(IsolineCollection collection)
   {
     var dataSource = DataSource;
-    var visibleMinMax = dataSource.GetMinMax(Plotter2D.Visible);
+    var visibleMinMax = dataSource.GetMinMax(area: Plotter2D.Visible);
     var visibleMinMaxRatio = (collection.Max - collection.Min) / visibleMinMax.GetLength();
 
-    var log = Math.Log10(visibleMinMaxRatio);
+    var log = Math.Log10(d: visibleMinMaxRatio);
     if (log > 0.9)
     {
-      var upperLog = Math.Ceiling(log);
-      var divisionsNum = Math.Pow(10, upperLog);
+      var upperLog = Math.Ceiling(a: log);
+      var divisionsNum = Math.Pow(x: 10, y: upperLog);
       var delta = (collection.Max - collection.Min) / divisionsNum;
 
-      var start = Math.Ceiling(visibleMinMax.Min / delta) * delta;
+      var start = Math.Ceiling(a: visibleMinMax.Min / delta) * delta;
 
       var x = start;
       while (x < visibleMinMax.Max)
@@ -140,7 +140,7 @@ public class FastIsolineRenderer : IsolineRenderer
       return;
     }
 
-    var viewportBounds = ViewportPanel.GetViewportBounds(this);
+    var viewportBounds = ViewportPanel.GetViewportBounds(obj: this);
     if (viewportBounds.IsEmpty)
     {
       return;
@@ -150,21 +150,21 @@ public class FastIsolineRenderer : IsolineRenderer
     var visible = Plotter2D.Visible;
     var output = Plotter2D.Viewport.Output;
 
-    var transform = Plotter2D.Transform.WithRects(viewportBounds, new Rect(RenderSize));
+    var transform = Plotter2D.Transform.WithRects(visibleRect: viewportBounds, screenRect: new Rect(size: RenderSize));
     var labelStringFormat = LabelStringFormat;
 
     // drawing constants
     var labelRectangleFill = Brushes.White;
 
-    var biggerViewport = viewportBounds.ZoomOutFromCenter(1.1);
+    var biggerViewport = viewportBounds.ZoomOutFromCenter(ratio: 1.1);
 
     // getting and filtering annotations to draw only visible ones
-    Annotater.WayBeforeText = Math.Sqrt(visible.Width * visible.Width + visible.Height * visible.Height) / 8 * WayBeforeTextMultiplier;
-    var annotations = Annotater.Annotate(collection, visible)
-    .Where(annotation =>
+    Annotater.WayBeforeText = Math.Sqrt(d: visible.Width * visible.Width + visible.Height * visible.Height) / 8 * WayBeforeTextMultiplier;
+    var annotations = Annotater.Annotate(collection: collection, visible: visible)
+    .Where(predicate: annotation =>
     {
-      Point viewportPosition = annotation.Position.DataToViewport(transform);
-      return biggerViewport.Contains(viewportPosition);
+      Point viewportPosition = annotation.Position.DataToViewport(transform: transform);
+      return biggerViewport.Contains(point: viewportPosition);
     });
 
     var labelsScale = LabelsScaling;
@@ -172,26 +172,26 @@ public class FastIsolineRenderer : IsolineRenderer
     // drawing annotations
     foreach (var annotation in annotations)
     {
-      FormattedText text = CreateFormattedText(annotation.Value.ToString(LabelStringFormat));
-      Point position = annotation.Position.DataToScreen(transform);
+      FormattedText text = CreateFormattedText(text: annotation.Value.ToString(format: LabelStringFormat));
+      Point position = annotation.Position.DataToScreen(transform: transform);
 
-      var labelTransform = CreateTransform(annotation, text, position);
+      var labelTransform = CreateTransform(isolineLabel: annotation, text: text, position: position);
 
       // creating rectange stroke
       double colorRatio = (annotation.Value - collection.Min) / (collection.Max - collection.Min);
-      colorRatio = MathHelper.Clamp(colorRatio);
-      Color rectangleStrokeColor = Palette.GetColor(colorRatio);
-      SolidColorBrush rectangleStroke = new(rectangleStrokeColor);
-      Pen labelRectangleStrokePen = new(rectangleStroke, 2);
+      colorRatio = MathHelper.Clamp(value: colorRatio);
+      Color rectangleStrokeColor = Palette.GetColor(t: colorRatio);
+      SolidColorBrush rectangleStroke = new(color: rectangleStrokeColor);
+      Pen labelRectangleStrokePen = new(brush: rectangleStroke, thickness: 2);
 
-      dc.PushTransform(new ScaleTransform(1, labelsScale));
-      dc.PushTransform(labelTransform);
+      dc.PushTransform(transform: new ScaleTransform(scaleX: 1, scaleY: labelsScale));
+      dc.PushTransform(transform: labelTransform);
       {
-        var bounds = RectExtensions.FromCenterSize(position, new Size(text.Width, text.Height));
-        bounds = bounds.ZoomOutFromCenter(1.3);
-        dc.DrawRoundedRectangle(labelRectangleFill, labelRectangleStrokePen, bounds, 8, 8);
+        var bounds = RectExtensions.FromCenterSize(center: position, size: new Size(width: text.Width, height: text.Height));
+        bounds = bounds.ZoomOutFromCenter(ratio: 1.3);
+        dc.DrawRoundedRectangle(brush: labelRectangleFill, pen: labelRectangleStrokePen, rectangle: bounds, radiusX: 8, radiusY: 8);
 
-        DrawTextInPosition(dc, text, position);
+        DrawTextInPosition(dc: dc, text: text, position: position);
       }
       dc.Pop();
       dc.Pop();
@@ -201,8 +201,8 @@ public class FastIsolineRenderer : IsolineRenderer
   private static void DrawTextInPosition(DrawingContext dc, FormattedText text, Point position)
   {
     var textPosition = position;
-    textPosition.Offset(-text.Width / 2, -text.Height / 2);
-    dc.DrawText(text, textPosition);
+    textPosition.Offset(offsetX: -text.Width / 2, offsetY: -text.Height / 2);
+    dc.DrawText(formattedText: text, origin: textPosition);
   }
 
   private static Transform CreateTransform(IsolineTextLabel isolineLabel, FormattedText text, Point position)
@@ -218,15 +218,15 @@ public class FastIsolineRenderer : IsolineRenderer
       angle -= 180;
     }
 
-    RotateTransform transform = new(angle, position.X, position.Y);
+    RotateTransform transform = new(angle: angle, centerX: position.X, centerY: position.Y);
     return transform;
   }
 
   private static FormattedText CreateFormattedText(string text)
   {
 #pragma warning disable CS0618 // 'FormattedText.FormattedText(string, CultureInfo, FlowDirection, Typeface, double, StrokeBrush)' is obsolete: 'Use the PixelsPerDip override'
-    FormattedText result = new(text,
-      CultureInfo.CurrentCulture, FlowDirection.LeftToRight, new Typeface("Arial"), 12, Brushes.Black);
+    FormattedText result = new(textToFormat: text,
+      culture: CultureInfo.CurrentCulture, flowDirection: FlowDirection.LeftToRight, typeface: new Typeface(typefaceName: "Arial"), emSize: 12, foreground: Brushes.Black);
 #pragma warning restore CS0618 // 'FormattedText.FormattedText(string, CultureInfo, FlowDirection, Typeface, double, StrokeBrush)' is obsolete: 'Use the PixelsPerDip override'
     return result;
   }

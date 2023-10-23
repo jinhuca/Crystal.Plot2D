@@ -11,14 +11,8 @@ public sealed class ValueChangedEventArgs<T> : EventArgs
   }
 
   private readonly T prevValue;
-  public T PreviousValue
-  {
-    get { return prevValue; }
-  }
+  public T PreviousValue => prevValue;
 
   private readonly T currValue;
-  public T CurrentValue
-  {
-    get { return currValue; }
-  }
+  public T CurrentValue => currValue;
 }

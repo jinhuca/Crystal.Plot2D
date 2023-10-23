@@ -16,7 +16,7 @@ public abstract class TwoValuesMultiConverter<T1, T2> : IMultiValueConverter
       {
         T1 param1 = (T1)values[0];
         T2 param2 = (T2)values[1];
-        return ConvertCore(param1, param2, targetType, parameter, culture);
+        return ConvertCore(value1: param1, value2: param2, targetType: targetType, parameter: parameter, culture: culture);
       }
     }
 

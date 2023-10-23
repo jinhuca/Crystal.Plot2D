@@ -7,29 +7,29 @@ internal static class RoundingHelper
 {
   internal static int GetDifferenceLog(double min, double max)
   {
-    return (int)Math.Round(Math.Log10(Math.Abs(max - min)));
+    return (int)Math.Round(a: Math.Log10(d: Math.Abs(value: max - min)));
   }
 
   internal static double Round(double number, int rem)
   {
     if (rem <= 0)
     {
-      rem = MathHelper.Clamp(-rem, 0, 15);
-      return Math.Round(number, rem);
+      rem = MathHelper.Clamp(value: -rem, min: 0, max: 15);
+      return Math.Round(value: number, digits: rem);
     }
     else
     {
-      double pow = Math.Pow(10, rem - 1);
-      double val = pow * Math.Round(number / Math.Pow(10, rem - 1));
+      double pow = Math.Pow(x: 10, y: rem - 1);
+      double val = pow * Math.Round(a: number / Math.Pow(x: 10, y: rem - 1));
       return val;
     }
   }
 
   internal static double Round(double value, Range<double> range)
   {
-    int log = GetDifferenceLog(range.Min, range.Max);
+    int log = GetDifferenceLog(min: range.Min, max: range.Max);
 
-    return Round(value, log);
+    return Round(number: value, rem: log);
   }
 
   internal static RoundingInfo CreateRoundedRange(double min, double max)
@@ -41,22 +41,22 @@ internal static class RoundingHelper
       return new RoundingInfo { Min = min, Max = max, Log = 0 };
     }
 
-    int log = (int)Math.Round(Math.Log10(Math.Abs(delta))) + 1;
+    int log = (int)Math.Round(a: Math.Log10(d: Math.Abs(value: delta))) + 1;
 
-    double newMin = Round(min, log);
-    double newMax = Round(max, log);
+    double newMin = Round(number: min, rem: log);
+    double newMax = Round(number: max, rem: log);
     if (newMin == newMax)
     {
       log--;
-      newMin = Round(min, log);
-      newMax = Round(max, log);
+      newMin = Round(number: min, rem: log);
+      newMax = Round(number: max, rem: log);
     }
 
     return new RoundingInfo { Min = newMin, Max = newMax, Log = log };
   }
 }
 
-[DebuggerDisplay("{Min} - {Max}, Log = {Log}")]
+[DebuggerDisplay(value: "{Min} - {Max}, Log = {Log}")]
 internal sealed class RoundingInfo
 {
   public double Min { get; set; }

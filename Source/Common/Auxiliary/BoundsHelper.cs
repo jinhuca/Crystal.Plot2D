@@ -25,17 +25,17 @@ public static class BoundsHelper
 
     foreach (var p in viewportPoints)
     {
-      xMin = Math.Min(xMin, p.X);
-      xMax = Math.Max(xMax, p.X);
+      xMin = Math.Min(val1: xMin, val2: p.X);
+      xMax = Math.Max(val1: xMax, val2: p.X);
 
-      yMin = Math.Min(yMin, p.Y);
-      yMax = Math.Max(yMax, p.Y);
+      yMin = Math.Min(val1: yMin, val2: p.Y);
+      yMax = Math.Max(val1: yMax, val2: p.Y);
     }
 
     // were some points in collection
-    if (!double.IsInfinity(xMin))
+    if (!double.IsInfinity(d: xMin))
     {
-      bounds = DataRect.Create(xMin, yMin, xMax, yMax);
+      bounds = DataRect.Create(xMin: xMin, yMin: yMin, xMax: xMax, yMax: yMax);
     }
 
     return bounds;
@@ -43,6 +43,6 @@ public static class BoundsHelper
 
   public static DataRect GetViewportBounds(IEnumerable<Point> dataPoints, DataTransform transform)
   {
-    return GetViewportBounds(dataPoints.DataToViewport(transform));
+    return GetViewportBounds(viewportPoints: dataPoints.DataToViewport(transform: transform));
   }
 }

@@ -11,8 +11,8 @@ public class TimeSpanAxis : AxisBase<TimeSpan>
   /// Initializes a new instance of the <see cref="TimeSpanAxis"/> class with default values conversion.
   /// </summary>
   public TimeSpanAxis()
-    : base(new TimeSpanAxisControl(),
-      DoubleToTimeSpan, TimeSpanToDouble)
+    : base(axisControl: new TimeSpanAxisControl(),
+      convertFromDouble: DoubleToTimeSpan, convertToDouble: TimeSpanToDouble)
   { }
 
   private static readonly long minTicks = TimeSpan.MinValue.Ticks;
@@ -31,7 +31,7 @@ public class TimeSpanAxis : AxisBase<TimeSpan>
       ticks = maxTicks;
     }
 
-    return new TimeSpan(ticks);
+    return new TimeSpan(ticks: ticks);
   }
 
   private static double TimeSpanToDouble(TimeSpan time)
@@ -49,7 +49,7 @@ public class TimeSpanAxis : AxisBase<TimeSpan>
   /// <param name="maxValue">The value of axis type, corresponding to maximal viewport value.</param>
   public override void SetConversion(double min, TimeSpan minValue, double max, TimeSpan maxValue)
   {
-    var conversion = new TimeSpanToDoubleConversion(min, minValue, max, maxValue);
+    var conversion = new TimeSpanToDoubleConversion(min: min, minSpan: minValue, max: max, maxSpan: maxValue);
 
     ConvertToDouble = conversion.ToDouble;
     ConvertFromDouble = conversion.FromDouble;

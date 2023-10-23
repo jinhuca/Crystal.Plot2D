@@ -25,42 +25,42 @@ public class Viewport2D : DependencyObject
 
   internal FrameworkElement HostElement { get; }
 
-  protected internal Viewport2D(FrameworkElement _host, PlotterBase _plotter)
+  protected internal Viewport2D(FrameworkElement host, PlotterBase plotter)
   {
-    HostElement = _host;
-    _host.ClipToBounds = true;
-    _host.SizeChanged += OnHostElementSizeChanged;
+    HostElement = host;
+    host.ClipToBounds = true;
+    host.SizeChanged += OnHostElementSizeChanged;
 
-    PlotterBase = _plotter;
-    _plotter.Children.CollectionChanged += OnPlotterChildrenChanged;
-    constraints = new ConstraintCollection(this);
-    constraints.Add(new MinimalSizeConstraint());
+    PlotterBase = plotter;
+    plotter.Children.CollectionChanged += OnPlotterChildrenChanged;
+    constraints = new ConstraintCollection(viewport: this);
+    constraints.Add(item: new MinimalSizeConstraint());
     constraints.CollectionChanged += constraints_CollectionChanged;
 
-    fitToViewConstraints = new ConstraintCollection(this);
+    fitToViewConstraints = new ConstraintCollection(viewport: this);
     fitToViewConstraints.CollectionChanged += fitToViewConstraints_CollectionChanged;
-    readonlyContentBoundsHosts = new ReadOnlyObservableCollection<DependencyObject>(contentBoundsHosts);
+    readonlyContentBoundsHosts = new ReadOnlyObservableCollection<DependencyObject>(list: contentBoundsHosts);
     UpdateVisible();
     UpdateTransform();
   }
 
   private void OnHostElementSizeChanged(object sender, SizeChangedEventArgs e)
   {
-    SetValue(OutputPropertyKey, new Rect(e.NewSize));
-    CoerceValue(VisibleProperty);
+    SetValue(key: OutputPropertyKey, value: new Rect(size: e.NewSize));
+    CoerceValue(dp: VisibleProperty);
   }
 
   private void fitToViewConstraints_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
   {
     if (IsFittedToView)
     {
-      CoerceValue(VisibleProperty);
+      CoerceValue(dp: VisibleProperty);
     }
   }
 
   private void constraints_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
   {
-    CoerceValue(VisibleProperty);
+    CoerceValue(dp: VisibleProperty);
   }
 
   private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -73,16 +73,16 @@ public class Viewport2D : DependencyObject
       if (viewport.UpdateIterationCount++ > 8)
       {
         viewport.EnforceRestrictions = false;
-        Debug.WriteLine("Plotter: update cycle detected. Viewport constraints disabled.");
+        Debug.WriteLine(message: "Plotter: update cycle detected. Viewport constraints disabled.");
       }
     }
     viewport.UpdateTransform();
-    viewport.RaisePropertyChangedEvent(e);
+    viewport.RaisePropertyChangedEvent(e: e);
   }
 
   public BindingExpressionBase SetBinding(DependencyProperty property, BindingBase binding)
   {
-    return BindingOperations.SetBinding(this, property, binding);
+    return BindingOperations.SetBinding(target: this, dp: property, binding: binding);
   }
 
   /// <summary>
@@ -93,8 +93,8 @@ public class Viewport2D : DependencyObject
   {
     if (!IsFittedToView)
     {
-      ClearValue(VisibleProperty);
-      CoerceValue(VisibleProperty);
+      ClearValue(dp: VisibleProperty);
+      CoerceValue(dp: VisibleProperty);
     }
   }
 
@@ -104,8 +104,8 @@ public class Viewport2D : DependencyObject
   /// <value>
   /// 	<c>true</c> if Viewport is fitted to view; otherwise, <c>false</c>.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  public bool IsFittedToView => ReadLocalValue(VisibleProperty) == DependencyProperty.UnsetValue;
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  public bool IsFittedToView => ReadLocalValue(dp: VisibleProperty) == DependencyProperty.UnsetValue;
 
   internal void UpdateVisible()
   {
@@ -121,13 +121,13 @@ public class Viewport2D : DependencyObject
 
     if (IsFittedToView)
     {
-      CoerceValue(VisibleProperty);
+      CoerceValue(dp: VisibleProperty);
     }
     //}, DispatcherPriority.Normal);
   }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public PlotterBase Plotter => PlotterBase;
 
   private readonly ConstraintCollection constraints;
@@ -138,7 +138,7 @@ public class Viewport2D : DependencyObject
   /// <value>
   ///   The constraints.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
   public ConstraintCollection Constraints => constraints;
 
   private readonly ConstraintCollection fitToViewConstraints;
@@ -147,8 +147,8 @@ public class Viewport2D : DependencyObject
 
   public bool EnforceRestrictions
   {
-    get { return enforceConstraints; }
-    set { enforceConstraints = value; }
+    get => enforceConstraints;
+    set => enforceConstraints = value;
   }
 
   /// <summary>
@@ -157,7 +157,7 @@ public class Viewport2D : DependencyObject
   /// <value>
   ///   The fit to view constraints.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
   public ConstraintCollection FitToViewConstraints => fitToViewConstraints;
 
   #region Output property
@@ -168,17 +168,14 @@ public class Viewport2D : DependencyObject
   /// <value>
   ///   The output.
   /// </value>
-  public Rect Output
-  {
-    get { return (Rect)GetValue(OutputProperty); }
-  }
+  public Rect Output => (Rect)GetValue(dp: OutputProperty);
 
-  [SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
+  [SuppressMessage(category: "Microsoft.Security", checkId: "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes")]
   private static readonly DependencyPropertyKey OutputPropertyKey = DependencyProperty.RegisterReadOnly(
-    "Output",
-    typeof(Rect),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(new Rect(0, 0, 1, 1), OnPropertyChanged));
+    name: "Output",
+    propertyType: typeof(Rect),
+    ownerType: typeof(Viewport2D),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: new Rect(x: 0, y: 0, width: 1, height: 1), propertyChangedCallback: OnPropertyChanged));
 
   /// <summary>
   ///   Identifies the <see cref="Output"/> dependency property.
@@ -197,23 +194,23 @@ public class Viewport2D : DependencyObject
   /// </value>
   public DataRect UnitedContentBounds
   {
-    get { return (DataRect)GetValue(UnitedContentBoundsProperty); }
-    internal set { SetValue(UnitedContentBoundsProperty, value); }
+    get => (DataRect)GetValue(dp: UnitedContentBoundsProperty);
+    internal set => SetValue(dp: UnitedContentBoundsProperty, value: value);
   }
 
   /// <summary>
   ///   Identifies the <see cref="UnitedContentBounds"/> dependency property.
   /// </summary>
   public static readonly DependencyProperty UnitedContentBoundsProperty = DependencyProperty.Register(
-    "UnitedContentBounds",
-    typeof(DataRect),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(DataRect.Empty, OnUnitedContentBoundsChanged));
+    name: nameof(UnitedContentBounds),
+    propertyType: typeof(DataRect),
+    ownerType: typeof(Viewport2D),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: DataRect.Empty, propertyChangedCallback: OnUnitedContentBoundsChanged));
 
   private static void OnUnitedContentBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     Viewport2D owner = (Viewport2D)d;
-    owner.ContentBoundsChanged.Raise(owner);
+    owner.ContentBoundsChanged.Raise(sender: owner);
   }
 
   public event EventHandler ContentBoundsChanged;
@@ -230,17 +227,17 @@ public class Viewport2D : DependencyObject
   /// </value>
   public DataRect Visible
   {
-    get { return (DataRect)GetValue(VisibleProperty); }
+    get => (DataRect)GetValue(dp: VisibleProperty);
     set
     {
       // This code is a part of workaround for endless axis resize loop
       UpdateIterationCount = 0;
       if (!EnforceRestrictions)
       {
-        Debug.WriteLine("Plotter: enabling viewport constraints");
+        Debug.WriteLine(message: "Plotter: enabling viewport constraints");
         EnforceRestrictions = true;
       }
-      SetValue(VisibleProperty, value);
+      SetValue(dp: VisibleProperty, value: value);
     }
   }
 
@@ -248,11 +245,11 @@ public class Viewport2D : DependencyObject
   ///   Identifies the <see cref="Visible"/> dependency property.
   /// </summary>
   public static readonly DependencyProperty VisibleProperty = DependencyProperty.Register(
-    "Visible",
-    typeof(DataRect),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(new DataRect(0, 0, 1, 1), OnPropertyChanged, OnCoerceVisible),
-    ValidateVisibleCallback);
+    name: nameof(Visible),
+    propertyType: typeof(DataRect),
+    ownerType: typeof(Viewport2D),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: new DataRect(xMin: 0, yMin: 0, width: 1, height: 1), propertyChangedCallback: OnPropertyChanged, coerceValueCallback: OnCoerceVisible),
+    validateValueCallback: ValidateVisibleCallback);
 
   private static bool ValidateVisibleCallback(object value)
   {
@@ -267,10 +264,10 @@ public class Viewport2D : DependencyObject
     {
       if (item is DependencyObject dependencyObject)
       {
-        bool hasNonEmptyBounds = !GetContentBounds(dependencyObject).IsEmpty;
-        if (hasNonEmptyBounds && GetIsContentBoundsHost(dependencyObject))
+        bool hasNonEmptyBounds = !GetContentBounds(obj: dependencyObject).IsEmpty;
+        if (hasNonEmptyBounds && GetIsContentBoundsHost(obj: dependencyObject))
         {
-          contentBoundsHosts.Add(dependencyObject);
+          contentBoundsHosts.Add(item: dependencyObject);
         }
       }
     }
@@ -287,11 +284,8 @@ public class Viewport2D : DependencyObject
   /// <value>
   ///   The content bounds hosts.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  public ReadOnlyObservableCollection<DependencyObject> ContentBoundsHosts
-  {
-    get { return readonlyContentBoundsHosts; }
-  }
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  public ReadOnlyObservableCollection<DependencyObject> ContentBoundsHosts => readonlyContentBoundsHosts;
 
   private bool useApproximateContentBoundsComparison = true;
 
@@ -304,15 +298,15 @@ public class Viewport2D : DependencyObject
   /// </value>
   public bool UseApproximateContentBoundsComparison
   {
-    get { return useApproximateContentBoundsComparison; }
-    set { useApproximateContentBoundsComparison = value; }
+    get => useApproximateContentBoundsComparison;
+    set => useApproximateContentBoundsComparison = value;
   }
 
   private double maxContentBoundsComparisonMistake = 0.02;
   public double MaxContentBoundsComparisonMistake
   {
-    get { return maxContentBoundsComparisonMistake; }
-    set { maxContentBoundsComparisonMistake = value; }
+    get => maxContentBoundsComparisonMistake;
+    set => maxContentBoundsComparisonMistake = value;
   }
 
   private DataRect prevContentBounds = DataRect.Empty;
@@ -347,23 +341,23 @@ public class Viewport2D : DependencyObject
         }
 
         var plotter = (PlotterBase)plotterElement.Plotter;
-        var visual = plotter.VisualBindings[plotterElement];
+        var visual = plotter.VisualBindings[element: plotterElement];
         if (visual.Visibility == Visibility.Visible)
         {
-          DataRect contentBounds = GetContentBounds(item);
+          DataRect contentBounds = GetContentBounds(obj: item);
           if (contentBounds.Width.IsNaN() || contentBounds.Height.IsNaN())
           {
             continue;
           }
 
-          bounds.UnionFinite(contentBounds);
+          bounds.UnionFinite(rect: contentBounds);
         }
       }
 
       if (useApproximateContentBoundsComparison)
       {
         var intersection = prevContentBounds;
-        intersection.Intersect(bounds);
+        intersection.Intersect(rect: bounds);
 
         double currSquare = bounds.GetSquare();
         double prevSquare = prevContentBounds.GetSquare();
@@ -387,18 +381,18 @@ public class Viewport2D : DependencyObject
       UnitedContentBounds = bounds;
 
       // applying fit-to-view constraints
-      bounds = fitToViewConstraints.Apply(Visible, bounds, this);
+      bounds = fitToViewConstraints.Apply(oldVisible: Visible, newVisible: bounds, viewport: this);
 
       // enlarging
       if (!bounds.IsEmpty)
       {
-        bounds = CoordinateUtilities.RectZoom(bounds, bounds.GetCenter(), clipToBoundsEnlargeFactor);
+        bounds = CoordinateUtilities.RectZoom(rect: bounds, zoomCenter: bounds.GetCenter(), ratio: clipToBoundsEnlargeFactor);
       }
       else
       {
         bounds = (DataRect)VisibleProperty.DefaultMetadata.DefaultValue;
       }
-      newVisible.Union(bounds);
+      newVisible.Union(rect: bounds);
     }
 
     if (newVisible.IsEmpty)
@@ -422,29 +416,29 @@ public class Viewport2D : DependencyObject
         location.Y -= size.Height / 2;
       }
 
-      newVisible = new DataRect(location, size);
+      newVisible = new DataRect(location: location, size: size);
     }
 
     // apply domain constraint
-    newVisible = domainConstraint.Apply(Visible, newVisible, this);
+    newVisible = domainConstraint.Apply(oldDataRect: Visible, newDataRect: newVisible, viewport: this);
 
     // apply other restrictions
     if (enforceConstraints)
     {
-      newVisible = constraints.Apply(Visible, newVisible, this);
+      newVisible = constraints.Apply(oldVisible: Visible, newVisible: newVisible, viewport: this);
     }
 
     // applying transform's data domain constraint
     if (!transform.DataTransform.DataDomain.IsEmpty)
     {
-      var newDataRect = newVisible.ViewportToData(transform);
-      newDataRect = DataRect.Intersect(newDataRect, transform.DataTransform.DataDomain);
-      newVisible = newDataRect.DataToViewport(transform);
+      var newDataRect = newVisible.ViewportToData(transform: transform);
+      newDataRect = DataRect.Intersect(rect1: newDataRect, rect2: transform.DataTransform.DataDomain);
+      newVisible = newDataRect.DataToViewport(transform: transform);
     }
 
     if (newVisible.IsEmpty)
     {
-      newVisible = new Rect(0, 0, 1, 1);
+      newVisible = new Rect(x: 0, y: 0, width: 1, height: 1);
     }
 
     return newVisible;
@@ -453,7 +447,7 @@ public class Viewport2D : DependencyObject
   private static object OnCoerceVisible(DependencyObject d, object newValue)
   {
     Viewport2D viewport = (Viewport2D)d;
-    DataRect newRect = viewport.CoerceVisible((DataRect)newValue);
+    DataRect newRect = viewport.CoerceVisible(newVisible: (DataRect)newValue);
     if (newRect.Width == 0 || newRect.Height == 0)
     {
       // doesn't apply rects with zero square
@@ -479,15 +473,15 @@ public class Viewport2D : DependencyObject
   /// </value>
   public DataRect Domain
   {
-    get { return (DataRect)GetValue(DomainProperty); }
-    set { SetValue(DomainProperty, value); }
+    get => (DataRect)GetValue(dp: DomainProperty);
+    set => SetValue(dp: DomainProperty, value: value);
   }
 
   public static readonly DependencyProperty DomainProperty = DependencyProperty.Register(
-    "Domain",
-    typeof(DataRect),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(DataRect.Empty, OnDomainReplaced));
+    name: nameof(Domain),
+    propertyType: typeof(DataRect),
+    ownerType: typeof(Viewport2D),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: DataRect.Empty, propertyChangedCallback: OnDomainReplaced));
 
   private static void OnDomainReplaced(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -498,8 +492,8 @@ public class Viewport2D : DependencyObject
   private void OnDomainChanged()
   {
     domainConstraint.Domain = Domain;
-    DomainChanged.Raise(this);
-    CoerceValue(VisibleProperty);
+    DomainChanged.Raise(sender: this);
+    CoerceValue(dp: VisibleProperty);
   }
 
   /// <summary>
@@ -520,7 +514,7 @@ public class Viewport2D : DependencyObject
   /// <value>The clip to bounds factor.</value>
   public double ClipToBoundsEnlargeFactor
   {
-    get { return clipToBoundsEnlargeFactor; }
+    get => clipToBoundsEnlargeFactor;
     set
     {
       if (clipToBoundsEnlargeFactor != value)
@@ -533,7 +527,7 @@ public class Viewport2D : DependencyObject
 
   private void UpdateTransform()
   {
-    transform = transform.WithRects(Visible, Output);
+    transform = transform.WithRects(visibleRect: Visible, screenRect: Output);
   }
 
   private CoordinateTransform transform = CoordinateTransform.CreateDefault();
@@ -544,11 +538,11 @@ public class Viewport2D : DependencyObject
   /// <value>
   ///   The transform.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   [NotNull]
   public virtual CoordinateTransform Transform
   {
-    get { return transform; }
+    get => transform;
     set
     {
       value.VerifyNotNull();
@@ -556,7 +550,7 @@ public class Viewport2D : DependencyObject
       {
         var oldTransform = transform;
         transform = value;
-        RaisePropertyChangedEvent(nameof(Transform), oldTransform, transform);
+        RaisePropertyChangedEvent(propertyName: nameof(Transform), oldValue: oldTransform, newValue: transform);
       }
     }
   }
@@ -570,7 +564,7 @@ public class Viewport2D : DependencyObject
   {
     if (PropertyChanged != null)
     {
-      RaisePropertyChanged(new ExtendedPropertyChangedEventArgs { PropertyName = propertyName, OldValue = oldValue, NewValue = newValue });
+      RaisePropertyChanged(args: new ExtendedPropertyChangedEventArgs { PropertyName = propertyName, OldValue = oldValue, NewValue = newValue });
     }
   }
 
@@ -578,7 +572,7 @@ public class Viewport2D : DependencyObject
   {
     if (PropertyChanged != null)
     {
-      RaisePropertyChanged(new ExtendedPropertyChangedEventArgs { PropertyName = propertyName });
+      RaisePropertyChanged(args: new ExtendedPropertyChangedEventArgs { PropertyName = propertyName });
     }
   }
 
@@ -586,7 +580,7 @@ public class Viewport2D : DependencyObject
   {
     if (PropertyChanged != null)
     {
-      RaisePropertyChanged(ExtendedPropertyChangedEventArgs.FromDependencyPropertyChanged(e));
+      RaisePropertyChanged(args: ExtendedPropertyChangedEventArgs.FromDependencyPropertyChanged(e: e));
     }
   }
 
@@ -605,7 +599,7 @@ public class Viewport2D : DependencyObject
     //pendingRaisePropertyChangedOperation = null;
     //inRaisePropertyChanged = true;
 
-    PropertyChanged.Raise(this, args);
+    PropertyChanged.Raise(sender: this, args: args);
 
     //inRaisePropertyChanged = false;
   }
@@ -620,25 +614,25 @@ public class Viewport2D : DependencyObject
   private Viewport2DPanningState panningState = Viewport2DPanningState.NotPanning;
   public Viewport2DPanningState PanningState
   {
-    get { return panningState; }
+    get => panningState;
     set
     {
       var prevState = panningState;
       panningState = value;
-      OnPanningStateChanged(prevState, panningState);
+      OnPanningStateChanged(prevState: prevState, currState: panningState);
     }
   }
 
   private void OnPanningStateChanged(Viewport2DPanningState prevState, Viewport2DPanningState currState)
   {
-    PanningStateChanged.Raise(this, prevState, currState);
+    PanningStateChanged.Raise(sender: this, prevValue: prevState, currValue: currState);
     if (currState == Viewport2DPanningState.Panning)
     {
-      BeginPanning.Raise(this);
+      BeginPanning.Raise(sender: this);
     }
     else if (currState == Viewport2DPanningState.NotPanning)
     {
-      EndPanning.Raise(this);
+      EndPanning.Raise(sender: this);
     }
   }
 
@@ -654,15 +648,15 @@ public class Viewport2D : DependencyObject
 
   #region IsContentBoundsHost attached property
 
-  public static bool GetIsContentBoundsHost(DependencyObject obj) => (bool)obj.GetValue(IsContentBoundsHostProperty);
+  public static bool GetIsContentBoundsHost(DependencyObject obj) => (bool)obj.GetValue(dp: IsContentBoundsHostProperty);
 
-  public static void SetIsContentBoundsHost(DependencyObject obj, bool value) => obj.SetValue(IsContentBoundsHostProperty, value);
+  public static void SetIsContentBoundsHost(DependencyObject obj, bool value) => obj.SetValue(dp: IsContentBoundsHostProperty, value: value);
 
   public static readonly DependencyProperty IsContentBoundsHostProperty = DependencyProperty.RegisterAttached(
-    "IsContentBoundsHost",
-    typeof(bool),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(true, OnIsContentBoundsChanged));
+    name: "IsContentBoundsHost",
+    propertyType: typeof(bool),
+    ownerType: typeof(Viewport2D),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: true, propertyChangedCallback: OnIsContentBoundsChanged));
 
   private static void OnIsContentBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -677,22 +671,22 @@ public class Viewport2D : DependencyObject
 
   #region ContentBounds attached property
 
-  public static DataRect GetContentBounds(DependencyObject obj) => (DataRect)obj.GetValue(ContentBoundsProperty);
+  public static DataRect GetContentBounds(DependencyObject obj) => (DataRect)obj.GetValue(dp: ContentBoundsProperty);
 
-  public static void SetContentBounds(DependencyObject obj, DataRect value) => obj.SetValue(ContentBoundsProperty, value);
+  public static void SetContentBounds(DependencyObject obj, DataRect value) => obj.SetValue(dp: ContentBoundsProperty, value: value);
 
   public static readonly DependencyProperty ContentBoundsProperty = DependencyProperty.RegisterAttached(
-    "ContentBounds",
-    typeof(DataRect),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(DataRect.Empty, OnContentBoundsChanged, CoerceContentBounds));
+    name: "ContentBounds",
+    propertyType: typeof(DataRect),
+    ownerType: typeof(Viewport2D),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: DataRect.Empty, propertyChangedCallback: OnContentBoundsChanged, coerceValueCallback: CoerceContentBounds));
 
   private static object CoerceContentBounds(DependencyObject d, object value)
   {
-    DataRect prevBounds = GetContentBounds(d);
+    DataRect prevBounds = GetContentBounds(obj: d);
     DataRect currBounds = (DataRect)value;
-    bool approximateComparanceAllowed = GetUsesApproximateContentBoundsComparison(d);
-    bool areClose = approximateComparanceAllowed && currBounds.IsCloseTo(prevBounds, 0.005);
+    bool approximateComparanceAllowed = GetUsesApproximateContentBoundsComparison(obj: d);
+    bool areClose = approximateComparanceAllowed && currBounds.IsCloseTo(rect2: prevBounds, difference: 0.005);
     return areClose ? DependencyProperty.UnsetValue : value;
   }
 
@@ -702,7 +696,7 @@ public class Viewport2D : DependencyObject
     {
       if (element is FrameworkElement frElement)
       {
-        frElement.RaiseEvent(new RoutedEventArgs(ContentBoundsChangedEvent));
+        frElement.RaiseEvent(e: new RoutedEventArgs(routedEvent: ContentBoundsChangedEvent));
       }
 
       if (element.Plotter is PlotterBase plotter2d)
@@ -713,10 +707,10 @@ public class Viewport2D : DependencyObject
   }
 
   public static readonly RoutedEvent ContentBoundsChangedEvent = EventManager.RegisterRoutedEvent(
-    "ContentBoundsChanged",
-    RoutingStrategy.Direct,
-    typeof(RoutedEventHandler),
-    typeof(Viewport2D));
+    name: "ContentBoundsChanged",
+    routingStrategy: RoutingStrategy.Direct,
+    handlerType: typeof(RoutedEventHandler),
+    ownerType: typeof(Viewport2D));
 
   #endregion
 
@@ -733,7 +727,7 @@ public class Viewport2D : DependencyObject
   /// </value>
   public static bool GetUsesApproximateContentBoundsComparison(DependencyObject obj)
   {
-    return (bool)obj.GetValue(UsesApproximateContentBoundsComparisonProperty);
+    return (bool)obj.GetValue(dp: UsesApproximateContentBoundsComparisonProperty);
   }
 
   /// <summary>
@@ -747,14 +741,14 @@ public class Viewport2D : DependencyObject
   /// </value>		
   public static void SetUsesApproximateContentBoundsComparison(DependencyObject obj, bool value)
   {
-    obj.SetValue(UsesApproximateContentBoundsComparisonProperty, value);
+    obj.SetValue(dp: UsesApproximateContentBoundsComparisonProperty, value: value);
   }
 
   public static readonly DependencyProperty UsesApproximateContentBoundsComparisonProperty = DependencyProperty.RegisterAttached(
-    "UsesApproximateContentBoundsComparison",
-    typeof(bool),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(true, OnUsesApproximateContentBoundsComparisonChanged));
+    name: "UsesApproximateContentBoundsComparison",
+    propertyType: typeof(bool),
+    ownerType: typeof(Viewport2D),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: true, propertyChangedCallback: OnUsesApproximateContentBoundsComparisonChanged));
 
   private static void OnUsesApproximateContentBoundsComparisonChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -773,19 +767,19 @@ public class Viewport2D : DependencyObject
 
   public static bool GetUseDeferredPanning(DependencyObject obj)
   {
-    return (bool)obj.GetValue(UseDeferredPanningProperty);
+    return (bool)obj.GetValue(dp: UseDeferredPanningProperty);
   }
 
   public static void SetUseDeferredPanning(DependencyObject obj, bool value)
   {
-    obj.SetValue(UseDeferredPanningProperty, value);
+    obj.SetValue(dp: UseDeferredPanningProperty, value: value);
   }
 
   public static readonly DependencyProperty UseDeferredPanningProperty = DependencyProperty.RegisterAttached(
-    "UseDeferredPanning",
-    typeof(bool),
-    typeof(Viewport2D),
-    new FrameworkPropertyMetadata(false));
+    name: "UseDeferredPanning",
+    propertyType: typeof(bool),
+    ownerType: typeof(Viewport2D),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: false));
 
   #endregion // end of UseDeferredPanning attached property
 

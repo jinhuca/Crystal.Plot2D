@@ -33,7 +33,7 @@ public abstract class LegendItem : ContentControl
   /// </value>
   public Description Description
   {
-    get { return description; }
+    get => description;
     set
     {
       description = value;

@@ -14,7 +14,7 @@ namespace Crystal.Plot2D.Charts;
 ///   Represents a marker with position.X bound to mouse cursor's position and position.
 ///   Y is determined by interpolation of <see cref="MarkerPointsGraph"/>'s points.
 /// </summary>
-[ContentProperty("MarkerTemplate")]
+[ContentProperty(name: "MarkerTemplate")]
 public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 {
   /// <summary>
@@ -23,9 +23,9 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   public DataFollowChart()
   {
     Marker = CreateDefaultMarker();
-    SetX(marker, 0);
-    SetY(marker, 0);
-    Children.Add(marker);
+    SetX(obj: marker, value: 0);
+    SetY(obj: marker, value: 0);
+    Children.Add(element: marker);
   }
 
   private static Ellipse CreateDefaultMarker()
@@ -62,18 +62,18 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   /// </value>
   public DataTemplate MarkerTemplate
   {
-    get { return (DataTemplate)GetValue(MarkerTemplateProperty); }
-    set { SetValue(MarkerTemplateProperty, value); }
+    get => (DataTemplate)GetValue(dp: MarkerTemplateProperty);
+    set => SetValue(dp: MarkerTemplateProperty, value: value);
   }
 
   /// <summary>
   /// Identifies the <see cref="MarkerTemplate"/> dependency property.
   /// </summary>
   public static readonly DependencyProperty MarkerTemplateProperty = DependencyProperty.Register(
-    "MarkerTemplate",
-    typeof(DataTemplate),
-    typeof(DataFollowChart),
-    new FrameworkPropertyMetadata(null, OnMarkerTemplateChanged));
+    name: nameof(MarkerTemplate),
+    propertyType: typeof(DataTemplate),
+    ownerType: typeof(DataFollowChart),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnMarkerTemplateChanged));
 
   private static void OnMarkerTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -90,9 +90,9 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
       marker = CreateDefaultMarker();
     }
 
-    chart.Children.Remove(chart.marker);
+    chart.Children.Remove(element: chart.marker);
     chart.Marker = marker;
-    chart.Children.Add(marker);
+    chart.Children.Add(element: marker);
   }
 
   #endregion
@@ -107,18 +107,18 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   /// </value>
   public PointsGraphBase PointSource
   {
-    get { return (PointsGraphBase)GetValue(PointSourceProperty); }
-    set { SetValue(PointSourceProperty, value); }
+    get => (PointsGraphBase)GetValue(dp: PointSourceProperty);
+    set => SetValue(dp: PointSourceProperty, value: value);
   }
 
   /// <summary>
   ///   Identifies the <see cref="PointSource"/> dependency property.
   /// </summary>
   public static readonly DependencyProperty PointSourceProperty = DependencyProperty.Register(
-    "PointSource",
-    typeof(PointsGraphBase),
-    typeof(DataFollowChart),
-    new FrameworkPropertyMetadata(null, OnPointSourceChanged));
+    name: nameof(PointSource),
+    propertyType: typeof(PointsGraphBase),
+    ownerType: typeof(DataFollowChart),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnPointSourceChanged));
 
   private static void OnPointSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -134,7 +134,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
       current.VisiblePointsChanged += chart.Source_VisiblePointsChanged;
       if (current.VisiblePoints != null)
       {
-        chart.searcher = new SortedXSearcher1d(current.VisiblePoints);
+        chart.searcher = new SortedXSearcher1d(_collection: current.VisiblePoints);
       }
     }
 
@@ -148,12 +148,12 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   [NotNull]
   public FrameworkElement Marker
   {
-    get { return marker; }
+    get => marker;
     protected set
     {
       marker = value;
       marker.DataContext = followDataContext;
-      PropertyChanged.Raise(this, "Marker");
+      PropertyChanged.Raise(sender: this, propertyName: "Marker");
     }
   }
 
@@ -170,38 +170,38 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
     PointsGraphBase source = PointSource;
     if (source == null || (source != null && source.VisiblePoints == null))
     {
-      SetValue(MarkerPositionPropertyKey, new Point(double.NaN, double.NaN));
+      SetValue(key: MarkerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
       marker.Visibility = Visibility.Hidden;
       return;
     }
     else
     {
-      Point mousePos = Mouse.GetPosition(Plotter.CentralGrid);
+      Point mousePos = Mouse.GetPosition(relativeTo: Plotter.CentralGrid);
       var transform = Plotter.Transform;
-      Point viewportPos = mousePos.ScreenToViewport(transform);
+      Point viewportPos = mousePos.ScreenToViewport(transform: transform);
       double x = viewportPos.X;
-      searchResult = searcher.SearchXBetween(x, searchResult);
-      SetValue(ClosestPointIndexPropertyKey, searchResult.Index);
+      searchResult = searcher.SearchXBetween(_x: x, _result: searchResult);
+      SetValue(key: ClosestPointIndexPropertyKey, value: searchResult.Index);
       if (!searchResult.IsEmpty)
       {
         marker.Visibility = Visibility.Visible;
         IList<Point> points = source.VisiblePoints;
-        Point ptBefore = points[searchResult.Index];
-        Point ptAfter = points[searchResult.Index + 1];
+        Point ptBefore = points[index: searchResult.Index];
+        Point ptAfter = points[index: searchResult.Index + 1];
 
         double ratio = (x - ptBefore.X) / (ptAfter.X - ptBefore.X);
         double y = ptBefore.Y + (ptAfter.Y - ptBefore.Y) * ratio;
-        Point temp = new(x, y);
-        SetX(marker, temp.X);
-        SetY(marker, temp.Y);
+        Point temp = new(x: x, y: y);
+        SetX(obj: marker, value: temp.X);
+        SetY(obj: marker, value: temp.Y);
 
         Point markerPosition = temp;
         followDataContext.Position = markerPosition;
-        SetValue(MarkerPositionPropertyKey, markerPosition);
+        SetValue(key: MarkerPositionPropertyKey, value: markerPosition);
       }
       else
       {
-        SetValue(MarkerPositionPropertyKey, new Point(double.NaN, double.NaN));
+        SetValue(key: MarkerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
         marker.Visibility = Visibility.Hidden;
       }
     }
@@ -210,32 +210,29 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   #region ClosestPointIndex property
 
   private static readonly DependencyPropertyKey ClosestPointIndexPropertyKey = DependencyProperty.RegisterReadOnly(
-    "ClosestPointIndex",
-    typeof(int),
-    typeof(DataFollowChart),
-    new PropertyMetadata(-1));
+    name: "ClosestPointIndex",
+    propertyType: typeof(int),
+    ownerType: typeof(DataFollowChart),
+    typeMetadata: new PropertyMetadata(defaultValue: -1));
 
   public static readonly DependencyProperty ClosestPointIndexProperty = ClosestPointIndexPropertyKey.DependencyProperty;
 
-  public int ClosestPointIndex
-  {
-    get { return (int)GetValue(ClosestPointIndexProperty); }
-  }
+  public int ClosestPointIndex => (int)GetValue(dp: ClosestPointIndexProperty);
 
   #endregion
 
   #region MarkerPositionProperty
 
   private static readonly DependencyPropertyKey MarkerPositionPropertyKey = DependencyProperty.RegisterReadOnly(
-    "MarkerPosition",
-    typeof(Point),
-    typeof(DataFollowChart),
-    new PropertyMetadata(new Point(), OnMarkerPositionChanged));
+    name: "MarkerPosition",
+    propertyType: typeof(Point),
+    ownerType: typeof(DataFollowChart),
+    typeMetadata: new PropertyMetadata(defaultValue: new Point(), propertyChangedCallback: OnMarkerPositionChanged));
 
   private static void OnMarkerPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     DataFollowChart chart = (DataFollowChart)d;
-    chart.MarkerPositionChanged.Raise(chart);
+    chart.MarkerPositionChanged.Raise(sender: chart);
   }
 
   /// <summary>
@@ -249,10 +246,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   /// <value>
   ///   The marker position.
   /// </value>
-  public Point MarkerPosition
-  {
-    get { return (Point)GetValue(MarkerPositionProperty); }
-  }
+  public Point MarkerPosition => (Point)GetValue(dp: MarkerPositionProperty);
 
   /// <summary>
   ///   Occurs when marker position changes.
@@ -263,7 +257,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 
   public override void OnPlotterAttached(PlotterBase plotter)
   {
-    base.OnPlotterAttached(plotter);
+    base.OnPlotterAttached(plotter: plotter);
     plotter.MainGrid.MouseMove += MainGrid_MouseMove;
   }
 
@@ -275,12 +269,12 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   public override void OnPlotterDetaching(PlotterBase plotter)
   {
     plotter.MainGrid.MouseMove -= MainGrid_MouseMove;
-    base.OnPlotterDetaching(plotter);
+    base.OnPlotterDetaching(_plotter: plotter);
   }
 
   protected override void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
-    base.Viewport_PropertyChanged(sender, e);
+    base.Viewport_PropertyChanged(sender: sender, e: e);
     UpdateUIRepresentation();
   }
 
@@ -289,7 +283,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
     PointsGraphBase source = (PointsGraphBase)sender;
     if (source.VisiblePoints != null)
     {
-      searcher = new SortedXSearcher1d(source.VisiblePoints);
+      searcher = new SortedXSearcher1d(_collection: source.VisiblePoints);
     }
     UpdateUIRepresentation();
   }
@@ -322,11 +316,11 @@ public class FollowDataContext : INotifyPropertyChanged
   /// </value>
   public Point Position
   {
-    get { return position; }
+    get => position;
     set
     {
       position = value;
-      PropertyChanged.Raise(this, "Position");
+      PropertyChanged.Raise(sender: this, propertyName: "Position");
     }
   }
 
@@ -340,11 +334,11 @@ public class FollowDataContext : INotifyPropertyChanged
   /// </value>
   public object Data
   {
-    get { return data; }
+    get => data;
     set
     {
       data = value;
-      PropertyChanged.Raise(this, "Data");
+      PropertyChanged.Raise(sender: this, propertyName: "Data");
     }
   }
 

@@ -14,11 +14,11 @@ public class DateTimeAxis : AxisBase<DateTime>
   /// Initializes a new instance of the <see cref="DateTimeAxis"/> class.
   /// </summary>
   public DateTimeAxis()
-      : base(new DateTimeAxisControl(), DoubleToDate,
-          dt => dt.Ticks / 10000000000.0)
+      : base(axisControl: new DateTimeAxisControl(), convertFromDouble: DoubleToDate,
+          convertToDouble: dt => dt.Ticks / 10000000000.0)
   {
-    AxisControl.SetBinding(MajorLabelBackgroundBrushProperty, new Binding("MajorLabelBackgroundBrush") { Source = this });
-    AxisControl.SetBinding(MajorLabelRectangleBorderPropertyProperty, new Binding("MajorLabelRectangleBorderProperty") { Source = this });
+    AxisControl.SetBinding(dp: MajorLabelBackgroundBrushProperty, binding: new Binding(path: "MajorLabelBackgroundBrush") { Source = this });
+    AxisControl.SetBinding(dp: MajorLabelRectangleBorderPropertyProperty, binding: new Binding(path: "MajorLabelRectangleBorderProperty") { Source = this });
   }
 
   #region VisualProperties
@@ -29,50 +29,50 @@ public class DateTimeAxis : AxisBase<DateTime>
   /// <value>The major label background brush.</value>
   public Brush MajorLabelBackgroundBrush
   {
-    get { return (Brush)GetValue(MajorLabelBackgroundBrushProperty); }
-    set { SetValue(MajorLabelBackgroundBrushProperty, value); }
+    get => (Brush)GetValue(dp: MajorLabelBackgroundBrushProperty);
+    set => SetValue(dp: MajorLabelBackgroundBrushProperty, value: value);
   }
 
   public static readonly DependencyProperty MajorLabelBackgroundBrushProperty = DependencyProperty.Register(
-    "MajorLabelBackgroundBrush",
-    typeof(Brush),
-    typeof(DateTimeAxis),
-    new FrameworkPropertyMetadata(Brushes.Beige));
+    name: nameof(MajorLabelBackgroundBrush),
+    propertyType: typeof(Brush),
+    ownerType: typeof(DateTimeAxis),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Beige));
 
 
   public Brush MajorLabelRectangleBorderProperty
   {
-    get { return (Brush)GetValue(MajorLabelRectangleBorderPropertyProperty); }
-    set { SetValue(MajorLabelRectangleBorderPropertyProperty, value); }
+    get => (Brush)GetValue(dp: MajorLabelRectangleBorderPropertyProperty);
+    set => SetValue(dp: MajorLabelRectangleBorderPropertyProperty, value: value);
   }
 
   public static readonly DependencyProperty MajorLabelRectangleBorderPropertyProperty = DependencyProperty.Register(
-    "MajorLabelRectangleBorderProperty",
-    typeof(Brush),
-    typeof(DateTimeAxis),
-    new FrameworkPropertyMetadata(Brushes.Peru));
+    name: nameof(MajorLabelRectangleBorderProperty),
+    propertyType: typeof(Brush),
+    ownerType: typeof(DateTimeAxis),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Peru));
 
   #endregion // end of VisualProperties
 
   private ViewportConstraint constraint = new DateTimeHorizontalAxisConstraint();
   protected ViewportConstraint Constraint
   {
-    get { return constraint; }
-    set { constraint = value; }
+    get => constraint;
+    set => constraint = value;
   }
 
-  protected override void OnPlotterAttached(PlotterBase plotter_)
+  protected override void OnPlotterAttached(PlotterBase thePlotter)
   {
-    base.OnPlotterAttached(plotter_);
+    base.OnPlotterAttached(thePlotter: thePlotter);
 
-    plotter_.Viewport.Constraints.Add(constraint);
+    thePlotter.Viewport.Constraints.Add(item: constraint);
   }
 
-  protected override void OnPlotterDetaching(PlotterBase plotter)
+  protected override void OnPlotterDetaching(PlotterBase thePlotter)
   {
-    plotter.Viewport.Constraints.Remove(constraint);
+    thePlotter.Viewport.Constraints.Remove(item: constraint);
 
-    base.OnPlotterDetaching(plotter);
+    base.OnPlotterDetaching(thePlotter: thePlotter);
   }
 
   private static readonly long minTicks = DateTime.MinValue.Ticks;
@@ -91,7 +91,7 @@ public class DateTimeAxis : AxisBase<DateTime>
       ticks = maxTicks;
     }
 
-    return new DateTime(ticks);
+    return new DateTime(ticks: ticks);
   }
 
   /// <summary>
@@ -104,7 +104,7 @@ public class DateTimeAxis : AxisBase<DateTime>
   /// <param name="maxValue">The value of axis type, corresponding to maximal viewport value.</param>
   public override void SetConversion(double min, DateTime minValue, double max, DateTime maxValue)
   {
-    var conversion = new DateTimeToDoubleConversion(min, minValue, max, maxValue);
+    var conversion = new DateTimeToDoubleConversion(min: min, minDate: minValue, max: max, maxDate: maxValue);
 
     ConvertToDouble = conversion.ToDouble;
     ConvertFromDouble = conversion.FromDouble;

@@ -17,18 +17,18 @@ public abstract class ViewportPolylineBase : ViewportShape
   /// <value>The points.</value>
   public PointCollection Points
   {
-    get { return (PointCollection)GetValue(PointsProperty); }
-    set { SetValue(PointsProperty, value); }
+    get => (PointCollection)GetValue(dp: PointsProperty);
+    set => SetValue(dp: PointsProperty, value: value);
   }
 
   /// <summary>
   /// Identifies the Points dependency property.
   /// </summary>
   public static readonly DependencyProperty PointsProperty = DependencyProperty.Register(
-    "Points",
-    typeof(PointCollection),
-    typeof(ViewportPolylineBase),
-    new FrameworkPropertyMetadata(new PointCollection(), OnPropertyChanged));
+    name: nameof(Points),
+    propertyType: typeof(PointCollection),
+    ownerType: typeof(ViewportPolylineBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: new PointCollection(), propertyChangedCallback: OnPropertyChanged));
 
   protected static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -45,26 +45,20 @@ public abstract class ViewportPolylineBase : ViewportShape
   /// <value>The fill rule.</value>
   public FillRule FillRule
   {
-    get { return (FillRule)GetValue(FillRuleProperty); }
-    set { SetValue(FillRuleProperty, value); }
+    get => (FillRule)GetValue(dp: FillRuleProperty);
+    set => SetValue(dp: FillRuleProperty, value: value);
   }
 
   public static readonly DependencyProperty FillRuleProperty = DependencyProperty.Register(
-    "FillRule",
-    typeof(FillRule),
-    typeof(ViewportPolylineBase),
-    new FrameworkPropertyMetadata(FillRule.EvenOdd, OnPropertyChanged));
+    name: nameof(FillRule),
+    propertyType: typeof(FillRule),
+    ownerType: typeof(ViewportPolylineBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: FillRule.EvenOdd, propertyChangedCallback: OnPropertyChanged));
 
   #endregion
 
   private readonly PathGeometry geometry = new();
-  protected PathGeometry PathGeometry
-  {
-    get { return geometry; }
-  }
+  protected PathGeometry PathGeometry => geometry;
 
-  protected sealed override Geometry DefiningGeometry
-  {
-    get { return geometry; }
-  }
+  protected sealed override Geometry DefiningGeometry => geometry;
 }

@@ -10,7 +10,7 @@ internal static class VisualTreeHelperHelper
     DependencyObject parent = target;
     do
     {
-      parent = VisualTreeHelper.GetParent(parent);
+      parent = VisualTreeHelper.GetParent(reference: parent);
       if (parent == null)
       {
         break;

@@ -10,7 +10,7 @@ public static class IListExtensions
   {
     foreach (var item in addingItems)
     {
-      collection.Add(item);
+      collection.Add(item: item);
     }
   }
 
@@ -18,16 +18,16 @@ public static class IListExtensions
   {
     foreach (var child in children)
     {
-      collection.Add(child);
+      collection.Add(item: child);
     }
   }
 
   public static void RemoveAll<T>(this IList<T> collection, Type type)
   {
-    var children = collection.Where(el => type.IsInstanceOfType(el)).ToArray();
+    var children = collection.Where(predicate: el => type.IsInstanceOfType(o: el)).ToArray();
     foreach (var child in children)
     {
-      collection.Remove((T)child);
+      collection.Remove(item: (T)child);
     }
   }
 
@@ -36,7 +36,7 @@ public static class IListExtensions
     var children = collection.OfType<TDelete>().ToArray();
     foreach (var child in children)
     {
-      collection.Remove((T)(object)child);
+      collection.Remove(item: (T)(object)child);
     }
   }
 }

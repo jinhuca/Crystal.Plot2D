@@ -9,7 +9,7 @@ namespace Crystal.Plot2D.Common;
 /// </summary>
 public class MinMaxLoggingPalette : DecoratorPaletteBase
 {
-  int counter = 0;
+  int counter;
 
   public double Min { get; set; } = double.MaxValue;
   public double Max { get; set; } = double.MinValue;
@@ -30,9 +30,9 @@ public class MinMaxLoggingPalette : DecoratorPaletteBase
 
     if (counter % 100000 == 0)
     {
-      Debug.WriteLine("Palette: Min = " + Min + ", max = " + Max);
+      Debug.WriteLine(message: "Palette: Min = " + Min + ", max = " + Max);
     }
 
-    return base.GetColor(t);
+    return base.GetColor(t: t);
   }
 }

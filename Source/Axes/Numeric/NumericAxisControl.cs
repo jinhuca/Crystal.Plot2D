@@ -7,6 +7,6 @@ public class NumericAxisControl : AxisControl<double>
     LabelProvider = new ExponentialLabelProvider();
     TicksProvider = new NumericTicksProvider();
     ConvertToDouble = d => d;
-    Range = new Range<double>(0, 10);
+    Range = new Range<double>(min: 0, max: 10);
   }
 }

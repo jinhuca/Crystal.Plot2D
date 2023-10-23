@@ -8,7 +8,7 @@ public class StandardDescription : Description
   public StandardDescription() { }
   public StandardDescription(string description)
   {
-    DescriptionString = description ?? throw new ArgumentNullException("description");
+    DescriptionString = description ?? throw new ArgumentNullException(paramName: "description");
   }
 
   protected override void AttachCore(UIElement element)

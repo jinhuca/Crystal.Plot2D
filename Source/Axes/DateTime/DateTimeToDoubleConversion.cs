@@ -22,9 +22,9 @@ internal sealed class DateTimeToDoubleConversion
     double ratio = (d - min) / length;
     long tick = (long)(ticksMin + ticksLength * ratio);
 
-    tick = MathHelper.Clamp(tick, DateTime.MinValue.Ticks, DateTime.MaxValue.Ticks);
+    tick = MathHelper.Clamp(value: tick, min: DateTime.MinValue.Ticks, max: DateTime.MaxValue.Ticks);
 
-    return new DateTime(tick);
+    return new DateTime(ticks: tick);
   }
 
   internal double ToDouble(DateTime dt)

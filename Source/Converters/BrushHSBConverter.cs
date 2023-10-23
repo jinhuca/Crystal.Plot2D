@@ -16,7 +16,7 @@ public sealed class BrushHSBConverter : IValueConverter
   {
     if (value is SolidColorBrush brush)
     {
-      SolidColorBrush result = brush.ChangeLightness(LightnessDelta).ChangeSaturation(SaturationDelta);
+      SolidColorBrush result = brush.ChangeLightness(lightnessFactor: LightnessDelta).ChangeSaturation(saturationFactor: SaturationDelta);
       return result;
     }
     else { return value; }

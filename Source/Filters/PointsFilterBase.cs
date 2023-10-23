@@ -14,7 +14,7 @@ public abstract class PointsFilterBase : IPointsFilter
 
   protected void RaiseChanged()
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
   public event EventHandler Changed;
 

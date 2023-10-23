@@ -7,6 +7,6 @@ internal static class MenuItemExtensions
 {
   public static MenuItem FindChildByHeader(this MenuItem parent, string header)
   {
-    return parent.Items.OfType<MenuItem>().FirstOrDefault(subMenu => subMenu.Header.ToString() == header);
+    return parent.Items.OfType<MenuItem>().FirstOrDefault(predicate: subMenu => subMenu.Header.ToString() == header);
   }
 }

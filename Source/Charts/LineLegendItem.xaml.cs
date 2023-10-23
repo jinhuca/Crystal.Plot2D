@@ -10,7 +10,7 @@ public partial class LineLegendItem : LegendItem
     InitializeComponent();
   }
 
-  public LineLegendItem(Description description) : base(description)
+  public LineLegendItem(Description description) : base(description: description)
   {
     InitializeComponent();
   }

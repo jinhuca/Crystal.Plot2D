@@ -21,7 +21,7 @@ public class DomainConstraint : ViewportConstraint
     Domain = domain;
   }
 
-  private DataRect domain = new(-1, -1, 2, 2);
+  private DataRect domain = new(xMin: -1, yMin: -1, width: 2, height: 2);
 
   /// <summary>
   /// Gets or sets the domain.
@@ -31,7 +31,7 @@ public class DomainConstraint : ViewportConstraint
   /// </value>
   public DataRect Domain
   {
-    get { return domain; }
+    get => domain;
     set
     {
       if (domain != value)
@@ -56,7 +56,7 @@ public class DomainConstraint : ViewportConstraint
     {
       res = newDataRect;
     }
-    else if (newDataRect.IntersectsWith(domain))
+    else if (newDataRect.IntersectsWith(rect: domain))
     {
       res = newDataRect;
       if (newDataRect.Size == oldDataRect.Size)
@@ -83,7 +83,7 @@ public class DomainConstraint : ViewportConstraint
       }
       else
       {
-        res = DataRect.Intersect(newDataRect, domain);
+        res = DataRect.Intersect(rect1: newDataRect, rect2: domain);
       }
     }
 

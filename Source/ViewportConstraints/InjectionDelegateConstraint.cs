@@ -8,8 +8,8 @@ public class InjectionDelegateConstraint : ViewportConstraint
 {
   public InjectionDelegateConstraint(Viewport2D masterViewport, ViewportConstraintCallback callback)
   {
-    Callback = callback ?? throw new ArgumentNullException("callback");
-    MasterViewport = masterViewport ?? throw new ArgumentNullException("masterViewport");
+    Callback = callback ?? throw new ArgumentNullException(paramName: "callback");
+    MasterViewport = masterViewport ?? throw new ArgumentNullException(paramName: "masterViewport");
     masterViewport.PropertyChanged += MasterViewport_PropertyChanged;
   }
 
@@ -26,6 +26,6 @@ public class InjectionDelegateConstraint : ViewportConstraint
 
   public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
   {
-    return Callback(proposedDataRect);
+    return Callback(proposedDataRect: proposedDataRect);
   }
 }

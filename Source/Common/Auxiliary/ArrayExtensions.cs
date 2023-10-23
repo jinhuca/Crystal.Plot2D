@@ -25,12 +25,12 @@ internal static class ArrayExtensions
   {
     if (array == null)
     {
-      throw new ArgumentNullException(nameof(array));
+      throw new ArgumentNullException(paramName: nameof(array));
     }
 
     for (var i = 0; i < array.Count - 1; i++)
     {
-      yield return new Range<T>(array[i], array[i + 1]);
+      yield return new Range<T>(min: array[index: i], max: array[index: i + 1]);
     }
   }
 }

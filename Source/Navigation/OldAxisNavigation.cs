@@ -9,7 +9,7 @@ namespace Crystal.Plot2D.Charts;
 /// <summary>
 /// Represents a navigation methods upon one axis - mouse panning and zooming.
 /// </summary>
-[Obsolete("Will be removed soon. Use AxisNavigation instead.")]
+[Obsolete(message: "Will be removed soon. Use AxisNavigation instead.")]
 public class OldAxisNavigation : ContentGraph
 {
   /// <summary>
@@ -35,16 +35,16 @@ public class OldAxisNavigation : ContentGraph
 
   private void SetHorizontalOrientation()
   {
-    Grid.SetColumn(this, 1);
-    Grid.SetRow(this, 2);
+    Grid.SetColumn(element: this, value: 1);
+    Grid.SetRow(element: this, value: 2);
   }
 
   private void SetVerticalOrientation()
   {
     // todo should automatically search for location of axes as they can be 
     // not only from the left or bottom.
-    Grid.SetColumn(this, 0);
-    Grid.SetRow(this, 1);
+    Grid.SetColumn(element: this, value: 0);
+    Grid.SetRow(element: this, value: 1);
   }
 
   private Orientation orientation = Orientation.Horizontal;
@@ -54,7 +54,7 @@ public class OldAxisNavigation : ContentGraph
   /// <value>The orientation.</value>
   public Orientation Orientation
   {
-    get { return orientation; }
+    get => orientation;
     set
     {
       if (orientation != value)
@@ -75,40 +75,29 @@ public class OldAxisNavigation : ContentGraph
       case Orientation.Vertical:
         SetVerticalOrientation();
         break;
-      default:
-        break;
     }
   }
 
-  private bool lmbPressed = false;
+  private bool lmbPressed;
   private Point dragStart;
 
-  private CoordinateTransform Transform
-  {
-    get { return Plotter2D.Viewport.Transform; }
-  }
+  private CoordinateTransform Transform => Plotter2D.Viewport.Transform;
 
-  protected override Panel HostPanel
-  {
-    get { return Plotter2D.MainGrid; }
-  }
+  protected override Panel HostPanel => Plotter2D.MainGrid;
 
   private readonly Panel content = new Canvas { Background = Brushes.Transparent };
-  private readonly SolidColorBrush fillBrush = new SolidColorBrush(Color.FromRgb(255, 228, 209)).MakeTransparent(0.2);
+  private readonly SolidColorBrush fillBrush = new SolidColorBrush(color: Color.FromRgb(r: 255, g: 228, b: 209)).MakeTransparent(opacity: 0.2);
 
   private Point lmbInitialPosition;
-  protected Point LmbInitialPosition
-  {
-    get { return lmbInitialPosition; }
-  }
+  protected Point LmbInitialPosition => lmbInitialPosition;
 
   protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
   {
-    base.OnMouseLeftButtonDown(e);
+    base.OnMouseLeftButtonDown(e: e);
 
-    lmbInitialPosition = e.GetPosition(this);
+    lmbInitialPosition = e.GetPosition(relativeTo: this);
 
-    dragStart = lmbInitialPosition.ScreenToViewport(Transform);
+    dragStart = lmbInitialPosition.ScreenToViewport(transform: Transform);
     lmbPressed = true;
 
     content.Background = fillBrush;
@@ -118,10 +107,10 @@ public class OldAxisNavigation : ContentGraph
 
   protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
   {
-    base.OnMouseLeftButtonUp(e);
+    base.OnMouseLeftButtonUp(e: e);
     lmbPressed = false;
 
-    ClearValue(CursorProperty);
+    ClearValue(dp: CursorProperty);
     content.Background = Brushes.Transparent;
 
     ReleaseMouseCapture();
@@ -131,7 +120,7 @@ public class OldAxisNavigation : ContentGraph
   {
     if (lmbPressed)
     {
-      Point mousePos = e.GetPosition(this).ScreenToViewport(Transform);
+      Point mousePos = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Transform);
 
       DataRect visible = Plotter2D.Viewport.Visible;
       double delta;
@@ -146,7 +135,7 @@ public class OldAxisNavigation : ContentGraph
         visible.YMin -= delta;
       }
 
-      if (e.GetPosition(this) != lmbInitialPosition)
+      if (e.GetPosition(relativeTo: this) != lmbInitialPosition)
       {
         Cursor = orientation == Orientation.Horizontal ? Cursors.ScrollWE : Cursors.ScrollNS;
       }
@@ -158,19 +147,19 @@ public class OldAxisNavigation : ContentGraph
   private const double wheelZoomSpeed = 1.2;
   protected override void OnMouseWheel(MouseWheelEventArgs e)
   {
-    Point mousePos = e.GetPosition(this);
+    Point mousePos = e.GetPosition(relativeTo: this);
     int delta = -e.Delta;
 
-    Point zoomTo = mousePos.ScreenToViewport(Transform);
+    Point zoomTo = mousePos.ScreenToViewport(transform: Transform);
 
-    double zoomSpeed = Math.Abs(delta / Mouse.MouseWheelDeltaForOneLine);
+    double zoomSpeed = Math.Abs(value: delta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed *= wheelZoomSpeed;
     if (delta < 0)
     {
       zoomSpeed = 1 / zoomSpeed;
     }
 
-    DataRect visible = Plotter2D.Viewport.Visible.Zoom(zoomTo, zoomSpeed);
+    DataRect visible = Plotter2D.Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
     DataRect oldVisible = Plotter2D.Viewport.Visible;
     if (orientation == Orientation.Horizontal)
     {
@@ -189,9 +178,9 @@ public class OldAxisNavigation : ContentGraph
 
   protected override void OnLostFocus(RoutedEventArgs e)
   {
-    base.OnLostFocus(e);
+    base.OnLostFocus(e: e);
 
-    ClearValue(CursorProperty);
+    ClearValue(dp: CursorProperty);
     content.Background = Brushes.Transparent;
 
     ReleaseMouseCapture();

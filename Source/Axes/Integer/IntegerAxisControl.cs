@@ -7,6 +7,6 @@ public class IntegerAxisControl : AxisControl<int>
     LabelProvider = new GenericLabelProvider<int>();
     TicksProvider = new IntegerTicksProvider();
     ConvertToDouble = i => (double)i;
-    Range = new Range<int>(0, 1);
+    Range = new Range<int>(min: 0, max: 1);
   }
 }

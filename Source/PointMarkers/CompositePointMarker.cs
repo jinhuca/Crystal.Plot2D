@@ -18,12 +18,12 @@ public sealed class CompositePointMarker : PointMarker
   {
     if (markers == null)
     {
-      throw new ArgumentNullException("markers");
+      throw new ArgumentNullException(paramName: "markers");
     }
 
     foreach (PointMarker m in markers)
     {
-      Markers.Add(m);
+      Markers.Add(item: m);
     }
   }
 
@@ -31,16 +31,16 @@ public sealed class CompositePointMarker : PointMarker
   {
     if (markers == null)
     {
-      throw new ArgumentNullException("markers");
+      throw new ArgumentNullException(paramName: "markers");
     }
 
     foreach (PointMarker m in markers)
     {
-      Markers.Add(m);
+      Markers.Add(item: m);
     }
   }
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-  public Collection<PointMarker> Markers { get; } = new Collection<PointMarker>();
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
+  public Collection<PointMarker> Markers { get; } = new();
 
   public override void Render(DrawingContext dc, Point screenPoint)
   {
@@ -50,10 +50,10 @@ public sealed class CompositePointMarker : PointMarker
       enumerator.Reset();
       while (enumerator.MoveNext())
       {
-        marker.SetValue(enumerator.Current.Property, enumerator.Current.Value);
+        marker.SetValue(dp: enumerator.Current.Property, value: enumerator.Current.Value);
       }
 
-      marker.Render(dc, screenPoint);
+      marker.Render(dc: dc, screenPoint: screenPoint);
     }
   }
 }

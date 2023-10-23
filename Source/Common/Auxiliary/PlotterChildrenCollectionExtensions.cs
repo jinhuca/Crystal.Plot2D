@@ -13,17 +13,17 @@ public static class PlotterChildrenCollectionExtensions
 
     foreach (var child in childrenToDelete)
     {
-      children.Remove(child as IPlotterElement);
+      children.Remove(item: child as IPlotterElement);
     }
   }
 
   public static void BeginAdd(this PlotterChildrenCollection children, IPlotterElement child)
   {
-    children.Plotter.Dispatcher.BeginInvoke(((Action)(() => { children.Add(child); })), DispatcherPriority.Send);
+    children.Plotter.Dispatcher.BeginInvoke(method: ((Action)(() => { children.Add(item: child); })), priority: DispatcherPriority.Send);
   }
 
   public static void BeginRemove(this PlotterChildrenCollection children, IPlotterElement child)
   {
-    children.Plotter.Dispatcher.BeginInvoke(((Action)(() => { children.Remove(child); })), DispatcherPriority.Send);
+    children.Plotter.Dispatcher.BeginInvoke(method: ((Action)(() => { children.Remove(item: child); })), priority: DispatcherPriority.Send);
   }
 }

@@ -6,7 +6,7 @@ namespace Crystal.Plot2D;
 /// <summary>
 ///   Represents a markup extension, which allows to get an access to application resource files.
 /// </summary>
-[MarkupExtensionReturnType(typeof(string))]
+[MarkupExtensionReturnType(returnType: typeof(string))]
 public class ResourceExtension : MarkupExtension
 {
   /// <summary>
@@ -18,12 +18,12 @@ public class ResourceExtension : MarkupExtension
   //[ConstructorArgument("resourceKey")]
   public string ResourceKey
   {
-    get { return resourceKey; }
+    get => resourceKey;
     set
     {
       if (resourceKey == null)
       {
-        throw new ArgumentNullException("resourceKey");
+        throw new ArgumentNullException(paramName: "resourceKey");
       }
 
       resourceKey = value;
@@ -40,11 +40,11 @@ public class ResourceExtension : MarkupExtension
   {
     if (_resourceKey == null)
     {
-      throw new ArgumentNullException("resourceKey");
+      throw new ArgumentNullException(paramName: "resourceKey");
     }
 
     resourceKey = _resourceKey;
   }
 
-  public override object ProvideValue(IServiceProvider serviceProvider) => Strings.UIResources.ResourceManager.GetString(resourceKey);
+  public override object ProvideValue(IServiceProvider serviceProvider) => Strings.UIResources.ResourceManager.GetString(name: resourceKey);
 }

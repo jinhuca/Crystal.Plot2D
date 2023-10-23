@@ -8,12 +8,12 @@ public static class IPlotterElementExtensions
   {
     if (element == null)
     {
-      throw new ArgumentNullException(nameof(element));
+      throw new ArgumentNullException(paramName: nameof(element));
     }
 
     if (element.Plotter != null)
     {
-      element.Plotter.Children.Remove(element);
+      element.Plotter.Children.Remove(item: element);
     }
   }
 
@@ -21,12 +21,12 @@ public static class IPlotterElementExtensions
   {
     if (element == null)
     {
-      throw new ArgumentNullException(nameof(element));
+      throw new ArgumentNullException(paramName: nameof(element));
     }
     if (plotter == null)
     {
-      throw new ArgumentNullException(nameof(plotter));
+      throw new ArgumentNullException(paramName: nameof(plotter));
     }
-    plotter.Children.Add(element);
+    plotter.Children.Add(item: element);
   }
 }

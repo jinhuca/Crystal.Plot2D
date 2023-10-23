@@ -9,20 +9,20 @@ public class TemplateableDraggablePoint : DraggablePoint
   private readonly Control marker = new() { Focusable = false };
   public TemplateableDraggablePoint()
   {
-    marker.SetBinding(TemplateProperty, new Binding { Source = this, Path = new PropertyPath("MarkerTemplate") });
+    marker.SetBinding(dp: TemplateProperty, binding: new Binding { Source = this, Path = new PropertyPath(path: "MarkerTemplate") });
     Content = marker;
   }
 
   public ControlTemplate MarkerTemplate
   {
-    get { return (ControlTemplate)GetValue(MarkerTemplateProperty); }
-    set { SetValue(MarkerTemplateProperty, value); }
+    get => (ControlTemplate)GetValue(dp: MarkerTemplateProperty);
+    set => SetValue(dp: MarkerTemplateProperty, value: value);
   }
 
   public static readonly DependencyProperty MarkerTemplateProperty = DependencyProperty.Register(
-    "MarkerTemplate",
-    typeof(ControlTemplate),
-    typeof(TemplateableDraggablePoint),
-    new FrameworkPropertyMetadata(null));
+    name: nameof(MarkerTemplate),
+    propertyType: typeof(ControlTemplate),
+    ownerType: typeof(TemplateableDraggablePoint),
+    typeMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
 }

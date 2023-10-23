@@ -12,7 +12,7 @@ public sealed class ViewportPolygon : ViewportPolylineBase
   static ViewportPolygon()
   {
     Type type = typeof(ViewportPolygon);
-    FillProperty.AddOwner(type, new FrameworkPropertyMetadata(Brushes.Coral));
+    FillProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Coral));
   }
 
   /// <summary>
@@ -35,19 +35,19 @@ public sealed class ViewportPolygon : ViewportPolylineBase
       PathFigure figure = new();
       if (points.Count > 0)
       {
-        figure.StartPoint = points[0].DataToScreen(transform);
+        figure.StartPoint = points[index: 0].DataToScreen(transform: transform);
         if (points.Count > 1)
         {
           Point[] pointArray = new Point[points.Count - 1];
           for (int i = 1; i < points.Count; i++)
           {
-            pointArray[i - 1] = points[i].DataToScreen(transform);
+            pointArray[i - 1] = points[index: i].DataToScreen(transform: transform);
           }
-          figure.Segments.Add(new PolyLineSegment(pointArray, true));
+          figure.Segments.Add(value: new PolyLineSegment(points: pointArray, isStroked: true));
           figure.IsClosed = true;
         }
       }
-      geometry.Figures.Add(figure);
+      geometry.Figures.Add(value: figure);
       geometry.FillRule = FillRule;
     }
   }

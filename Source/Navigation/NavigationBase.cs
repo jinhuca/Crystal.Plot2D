@@ -17,7 +17,7 @@ public abstract class NavigationBase : ViewportElement2D
 
   private void NavigationBase_Loaded(object sender, RoutedEventArgs e)
   {
-    OnLoaded(e);
+    OnLoaded(e: e);
   }
 
   protected virtual void OnLoaded(RoutedEventArgs e)
@@ -30,6 +30,6 @@ public abstract class NavigationBase : ViewportElement2D
 
   protected override void OnRenderCore(DrawingContext dc, RenderState state)
   {
-    dc.DrawRectangle(Brushes.Transparent, null, state.Output);
+    dc.DrawRectangle(brush: Brushes.Transparent, pen: null, rectangle: state.Output);
   }
 }

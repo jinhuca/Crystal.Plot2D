@@ -7,21 +7,21 @@ namespace Crystal.Plot2D.Common;
 
 public class ObservableCollectionWrapper<T> : INotifyCollectionChanged, IList<T>
 {
-  public ObservableCollectionWrapper() : this(new ObservableCollection<T>()) { }
+  public ObservableCollectionWrapper() : this(_collection: new ObservableCollection<T>()) { }
 
   private readonly ObservableCollection<T> collection;
   public ObservableCollectionWrapper(ObservableCollection<T> _collection)
   {
     if (_collection == null)
     {
-      throw new ArgumentNullException("collection");
+      throw new ArgumentNullException(paramName: "collection");
     }
 
     collection = _collection;
-    _collection.CollectionChanged += new NotifyCollectionChangedEventHandler(collection_CollectionChanged);
+    _collection.CollectionChanged += collection_CollectionChanged;
   }
 
-  private int attemptsToRaiseChanged = 0;
+  private int attemptsToRaiseChanged;
   public bool RaisingEvents { get; private set; } = true;
 
   private void collection_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -29,7 +29,7 @@ public class ObservableCollectionWrapper<T> : INotifyCollectionChanged, IList<T>
     attemptsToRaiseChanged++;
     if (RaisingEvents)
     {
-      CollectionChanged.Raise(this, e);
+      CollectionChanged.Raise(sender: this, e: e);
     }
   }
 
@@ -45,11 +45,11 @@ public class ObservableCollectionWrapper<T> : INotifyCollectionChanged, IList<T>
     RaisingEvents = true;
     if (attemptsToRaiseChanged > 0)
     {
-      CollectionChanged.Raise(this);
+      CollectionChanged.Raise(sender: this);
     }
   }
 
-  public IDisposable BlockEvents() => new EventBlocker<T>(this);
+  public IDisposable BlockEvents() => new EventBlocker<T>(_collection: this);
 
   private sealed class EventBlocker<TT> : IDisposable
   {
@@ -71,35 +71,35 @@ public class ObservableCollectionWrapper<T> : INotifyCollectionChanged, IList<T>
 
   #region IList<T> Members
 
-  public int IndexOf(T item) => collection.IndexOf(item);
+  public int IndexOf(T item) => collection.IndexOf(item: item);
 
-  public void Insert(int index, T item) => collection.Insert(index, item);
+  public void Insert(int index, T item) => collection.Insert(index: index, item: item);
 
-  public void RemoveAt(int index) => collection.RemoveAt(index);
+  public void RemoveAt(int index) => collection.RemoveAt(index: index);
 
   public T this[int index]
   {
-    get => collection[index];
-    set => collection[index] = value;
+    get => collection[index: index];
+    set => collection[index: index] = value;
   }
 
   #endregion
 
   #region ICollection<T> Members
 
-  public void Add(T item) => collection.Add(item);
+  public void Add(T item) => collection.Add(item: item);
 
   public void Clear() => collection.Clear();
 
-  public bool Contains(T item) => collection.Contains(item);
+  public bool Contains(T item) => collection.Contains(item: item);
 
-  public void CopyTo(T[] array, int arrayIndex) => collection.CopyTo(array, arrayIndex);
+  public void CopyTo(T[] array, int arrayIndex) => collection.CopyTo(array: array, index: arrayIndex);
 
   public int Count => collection.Count;
 
   public bool IsReadOnly => throw new NotImplementedException();
 
-  public bool Remove(T item) => collection.Remove(item);
+  public bool Remove(T item) => collection.Remove(item: item);
 
   #endregion
 

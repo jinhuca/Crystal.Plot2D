@@ -1,5 +1,4 @@
 ﻿using System.Globalization;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -28,7 +27,7 @@ public sealed class ExponentialLabelProvider : NumericLabelProviderBase
   {
     var ticks = ticksInfo.Ticks;
 
-    Init(ticks);
+    Init(ticks: ticks);
 
     UIElement[] res = new UIElement[ticks.Length];
 
@@ -40,24 +39,24 @@ public sealed class ExponentialLabelProvider : NumericLabelProviderBase
       tickInfo.Tick = tick;
       tickInfo.Index = i;
 
-      string labelText = GetString(tickInfo);
+      string labelText = GetString(tickInfo: tickInfo);
 
       TextBlock label;
-      if (labelText.Contains('E'))
+      if (labelText.Contains(value: 'E'))
       {
-        string[] substrs = labelText.Split('E');
+        string[] substrs = labelText.Split(separator: 'E');
         string mantissa = substrs[0];
         string exponenta = substrs[1];
-        exponenta = exponenta.TrimStart('+');
+        exponenta = exponenta.TrimStart(trimChar: '+');
         Span span = new();
-        span.Inlines.Add(string.Format(CultureInfo.CurrentCulture, "{0}·10", mantissa));
-        Span exponentaSpan = new(new Run(exponenta));
+        span.Inlines.Add(text: string.Format(provider: CultureInfo.CurrentCulture, format: "{0}·10", arg0: mantissa));
+        Span exponentaSpan = new(childInline: new Run(text: exponenta));
         exponentaSpan.BaselineAlignment = BaselineAlignment.Superscript;
         exponentaSpan.FontSize = 8;
-        span.Inlines.Add(exponentaSpan);
+        span.Inlines.Add(item: exponentaSpan);
 
-        label = new TextBlock(span);
-        LabelProviderProperties.SetExponentialIsCommonLabel(label, false);
+        label = new TextBlock(inline: span);
+        LabelProviderProperties.SetExponentialIsCommonLabel(obj: label, value: false);
       }
       else
       {
@@ -70,9 +69,9 @@ public sealed class ExponentialLabelProvider : NumericLabelProviderBase
         label.Text = labelText;
       }
       res[i] = label;
-      label.ToolTip = tick.ToString(CultureInfo.CurrentCulture);
+      label.ToolTip = tick.ToString(provider: CultureInfo.CurrentCulture);
 
-      ApplyCustomView(tickInfo, label);
+      ApplyCustomView(info: tickInfo, label: label);
     }
 
     return res;
@@ -80,7 +79,7 @@ public sealed class ExponentialLabelProvider : NumericLabelProviderBase
 
   protected override bool ReleaseCore(UIElement label)
   {
-    bool isNotExponential = LabelProviderProperties.GetExponentialIsCommonLabel(label);
+    bool isNotExponential = LabelProviderProperties.GetExponentialIsCommonLabel(obj: label);
     return isNotExponential && CustomView == null;
   }
 }

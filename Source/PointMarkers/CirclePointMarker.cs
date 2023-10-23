@@ -10,7 +10,7 @@ public class CirclePointMarker : ShapePointMarker
 {
   public override void Render(DrawingContext dc, Point screenPoint)
   {
-    dc.DrawEllipse(FillBrush, OutlinePen, screenPoint, Diameter / 2, Diameter / 2);
+    dc.DrawEllipse(brush: FillBrush, pen: OutlinePen, center: screenPoint, radiusX: Diameter / 2, radiusY: Diameter / 2);
   }
 }
 

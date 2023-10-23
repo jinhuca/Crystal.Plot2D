@@ -9,35 +9,23 @@ namespace Crystal.Plot2D.Charts;
 internal sealed class Quad
 {
   private readonly Point v00;
-  public Point V00
-  {
-    get { return v00; }
-  }
+  public Point V00 => v00;
 
   private readonly Point v01;
-  public Point V01
-  {
-    get { return v01; }
-  }
+  public Point V01 => v01;
 
   private readonly Point v10;
-  public Point V10
-  {
-    get { return v10; }
-  }
+  public Point V10 => v10;
 
   private readonly Point v11;
-  public Point V11
-  {
-    get { return v11; }
-  }
+  public Point V11 => v11;
 
   public Quad(Point v00, Point v01, Point v11, Point v10)
   {
-    DebugVerify.IsNotNaN(v00);
-    DebugVerify.IsNotNaN(v01);
-    DebugVerify.IsNotNaN(v11);
-    DebugVerify.IsNotNaN(v10);
+    DebugVerify.IsNotNaN(point: v00);
+    DebugVerify.IsNotNaN(point: v01);
+    DebugVerify.IsNotNaN(point: v11);
+    DebugVerify.IsNotNaN(point: v10);
 
     this.v00 = v00;
     this.v01 = v01;
@@ -56,6 +44,6 @@ internal sealed class Quad
   {
     // breaking quad into 2 triangles, 
     // points contains in quad, if it contains in at least one half-triangle of it.
-    return TriangleMath.TriangleContains(v00, v01, v11, pt) || TriangleMath.TriangleContains(v00, v10, v11, pt);
+    return TriangleMath.TriangleContains(a: v00, b: v01, c: v11, m: pt) || TriangleMath.TriangleContains(a: v00, b: v10, c: v11, m: pt);
   }
 }

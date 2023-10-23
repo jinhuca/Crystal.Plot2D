@@ -6,7 +6,7 @@ public class TransparentLimitsPalette : DecoratorPaletteBase
 {
   public TransparentLimitsPalette() { }
 
-  public TransparentLimitsPalette(IPalette palette) : base(palette) { }
+  public TransparentLimitsPalette(IPalette palette) : base(palette: palette) { }
 
   public override Color GetColor(double t)
   {
@@ -15,6 +15,6 @@ public class TransparentLimitsPalette : DecoratorPaletteBase
       return Colors.Transparent;
     }
 
-    return Palette.GetColor(t);
+    return Palette.GetColor(t: t);
   }
 }

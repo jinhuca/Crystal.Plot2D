@@ -7,10 +7,10 @@ public class NonUniformDataSource2D<T> : INonUniformDataSource2D<T> where T : st
 {
   public NonUniformDataSource2D(double[] xcoordinates, double[] ycoordinates, T[,] data)
   {
-    XCoordinates = xcoordinates ?? throw new ArgumentNullException(nameof(xcoordinates));
-    YCoordinates = ycoordinates ?? throw new ArgumentNullException(nameof(ycoordinates));
+    XCoordinates = xcoordinates ?? throw new ArgumentNullException(paramName: nameof(xcoordinates));
+    YCoordinates = ycoordinates ?? throw new ArgumentNullException(paramName: nameof(ycoordinates));
     BuildGrid();
-    Data = data ?? throw new ArgumentNullException(nameof(data));
+    Data = data ?? throw new ArgumentNullException(paramName: nameof(data));
   }
 
   private void BuildGrid()
@@ -20,7 +20,7 @@ public class NonUniformDataSource2D<T> : INonUniformDataSource2D<T> where T : st
     {
       for (int ix = 0; ix < Width; ix++)
       {
-        Grid[ix, iy] = new Point(XCoordinates[ix], YCoordinates[iy]);
+        Grid[ix, iy] = new Point(x: XCoordinates[ix], y: YCoordinates[iy]);
       }
     }
   }

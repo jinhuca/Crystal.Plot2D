@@ -19,7 +19,7 @@ public class HorizontalTimeSpanAxis : TimeSpanAxis
   {
     if (newPlacement == AxisPlacement.Left || newPlacement == AxisPlacement.Right)
     {
-      throw new ArgumentException(Strings.Exceptions.HorizontalAxisCannotBeVertical);
+      throw new ArgumentException(message: Strings.Exceptions.HorizontalAxisCannotBeVertical);
     }
   }
 }

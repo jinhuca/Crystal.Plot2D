@@ -18,7 +18,7 @@ public class ToStringLabelProvider : NumericLabelProviderBase
   {
     var ticks = ticksInfo.Ticks;
 
-    Init(ticks);
+    Init(ticks: ticks);
 
     UIElement[] res = new UIElement[ticks.Length];
     LabelTickInfo<double> tickInfo = new() { Info = ticksInfo.Info };
@@ -27,7 +27,7 @@ public class ToStringLabelProvider : NumericLabelProviderBase
       tickInfo.Tick = ticks[i];
       tickInfo.Index = i;
 
-      string labelText = GetString(tickInfo);
+      string labelText = GetString(tickInfo: tickInfo);
 
       TextBlock label = (TextBlock)GetResourceFromPool();
       if (label == null)
@@ -36,11 +36,11 @@ public class ToStringLabelProvider : NumericLabelProviderBase
       }
 
       label.Text = labelText;
-      label.ToolTip = ticks[i].ToString(CultureInfo.InvariantCulture);
+      label.ToolTip = ticks[i].ToString(provider: CultureInfo.InvariantCulture);
 
       res[i] = label;
 
-      ApplyCustomView(tickInfo, label);
+      ApplyCustomView(info: tickInfo, label: label);
     }
     return res;
   }

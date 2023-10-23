@@ -8,15 +8,15 @@ namespace Crystal.Plot2D.Common;
 /// <summary>
 /// Represents a palette with start and stop colors and intermediate colors with their custom offsets.
 /// </summary>
-[ContentProperty("Steps")]
+[ContentProperty(name: "Steps")]
 public class LinearPalette : PaletteBase, ISupportInitialize
 {
-  public ObservableCollection<LinearPaletteColorStep> Steps { get; } = new ObservableCollection<LinearPaletteColorStep>();
+  public ObservableCollection<LinearPaletteColorStep> Steps { get; } = new();
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
   public Color StartColor { get; set; } = Colors.White;
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
   public Color EndColor { get; set; } = Colors.Black;
 
   /// <summary>
@@ -32,13 +32,13 @@ public class LinearPalette : PaletteBase, ISupportInitialize
   /// <param name="steps">The steps.</param>
   public LinearPalette(Color startColor, Color endColor, params LinearPaletteColorStep[] steps)
   {
-    Steps.Add(new LinearPaletteColorStep(startColor, 0));
+    Steps.Add(item: new LinearPaletteColorStep(color: startColor, offset: 0));
     if (steps != null)
     {
-      Steps.AddMany(steps);
+      Steps.AddMany(children: steps);
     }
 
-    Steps.Add(new LinearPaletteColorStep(endColor, 1));
+    Steps.Add(item: new LinearPaletteColorStep(color: endColor, offset: 1));
   }
 
   #region IPalette Members
@@ -52,31 +52,31 @@ public class LinearPalette : PaletteBase, ISupportInitialize
   {
     if (t < 0)
     {
-      return Steps[0].Color;
+      return Steps[index: 0].Color;
     }
 
     if (t > 1)
     {
-      return Steps[Steps.Count - 1].Color;
+      return Steps[index: Steps.Count - 1].Color;
     }
 
     int i = 0;
     double x = 0;
     while (x <= t)
     {
-      x = Steps[i + 1].Offset;
+      x = Steps[index: i + 1].Offset;
       i++;
     }
 
-    double ratio = (t - Steps[i - 1].Offset) / (Steps[i].Offset - Steps[i - 1].Offset);
+    double ratio = (t - Steps[index: i - 1].Offset) / (Steps[index: i].Offset - Steps[index: i - 1].Offset);
 
-    Color c0 = Steps[i - 1].Color;
-    Color c1 = Steps[i].Color;
+    Color c0 = Steps[index: i - 1].Color;
+    Color c1 = Steps[index: i].Color;
 
     return Color.FromRgb(
-      (byte)((1 - ratio) * c0.R + ratio * c1.R),
-      (byte)((1 - ratio) * c0.G + ratio * c1.G),
-      (byte)((1 - ratio) * c0.B + ratio * c1.B));
+      r: (byte)((1 - ratio) * c0.R + ratio * c1.R),
+      g: (byte)((1 - ratio) * c0.G + ratio * c1.G),
+      b: (byte)((1 - ratio) * c0.B + ratio * c1.B));
   }
 
   #endregion
@@ -89,14 +89,14 @@ public class LinearPalette : PaletteBase, ISupportInitialize
 
   void ISupportInitialize.EndInit()
   {
-    if (Steps.Count == 0 || Steps[0].Offset > 0)
+    if (Steps.Count == 0 || Steps[index: 0].Offset > 0)
     {
-      Steps.Insert(0, new LinearPaletteColorStep(StartColor, 0));
+      Steps.Insert(index: 0, item: new LinearPaletteColorStep(color: StartColor, offset: 0));
     }
 
-    if (Steps.Count == 0 || Steps[Steps.Count - 1].Offset < 1)
+    if (Steps.Count == 0 || Steps[index: Steps.Count - 1].Offset < 1)
     {
-      Steps.Add(new LinearPaletteColorStep(EndColor, 1));
+      Steps.Add(item: new LinearPaletteColorStep(color: EndColor, offset: 1));
     }
   }
 

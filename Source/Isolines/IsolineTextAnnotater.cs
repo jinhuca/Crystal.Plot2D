@@ -14,8 +14,8 @@ public sealed class IsolineTextAnnotater
   /// </summary>
   public double WayBeforeText
   {
-    get { return wayBeforeText; }
-    set { wayBeforeText = value; }
+    get => wayBeforeText;
+    set => wayBeforeText = value;
   }
 
   /// <summary>
@@ -53,7 +53,7 @@ public sealed class IsolineTextAnnotater
             rotation = (rotation + (forwardSegment.Max - forwardSegment.Min).ToAngle()) / 2;
           }
 
-          res.Add(new IsolineTextLabel
+          res.Add(item: new IsolineTextLabel
           {
             Value = line.RealValue,
             Position = segment.Max,

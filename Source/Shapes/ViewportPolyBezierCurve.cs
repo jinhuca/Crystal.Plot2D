@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
@@ -15,24 +14,24 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
 
   public PointCollection BezierPoints
   {
-    get { return (PointCollection)GetValue(BezierPointsProperty); }
-    set { SetValue(BezierPointsProperty, value); }
+    get => (PointCollection)GetValue(dp: BezierPointsProperty);
+    set => SetValue(dp: BezierPointsProperty, value: value);
   }
 
   public static readonly DependencyProperty BezierPointsProperty = DependencyProperty.Register(
-    "BezierPoints",
-    typeof(PointCollection),
-    typeof(ViewportPolyBezierCurve),
-    new FrameworkPropertyMetadata(null, OnPropertyChanged));
+    name: nameof(BezierPoints),
+    propertyType: typeof(PointCollection),
+    ownerType: typeof(ViewportPolyBezierCurve),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnPropertyChanged));
 
   private bool buildBezierPoints = true;
   public bool BuildBezierPoints
   {
-    get { return buildBezierPoints; }
-    set { buildBezierPoints = value; }
+    get => buildBezierPoints;
+    set => buildBezierPoints = value;
   }
 
-  bool updating = false;
+  bool updating;
   protected override void UpdateUIRepresentationCore()
   {
     if (updating)
@@ -54,11 +53,11 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
     {
       points = BezierPoints;
 
-      var screenPoints = points.DataToScreen(transform).ToArray();
+      var screenPoints = points.DataToScreen(transform: transform).ToArray();
       PathFigure figure = new();
       figure.StartPoint = screenPoints[0];
-      figure.Segments.Add(new PolyBezierSegment(screenPoints.Skip(1), true));
-      geometry.Figures.Add(figure);
+      figure.Segments.Add(value: new PolyBezierSegment(points: screenPoints.Skip(skipCount: 1), isStroked: true));
+      geometry.Figures.Add(value: figure);
       geometry.FillRule = FillRule;
     }
     else if (points == null) { }
@@ -68,27 +67,27 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
       if (points.Count > 0)
       {
         Point[] bezierPoints = null;
-        figure.StartPoint = points[0].DataToScreen(transform);
+        figure.StartPoint = points[index: 0].DataToScreen(transform: transform);
         if (points.Count > 1)
         {
-          Point[] screenPoints = points.DataToScreen(transform).ToArray();
+          Point[] screenPoints = points.DataToScreen(transform: transform).ToArray();
 
-          bezierPoints = BezierBuilder.GetBezierPoints(screenPoints).Skip(1).ToArray();
+          bezierPoints = BezierBuilder.GetBezierPoints(points: screenPoints).Skip(count: 1).ToArray();
 
-          figure.Segments.Add(new PolyBezierSegment(bezierPoints, true));
+          figure.Segments.Add(value: new PolyBezierSegment(points: bezierPoints, isStroked: true));
         }
 
         if (bezierPoints != null && buildBezierPoints)
         {
-          Array.Resize(ref bezierPoints, bezierPoints.Length + 1);
-          Array.Copy(bezierPoints, 0, bezierPoints, 1, bezierPoints.Length - 1);
+          Array.Resize(array: ref bezierPoints, newSize: bezierPoints.Length + 1);
+          Array.Copy(sourceArray: bezierPoints, sourceIndex: 0, destinationArray: bezierPoints, destinationIndex: 1, length: bezierPoints.Length - 1);
           bezierPoints[0] = figure.StartPoint;
 
-          BezierPoints = new PointCollection(bezierPoints.ScreenToData(transform));
+          BezierPoints = new PointCollection(collection: bezierPoints.ScreenToData(transform: transform));
         }
       }
 
-      geometry.Figures.Add(figure);
+      geometry.Figures.Add(value: figure);
       geometry.FillRule = FillRule;
     }
 

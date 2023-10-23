@@ -6,18 +6,18 @@ namespace Crystal.Plot2D;
 
 public class PopupTip : Popup
 {
-  private readonly TimeSpan showDurationInerval = new(0, 0, 10);
+  private readonly TimeSpan showDurationInterval = new(hours: 0, minutes: 0, seconds: 10);
   private Timer timer;
 
   public void ShowDelayed(TimeSpan delay)
   {
     if (timer != null)
     {
-      timer.Change((int)delay.TotalMilliseconds, Timeout.Infinite);
+      timer.Change(dueTime: (int)delay.TotalMilliseconds, period: Timeout.Infinite);
     }
     else
     {
-      timer = new Timer(OnTimerFinished, null, (int)delay.TotalMilliseconds, Timeout.Infinite);
+      timer = new Timer(callback: OnTimerFinished, state: null, dueTime: (int)delay.TotalMilliseconds, period: Timeout.Infinite);
     }
   }
 
@@ -25,11 +25,11 @@ public class PopupTip : Popup
   {
     if (timer != null)
     {
-      timer.Change((int)delay.TotalMilliseconds, Timeout.Infinite);
+      timer.Change(dueTime: (int)delay.TotalMilliseconds, period: Timeout.Infinite);
     }
     else
     {
-      timer = new Timer(OnTimerFinished, null, (int)delay.TotalMilliseconds, Timeout.Infinite);
+      timer = new Timer(callback: OnTimerFinished, state: null, dueTime: (int)delay.TotalMilliseconds, period: Timeout.Infinite);
     }
   }
 
@@ -37,20 +37,20 @@ public class PopupTip : Popup
   {
     if (timer != null)
     {
-      timer.Change(Timeout.Infinite, Timeout.Infinite);
+      timer.Change(dueTime: Timeout.Infinite, period: Timeout.Infinite);
     }
     IsOpen = false;
   }
 
   private void OnTimerFinished(object state)
   {
-    Dispatcher.BeginInvoke(new Action(() =>
+    Dispatcher.BeginInvoke(method: new Action(() =>
     {
       bool show = !IsOpen;
       IsOpen = show;
       if (show)
       {
-        HideDelayed(showDurationInerval);
+        HideDelayed(delay: showDurationInterval);
       }
     }));
   }

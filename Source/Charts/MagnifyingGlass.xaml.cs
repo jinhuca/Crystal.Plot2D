@@ -30,9 +30,9 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
   private void plotter_PreviewMouseMove(object sender, MouseEventArgs e)
   {
     VisualBrush b = (VisualBrush)magnifierEllipse.Fill;
-    Point pos = e.GetPosition(plotter.ParallelCanvas);
+    Point pos = e.GetPosition(relativeTo: plotter.ParallelCanvas);
 
-    Point plotterPos = e.GetPosition(plotter);
+    Point plotterPos = e.GetPosition(relativeTo: plotter);
 
     Rect viewBox = b.Viewbox;
     double xoffset = viewBox.Width / 2.0;
@@ -40,14 +40,14 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
     viewBox.X = plotterPos.X - xoffset;
     viewBox.Y = plotterPos.Y - yoffset;
     b.Viewbox = viewBox;
-    Canvas.SetLeft(this, pos.X - Width / 2);
-    Canvas.SetTop(this, pos.Y - Height / 2);
+    Canvas.SetLeft(element: this, length: pos.X - Width / 2);
+    Canvas.SetTop(element: this, length: pos.Y - Height / 2);
   }
 
   private double magnification = 2.0;
   public double Magnification
   {
-    get { return magnification; }
+    get => magnification;
     set
     {
       magnification = value;
@@ -72,7 +72,7 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
 
   protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
   {
-    base.OnPropertyChanged(e);
+    base.OnPropertyChanged(e: e);
 
     if (e.Property == WidthProperty || e.Property == HeightProperty)
     {
@@ -86,10 +86,10 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
   public void OnPlotterAttached(PlotterBase plotter)
   {
     this.plotter = plotter;
-    plotter.ParallelCanvas.Children.Add(this);
+    plotter.ParallelCanvas.Children.Add(element: this);
     plotter.PreviewMouseMove += plotter_PreviewMouseMove;
-    plotter.MouseEnter += new MouseEventHandler(plotter_MouseEnter);
-    plotter.MouseLeave += new MouseEventHandler(plotter_MouseLeave);
+    plotter.MouseEnter += plotter_MouseEnter;
+    plotter.MouseLeave += plotter_MouseLeave;
 
     VisualBrush b = (VisualBrush)magnifierEllipse.Fill;
     b.Visual = plotter.MainGrid;
@@ -109,11 +109,11 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
 
   public void OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.MouseEnter -= new MouseEventHandler(plotter_MouseEnter);
-    plotter.MouseLeave -= new MouseEventHandler(plotter_MouseLeave);
+    plotter.MouseEnter -= plotter_MouseEnter;
+    plotter.MouseLeave -= plotter_MouseLeave;
 
     plotter.PreviewMouseMove -= plotter_PreviewMouseMove;
-    plotter.ParallelCanvas.Children.Remove(this);
+    plotter.ParallelCanvas.Children.Remove(element: this);
     this.plotter = null;
 
     VisualBrush b = (VisualBrush)magnifierEllipse.Fill;

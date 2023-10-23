@@ -18,8 +18,8 @@ public class Legend : ItemsControl, IPlotterElement
   static Legend()
   {
     Type thisType = typeof(Legend);
-    DefaultStyleKeyProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(thisType));
-    PlotterBase.PlotterProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(OnPlotterChanged));
+    DefaultStyleKeyProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: thisType));
+    PlotterBase.PlotterProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: OnPlotterChanged));
   }
 
   private readonly ObservableCollection<FrameworkElement> legendItems = new();
@@ -33,19 +33,19 @@ public class Legend : ItemsControl, IPlotterElement
     Legend legend = (Legend)d;
     if (e.OldValue != null)
     {
-      legend.DetachFromPlotter((PlotterBase)e.OldValue);
+      legend.DetachFromPlotter(plotter: (PlotterBase)e.OldValue);
     }
     if (e.NewValue != null)
     {
-      legend.AttachToPlotter((PlotterBase)e.NewValue);
+      legend.AttachToPlotter(plotter: (PlotterBase)e.NewValue);
     }
   }
 
   private PlotterBase plotter;
   public void OnPlotterAttached(PlotterBase plotter)
   {
-    plotter.CentralGrid.Children.Add(this);
-    AttachToPlotter(plotter);
+    plotter.CentralGrid.Children.Add(element: this);
+    AttachToPlotter(plotter: plotter);
   }
 
   private void AttachToPlotter(PlotterBase plotter)
@@ -60,8 +60,8 @@ public class Legend : ItemsControl, IPlotterElement
 
   public void OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.CentralGrid.Children.Remove(this);
-    DetachFromPlotter(plotter);
+    plotter.CentralGrid.Children.Remove(element: this);
+    DetachFromPlotter(plotter: plotter);
   }
 
   private void DetachFromPlotter(PlotterBase plotter)
@@ -91,12 +91,12 @@ public class Legend : ItemsControl, IPlotterElement
 
     foreach (var chart in plotter.Children.OfType<DependencyObject>())
     {
-      var legendItemsBuilder = GetLegendItemsBuilder(chart);
+      var legendItemsBuilder = GetLegendItemsBuilder(obj: chart);
       if (legendItemsBuilder != null)
       {
-        foreach (var legendItem in legendItemsBuilder((IPlotterElement)chart))
+        foreach (var legendItem in legendItemsBuilder(element: (IPlotterElement)chart))
         {
-          legendItems.Add(legendItem);
+          legendItems.Add(item: legendItem);
         }
       }
 
@@ -119,7 +119,7 @@ public class Legend : ItemsControl, IPlotterElement
   {
     foreach (var legendItem in legendItems)
     {
-      BindingOperations.ClearAllBindings(legendItem);
+      BindingOperations.ClearAllBindings(target: legendItem);
     }
     legendItems.Clear();
     UpdateVisibility();
@@ -131,19 +131,19 @@ public class Legend : ItemsControl, IPlotterElement
 
   public static object GetDescription(DependencyObject obj)
   {
-    return obj.GetValue(DescriptionProperty);
+    return obj.GetValue(dp: DescriptionProperty);
   }
 
   public static void SetDescription(DependencyObject obj, object value)
   {
-    obj.SetValue(DescriptionProperty, value);
+    obj.SetValue(dp: DescriptionProperty, value: value);
   }
 
   public static readonly DependencyProperty DescriptionProperty = DependencyProperty.RegisterAttached(
-    "Description",
-    typeof(object),
-    typeof(Legend),
-    new FrameworkPropertyMetadata(null));
+    name: "Description",
+    propertyType: typeof(object),
+    ownerType: typeof(Legend),
+    defaultMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   #endregion // end of Description
 
@@ -151,19 +151,19 @@ public class Legend : ItemsControl, IPlotterElement
 
   public static object GetDetailedDescription(DependencyObject obj)
   {
-    return (object)obj.GetValue(DetailedDescriptionProperty);
+    return (object)obj.GetValue(dp: DetailedDescriptionProperty);
   }
 
   public static void SetDetailedDescription(DependencyObject obj, object value)
   {
-    obj.SetValue(DetailedDescriptionProperty, value);
+    obj.SetValue(dp: DetailedDescriptionProperty, value: value);
   }
 
   public static readonly DependencyProperty DetailedDescriptionProperty = DependencyProperty.RegisterAttached(
-    "DetailedDescription",
-    typeof(object),
-    typeof(Legend),
-    new FrameworkPropertyMetadata(null));
+    name: "DetailedDescription",
+    propertyType: typeof(object),
+    ownerType: typeof(Legend),
+    defaultMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   #endregion // end of Detailed description
 
@@ -171,19 +171,19 @@ public class Legend : ItemsControl, IPlotterElement
 
   public static object GetVisualContent(DependencyObject obj)
   {
-    return (object)obj.GetValue(VisualContentProperty);
+    return (object)obj.GetValue(dp: VisualContentProperty);
   }
 
   public static void SetVisualContent(DependencyObject obj, object value)
   {
-    obj.SetValue(VisualContentProperty, value);
+    obj.SetValue(dp: VisualContentProperty, value: value);
   }
 
   public static readonly DependencyProperty VisualContentProperty = DependencyProperty.RegisterAttached(
-    "VisualContent",
-    typeof(object),
-    typeof(Legend),
-    new FrameworkPropertyMetadata(null));
+    name: "VisualContent",
+    propertyType: typeof(object),
+    ownerType: typeof(Legend),
+    defaultMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   #endregion // end of VisualContent
 
@@ -191,19 +191,19 @@ public class Legend : ItemsControl, IPlotterElement
 
   public static object GetSampleData(DependencyObject obj)
   {
-    return (object)obj.GetValue(SampleDataProperty);
+    return (object)obj.GetValue(dp: SampleDataProperty);
   }
 
   public static void SetSampleData(DependencyObject obj, object value)
   {
-    obj.SetValue(SampleDataProperty, value);
+    obj.SetValue(dp: SampleDataProperty, value: value);
   }
 
   public static readonly DependencyProperty SampleDataProperty = DependencyProperty.RegisterAttached(
-    "SampleData",
-    typeof(object),
-    typeof(Legend),
-    new FrameworkPropertyMetadata(null));
+    name: "SampleData",
+    propertyType: typeof(object),
+    ownerType: typeof(Legend),
+    defaultMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   #endregion // end of SampleData
 
@@ -211,19 +211,19 @@ public class Legend : ItemsControl, IPlotterElement
 
   public static bool GetShowInLegend(DependencyObject obj)
   {
-    return (bool)obj.GetValue(ShowInLegendProperty);
+    return (bool)obj.GetValue(dp: ShowInLegendProperty);
   }
 
   public static void SetShowInLegend(DependencyObject obj, bool value)
   {
-    obj.SetValue(ShowInLegendProperty, value);
+    obj.SetValue(dp: ShowInLegendProperty, value: value);
   }
 
   public static readonly DependencyProperty ShowInLegendProperty = DependencyProperty.RegisterAttached(
-    "ShowInLegend",
-    typeof(bool),
-    typeof(Legend),
-    new FrameworkPropertyMetadata(true, OnShowInLegendChanged));
+    name: "ShowInLegend",
+    propertyType: typeof(bool),
+    ownerType: typeof(Legend),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: true, propertyChangedCallback: OnShowInLegendChanged));
 
   private static void OnShowInLegendChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -237,19 +237,19 @@ public class Legend : ItemsControl, IPlotterElement
 
   public static LegendItemsBuilder GetLegendItemsBuilder(DependencyObject obj)
   {
-    return (LegendItemsBuilder)obj.GetValue(LegendItemsBuilderProperty);
+    return (LegendItemsBuilder)obj.GetValue(dp: LegendItemsBuilderProperty);
   }
 
   public static void SetLegendItemsBuilder(DependencyObject obj, LegendItemsBuilder value)
   {
-    obj.SetValue(LegendItemsBuilderProperty, value);
+    obj.SetValue(dp: LegendItemsBuilderProperty, value: value);
   }
 
   public static readonly DependencyProperty LegendItemsBuilderProperty = DependencyProperty.RegisterAttached(
-    "LegendItemsBuilder",
-    typeof(LegendItemsBuilder),
-    typeof(Legend),
-    new FrameworkPropertyMetadata(null, OnLegendItemsBuilderChanged));
+    name: "LegendItemsBuilder",
+    propertyType: typeof(LegendItemsBuilder),
+    ownerType: typeof(Legend),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnLegendItemsBuilderChanged));
 
   private static void OnLegendItemsBuilderChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -270,21 +270,21 @@ public class Legend : ItemsControl, IPlotterElement
 
   public bool LegendVisible
   {
-    get { return (bool)GetValue(LegendVisibleProperty); }
-    set { SetValue(LegendVisibleProperty, value); }
+    get => (bool)GetValue(dp: LegendVisibleProperty);
+    set => SetValue(dp: LegendVisibleProperty, value: value);
   }
 
   public static readonly DependencyProperty LegendVisibleProperty = DependencyProperty.Register(
-    "LegendVisible",
-    typeof(bool),
-    typeof(Legend),
-    new FrameworkPropertyMetadata(true, OnLegendVisibleChanged));
+    name: nameof(LegendVisible),
+    propertyType: typeof(bool),
+    ownerType: typeof(Legend),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: true, propertyChangedCallback: OnLegendVisibleChanged));
 
   private static void OnLegendVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     Legend owner = (Legend)d;
     var visible = (bool)e.NewValue;
-    owner.OnLegendVisibleChanged(visible);
+    owner.OnLegendVisibleChanged(visible: visible);
   }
 
   private void OnLegendVisibleChanged(bool visible)
@@ -301,7 +301,7 @@ public class Legend : ItemsControl, IPlotterElement
     base.OnApplyTemplate();
 
 #if !RELEASEXBAP
-    var rect = (Rectangle)Template.FindName("backRect", this);
+    var rect = (Rectangle)Template.FindName(name: "backRect", templatedParent: this);
     if (rect != null)
     {
       rect.Effect = new DropShadowEffect { Direction = 300, ShadowDepth = 3, Opacity = 0.4 };

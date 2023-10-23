@@ -13,8 +13,8 @@ public abstract class ViewportShape : Shape, IPlotterElement
   static ViewportShape()
   {
     Type type = typeof(ViewportShape);
-    StrokeProperty.AddOwner(type, new FrameworkPropertyMetadata(Brushes.Blue));
-    StrokeThicknessProperty.AddOwner(type, new FrameworkPropertyMetadata(2.0));
+    StrokeProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Blue));
+    StrokeThicknessProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: 2.0));
   }
 
   /// <summary>
@@ -38,7 +38,7 @@ public abstract class ViewportShape : Shape, IPlotterElement
   private PlotterBase plotter;
   void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
   {
-    plotter.CentralGrid.Children.Add(this);
+    plotter.CentralGrid.Children.Add(element: this);
 
     PlotterBase plotter2d = (PlotterBase)plotter;
     this.plotter = plotter2d;
@@ -49,7 +49,7 @@ public abstract class ViewportShape : Shape, IPlotterElement
 
   private void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
-    OnViewportPropertyChanged(e);
+    OnViewportPropertyChanged(e: e);
   }
 
   protected virtual void OnViewportPropertyChanged(ExtendedPropertyChangedEventArgs e)
@@ -61,20 +61,14 @@ public abstract class ViewportShape : Shape, IPlotterElement
   {
     PlotterBase plotter2d = (PlotterBase)plotter;
     plotter2d.Viewport.PropertyChanged -= Viewport_PropertyChanged;
-    plotter.CentralGrid.Children.Remove(this);
+    plotter.CentralGrid.Children.Remove(element: this);
 
     this.plotter = null;
   }
 
-  public PlotterBase Plotter
-  {
-    get { return plotter; }
-  }
+  public PlotterBase Plotter => plotter;
 
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 }

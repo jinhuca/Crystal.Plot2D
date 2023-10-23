@@ -27,8 +27,8 @@ public sealed class HorizontalLine : SimpleLine
   protected override void UpdateUIRepresentationCore()
   {
     var transform = Plotter.Viewport.Transform;
-    var p1 = new Point(Plotter.Viewport.Visible.XMin, Value).DataToScreen(transform);
-    var p2 = new Point(Plotter.Viewport.Visible.XMax, Value).DataToScreen(transform);
+    var p1 = new Point(x: Plotter.Viewport.Visible.XMin, y: Value).DataToScreen(transform: transform);
+    var p2 = new Point(x: Plotter.Viewport.Visible.XMax, y: Value).DataToScreen(transform: transform);
 
     LineGeometry.StartPoint = p1;
     LineGeometry.EndPoint = p2;

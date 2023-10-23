@@ -11,8 +11,8 @@ namespace Crystal.Plot2D;
 /// Describes a rectangle in viewport or data coordinates.
 /// </summary>
 [Serializable]
-[ValueSerializer(typeof(DataRectSerializer))]
-[TypeConverter(typeof(DataRectConverter))]
+[ValueSerializer(valueSerializerType: typeof(DataRectSerializer))]
+[TypeConverter(type: typeof(DataRectConverter))]
 public struct DataRect : IEquatable<DataRect>, IFormattable
 {
   #region Ctors
@@ -78,10 +78,10 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <param name="point2">The point2.</param>
   public DataRect(Point point1, Point point2)
   {
-    xMin = Math.Min(point1.X, point2.X);
-    yMin = Math.Min(point1.Y, point2.Y);
-    width = Math.Max((double)(Math.Max(point1.X, point2.X) - xMin), 0);
-    height = Math.Max((double)(Math.Max(point1.Y, point2.Y) - yMin), 0);
+    xMin = Math.Min(val1: point1.X, val2: point2.X);
+    yMin = Math.Min(val1: point1.Y, val2: point2.Y);
+    width = Math.Max(val1: (double)(Math.Max(val1: point1.X, val2: point2.X) - xMin), val2: 0);
+    height = Math.Max(val1: (double)(Math.Max(val1: point1.Y, val2: point2.Y) - yMin), val2: 0);
   }
 
   /// <summary>
@@ -89,7 +89,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// </summary>
   /// <param name="point">The point.</param>
   /// <param name="vector">The vector.</param>
-  public DataRect(Point point, Vector vector) : this(point, point + vector) { }
+  public DataRect(Point point, Vector vector) : this(point1: point, point2: point + vector) { }
 
   /// <summary>
   ///   Initializes a new instance of the <see cref="DataRect"/> struct.
@@ -102,7 +102,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   {
     if ((width < 0) || (height < 0))
     {
-      throw new ArgumentException(Strings.Exceptions.WidthAndHeightCannotBeNegative);
+      throw new ArgumentException(message: Strings.Exceptions.WidthAndHeightCannotBeNegative);
     }
 
     this.xMin = xMin;
@@ -123,29 +123,29 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <param name="xMax">The x max.</param>
   /// <param name="yMax">The y max.</param>
   /// <returns></returns>
-  public static DataRect Create(double xMin, double yMin, double xMax, double yMax) => new(xMin, yMin, xMax - xMin, yMax - yMin);
+  public static DataRect Create(double xMin, double yMin, double xMax, double yMax) => new(xMin: xMin, yMin: yMin, width: xMax - xMin, height: yMax - yMin);
 
-  public static DataRect FromPoints(double x1, double y1, double x2, double y2) => new(new Point(x1, y1), new Point(x2, y2));
+  public static DataRect FromPoints(double x1, double y1, double x2, double y2) => new(point1: new Point(x: x1, y: y1), point2: new Point(x: x2, y: y2));
 
-  public static DataRect FromCenterSize(Point center, double width, double height) => new(center.X - width / 2, center.Y - height / 2, width, height);
+  public static DataRect FromCenterSize(Point center, double width, double height) => new(xMin: center.X - width / 2, yMin: center.Y - height / 2, width: width, height: height);
 
-  public static DataRect FromCenterSize(Point center, Size size) => FromCenterSize(center, size.Width, size.Height);
+  public static DataRect FromCenterSize(Point center, Size size) => FromCenterSize(center: center, width: size.Width, height: size.Height);
 
   public static DataRect Intersect(DataRect rect1, DataRect rect2)
   {
-    rect1.Intersect(rect2);
+    rect1.Intersect(rect: rect2);
     return rect1;
   }
 
-  public static implicit operator DataRect(Rect rect) => new(rect);
+  public static implicit operator DataRect(Rect rect) => new(rect: rect);
 
   #endregion
 
-  public Rect ToRect() => new(xMin, yMin, width, height);
+  public Rect ToRect() => new(x: xMin, y: yMin, width: width, height: height);
 
   public void Intersect(DataRect rect)
   {
-    if (!IntersectsWith(rect))
+    if (!IntersectsWith(rect: rect))
     {
       this = Empty;
       return;
@@ -153,10 +153,10 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
     DataRect res = new();
 
-    double x = Math.Max(XMin, rect.XMin);
-    double y = Math.Max(YMin, rect.YMin);
-    res.width = Math.Max(Math.Min(XMax, rect.XMax) - x, 0.0);
-    res.height = Math.Max(Math.Min(YMax, rect.YMax) - y, 0.0);
+    double x = Math.Max(val1: XMin, val2: rect.XMin);
+    double y = Math.Max(val1: YMin, val2: rect.YMin);
+    res.width = Math.Max(val1: Math.Min(val1: XMax, val2: rect.XMax) - x, val2: 0.0);
+    res.height = Math.Max(val1: Math.Min(val1: YMax, val2: rect.YMax) - y, val2: 0.0);
     res.xMin = x;
     res.yMin = y;
 
@@ -194,12 +194,12 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// </value>
   public double YMin
   {
-    get { return yMin; }
+    get => yMin;
     set
     {
       if (IsEmpty)
       {
-        throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+        throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
 
       yMin = value;
@@ -222,12 +222,12 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// </value>
   public double XMin
   {
-    get { return xMin; }
+    get => xMin;
     set
     {
       if (IsEmpty)
       {
-        throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+        throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
       xMin = value;
     }
@@ -249,21 +249,21 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// </value>
   public Point Location
   {
-    get => new(xMin, yMin);
+    get => new(x: xMin, y: yMin);
     set
     {
       if (IsEmpty)
       {
-        throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+        throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
       xMin = value.X;
       yMin = value.Y;
     }
   }
 
-  public Point XMaxYMax => new(XMax, YMax);
+  public Point XMaxYMax => new(x: XMax, y: YMax);
 
-  public Point XMinYMin => new(xMin, yMin);
+  public Point XMinYMin => new(x: xMin, y: yMin);
 
   /// <summary>
   /// Gets or sets the size.
@@ -271,10 +271,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <value>The size.</value>
   public Size Size
   {
-    get
-    {
-      return IsEmpty ? Size.Empty : new Size(width, height);
-    }
+    get => IsEmpty ? Size.Empty : new Size(width: width, height: height);
     set
     {
       if (value.IsEmpty)
@@ -285,7 +282,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       {
         if (IsEmpty)
         {
-          throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+          throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
         }
 
         width = value.Width;
@@ -296,16 +293,16 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   public double Width
   {
-    get { return width; }
+    get => width;
     set
     {
       if (IsEmpty)
       {
-        throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+        throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
       if (value < 0)
       {
-        throw new ArgumentOutOfRangeException(Strings.Exceptions.DataRectSizeCannotBeNegative);
+        throw new ArgumentOutOfRangeException(paramName: Strings.Exceptions.DataRectSizeCannotBeNegative);
       }
       width = value;
     }
@@ -313,17 +310,17 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   public double Height
   {
-    get { return height; }
+    get => height;
     set
     {
       if (IsEmpty)
       {
-        throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+        throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
 
       if (value < 0)
       {
-        throw new ArgumentOutOfRangeException(Strings.Exceptions.DataRectSizeCannotBeNegative);
+        throw new ArgumentOutOfRangeException(paramName: Strings.Exceptions.DataRectSizeCannotBeNegative);
       }
 
       height = value;
@@ -332,10 +329,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   private static readonly DataRect emptyRect = CreateEmptyRect();
 
-  public static DataRect Empty
-  {
-    get { return emptyRect; }
-  }
+  public static DataRect Empty => emptyRect;
 
   private static DataRect CreateEmptyRect()
   {
@@ -346,7 +340,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
     rect.height = double.NegativeInfinity;
     return rect;
   }
-  public static DataRect Infinite { get; } = new DataRect(double.MinValue / 2, double.MinValue / 2, double.MaxValue, double.MaxValue);
+  public static DataRect Infinite { get; } = new(xMin: double.MinValue / 2, yMin: double.MinValue / 2, width: double.MaxValue, height: double.MaxValue);
 
   #region Object overrides
 
@@ -371,7 +365,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
     DataRect other = (DataRect)obj;
 
-    return Equals(other);
+    return Equals(other: other);
   }
 
   /// <summary>
@@ -406,7 +400,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return "Empty";
     }
 
-    return string.Format("({0};{1}) -> {2}*{3}", xMin, yMin, width, height);
+    return $"({xMin};{yMin}) -> {width}*{height}";
   }
 
   /// <summary>
@@ -417,7 +411,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <returns>The result of the operator.</returns>
   public static bool operator ==(DataRect rect1, DataRect rect2)
   {
-    return rect1.Equals(rect2);
+    return rect1.Equals(other: rect2);
   }
 
   /// <summary>
@@ -428,17 +422,17 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <returns>The result of the operator.</returns>
   public static bool operator !=(DataRect rect1, DataRect rect2)
   {
-    return !rect1.Equals(rect2);
+    return !rect1.Equals(other: rect2);
   }
 
   public static bool EqualEps(DataRect rect1, DataRect rect2, double eps)
   {
-    double width = Math.Min(rect1.Width, rect2.Width);
-    double height = Math.Min(rect1.Height, rect2.Height);
-    return Math.Abs(rect1.XMin - rect2.XMin) < width * eps &&
-         Math.Abs(rect1.XMax - rect2.XMax) < width * eps &&
-         Math.Abs(rect1.YMin - rect2.YMin) < height * eps &&
-         Math.Abs(rect1.YMax - rect2.YMax) < height * eps;
+    double width = Math.Min(val1: rect1.Width, val2: rect2.Width);
+    double height = Math.Min(val1: rect1.Height, val2: rect2.Height);
+    return Math.Abs(value: rect1.XMin - rect2.XMin) < width * eps &&
+         Math.Abs(value: rect1.XMax - rect2.XMax) < width * eps &&
+         Math.Abs(value: rect1.YMin - rect2.YMin) < height * eps &&
+         Math.Abs(value: rect1.YMax - rect2.YMax) < height * eps;
   }
 
   #endregion
@@ -490,7 +484,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   public bool Contains(Point point)
   {
-    return Contains(point.X, point.Y);
+    return Contains(x: point.X, y: point.Y);
   }
 
   public bool Contains(DataRect rect)
@@ -511,7 +505,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   {
     if (IsEmpty)
     {
-      throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+      throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
     }
 
     xMin += offsetVector.X;
@@ -522,7 +516,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   {
     if (IsEmpty)
     {
-      throw new InvalidOperationException(Strings.Exceptions.CannotModifyEmptyDataRect);
+      throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
     }
 
     xMin += offsetX;
@@ -531,7 +525,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   public static DataRect Offset(DataRect rect, double offsetX, double offsetY)
   {
-    rect.Offset(offsetX, offsetY);
+    rect.Offset(offsetX: offsetX, offsetY: offsetY);
     return rect;
   }
 
@@ -560,7 +554,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       }
     }
 
-    Union(rect);
+    Union(rect: rect);
   }
 
   public void Union(DataRect rect)
@@ -572,8 +566,8 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
     }
     else if (!rect.IsEmpty)
     {
-      double minX = Math.Min(xMin, rect.xMin);
-      double minY = Math.Min(yMin, rect.yMin);
+      double minX = Math.Min(val1: xMin, val2: rect.xMin);
+      double minY = Math.Min(val1: yMin, val2: rect.yMin);
 
       if (rect.width == double.PositiveInfinity || width == double.PositiveInfinity)
       {
@@ -581,8 +575,8 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       }
       else
       {
-        double maxX = Math.Max(XMax, rect.XMax);
-        width = Math.Max(maxX - minX, 0.0);
+        double maxX = Math.Max(val1: XMax, val2: rect.XMax);
+        width = Math.Max(val1: maxX - minX, val2: 0.0);
       }
 
       if (rect.height == double.PositiveInfinity || height == double.PositiveInfinity)
@@ -591,8 +585,8 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       }
       else
       {
-        double maxY = Math.Max(YMax, rect.YMax);
-        height = Math.Max(maxY - minY, 0.0);
+        double maxY = Math.Max(val1: YMax, val2: rect.YMax);
+        height = Math.Max(val1: maxY - minY, val2: 0.0);
       }
 
       xMin = minX;
@@ -602,19 +596,19 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   public void Union(Point point)
   {
-    Union(new DataRect(point, point));
+    Union(rect: new DataRect(point1: point, point2: point));
   }
 
   public static DataRect Union(DataRect rect, Point point)
   {
-    rect.Union(point);
+    rect.Union(point: point);
 
     return rect;
   }
 
   public static DataRect Union(DataRect rect1, DataRect rect2)
   {
-    rect1.Union(rect2);
+    rect1.Union(rect: rect2);
 
     return rect1;
   }
@@ -626,8 +620,9 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return "Empty";
     }
 
-    char listSeparator = TokenizerHelper.GetNumericListSeparator(provider);
-    return string.Format(provider, "{1:" + format + "}{0}{2:" + format + "}{0}{3:" + format + "}{0}{4:" + format + "}", listSeparator, xMin, yMin, width, height);
+    char listSeparator = TokenizerHelper.GetNumericListSeparator(provider: provider);
+    return string.Format(provider: provider, format: "{1:" + format + "}{0}{2:" + format + "}{0}{3:" + format + "}{0}{4:" + format + "}",
+      args: new object[] { listSeparator, xMin, yMin, width, height });
   }
 
   /// <summary>
@@ -646,7 +641,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   public static DataRect Parse(string source)
   {
     DataRect rect;
-    IFormatProvider cultureInfo = CultureInfo.GetCultureInfo("en-us");
+    IFormatProvider cultureInfo = CultureInfo.GetCultureInfo(name: "en-us");
 
     if (source == "Empty")
     {
@@ -655,25 +650,25 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
     else
     {
       // format X,Y,Width,Height
-      string[] values = source.Split(',');
+      string[] values = source.Split(separator: ',');
       if (values.Length == 4)
       {
         rect = new DataRect(
-          Convert.ToDouble(values[0], cultureInfo),
-          Convert.ToDouble(values[1], cultureInfo),
-          Convert.ToDouble(values[2], cultureInfo),
-          Convert.ToDouble(values[3], cultureInfo)
+          xMin: Convert.ToDouble(value: values[0], provider: cultureInfo),
+          yMin: Convert.ToDouble(value: values[1], provider: cultureInfo),
+          width: Convert.ToDouble(value: values[2], provider: cultureInfo),
+          height: Convert.ToDouble(value: values[3], provider: cultureInfo)
           );
       }
       else
       {
         // format XMin, YMin - XMax, YMax
-        values = source.Split(new char[] { ',', ' ' }, StringSplitOptions.RemoveEmptyEntries);
+        values = source.Split(separator: new char[] { ',', ' ' }, options: StringSplitOptions.RemoveEmptyEntries);
         rect = Create(
-          Convert.ToDouble(values[0], cultureInfo),
-          Convert.ToDouble(values[1], cultureInfo),
-          Convert.ToDouble(values[2], cultureInfo),
-          Convert.ToDouble(values[3], cultureInfo)
+          xMin: Convert.ToDouble(value: values[0], provider: cultureInfo),
+          yMin: Convert.ToDouble(value: values[1], provider: cultureInfo),
+          xMax: Convert.ToDouble(value: values[2], provider: cultureInfo),
+          yMax: Convert.ToDouble(value: values[3], provider: cultureInfo)
           );
       }
     }
@@ -685,7 +680,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   string IFormattable.ToString(string format, IFormatProvider formatProvider)
   {
-    return ConvertToString(format, formatProvider);
+    return ConvertToString(format: format, provider: formatProvider);
   }
 
   #endregion

@@ -39,9 +39,9 @@ public sealed class RectangleHighlight : ViewportShape
   protected override void UpdateUIRepresentationCore()
   {
     var transform = Plotter.Viewport.Transform;
-    var p1 = rect.XMaxYMax.DataToScreen(transform);
-    var p2 = rect.XMinYMin.DataToScreen(transform);
-    rectGeometry.Rect = new Rect(p1, p2);
+    var p1 = rect.XMaxYMax.DataToScreen(transform: transform);
+    var p2 = rect.XMinYMin.DataToScreen(transform: transform);
+    rectGeometry.Rect = new Rect(point1: p1, point2: p2);
   }
 
   private readonly RectangleGeometry rectGeometry = new();

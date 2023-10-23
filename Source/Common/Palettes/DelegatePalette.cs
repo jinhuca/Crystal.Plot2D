@@ -5,7 +5,7 @@ namespace Crystal.Plot2D.Common;
 
 public sealed class DelegatePalette : PaletteBase
 {
-  public DelegatePalette(Func<double, Color> _func) => func = _func ?? throw new ArgumentNullException(nameof(_func));
+  public DelegatePalette(Func<double, Color> _func) => func = _func ?? throw new ArgumentNullException(paramName: nameof(_func));
   private readonly Func<double, Color> func;
-  public override Color GetColor(double t) => func(t);
+  public override Color GetColor(double t) => func(arg: t);
 }

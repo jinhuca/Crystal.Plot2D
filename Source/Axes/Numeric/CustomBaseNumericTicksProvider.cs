@@ -3,7 +3,7 @@ using System.Windows.Markup;
 
 namespace Crystal.Plot2D.Charts;
 
-[ContentProperty("TicksProvider")]
+[ContentProperty(name: "TicksProvider")]
 public class CustomBaseNumericTicksProvider : ITicksProvider<double>
 {
   private double customBase = 2;
@@ -14,17 +14,17 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
   /// <value>The custom base.</value>
   public double CustomBase
   {
-    get { return customBase; }
+    get => customBase;
     set
     {
-      if (double.IsNaN(value))
+      if (double.IsNaN(d: value))
       {
-        throw new ArgumentException(Strings.Exceptions.CustomBaseTicksProviderBaseIsNaN);
+        throw new ArgumentException(message: Strings.Exceptions.CustomBaseTicksProviderBaseIsNaN);
       }
 
       if (value <= 0)
       {
-        throw new ArgumentOutOfRangeException(Strings.Exceptions.CustomBaseTicksProviderBaseIsTooSmall);
+        throw new ArgumentOutOfRangeException(paramName: Strings.Exceptions.CustomBaseTicksProviderBaseIsTooSmall);
       }
 
       customBase = value;
@@ -34,19 +34,19 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
   /// <summary>
   /// Initializes a new instance of the <see cref="CustomBaseNumericTicksProvider"/> class.
   /// </summary>
-  public CustomBaseNumericTicksProvider() : this(2.0) { }
+  public CustomBaseNumericTicksProvider() : this(customBase: 2.0) { }
 
   /// <summary>
   /// Initializes a new instance of the <see cref="CustomBaseNumericTicksProvider"/> class.
   /// </summary>
   /// <param name="customBase">The custom base, e.g. Math.PI</param>
-  public CustomBaseNumericTicksProvider(double customBase) : this(customBase, new NumericTicksProvider()) { }
+  public CustomBaseNumericTicksProvider(double customBase) : this(customBase: customBase, ticksProvider: new NumericTicksProvider()) { }
 
   private CustomBaseNumericTicksProvider(double customBase, ITicksProvider<double> ticksProvider)
   {
     if (ticksProvider == null)
     {
-      throw new ArgumentNullException("ticksProvider");
+      throw new ArgumentNullException(paramName: "ticksProvider");
     }
 
     CustomBase = customBase;
@@ -56,18 +56,18 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
 
   private void ticksProvider_Changed(object sender, EventArgs e)
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
 
-  private ITicksProvider<double> ticksProvider = null;
+  private ITicksProvider<double> ticksProvider;
   public ITicksProvider<double> TicksProvider
   {
-    get { return ticksProvider; }
+    get => ticksProvider;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: "value");
       }
 
       if (ticksProvider != null)
@@ -83,16 +83,16 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
         minorTicksProvider.Changed -= minorTicksProvider_Changed;
       }
 
-      minorTicksProvider = new MinorProviderWrapper(this);
+      minorTicksProvider = new MinorProviderWrapper(owner: this);
       minorTicksProvider.Changed += minorTicksProvider_Changed;
 
-      Changed.Raise(this);
+      Changed.Raise(sender: this);
     }
   }
 
   void minorTicksProvider_Changed(object sender, EventArgs e)
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
 
   private Range<double> TransformRange(Range<double> range)
@@ -100,7 +100,7 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
     double min = range.Min / customBase;
     double max = range.Max / customBase;
 
-    return new Range<double>(min, max);
+    return new Range<double>(min: min, max: max);
   }
 
   #region ITicksProvider<double> Members
@@ -108,9 +108,9 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
   private double[] tickMarks;
   public ITicksInfo<double> GetTicks(Range<double> range, int ticksCount)
   {
-    var ticks = ticksProvider.GetTicks(TransformRange(range), ticksCount);
+    var ticks = ticksProvider.GetTicks(range: TransformRange(range: range), ticksCount: ticksCount);
 
-    TransformTicks(ticks);
+    TransformTicks(ticks: ticks);
 
     tickMarks = ticks.Ticks;
 
@@ -127,28 +127,22 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
 
   public int DecreaseTickCount(int ticksCount)
   {
-    return ticksProvider.DecreaseTickCount(ticksCount);
+    return ticksProvider.DecreaseTickCount(ticksCount: ticksCount);
   }
 
   public int IncreaseTickCount(int ticksCount)
   {
-    return ticksProvider.IncreaseTickCount(ticksCount);
+    return ticksProvider.IncreaseTickCount(ticksCount: ticksCount);
   }
 
   private ITicksProvider<double> minorTicksProvider;
-  public ITicksProvider<double> MinorProvider
-  {
-    get { return minorTicksProvider; }
-  }
+  public ITicksProvider<double> MinorProvider => minorTicksProvider;
 
   /// <summary>
   /// Gets the major provider, used to generate major ticks - for example, years for common ticks as months.
   /// </summary>
   /// <value>The major provider.</value>
-  public ITicksProvider<double> MajorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<double> MajorProvider => null;
 
   public event EventHandler Changed;
 
@@ -167,43 +161,34 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
 
     private void MinorTicksProvider_Changed(object sender, EventArgs e)
     {
-      Changed.Raise(this);
+      Changed.Raise(sender: this);
     }
 
-    private ITicksProvider<double> MinorTicksProvider
-    {
-      get { return owner.ticksProvider.MinorProvider; }
-    }
+    private ITicksProvider<double> MinorTicksProvider => owner.ticksProvider.MinorProvider;
 
     #region ITicksProvider<double> Members
 
     public ITicksInfo<double> GetTicks(Range<double> range, int ticksCount)
     {
       var minorProvider = MinorTicksProvider;
-      var ticks = minorProvider.GetTicks(range, ticksCount);
+      var ticks = minorProvider.GetTicks(range: range, ticksCount: ticksCount);
 
       return ticks;
     }
 
     public int DecreaseTickCount(int ticksCount)
     {
-      return MinorTicksProvider.DecreaseTickCount(ticksCount);
+      return MinorTicksProvider.DecreaseTickCount(ticksCount: ticksCount);
     }
 
     public int IncreaseTickCount(int ticksCount)
     {
-      return MinorTicksProvider.IncreaseTickCount(ticksCount);
+      return MinorTicksProvider.IncreaseTickCount(ticksCount: ticksCount);
     }
 
-    public ITicksProvider<double> MinorProvider
-    {
-      get { return MinorTicksProvider.MinorProvider; }
-    }
+    public ITicksProvider<double> MinorProvider => MinorTicksProvider.MinorProvider;
 
-    public ITicksProvider<double> MajorProvider
-    {
-      get { return owner; }
-    }
+    public ITicksProvider<double> MajorProvider => owner;
 
     public event EventHandler Changed;
 

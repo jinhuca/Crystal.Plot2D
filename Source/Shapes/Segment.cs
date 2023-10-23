@@ -30,18 +30,18 @@ public class Segment : ViewportShape
   /// <value>The start point.</value>
   public Point StartPoint
   {
-    get { return (Point)GetValue(StartPointProperty); }
-    set { SetValue(StartPointProperty, value); }
+    get => (Point)GetValue(dp: StartPointProperty);
+    set => SetValue(dp: StartPointProperty, value: value);
   }
 
   /// <summary>
   /// Identifies the StartPoint dependency property.
   /// </summary>
   public static readonly DependencyProperty StartPointProperty = DependencyProperty.Register(
-    "StartPoint",
-    typeof(Point),
-    typeof(Segment),
-    new FrameworkPropertyMetadata(new Point(), OnPointChanged));
+    name: nameof(StartPoint),
+    propertyType: typeof(Point),
+    ownerType: typeof(Segment),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: new Point(), propertyChangedCallback: OnPointChanged));
 
   protected static void OnPointChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -57,18 +57,18 @@ public class Segment : ViewportShape
   /// <value>The end point.</value>
   public Point EndPoint
   {
-    get { return (Point)GetValue(EndPointProperty); }
-    set { SetValue(EndPointProperty, value); }
+    get => (Point)GetValue(dp: EndPointProperty);
+    set => SetValue(dp: EndPointProperty, value: value);
   }
 
   /// <summary>
   /// Identifies the EndPoint dependency property.
   /// </summary>
   public static readonly DependencyProperty EndPointProperty = DependencyProperty.Register(
-    "EndPoint",
-    typeof(Point),
-    typeof(Segment),
-    new FrameworkPropertyMetadata(new Point(), OnPointChanged));
+    name: nameof(EndPoint),
+    propertyType: typeof(Point),
+    ownerType: typeof(Segment),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: new Point(), propertyChangedCallback: OnPointChanged));
 
   protected override void UpdateUIRepresentationCore()
   {
@@ -79,21 +79,15 @@ public class Segment : ViewportShape
 
     var transform = Plotter.Viewport.Transform;
 
-    Point p1 = StartPoint.DataToScreen(transform);
-    Point p2 = EndPoint.DataToScreen(transform);
+    Point p1 = StartPoint.DataToScreen(transform: transform);
+    Point p2 = EndPoint.DataToScreen(transform: transform);
 
     lineGeometry.StartPoint = p1;
     lineGeometry.EndPoint = p2;
   }
 
   readonly LineGeometry lineGeometry = new();
-  protected LineGeometry LineGeometry
-  {
-    get { return lineGeometry; }
-  }
+  protected LineGeometry LineGeometry => lineGeometry;
 
-  protected override Geometry DefiningGeometry
-  {
-    get { return lineGeometry; }
-  }
+  protected override Geometry DefiningGeometry => lineGeometry;
 }

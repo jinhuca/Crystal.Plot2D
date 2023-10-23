@@ -8,48 +8,48 @@ public abstract class MouseNavigationBase : NavigationBase
 {
   protected override void OnPlotterAttached(PlotterBase plotter)
   {
-    base.OnPlotterAttached(plotter);
+    base.OnPlotterAttached(plotter: plotter);
 
-    Mouse.AddMouseDownHandler(Parent, OnMouseDown);
-    Mouse.AddMouseMoveHandler(Parent, OnMouseMove);
-    Mouse.AddMouseUpHandler(Parent, OnMouseUp);
-    Mouse.AddMouseWheelHandler(Parent, OnMouseWheel);
+    Mouse.AddMouseDownHandler(element: Parent, handler: OnMouseDown);
+    Mouse.AddMouseMoveHandler(element: Parent, handler: OnMouseMove);
+    Mouse.AddMouseUpHandler(element: Parent, handler: OnMouseUp);
+    Mouse.AddMouseWheelHandler(element: Parent, handler: OnMouseWheel);
   }
 
   protected override void OnPlotterDetaching(PlotterBase plotter)
   {
-    Mouse.RemoveMouseDownHandler(Parent, OnMouseDown);
-    Mouse.RemoveMouseMoveHandler(Parent, OnMouseMove);
-    Mouse.RemoveMouseUpHandler(Parent, OnMouseUp);
-    Mouse.RemoveMouseWheelHandler(Parent, OnMouseWheel);
+    Mouse.RemoveMouseDownHandler(element: Parent, handler: OnMouseDown);
+    Mouse.RemoveMouseMoveHandler(element: Parent, handler: OnMouseMove);
+    Mouse.RemoveMouseUpHandler(element: Parent, handler: OnMouseUp);
+    Mouse.RemoveMouseWheelHandler(element: Parent, handler: OnMouseWheel);
 
-    base.OnPlotterDetaching(plotter);
+    base.OnPlotterDetaching(plotter: plotter);
   }
 
   private void OnMouseWheel(object sender, MouseWheelEventArgs e)
   {
-    OnPlotterMouseWheel(e);
+    OnPlotterMouseWheel(e: e);
   }
 
   protected virtual void OnPlotterMouseWheel(MouseWheelEventArgs e) { }
 
   private void OnMouseUp(object sender, MouseButtonEventArgs e)
   {
-    OnPlotterMouseUp(e);
+    OnPlotterMouseUp(e: e);
   }
 
   protected virtual void OnPlotterMouseUp(MouseButtonEventArgs e) { }
 
   private void OnMouseDown(object sender, MouseButtonEventArgs e)
   {
-    OnPlotterMouseDown(e);
+    OnPlotterMouseDown(e: e);
   }
 
   protected virtual void OnPlotterMouseDown(MouseButtonEventArgs e) { }
 
   private void OnMouseMove(object sender, MouseEventArgs e)
   {
-    OnPlotterMouseMove(e);
+    OnPlotterMouseMove(e: e);
   }
 
   protected virtual void OnPlotterMouseMove(MouseEventArgs e) { }

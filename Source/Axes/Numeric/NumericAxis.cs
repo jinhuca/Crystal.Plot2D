@@ -9,9 +9,9 @@ public class NumericAxis : AxisBase<double>
   /// Initializes a new instance of the <see cref="NumericAxis"/> class.
   /// </summary>
   public NumericAxis()
-    : base(new NumericAxisControl(),
-      d => d,
-      d => d)
+    : base(axisControl: new NumericAxisControl(),
+      convertFromDouble: d => d,
+      convertToDouble: d => d)
   {
   }
 
@@ -25,7 +25,7 @@ public class NumericAxis : AxisBase<double>
   /// <param name="maxValue">The value of axis type, corresponding to maximal viewport value.</param>
   public override void SetConversion(double min, double minValue, double max, double maxValue)
   {
-    var conversion = new NumericConversion(min, minValue, max, maxValue);
+    var conversion = new NumericConversion(min: min, minValue: minValue, max: max, maxValue: maxValue);
 
     ConvertFromDouble = conversion.FromDouble;
     ConvertToDouble = conversion.ToDouble;

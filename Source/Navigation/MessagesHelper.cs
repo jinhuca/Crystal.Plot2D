@@ -8,22 +8,22 @@ internal static class MessagesHelper
 {
   internal static int GetXFromLParam(IntPtr lParam)
   {
-    return LOWORD(lParam.ToInt32());
+    return LOWORD(i: lParam.ToInt32());
   }
 
   internal static int GetYFromLParam(IntPtr lParam)
   {
-    return HIWORD(lParam.ToInt32());
+    return HIWORD(i: lParam.ToInt32());
   }
 
   internal static Point GetMousePosFromLParam(IntPtr lParam)
   {
-    return new Point(GetXFromLParam(lParam), GetYFromLParam(lParam));
+    return new Point(x: GetXFromLParam(lParam: lParam), y: GetYFromLParam(lParam: lParam));
   }
 
   internal static int GetWheelDataFromWParam(IntPtr wParam)
   {
-    return HIWORD(wParam.ToInt32());
+    return HIWORD(i: wParam.ToInt32());
   }
 
   internal static short HIWORD(int i)

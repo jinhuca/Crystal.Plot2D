@@ -17,10 +17,10 @@ internal sealed class UIChildrenCollection : UIElementCollection
   /// Initializes a new instance of the <see cref="UIChildrenCollection"/> class.
   /// </summary>
   internal UIChildrenCollection(UIElement visualParent, FrameworkElement logicalParent)
-    : base(visualParent, logicalParent)
+    : base(visualParent: visualParent, logicalParent: logicalParent)
   {
     hostPanel = (IndividualArrangePanel)visualParent;
-    visualChildren = new VisualCollection(visualParent);
+    visualChildren = new VisualCollection(parent: visualParent);
   }
 
   private readonly VisualCollection visualChildren;
@@ -30,12 +30,12 @@ internal sealed class UIChildrenCollection : UIElementCollection
   {
     if (element == null)
     {
-      throw new ArgumentNullException("element");
+      throw new ArgumentNullException(paramName: nameof(element));
     }
 
-    SetLogicalParent(element);
+    SetLogicalParent(element: element);
 
-    var index = visualChildren.Add(element);
+    var index = visualChildren.Add(visual: element);
 
     if (IsAddingMany)
     {
@@ -43,7 +43,7 @@ internal sealed class UIChildrenCollection : UIElementCollection
     }
     else
     {
-      hostPanel.OnChildAdded((FrameworkElement)element);
+      hostPanel.OnChildAdded(child: (FrameworkElement)element);
     }
 
     return index;
@@ -56,7 +56,7 @@ internal sealed class UIChildrenCollection : UIElementCollection
       Visual[] visualArray = new Visual[visualChildren.Count];
       for (int i = 0; i < visualChildren.Count; i++)
       {
-        visualArray[i] = visualChildren[i];
+        visualArray[i] = visualChildren[index: i];
       }
 
       visualChildren.Clear();
@@ -65,46 +65,46 @@ internal sealed class UIChildrenCollection : UIElementCollection
       {
         if (visualArray[i] is UIElement element)
         {
-          ClearLogicalParent(element);
+          ClearLogicalParent(element: element);
         }
       }
     }
   }
 
-  public override bool Contains(UIElement element) => visualChildren.Contains(element);
+  public override bool Contains(UIElement element) => visualChildren.Contains(visual: element);
 
-  public override void CopyTo(Array array, int index) => visualChildren.CopyTo(array, index);
+  public override void CopyTo(Array array, int index) => visualChildren.CopyTo(array: array, index: index);
 
-  public override void CopyTo(UIElement[] array, int index) => visualChildren.CopyTo(array, index);
+  public override void CopyTo(UIElement[] array, int index) => visualChildren.CopyTo(array: array, index: index);
 
   public override IEnumerator GetEnumerator() => visualChildren.GetEnumerator();
 
-  public override int IndexOf(UIElement element) => visualChildren.IndexOf(element);
+  public override int IndexOf(UIElement element) => visualChildren.IndexOf(visual: element);
 
   public override void Insert(int index, UIElement element)
   {
     if (element == null)
     {
-      throw new ArgumentNullException("element");
+      throw new ArgumentNullException(paramName: nameof(element));
     }
 
-    hostPanel.OnChildAdded((FrameworkElement)element);
-    SetLogicalParent(element);
-    visualChildren.Insert(index, element);
+    hostPanel.OnChildAdded(child: (FrameworkElement)element);
+    SetLogicalParent(element: element);
+    visualChildren.Insert(index: index, visual: element);
   }
 
   public override void Remove(UIElement element)
   {
-    visualChildren.Remove(element);
-    ClearLogicalParent(element);
+    visualChildren.Remove(visual: element);
+    ClearLogicalParent(element: element);
   }
 
   public override void RemoveAt(int index)
   {
-    visualChildren.RemoveAt(index);
-    if (visualChildren[index] is UIElement element)
+    visualChildren.RemoveAt(index: index);
+    if (visualChildren[index: index] is UIElement element)
     {
-      ClearLogicalParent(element);
+      ClearLogicalParent(element: element);
     }
   }
 
@@ -122,17 +122,17 @@ internal sealed class UIChildrenCollection : UIElementCollection
       int copyIndex = index;
       for (int i = 0; i < count; i++)
       {
-        visualArray[i] = visualChildren[copyIndex];
+        visualArray[i] = visualChildren[index: copyIndex];
         copyIndex++;
       }
 
-      visualChildren.RemoveRange(index, count);
+      visualChildren.RemoveRange(index: index, count: count);
 
       for (int i = 0; i < count; i++)
       {
         if (visualArray[i] is UIElement element)
         {
-          ClearLogicalParent(element);
+          ClearLogicalParent(element: element);
         }
       }
     }
@@ -140,27 +140,24 @@ internal sealed class UIChildrenCollection : UIElementCollection
 
   public override UIElement this[int index]
   {
-    get
-    {
-      return visualChildren[index] as UIElement;
-    }
+    get => visualChildren[index: index] as UIElement;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: nameof(value));
       }
 
-      if (visualChildren[index] != value)
+      if (visualChildren[index: index] != value)
       {
-        if (visualChildren[index] is UIElement element)
+        if (visualChildren[index: index] is UIElement element)
         {
-          ClearLogicalParent(element);
+          ClearLogicalParent(element: element);
         }
 
-        hostPanel.OnChildAdded((FrameworkElement)value);
-        visualChildren[index] = value;
-        SetLogicalParent(value);
+        hostPanel.OnChildAdded(child: (FrameworkElement)value);
+        visualChildren[index: index] = value;
+        SetLogicalParent(element: value);
       }
     }
   }

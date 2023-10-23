@@ -10,7 +10,7 @@ namespace Crystal.Plot2D.Charts;
 public sealed class IsolineGenerationException : Exception
 {
   internal IsolineGenerationException() { }
-  internal IsolineGenerationException(string message) : base(message) { }
-  internal IsolineGenerationException(string message, Exception inner) : base(message, inner) { }
-  internal IsolineGenerationException(SerializationInfo info, StreamingContext context) : base(info, context) { }
+  internal IsolineGenerationException(string message) : base(message: message) { }
+  internal IsolineGenerationException(string message, Exception inner) : base(message: message, innerException: inner) { }
+  internal IsolineGenerationException(SerializationInfo info, StreamingContext context) : base(info: info, context: context) { }
 }

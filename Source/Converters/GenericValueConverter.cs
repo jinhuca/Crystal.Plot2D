@@ -12,7 +12,7 @@ public class GenericValueConverter<T> : IValueConverter
 
   public GenericValueConverter(Func<T, object> conversion)
   {
-    Conversion = conversion ?? throw new ArgumentNullException("conversion");
+    Conversion = conversion ?? throw new ArgumentNullException(paramName: "conversion");
   }
 
   #region IValueConverter Members
@@ -22,7 +22,7 @@ public class GenericValueConverter<T> : IValueConverter
     if (value is T)
     {
       T genericValue = (T)value;
-      object result = ConvertCore(genericValue, targetType, parameter, culture);
+      object result = ConvertCore(value: genericValue, targetType: targetType, parameter: parameter, culture: culture);
       return result;
     }
     return null;
@@ -32,7 +32,7 @@ public class GenericValueConverter<T> : IValueConverter
   {
     if (Conversion != null)
     {
-      return Conversion(value);
+      return Conversion(arg: value);
     }
 
     throw new NotImplementedException();

@@ -9,17 +9,17 @@ using System.Windows.Media;
 
 namespace Crystal.Plot2D.Common;
 
-[ContentProperty("ColorSteps")]
+[ContentProperty(name: "ColorSteps")]
 public sealed class UniformLinearPalette : IPalette, ISupportInitialize
 {
-  public ObservableCollection<Color> Colors { get; private set; } = new ObservableCollection<Color>();
+  public ObservableCollection<Color> Colors { get; private set; } = new();
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-  [EditorBrowsable(EditorBrowsableState.Never)]
-  public List<PaletteColorStep> ColorSteps { get; } = new List<PaletteColorStep>();
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
+  public List<PaletteColorStep> ColorSteps { get; } = new();
 
-  [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-  private void RaiseChanged() => Changed.Raise(this);
+  [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1811:AvoidUncalledPrivateCode")]
+  private void RaiseChanged() => Changed.Raise(sender: this);
   public event EventHandler Changed;
 
   public UniformLinearPalette() { }
@@ -28,16 +28,16 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
   {
     if (colors == null)
     {
-      throw new ArgumentNullException("colors");
+      throw new ArgumentNullException(paramName: "colors");
     }
 
     if (colors.Length < 2)
     {
-      throw new ArgumentException(Strings.Exceptions.PaletteTooFewColors);
+      throw new ArgumentException(message: Strings.Exceptions.PaletteTooFewColors);
     }
 
-    Colors = new ObservableCollection<Color>(colors);
-    FillPoints(colors.Length);
+    Colors = new ObservableCollection<Color>(collection: colors);
+    FillPoints(size: colors.Length);
   }
 
   private void FillPoints(int size)
@@ -48,24 +48,24 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
       Points[i] = i / (double)(size - 1);
     }
   }
-  [DefaultValue(true)]
+  [DefaultValue(value: true)]
   public bool IncreaseBrightness { get; set; } = true;
 
   public double[] Points { get; set; }
-  public bool BeganInit { get; set; } = false;
+  public bool BeganInit { get; set; }
 
   public Color GetColor(double t)
   {
-    Verify.AssertIsFinite(t);
-    Verify.IsTrue(0 <= t && t <= 1);
+    Verify.AssertIsFinite(d: t);
+    Verify.IsTrue(condition: 0 <= t && t <= 1);
 
     if (t <= 0)
     {
-      return Colors[0];
+      return Colors[index: 0];
     }
     else if (t >= 1)
     {
-      return Colors[Colors.Count - 1];
+      return Colors[index: Colors.Count - 1];
     }
     else
     {
@@ -77,14 +77,14 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
 
       double ratio = (Points[i] - t) / (Points[i] - Points[i - 1]);
 
-      Verify.IsTrue(0 <= ratio && ratio <= 1);
+      Verify.IsTrue(condition: 0 <= ratio && ratio <= 1);
 
-      Color c0 = Colors[i - 1];
-      Color c1 = Colors[i];
+      Color c0 = Colors[index: i - 1];
+      Color c1 = Colors[index: i];
       Color res = Color.FromRgb(
-        (byte)(c0.R * ratio + c1.R * (1 - ratio)),
-        (byte)(c0.G * ratio + c1.G * (1 - ratio)),
-        (byte)(c0.B * ratio + c1.B * (1 - ratio)));
+        r: (byte)(c0.R * ratio + c1.R * (1 - ratio)),
+        g: (byte)(c0.G * ratio + c1.G * (1 - ratio)),
+        b: (byte)(c0.B * ratio + c1.B * (1 - ratio)));
 
       // Increasing saturation and brightness
       if (IncreaseBrightness)
@@ -109,8 +109,8 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
   {
     if (BeganInit)
     {
-      Colors = new ObservableCollection<Color>(ColorSteps.Select(step => step.Color));
-      FillPoints(Colors.Count);
+      Colors = new ObservableCollection<Color>(collection: ColorSteps.Select(selector: step => step.Color));
+      FillPoints(size: Colors.Count);
     }
   }
 

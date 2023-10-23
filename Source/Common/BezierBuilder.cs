@@ -12,7 +12,7 @@ public static class BezierBuilder
   {
     if (points == null)
     {
-      throw new ArgumentNullException(nameof(points));
+      throw new ArgumentNullException(paramName: nameof(points));
     }
     Point[] firstControlPoints;
     Point[] secondControlPoints;
@@ -20,7 +20,7 @@ public static class BezierBuilder
     int n = points.Length - 1;
     if (n < 1)
     {
-      throw new ArgumentException(Exceptions.BezierBuilder_GetBezierPoints_At_least_two_knot_points_required, nameof(points));
+      throw new ArgumentException(message: Exceptions.BezierBuilder_GetBezierPoints_At_least_two_knot_points_required, paramName: nameof(points));
     }
     if (n == 1)
     {
@@ -36,7 +36,7 @@ public static class BezierBuilder
       secondControlPoints[0].X = 2 * firstControlPoints[0].X - points[0].X;
       secondControlPoints[0].Y = 2 * firstControlPoints[0].Y - points[0].Y;
 
-      return Join(points, firstControlPoints, secondControlPoints);
+      return Join(points: points, firstControlPoints: firstControlPoints, secondControlPoints: secondControlPoints);
     }
 
     // Calculate first Bezier control points
@@ -52,7 +52,7 @@ public static class BezierBuilder
     rhs[0] = points[0].X + 2 * points[1].X;
     rhs[n - 1] = (8 * points[n - 1].X + points[n].X) / 2.0;
     // Get first control points X-values
-    double[] x = GetFirstControlPoints(rhs);
+    double[] x = GetFirstControlPoints(rhs: rhs);
 
     // Set right hand side Y values
     for (int i = 1; i < n - 1; ++i)
@@ -63,7 +63,7 @@ public static class BezierBuilder
     rhs[0] = points[0].Y + 2 * points[1].Y;
     rhs[n - 1] = (8 * points[n - 1].Y + points[n].Y) / 2.0;
     // Get first control points Y-values
-    double[] y = GetFirstControlPoints(rhs);
+    double[] y = GetFirstControlPoints(rhs: rhs);
 
     // InnerBrush output arrays.
     firstControlPoints = new Point[n];
@@ -71,19 +71,19 @@ public static class BezierBuilder
     for (int i = 0; i < n; ++i)
     {
       // First control point
-      firstControlPoints[i] = new Point(x[i], y[i]);
+      firstControlPoints[i] = new Point(x: x[i], y: y[i]);
       // Second control point
       if (i < n - 1)
       {
-        secondControlPoints[i] = new Point(2 * points[i + 1].X - x[i + 1], 2 * points[i + 1].Y - y[i + 1]);
+        secondControlPoints[i] = new Point(x: 2 * points[i + 1].X - x[i + 1], y: 2 * points[i + 1].Y - y[i + 1]);
       }
       else
       {
-        secondControlPoints[i] = new Point((points[n].X + x[n - 1]) / 2, (points[n].Y + y[n - 1]) / 2);
+        secondControlPoints[i] = new Point(x: (points[n].X + x[n - 1]) / 2, y: (points[n].Y + y[n - 1]) / 2);
       }
     }
 
-    return Join(points, firstControlPoints, secondControlPoints);
+    return Join(points: points, firstControlPoints: firstControlPoints, secondControlPoints: secondControlPoints);
   }
 
   private static IEnumerable<Point> Join(Point[] points, Point[] firstControlPoints, Point[] secondControlPoints)

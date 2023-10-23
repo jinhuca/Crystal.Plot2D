@@ -7,14 +7,14 @@ public static class BackgroundRenderer
   #region RenderingFinished event
 
   public static readonly RoutedEvent RenderingFinished = EventManager.RegisterRoutedEvent(
-    "RenderingFinished",
-    RoutingStrategy.Bubble,
-    typeof(RoutedEventHandler),
-    typeof(BackgroundRenderer));
+    name: "RenderingFinished",
+    routingStrategy: RoutingStrategy.Bubble,
+    handlerType: typeof(RoutedEventHandler),
+    ownerType: typeof(BackgroundRenderer));
 
   public static void RaiseRenderingFinished(FrameworkElement eventSource)
   {
-    eventSource.RaiseEvent(new RoutedEventArgs(RenderingFinished));
+    eventSource.RaiseEvent(e: new RoutedEventArgs(routedEvent: RenderingFinished));
   }
 
   #endregion
@@ -23,33 +23,33 @@ public static class BackgroundRenderer
 
   public static RenderingState GetRenderingState(DependencyObject obj)
   {
-    return (RenderingState)obj.GetValue(RenderingStateProperty);
+    return (RenderingState)obj.GetValue(dp: RenderingStateProperty);
   }
 
   public static void SetRenderingState(DependencyObject obj, RenderingState value)
   {
-    obj.SetValue(RenderingStateProperty, value);
+    obj.SetValue(dp: RenderingStateProperty, value: value);
   }
 
   public static readonly DependencyProperty RenderingStateProperty = DependencyProperty.RegisterAttached(
-    "RenderingState",
-    typeof(RenderingState),
-    typeof(BackgroundRenderer),
-    new FrameworkPropertyMetadata(RenderingState.DuringRendering));
+    name: "RenderingState",
+    propertyType: typeof(RenderingState),
+    ownerType: typeof(BackgroundRenderer),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: RenderingState.DuringRendering));
 
   #endregion RenderingState property
 
   #region UpdateRequestedEvent
 
   public static readonly RoutedEvent UpdateRequested = EventManager.RegisterRoutedEvent(
-    "UpdateRequested",
-    RoutingStrategy.Bubble,
-    typeof(RoutedEventHandler),
-    typeof(BackgroundRenderer));
+    name: "UpdateRequested",
+    routingStrategy: RoutingStrategy.Bubble,
+    handlerType: typeof(RoutedEventHandler),
+    ownerType: typeof(BackgroundRenderer));
 
   public static void RaiseUpdateRequested(FrameworkElement eventSource)
   {
-    eventSource.RaiseEvent(new RoutedEventArgs(UpdateRequested));
+    eventSource.RaiseEvent(e: new RoutedEventArgs(routedEvent: UpdateRequested));
   }
 
   #endregion
@@ -58,19 +58,19 @@ public static class BackgroundRenderer
 
   public static bool GetUsesBackgroundRendering(DependencyObject obj)
   {
-    return (bool)obj.GetValue(UsesBackgroundRenderingProperty);
+    return (bool)obj.GetValue(dp: UsesBackgroundRenderingProperty);
   }
 
   public static void SetUsesBackgroundRendering(DependencyObject obj, bool value)
   {
-    obj.SetValue(UsesBackgroundRenderingProperty, value);
+    obj.SetValue(dp: UsesBackgroundRenderingProperty, value: value);
   }
 
   public static readonly DependencyProperty UsesBackgroundRenderingProperty = DependencyProperty.RegisterAttached(
-    "UsesBackgroundRendering",
-    typeof(bool),
-    typeof(BackgroundRenderer),
-    new FrameworkPropertyMetadata(false));
+    name: "UsesBackgroundRendering",
+    propertyType: typeof(bool),
+    ownerType: typeof(BackgroundRenderer),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: false));
 
   #endregion // end of UsesBackgroundRendering
 }

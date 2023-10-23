@@ -16,14 +16,14 @@ public sealed class ConstraintCollection : NotifiableCollection<ViewportConstrai
 
   internal ConstraintCollection(Viewport2D viewport)
   {
-    Viewport = viewport ?? throw new ArgumentNullException("viewport");
+    Viewport = viewport ?? throw new ArgumentNullException(paramName: "viewport");
   }
 
   protected override void OnItemAdding(ViewportConstraint item)
   {
     if (item == null)
     {
-      throw new ArgumentNullException("item");
+      throw new ArgumentNullException(paramName: "item");
     }
   }
 
@@ -32,20 +32,20 @@ public sealed class ConstraintCollection : NotifiableCollection<ViewportConstrai
     item.Changed += OnItemChanged;
     if (item is ISupportAttachToViewport attachable)
     {
-      attachable.Attach(Viewport);
+      attachable.Attach(viewport: Viewport);
     }
   }
 
   private void OnItemChanged(object sender, EventArgs e)
   {
-    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    OnCollectionChanged(e: new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
   }
 
   protected override void OnItemRemoving(ViewportConstraint item)
   {
     if (item is ISupportAttachToViewport attachable)
     {
-      attachable.Detach(Viewport);
+      attachable.Detach(viewport: Viewport);
     }
     item.Changed -= OnItemChanged;
   }
@@ -55,7 +55,7 @@ public sealed class ConstraintCollection : NotifiableCollection<ViewportConstrai
     DataRect res = newVisible;
     foreach (var constraint in this)
     {
-      res = constraint.Apply(oldVisible, res, viewport);
+      res = constraint.Apply(previousDataRect: oldVisible, proposedDataRect: res, viewport: viewport);
     }
     return res;
   }

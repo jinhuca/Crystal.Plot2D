@@ -19,8 +19,8 @@ public abstract class SimpleLine : ViewportShape
   /// <value>The value.</value>
   public double Value
   {
-    get { return (double)GetValue(ValueProperty); }
-    set { SetValue(ValueProperty, value); }
+    get => (double)GetValue(dp: ValueProperty);
+    set => SetValue(dp: ValueProperty, value: value);
   }
 
   /// <summary>
@@ -28,11 +28,11 @@ public abstract class SimpleLine : ViewportShape
   /// </summary>
   public static readonly DependencyProperty ValueProperty =
     DependencyProperty.Register(
-      "Value",
-      typeof(double),
-      typeof(SimpleLine),
-      new PropertyMetadata(
-        0.0, OnValueChanged));
+      name: nameof(Value),
+      propertyType: typeof(double),
+      ownerType: typeof(SimpleLine),
+      typeMetadata: new PropertyMetadata(
+        defaultValue: 0.0, propertyChangedCallback: OnValueChanged));
 
   private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -46,12 +46,7 @@ public abstract class SimpleLine : ViewportShape
   }
 
   private readonly LineGeometry lineGeometry = new();
-  protected LineGeometry LineGeometry
-  {
-    get { return lineGeometry; }
-  }
-  protected override Geometry DefiningGeometry
-  {
-    get { return lineGeometry; }
-  }
+  protected LineGeometry LineGeometry => lineGeometry;
+
+  protected override Geometry DefiningGeometry => lineGeometry;
 }

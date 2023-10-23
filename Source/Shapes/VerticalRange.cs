@@ -10,19 +10,19 @@ public sealed class VerticalRange : RangeHighlight
   protected override void UpdateUIRepresentationCore()
   {
     var transform = Plotter.Viewport.Transform;
-    DataRect visible = Plotter.Viewport.Visible;
+    var visible = Plotter.Viewport.Visible;
 
-    Point p1_top = new Point(Value1, visible.YMin).DataToScreen(transform);
-    Point p1_bottom = new Point(Value1, visible.YMax).DataToScreen(transform);
-    Point p2_top = new Point(Value2, visible.YMin).DataToScreen(transform);
-    Point p2_bottom = new Point(Value2, visible.YMax).DataToScreen(transform);
+    var p1Top = new Point(x: Value1, y: visible.YMin).DataToScreen(transform: transform);
+    var p1Bottom = new Point(x: Value1, y: visible.YMax).DataToScreen(transform: transform);
+    var p2Top = new Point(x: Value2, y: visible.YMin).DataToScreen(transform: transform);
+    var p2Bottom = new Point(x: Value2, y: visible.YMax).DataToScreen(transform: transform);
 
-    LineGeometry1.StartPoint = p1_top;
-    LineGeometry1.EndPoint = p1_bottom;
+    LineGeometry1.StartPoint = p1Top;
+    LineGeometry1.EndPoint = p1Bottom;
 
-    LineGeometry2.StartPoint = p2_top;
-    LineGeometry2.EndPoint = p2_bottom;
+    LineGeometry2.StartPoint = p2Top;
+    LineGeometry2.EndPoint = p2Bottom;
 
-    RectGeometry.Rect = new Rect(p1_top, p2_bottom);
+    RectGeometry.Rect = new Rect(point1: p1Top, point2: p2Bottom);
   }
 }

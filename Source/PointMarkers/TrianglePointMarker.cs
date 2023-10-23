@@ -10,15 +10,15 @@ public class TrianglePointMarker : ShapePointMarker
 {
   public override void Render(DrawingContext dc, Point screenPoint)
   {
-    Point pt0 = Point.Add(screenPoint, new Vector(-Diameter / 2, -Diameter / 2));
-    Point pt1 = Point.Add(screenPoint, new Vector(0, Diameter / 2));
-    Point pt2 = Point.Add(screenPoint, new Vector(Diameter / 2, -Diameter / 2));
+    Point pt0 = Point.Add(point: screenPoint, vector: new Vector(x: -Diameter / 2, y: -Diameter / 2));
+    Point pt1 = Point.Add(point: screenPoint, vector: new Vector(x: 0, y: Diameter / 2));
+    Point pt2 = Point.Add(point: screenPoint, vector: new Vector(x: Diameter / 2, y: -Diameter / 2));
 
     var streamGeom = new StreamGeometry();
     using var context = streamGeom.Open();
-    context.BeginFigure(pt0, true, true);
-    context.LineTo(pt1, true, true);
-    context.LineTo(pt2, true, true);
-    dc.DrawGeometry(FillBrush, OutlinePen, streamGeom);
+    context.BeginFigure(startPoint: pt0, isFilled: true, isClosed: true);
+    context.LineTo(point: pt1, isStroked: true, isSmoothJoin: true);
+    context.LineTo(point: pt2, isStroked: true, isSmoothJoin: true);
+    dc.DrawGeometry(brush: FillBrush, pen: OutlinePen, geometry: streamGeom);
   }
 }

@@ -7,20 +7,20 @@ using System.Windows.Media;
 
 namespace Crystal.Plot2D.Common;
 
-[ContentProperty("Steps")]
+[ContentProperty(name: "Steps")]
 public class DiscretePalette : IPalette
 {
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-  public ObservableCollection<LinearPaletteColorStep> Steps { get; } = new ObservableCollection<LinearPaletteColorStep>();
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
+  public ObservableCollection<LinearPaletteColorStep> Steps { get; } = new();
 
   public DiscretePalette() { }
-  public DiscretePalette(params LinearPaletteColorStep[] steps) => Steps.AddMany(steps);
+  public DiscretePalette(params LinearPaletteColorStep[] steps) => Steps.AddMany(children: steps);
 
   public Color GetColor(double t)
   {
     if (t <= 0)
     {
-      return Steps[0].Color;
+      return Steps[index: 0].Color;
     }
 
     if (t >= Steps.Last().Offset)
@@ -32,11 +32,11 @@ public class DiscretePalette : IPalette
     double x = 0;
     while (x < t && i < Steps.Count)
     {
-      x = Steps[i].Offset;
+      x = Steps[index: i].Offset;
       i++;
     }
 
-    Color result = Steps[i - 1].Color;
+    Color result = Steps[index: i - 1].Color;
     return result;
   }
 

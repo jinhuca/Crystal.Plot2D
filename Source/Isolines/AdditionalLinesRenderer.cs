@@ -18,11 +18,11 @@ public class AdditionalLinesRenderer : IsolineRenderer
     base.OnPlotterAttached();
 
     FrameworkElement parent = (FrameworkElement)Parent;
-    var renderer = (FrameworkElement)parent.FindName("PART_IsolineRenderer");
+    var renderer = (FrameworkElement)parent.FindName(name: "PART_IsolineRenderer");
 
-    Binding contentBoundsBinding = new() { Path = new PropertyPath("(0)", Viewport2D.ContentBoundsProperty), Source = renderer };
-    SetBinding(Viewport2D.ContentBoundsProperty, contentBoundsBinding);
-    SetBinding(ViewportPanel.ViewportBoundsProperty, contentBoundsBinding);
+    Binding contentBoundsBinding = new() { Path = new PropertyPath(path: "(0)", pathParameters: Viewport2D.ContentBoundsProperty), Source = renderer };
+    SetBinding(dp: Viewport2D.ContentBoundsProperty, binding: contentBoundsBinding);
+    SetBinding(dp: ViewportPanel.ViewportBoundsProperty, binding: contentBoundsBinding);
 
     Plotter2D.Viewport.EndPanning += Viewport_EndPanning;
     Plotter2D.Viewport.PropertyChanged += Viewport_PropertyChanged;
@@ -64,13 +64,13 @@ public class AdditionalLinesRenderer : IsolineRenderer
       return;
     }
 
-    var collection = (IsolineCollection)Parent.GetValue(IsolineCollectionProperty);
+    var collection = (IsolineCollection)Parent.GetValue(dp: IsolineCollectionProperty);
     if (collection == null)
     {
       return;
     }
 
-    var bounds = ViewportPanel.GetViewportBounds(this);
+    var bounds = ViewportPanel.GetViewportBounds(obj: this);
     if (bounds.IsEmpty)
     {
       return;
@@ -79,20 +79,20 @@ public class AdditionalLinesRenderer : IsolineRenderer
     var dc = drawingContext;
     var strokeThickness = StrokeThickness;
 
-    var transform = Plotter2D.Transform.WithRects(bounds, new Rect(RenderSize));
+    var transform = Plotter2D.Transform.WithRects(visibleRect: bounds, screenRect: new Rect(size: RenderSize));
 
     //dc.DrawRectangle(null, new OutlinePen(Brushes.Green, 2), new Rect(RenderSize));
 
-    var additionalLevels = GetAdditionalLevels(collection);
+    var additionalLevels = GetAdditionalLevels(collection: collection);
     IsolineBuilder.DataSource = DataSource;
-    var additionalIsolineCollections = additionalLevels.Select(level =>
+    var additionalIsolineCollections = additionalLevels.Select(selector: level =>
     {
-      return IsolineBuilder.BuildIsoline(level);
+      return IsolineBuilder.BuildIsoline(level: level);
     });
 
     foreach (var additionalCollection in additionalIsolineCollections)
     {
-      RenderIsolineCollection(dc, strokeThickness, additionalCollection, transform);
+      RenderIsolineCollection(dc: dc, strokeThickness: strokeThickness, collection: additionalCollection, transform: transform);
     }
   }
 }

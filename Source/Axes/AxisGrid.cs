@@ -20,10 +20,10 @@ public class AxisGrid : ContentControl, IPlotterElement
   static AxisGrid()
   {
     Type thisType = typeof(AxisGrid);
-    Panel.ZIndexProperty.OverrideMetadata(thisType, new FrameworkPropertyMetadata(-1));
+    Panel.ZIndexProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: -1));
   }
 
-  [SuppressMessage("Microsoft.Performance", "CA1822:MarkMembersAsStatic")]
+  [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1822:MarkMembersAsStatic")]
   internal void BeginTicksUpdate()
   {
   }
@@ -48,7 +48,7 @@ public class AxisGrid : ContentControl, IPlotterElement
   /// <value><c>true</c> if draw vertical ticks; otherwise, <c>false</c>.</value>
   public bool DrawVerticalTicks
   {
-    get { return drawVerticalTicks; }
+    get => drawVerticalTicks;
     set
     {
       if (drawVerticalTicks != value)
@@ -66,7 +66,7 @@ public class AxisGrid : ContentControl, IPlotterElement
   /// <value><c>true</c> if draw horizontal ticks; otherwise, <c>false</c>.</value>
   public bool DrawHorizontalTicks
   {
-    get { return drawHorizontalTicks; }
+    get => drawHorizontalTicks;
     set
     {
       if (drawHorizontalTicks != value)
@@ -77,7 +77,7 @@ public class AxisGrid : ContentControl, IPlotterElement
     }
   }
 
-  private bool drawHorizontalMinorTicks = false;
+  private bool drawHorizontalMinorTicks;
   /// <summary>
   /// Gets or sets a value indicating whether to draw horizontal minor ticks.
   /// </summary>
@@ -86,7 +86,7 @@ public class AxisGrid : ContentControl, IPlotterElement
   /// </value>
   public bool DrawHorizontalMinorTicks
   {
-    get { return drawHorizontalMinorTicks; }
+    get => drawHorizontalMinorTicks;
     set
     {
       if (drawHorizontalMinorTicks != value)
@@ -97,7 +97,7 @@ public class AxisGrid : ContentControl, IPlotterElement
     }
   }
 
-  private bool drawVerticalMinorTicks = false;
+  private bool drawVerticalMinorTicks;
   /// <summary>
   /// Gets or sets a value indicating whether to draw vertical minor ticks.
   /// </summary>
@@ -106,7 +106,7 @@ public class AxisGrid : ContentControl, IPlotterElement
   /// </value>
   public bool DrawVerticalMinorTicks
   {
-    get { return drawVerticalMinorTicks; }
+    get => drawVerticalMinorTicks;
     set
     {
       if (drawVerticalMinorTicks != value)
@@ -145,7 +145,7 @@ public class AxisGrid : ContentControl, IPlotterElement
     {
       if (item is Line line)
       {
-        linePool.Put(line);
+        linePool.Put(item: line);
       }
     }
 
@@ -159,7 +159,7 @@ public class AxisGrid : ContentControl, IPlotterElement
     {
       foreach (LineGeometry geometry in prevGroup.Children)
       {
-        lineGeometryPool.Put(geometry);
+        lineGeometryPool.Put(item: geometry);
       }
     }
 
@@ -173,9 +173,9 @@ public class AxisGrid : ContentControl, IPlotterElement
       {
         double screenX = HorizontalTicks[i];
         LineGeometry line = lineGeometryPool.GetOrCreate();
-        line.StartPoint = new Point(screenX, minY);
-        line.EndPoint = new Point(screenX, maxY);
-        group.Children.Add(line);
+        line.StartPoint = new Point(x: screenX, y: minY);
+        line.EndPoint = new Point(x: screenX, y: maxY);
+        group.Children.Add(value: line);
       }
     }
 
@@ -188,13 +188,13 @@ public class AxisGrid : ContentControl, IPlotterElement
       {
         double screenY = VerticalTicks[i];
         LineGeometry line = lineGeometryPool.GetOrCreate();
-        line.StartPoint = new Point(minX, screenY);
-        line.EndPoint = new Point(maxX, screenY);
-        group.Children.Add(line);
+        line.StartPoint = new Point(x: minX, y: screenY);
+        line.EndPoint = new Point(x: maxX, y: screenY);
+        group.Children.Add(value: line);
       }
     }
 
-    canvas.Children.Add(path);
+    canvas.Children.Add(element: path);
     path.Data = group;
   }
 
@@ -228,7 +228,7 @@ public class AxisGrid : ContentControl, IPlotterElement
         line.Stroke = Brushes.LightGray;
         line.StrokeThickness = MinorVerticalTicks[i].Value * gridBrushThickness;
 
-        canvas.Children.Add(line);
+        canvas.Children.Add(element: line);
       }
     }
   }
@@ -262,7 +262,7 @@ public class AxisGrid : ContentControl, IPlotterElement
         line.Stroke = Brushes.LightGray;
         line.StrokeThickness = MinorHorizontalTicks[i].Value * gridBrushThickness;
 
-        canvas.Children.Add(line);
+        canvas.Children.Add(element: line);
       }
     }
   }
@@ -272,21 +272,18 @@ public class AxisGrid : ContentControl, IPlotterElement
   void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
   {
     this.plotter = plotter;
-    plotter.CentralGrid.Children.Add(this);
+    plotter.CentralGrid.Children.Add(element: this);
   }
 
   void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.CentralGrid.Children.Remove(this);
+    plotter.CentralGrid.Children.Remove(element: this);
     this.plotter = null;
   }
 
   private PlotterBase plotter;
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-  public PlotterBase Plotter
-  {
-    get { return plotter; }
-  }
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
+  public PlotterBase Plotter => plotter;
 
   #endregion
 }

@@ -6,8 +6,8 @@ public sealed class LambdaUndoAction : UndoAction
 {
   public LambdaUndoAction(Action doAction, Action undoAction)
   {
-    DoAction = doAction ?? throw new ArgumentNullException("doHander");
-    UndoAction = undoAction ?? throw new ArgumentNullException("undoAction");
+    DoAction = doAction ?? throw new ArgumentNullException(paramName: "doHander");
+    UndoAction = undoAction ?? throw new ArgumentNullException(paramName: "undoAction");
   }
 
   public Action DoAction { get; }

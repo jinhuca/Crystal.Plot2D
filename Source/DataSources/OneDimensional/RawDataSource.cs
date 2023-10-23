@@ -5,11 +5,11 @@ namespace Crystal.Plot2D.DataSources;
 
 public sealed class RawDataSource : EnumerableDataSourceBase<Point>
 {
-  public RawDataSource(params Point[] data) : base(data) { }
-  public RawDataSource(IEnumerable<Point> data) : base(data) { }
+  public RawDataSource(params Point[] data) : base(data: data) { }
+  public RawDataSource(IEnumerable<Point> data) : base(data: data) { }
 
   public override IPointEnumerator GetEnumerator(DependencyObject context)
   {
-    return new RawPointEnumerator(this);
+    return new RawPointEnumerator(dataSource: this);
   }
 }

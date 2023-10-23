@@ -15,33 +15,33 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
   /// </summary>
   public NumericTicksProvider()
   {
-    minorProvider = new MinorNumericTicksProvider(this);
+    minorProvider = new MinorNumericTicksProvider(parent: this);
     minorProvider.Changed += minorProvider_Changed;
     minorProvider.Coeffs = new double[] { 0.3, 0.3, 0.3, 0.3, 0.6, 0.3, 0.3, 0.3, 0.3 };
   }
 
   private void minorProvider_Changed(object sender, EventArgs e)
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
 
   public event EventHandler Changed;
   private void RaiseChangedEvent()
   {
-    Changed.Raise(this);
+    Changed.Raise(sender: this);
   }
 
-  private double minStep = 0.0;
+  private double minStep;
   /// <summary>
   /// Gets or sets the minimal step between ticks.
   /// </summary>
   /// <value>The min step.</value>
   public double MinStep
   {
-    get { return minStep; }
+    get => minStep;
     set
     {
-      Verify.IsTrue(value >= 0.0, "value");
+      Verify.IsTrue(condition: value >= 0.0, paramName: "value");
       if (minStep != value)
       {
         minStep = value;
@@ -58,26 +58,26 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
 
     double delta = finish - start;
 
-    int log = (int)Math.Round(Math.Log10(delta));
+    int log = (int)Math.Round(a: Math.Log10(d: delta));
 
-    double newStart = RoundingHelper.Round(start, log);
-    double newFinish = RoundingHelper.Round(finish, log);
+    double newStart = RoundingHelper.Round(number: start, rem: log);
+    double newFinish = RoundingHelper.Round(number: finish, rem: log);
     if (newStart == newFinish)
     {
       log--;
-      newStart = RoundingHelper.Round(start, log);
-      newFinish = RoundingHelper.Round(finish, log);
+      newStart = RoundingHelper.Round(number: start, rem: log);
+      newFinish = RoundingHelper.Round(number: finish, rem: log);
     }
 
     // calculating step between ticks
     double unroundedStep = (newFinish - newStart) / ticksCount;
     int stepLog = log;
     // trying to round step
-    double step = RoundingHelper.Round(unroundedStep, stepLog);
+    double step = RoundingHelper.Round(number: unroundedStep, rem: stepLog);
     if (step == 0)
     {
       stepLog--;
-      step = RoundingHelper.Round(unroundedStep, stepLog);
+      step = RoundingHelper.Round(number: unroundedStep, rem: stepLog);
       if (step == 0)
       {
         // step will not be rounded if attempts to be rounded to zero.
@@ -92,7 +92,7 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
 
     if (step != 0.0)
     {
-      ticks = CreateTicks(start, finish, step);
+      ticks = CreateTicks(start: start, finish: finish, step: step);
     }
     else
     {
@@ -106,13 +106,13 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
 
   private static double[] CreateTicks(double start, double finish, double step)
   {
-    DebugVerify.Is(step != 0.0);
+    DebugVerify.Is(condition: step != 0.0);
 
-    double x = step * Math.Floor(start / step);
+    double x = step * Math.Floor(d: start / step);
 
     if (x == x + step)
     {
-      return new double[0];
+      return Array.Empty<double>();
     }
 
     List<double> res = new();
@@ -120,8 +120,8 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
     double increasedFinish = finish + step * 1.05;
     while (x <= increasedFinish)
     {
-      res.Add(x);
-      DebugVerify.Is(res.Count < 2000);
+      res.Add(item: x);
+      DebugVerify.Is(condition: res.Count < 2000);
       x += step;
     }
     return res.ToArray();
@@ -133,12 +133,12 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
 
   public int DecreaseTickCount(int ticksCount)
   {
-    return tickCounts.FirstOrDefault(tick => tick < ticksCount);
+    return tickCounts.FirstOrDefault(predicate: tick => tick < ticksCount);
   }
 
   public int IncreaseTickCount(int ticksCount)
   {
-    int newTickCount = tickCounts.Reverse().FirstOrDefault(tick => tick > ticksCount);
+    int newTickCount = tickCounts.Reverse().FirstOrDefault(predicate: tick => tick > ticksCount);
     if (newTickCount == 0)
     {
       newTickCount = tickCounts[0];
@@ -154,15 +154,12 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
     {
       if (ticks != null)
       {
-        minorProvider.SetRanges(ticks.GetPairs());
+        minorProvider.SetRanges(ranges: ticks.GetPairs());
       }
 
       return minorProvider;
     }
   }
 
-  public ITicksProvider<double> MajorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<double> MajorProvider => null;
 }

@@ -13,7 +13,7 @@ public class MinimalSizeConstraint : ViewportConstraint
   /// <value>The minimal size of Viewport's Visible.</value>
   public double MinSize
   {
-    get { return minSize; }
+    get => minSize;
     set
     {
       if (minSize != value)

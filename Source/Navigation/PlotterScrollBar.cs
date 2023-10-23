@@ -15,27 +15,21 @@ public abstract class PlotterScrollBar : IPlotterElement
   private void OnScroll(object sender, ScrollEventArgs e)
   {
     DataRect visible = plotter.Viewport.Visible;
-    visible = CreateVisibleRect(visible, scrollBar.Value);
+    visible = CreateVisibleRect(rect: visible, value: scrollBar.Value);
     plotter.Viewport.Visible = visible;
   }
 
   private readonly ScrollBar scrollBar = new();
-  protected ScrollBar ScrollBar
-  {
-    get { return scrollBar; }
-  }
+  protected ScrollBar ScrollBar => scrollBar;
 
   private PlotterBase plotter;
-  protected PlotterBase Plotter
-  {
-    get { return plotter; }
-  }
+  protected PlotterBase Plotter => plotter;
 
   private void OnViewportPropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     if (e.PropertyName == "Visible" || e.PropertyName == "Output")
     {
-      UpdateScrollBar((Viewport2D)sender);
+      UpdateScrollBar(viewport: (Viewport2D)sender);
     }
   }
 
@@ -43,7 +37,7 @@ public abstract class PlotterScrollBar : IPlotterElement
 
   void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
   {
-    GetHostPanel(plotter).Children.Add(scrollBar);
+    GetHostPanel(plotter: plotter).Children.Add(element: scrollBar);
 
     PlotterBase plotter2d = (PlotterBase)plotter;
     this.plotter = plotter2d;
@@ -51,7 +45,7 @@ public abstract class PlotterScrollBar : IPlotterElement
     viewport.PropertyChanged += OnViewportPropertyChanged;
     viewport.DomainChanged += OnViewportDomainChanged;
 
-    UpdateScrollBar(viewport);
+    UpdateScrollBar(viewport: viewport);
   }
 
   protected abstract void UpdateScrollBar(Viewport2D viewport);
@@ -63,7 +57,7 @@ public abstract class PlotterScrollBar : IPlotterElement
 
   private void OnViewportDomainChanged(object sender, EventArgs e)
   {
-    UpdateScrollBar((Viewport2D)sender);
+    UpdateScrollBar(viewport: (Viewport2D)sender);
   }
 
   protected abstract DataRect CreateVisibleRect(DataRect rect, double value);
@@ -74,17 +68,14 @@ public abstract class PlotterScrollBar : IPlotterElement
     this.plotter.Viewport.PropertyChanged -= OnViewportPropertyChanged;
     this.plotter.Viewport.DomainChanged -= OnViewportDomainChanged;
 
-    GetHostPanel(plotter).Children.Remove(scrollBar);
+    GetHostPanel(plotter: plotter).Children.Remove(element: scrollBar);
 
-    UpdateScrollBar(null);
+    UpdateScrollBar(viewport: null);
 
     this.plotter = null;
   }
 
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 }

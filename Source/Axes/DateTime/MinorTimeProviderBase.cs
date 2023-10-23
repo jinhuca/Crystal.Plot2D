@@ -12,7 +12,7 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
   {
     if (Changed != null)
     {
-      Changed(this, EventArgs.Empty);
+      Changed(sender: this, e: EventArgs.Empty);
     }
   }
 
@@ -43,29 +43,29 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
       ticksCount = 2;
     }
 
-    var ticks = majorTicks.GetPairs().Select(r => Clip(provider.GetTicks(r, ticksCount), r)).
-      SelectMany(t => t.Ticks).ToArray();
+    var ticks = majorTicks.GetPairs().Select(selector: r => Clip(ticks: provider.GetTicks(range: r, ticksCount: ticksCount), range: r)).
+      SelectMany(selector: t => t.Ticks).ToArray();
 
     var res = new TicksInfo<T>
     {
       Ticks = ticks,
-      TickSizes = ArrayExtensions.CreateArray(ticks.Length, ticksSize)
+      TickSizes = ArrayExtensions.CreateArray(length: ticks.Length, defaultValue: ticksSize)
     };
     return res;
   }
 
   private ITicksInfo<T> Clip(ITicksInfo<T> ticks, Range<T> range)
   {
-    var newTicks = new List<T>(ticks.Ticks.Length);
-    var newSizes = new List<double>(ticks.TickSizes.Length);
+    var newTicks = new List<T>(capacity: ticks.Ticks.Length);
+    var newSizes = new List<double>(capacity: ticks.TickSizes.Length);
 
     for (int i = 0; i < ticks.Ticks.Length; i++)
     {
       T tick = ticks.Ticks[i];
-      if (IsInside(tick, range))
+      if (IsInside(value: tick, range: range))
       {
-        newTicks.Add(tick);
-        newSizes.Add(ticks.TickSizes[i]);
+        newTicks.Add(item: tick);
+        newSizes.Add(item: ticks.TickSizes[i]);
       }
     }
 
@@ -86,7 +86,7 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
       ticksCount /= majorTicks.Length;
     }
 
-    int minorTicksCount = provider.DecreaseTickCount(ticksCount);
+    int minorTicksCount = provider.DecreaseTickCount(ticksCount: ticksCount);
 
     if (majorTicks.Length > 0)
     {
@@ -103,7 +103,7 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
       ticksCount /= majorTicks.Length;
     }
 
-    int minorTicksCount = provider.IncreaseTickCount(ticksCount);
+    int minorTicksCount = provider.IncreaseTickCount(ticksCount: ticksCount);
 
     if (majorTicks.Length > 0)
     {
@@ -113,13 +113,7 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
     return minorTicksCount;
   }
 
-  public ITicksProvider<T> MinorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<T> MinorProvider => null;
 
-  public ITicksProvider<T> MajorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<T> MajorProvider => null;
 }

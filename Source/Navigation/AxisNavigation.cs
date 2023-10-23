@@ -12,15 +12,15 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 {
   public AxisPlacement Placement
   {
-    get { return (AxisPlacement)GetValue(PlacementProperty); }
-    set { SetValue(PlacementProperty, value); }
+    get => (AxisPlacement)GetValue(dp: PlacementProperty);
+    set => SetValue(dp: PlacementProperty, value: value);
   }
 
   public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
-    "Placement",
-    typeof(AxisPlacement),
-    typeof(AxisNavigation),
-    new FrameworkPropertyMetadata(AxisPlacement.Left, OnPlacementChanged));
+    name: nameof(Placement),
+    propertyType: typeof(AxisPlacement),
+    ownerType: typeof(AxisNavigation),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: AxisPlacement.Left, propertyChangedCallback: OnPlacementChanged));
 
   private static void OnPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -29,10 +29,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
   }
 
   private Panel listeningPanel;
-  protected Panel ListeningPanel
-  {
-    get { return listeningPanel; }
-  }
+  protected Panel ListeningPanel => listeningPanel;
 
   private void OnPlacementChanged()
   {
@@ -61,15 +58,10 @@ public class AxisNavigation : DependencyObject, IPlotterElement
       case AxisPlacement.Bottom:
         listeningPanel = plotter.BottomPanel;
         break;
-      default:
-        break;
     }
   }
 
-  private CoordinateTransform Transform
-  {
-    get { return plotter.Viewport.Transform; }
-  }
+  private CoordinateTransform Transform => plotter.Viewport.Transform;
 
   private Panel hostPanel;
 
@@ -113,18 +105,18 @@ public class AxisNavigation : DependencyObject, IPlotterElement
   DataRect rmbDragStartRect;
   private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
   {
-    OnMouseRightButtonDown(e);
+    OnMouseRightButtonDown(e: e);
   }
 
   protected virtual void OnMouseRightButtonDown(MouseButtonEventArgs e)
   {
-    rmbInitialPosition = e.GetPosition(listeningPanel);
+    rmbInitialPosition = e.GetPosition(relativeTo: listeningPanel);
 
-    var foundActivePlotter = UpdateActivePlotter(e);
+    var foundActivePlotter = UpdateActivePlotter(e: e);
     if (foundActivePlotter)
     {
       rmbPressed = true;
-      dragStartInViewport = rmbInitialPosition.ScreenToViewport(activePlotter.Transform);
+      dragStartInViewport = rmbInitialPosition.ScreenToViewport(transform: activePlotter.Transform);
       rmbDragStartRect = activePlotter.Visible;
 
       listeningPanel.Background = fillBrush;
@@ -140,7 +132,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
   private void OnMouseRightButtonUp(object sender, MouseButtonEventArgs e)
   {
-    OnMouseRightButtonUp(e);
+    OnMouseRightButtonUp(e: e);
   }
 
   protected virtual void OnMouseRightButtonUp(MouseButtonEventArgs e)
@@ -158,7 +150,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
   private void RevertChanges()
   {
-    listeningPanel.ClearValue(FrameworkElement.CursorProperty);
+    listeningPanel.ClearValue(dp: FrameworkElement.CursorProperty);
     listeningPanel.Background = Brushes.Transparent;
     listeningPanel.ReleaseMouseCapture();
   }
@@ -166,15 +158,15 @@ public class AxisNavigation : DependencyObject, IPlotterElement
   private const double wheelZoomSpeed = 1.2;
   private void OnMouseWheel(object sender, MouseWheelEventArgs e)
   {
-    Point mousePos = e.GetPosition(listeningPanel);
+    Point mousePos = e.GetPosition(relativeTo: listeningPanel);
 
-    Rect listeningPanelBounds = new(listeningPanel.RenderSize);
-    if (!listeningPanelBounds.Contains(mousePos))
+    Rect listeningPanelBounds = new(size: listeningPanel.RenderSize);
+    if (!listeningPanelBounds.Contains(point: mousePos))
     {
       return;
     }
 
-    var foundActivePlotter = UpdateActivePlotter(e);
+    var foundActivePlotter = UpdateActivePlotter(e: e);
     if (!foundActivePlotter)
     {
       return;
@@ -182,16 +174,16 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
     int delta = -e.Delta;
 
-    Point zoomTo = mousePos.ScreenToViewport(activePlotter.Transform);
+    Point zoomTo = mousePos.ScreenToViewport(transform: activePlotter.Transform);
 
-    double zoomSpeed = Math.Abs(delta / Mouse.MouseWheelDeltaForOneLine);
+    double zoomSpeed = Math.Abs(value: delta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed *= wheelZoomSpeed;
     if (delta < 0)
     {
       zoomSpeed = 1 / zoomSpeed;
     }
 
-    DataRect visible = activePlotter.Viewport.Visible.Zoom(zoomTo, zoomSpeed);
+    DataRect visible = activePlotter.Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
     DataRect oldVisible = activePlotter.Viewport.Visible;
     if (Placement.IsBottomOrTop())
     {
@@ -221,8 +213,8 @@ public class AxisNavigation : DependencyObject, IPlotterElement
         return;
       }
 
-      Point screenMousePos = e.GetPosition(listeningPanel);
-      Point dataMousePos = screenMousePos.ScreenToViewport(activePlotter.Transform);
+      Point screenMousePos = e.GetPosition(relativeTo: listeningPanel);
+      Point dataMousePos = screenMousePos.ScreenToViewport(transform: activePlotter.Transform);
       DataRect visible = activePlotter.Viewport.Visible;
       double delta;
       if (Placement.IsBottomOrTop())
@@ -255,7 +247,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
         return;
       }
 
-      Point screenMousePos = e.GetPosition(listeningPanel);
+      Point screenMousePos = e.GetPosition(relativeTo: listeningPanel);
       DataRect visible = activePlotter.Viewport.Visible;
       double delta;
 
@@ -271,22 +263,22 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
       if (delta < 0)
       {
-        delta = 1 / Math.Exp(-delta / RmbZoomScale);
+        delta = 1 / Math.Exp(d: -delta / RmbZoomScale);
       }
       else
       {
-        delta = Math.Exp(delta / RmbZoomScale);
+        delta = Math.Exp(d: delta / RmbZoomScale);
       }
 
       Point center = dragStartInViewport;
 
       if (isHorizontal)
       {
-        visible = rmbDragStartRect.ZoomX(center, delta);
+        visible = rmbDragStartRect.ZoomX(to: center, ratio: delta);
       }
       else
       {
-        visible = rmbDragStartRect.ZoomY(center, delta);
+        visible = rmbDragStartRect.ZoomY(to: center, ratio: delta);
       }
 
       if (screenMousePos != lmbInitialPosition)
@@ -302,13 +294,10 @@ public class AxisNavigation : DependencyObject, IPlotterElement
   }
 
   private Point lmbInitialPosition;
-  protected Point LmbInitialPosition
-  {
-    get { return lmbInitialPosition; }
-  }
+  protected Point LmbInitialPosition => lmbInitialPosition;
 
   private Point rmbInitialPosition;
-  private readonly SolidColorBrush fillBrush = new SolidColorBrush(Color.FromRgb(255, 228, 209)).MakeTransparent(0.2);
+  private readonly SolidColorBrush fillBrush = new SolidColorBrush(color: Color.FromRgb(r: 255, g: 228, b: 209)).MakeTransparent(opacity: 0.2);
   private bool lmbPressed;
   private bool rmbPressed;
   private Point dragStartInViewport;
@@ -318,18 +307,18 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
   private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
   {
-    OnMouseLeftButtonDown(e);
+    OnMouseLeftButtonDown(e: e);
   }
 
   protected virtual void OnMouseLeftButtonDown(MouseButtonEventArgs e)
   {
-    lmbInitialPosition = e.GetPosition(listeningPanel);
+    lmbInitialPosition = e.GetPosition(relativeTo: listeningPanel);
 
-    var foundActivePlotter = UpdateActivePlotter(e);
+    var foundActivePlotter = UpdateActivePlotter(e: e);
     if (foundActivePlotter)
     {
       lmbPressed = true;
-      dragStartInViewport = lmbInitialPosition.ScreenToViewport(activePlotter.Transform);
+      dragStartInViewport = lmbInitialPosition.ScreenToViewport(transform: activePlotter.Transform);
 
       listeningPanel.Background = fillBrush;
       listeningPanel.CaptureMouse();
@@ -346,9 +335,9 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
     foreach (var axis in axes)
     {
-      var positionInAxis = e.GetPosition(axis);
-      Rect axisBounds = new(axis.RenderSize);
-      if (axisBounds.Contains(positionInAxis))
+      var positionInAxis = e.GetPosition(relativeTo: axis);
+      Rect axisBounds = new(size: axis.RenderSize);
+      if (axisBounds.Contains(point: positionInAxis))
       {
         activePlotter = axis.Plotter;
 
@@ -363,7 +352,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
   private void OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
   {
-    OnMouseLeftButtonUp(e);
+    OnMouseLeftButtonUp(e: e);
   }
 
   protected virtual void OnMouseLeftButtonUp(MouseButtonEventArgs e)
@@ -398,10 +387,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
   }
 
   private PlotterBase plotter;
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 

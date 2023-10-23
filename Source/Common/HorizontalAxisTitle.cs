@@ -53,12 +53,12 @@ public class HorizontalAxisTitle : ContentControl, IPlotterElement
   /// <value>The placement.</value>
   public AxisPlacement Placement
   {
-    get { return placement; }
+    get => placement;
     set
     {
       if (!value.IsBottomOrTop())
       {
-        throw new ArgumentException(string.Format("HorizontalAxisTitle only supports Top and Bottom values of AxisPlacement, you passed '{0}'", value), "Placement");
+        throw new ArgumentException(message: string.Format(format: "HorizontalAxisTitle only supports Top and Bottom values of AxisPlacement, you passed '{0}'", arg0: value), paramName: "Placement");
       }
       if (placement != value)
       {
@@ -77,14 +77,14 @@ public class HorizontalAxisTitle : ContentControl, IPlotterElement
 
   private void RemoveFromPlotter()
   {
-    var oldPanel = GetHostPanel(plotter);
-    oldPanel.Children.Remove(this);
+    var oldPanel = GetHostPanel(_plotter: plotter);
+    oldPanel.Children.Remove(element: this);
   }
 
   private void AddToPlotter()
   {
-    var hostPanel = GetHostPanel(plotter);
-    var index = GetInsertPosition(hostPanel);
-    hostPanel.Children.Insert(index, this);
+    var hostPanel = GetHostPanel(_plotter: plotter);
+    var index = GetInsertPosition(panel: hostPanel);
+    hostPanel.Children.Insert(index: index, element: this);
   }
 }

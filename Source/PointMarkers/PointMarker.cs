@@ -17,7 +17,7 @@ public abstract class PointMarker : DependencyObject
   /// <param name="screenPoint">Marker center coordinates on drawing context.</param>
   public abstract void Render(DrawingContext dc, Point screenPoint);
 
-  public static implicit operator PointMarker(MarkerRenderHandler renderer) => FromRenderer(renderer);
+  public static implicit operator PointMarker(MarkerRenderHandler renderer) => FromRenderer(renderer: renderer);
 
-  public static PointMarker FromRenderer(MarkerRenderHandler renderer) => new DelegatePointMarker(renderer);
+  public static PointMarker FromRenderer(MarkerRenderHandler renderer) => new DelegatePointMarker(renderCallback: renderer);
 }

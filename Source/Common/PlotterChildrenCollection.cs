@@ -10,7 +10,7 @@ namespace Crystal.Plot2D.Common;
 /// <summary>
 /// Contains all charts added to Plotter.
 /// </summary>
-[ContentWrapper(typeof(ViewportUIContainer))]
+[ContentWrapper(contentWrapper: typeof(ViewportUIContainer))]
 public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterElement>, IList
 {
   /// <summary>
@@ -18,7 +18,7 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   /// </summary>
   internal PlotterChildrenCollection(PlotterBase plotter)
   {
-    Plotter = plotter ?? throw new ArgumentNullException(nameof(plotter));
+    Plotter = plotter ?? throw new ArgumentNullException(paramName: nameof(plotter));
   }
 
   public PlotterBase Plotter { get; }
@@ -31,7 +31,7 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   {
     if (item == null)
     {
-      throw new ArgumentNullException(nameof(item));
+      throw new ArgumentNullException(paramName: nameof(item));
     }
   }
 
@@ -41,10 +41,10 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   /// </summary>
   protected override void ClearItems()
   {
-    var items = new List<IPlotterElement>(Items);
+    var items = new List<IPlotterElement>(collection: Items);
     foreach (var item in items)
     {
-      Remove(item);
+      Remove(item: item);
     }
   }
 
@@ -54,17 +54,17 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   {
     if (content == null)
     {
-      throw new ArgumentNullException(nameof(content));
+      throw new ArgumentNullException(paramName: nameof(content));
     }
 
     if (content is IPlotterElement plotterElement)
     {
-      Add(plotterElement);
+      Add(item: plotterElement);
     }
     else
     {
-      ViewportUIContainer container = new(content);
-      Add(container);
+      ViewportUIContainer container = new(content: content);
+      Add(item: container);
     }
   }
 
@@ -77,32 +77,30 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
     switch (value)
     {
       case null:
-        throw new ArgumentNullException(nameof(value));
+        throw new ArgumentNullException(paramName: nameof(value));
       case FrameworkElement content:
-        Add(content);
+        Add(content: content);
         return 0;
       case IPlotterElement element:
-        Add(element);
+        Add(item: element);
         return 0;
-      default:
-        break;
     }
 
-    throw new ArgumentException($"Children of type '{value.GetType()}' are not supported.");
+    throw new ArgumentException(message: $"Children of type '{value.GetType()}' are not supported.");
   }
 
   void IList.Clear() => Clear();
 
   bool IList.Contains(object value)
   {
-    return value is IPlotterElement element && Contains(element);
+    return value is IPlotterElement element && Contains(item: element);
   }
 
   int IList.IndexOf(object value)
   {
     if (value is IPlotterElement element)
     {
-      return IndexOf(element);
+      return IndexOf(item: element);
     }
 
     return -1;
@@ -112,7 +110,7 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   {
     if (value is IPlotterElement element)
     {
-      Insert(index, element);
+      Insert(index: index, item: element);
     }
   }
 
@@ -124,23 +122,20 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   {
     if (value is IPlotterElement element)
     {
-      Remove(element);
+      Remove(item: element);
     }
   }
 
-  void IList.RemoveAt(int index) => RemoveAt(index);
+  void IList.RemoveAt(int index) => RemoveAt(index: index);
 
   object IList.this[int index]
   {
-    get
-    {
-      return this[index];
-    }
+    get => this[index: index];
     set
     {
       if (value is IPlotterElement element)
       {
-        this[index] = element;
+        this[index: index] = element;
       }
     }
   }
@@ -153,7 +148,7 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   {
     if (array is IPlotterElement[] elements)
     {
-      CopyTo(elements, index);
+      CopyTo(array: elements, index: index);
     }
   }
 

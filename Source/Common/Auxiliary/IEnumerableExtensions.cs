@@ -23,12 +23,12 @@ internal static class IEnumerableExtensions
 
   public static IEnumerable<IEnumerable<T>> Split<T>(this IEnumerable<T> source, int maxCount)
   {
-    using (var enumerator = new FixedEnumeratorWrapper<T>(source.GetEnumerator()))
+    using (var enumerator = new FixedEnumeratorWrapper<T>(_enumerator: source.GetEnumerator()))
     {
       do
       {
-        var enumerable = new FixedEnumerable<T>(enumerator);
-        yield return enumerable.Take(maxCount);
+        var enumerable = new FixedEnumerable<T>(_enumerator: enumerator);
+        yield return enumerable.Take(count: maxCount);
       }
       while (enumerator.CanMoveNext);
     }
@@ -60,16 +60,10 @@ internal static class IEnumerableExtensions
 
     #region IEnumerator Members
 
-    object IEnumerator.Current
-    {
-      get { throw new NotImplementedException(); }
-    }
+    object IEnumerator.Current => throw new NotImplementedException();
 
-    private bool canMoveNext = false;
-    public bool CanMoveNext
-    {
-      get { return canMoveNext; }
-    }
+    private bool canMoveNext;
+    public bool CanMoveNext => canMoveNext;
 
     public bool MoveNext()
     {

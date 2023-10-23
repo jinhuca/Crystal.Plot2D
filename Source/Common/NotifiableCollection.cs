@@ -16,34 +16,34 @@ public abstract class NotifiableCollection<T> : ObservableCollection<T>
 
   protected override void InsertItem(int index, T item)
   {
-    OnItemAdding(item);
-    base.InsertItem(index, item);
-    OnItemAdded(item);
+    OnItemAdding(item: item);
+    base.InsertItem(index: index, item: item);
+    OnItemAdded(item: item);
   }
 
   protected override void ClearItems()
   {
     foreach (var item in Items)
     {
-      OnItemRemoving(item);
+      OnItemRemoving(item: item);
     }
     base.ClearItems();
   }
 
   protected override void RemoveItem(int index)
   {
-    T item = Items[index];
-    OnItemRemoving(item);
-    base.RemoveItem(index);
+    T item = Items[index: index];
+    OnItemRemoving(item: item);
+    base.RemoveItem(index: index);
   }
 
   protected override void SetItem(int index, T item)
   {
-    T oldItem = Items[index];
-    OnItemRemoving(oldItem);
-    OnItemAdding(item);
-    base.SetItem(index, item);
-    OnItemAdded(item);
+    T oldItem = Items[index: index];
+    OnItemRemoving(item: oldItem);
+    OnItemAdding(item: item);
+    base.SetItem(index: index, item: item);
+    OnItemAdded(item: item);
   }
 
   protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
@@ -51,7 +51,7 @@ public abstract class NotifiableCollection<T> : ObservableCollection<T>
     attemptsToRaiseEvent++;
     if (raiseCollectionChangedEvent)
     {
-      base.OnCollectionChanged(e);
+      base.OnCollectionChanged(e: e);
     }
   }
 
@@ -81,7 +81,7 @@ public abstract class NotifiableCollection<T> : ObservableCollection<T>
   /// </param>
   protected virtual void OnItemRemoving(T item) { }
 
-  int attemptsToRaiseEvent = 0;
+  int attemptsToRaiseEvent;
   bool raiseCollectionChangedEvent = true;
 
   #region Public
@@ -97,11 +97,11 @@ public abstract class NotifiableCollection<T> : ObservableCollection<T>
     raiseCollectionChangedEvent = true;
     if (attemptsToRaiseEvent > 0 && raiseReset)
     {
-      OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+      OnCollectionChanged(e: new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
     }
   }
 
-  public IDisposable BlockEvents(bool raiseReset) => new EventBlocker<T>(this, raiseReset);
+  public IDisposable BlockEvents(bool raiseReset) => new EventBlocker<T>(_collection: this, _raiseReset: raiseReset);
 
   private sealed class EventBlocker<TT> : IDisposable
   {
@@ -117,7 +117,7 @@ public abstract class NotifiableCollection<T> : ObservableCollection<T>
 
     #region IDisposable Members
 
-    public void Dispose() => collection.EndUpdate(raiseReset);
+    public void Dispose() => collection.EndUpdate(raiseReset: raiseReset);
 
     #endregion
   }

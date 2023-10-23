@@ -35,51 +35,51 @@ public sealed class FrequencyFilter : PointsFilterBase
     {
       resultPoints = new List<Point>();
 
-      double currentX = Math.Floor(points[0].X);
+      double currentX = Math.Floor(d: points[index: 0].X);
       foreach (Point p in points)
       {
-        if (Math.Floor(p.X) == currentX)
+        if (Math.Floor(d: p.X) == currentX)
         {
-          currentChain.Add(p);
+          currentChain.Add(item: p);
         }
         else
         {
           // Analyse current chain
           if (currentChain.Count <= 2)
           {
-            resultPoints.AddRange(currentChain);
+            resultPoints.AddRange(collection: currentChain);
           }
           else
           {
-            Point first = MinByX(currentChain);
-            Point last = MaxByX(currentChain);
-            Point min = MinByY(currentChain);
-            Point max = MaxByY(currentChain);
-            resultPoints.Add(first);
+            Point first = MinByX(points: currentChain);
+            Point last = MaxByX(points: currentChain);
+            Point min = MinByY(points: currentChain);
+            Point max = MaxByY(points: currentChain);
+            resultPoints.Add(item: first);
 
             Point smaller = min.X < max.X ? min : max;
             Point greater = min.X > max.X ? min : max;
             if (smaller != resultPoints.GetLast())
             {
-              resultPoints.Add(smaller);
+              resultPoints.Add(item: smaller);
             }
             if (greater != resultPoints.GetLast())
             {
-              resultPoints.Add(greater);
+              resultPoints.Add(item: greater);
             }
             if (last != resultPoints.GetLast())
             {
-              resultPoints.Add(last);
+              resultPoints.Add(item: last);
             }
           }
           currentChain.Clear();
-          currentChain.Add(p);
-          currentX = Math.Floor(p.X);
+          currentChain.Add(item: p);
+          currentX = Math.Floor(d: p.X);
         }
       }
     }
 
-    resultPoints.AddRange(currentChain);
+    resultPoints.AddRange(collection: currentChain);
 
     return resultPoints;
   }
@@ -88,7 +88,7 @@ public sealed class FrequencyFilter : PointsFilterBase
 
   private static Point MinByX(IList<Point> points)
   {
-    Point minPoint = points[0];
+    Point minPoint = points[index: 0];
     foreach (Point p in points)
     {
       if (p.X < minPoint.X)
@@ -101,7 +101,7 @@ public sealed class FrequencyFilter : PointsFilterBase
 
   private static Point MaxByX(IList<Point> points)
   {
-    Point maxPoint = points[0];
+    Point maxPoint = points[index: 0];
     foreach (Point p in points)
     {
       if (p.X > maxPoint.X)
@@ -114,7 +114,7 @@ public sealed class FrequencyFilter : PointsFilterBase
 
   private static Point MinByY(IList<Point> points)
   {
-    Point minPoint = points[0];
+    Point minPoint = points[index: 0];
     foreach (Point p in points)
     {
       if (p.Y < minPoint.Y)
@@ -127,7 +127,7 @@ public sealed class FrequencyFilter : PointsFilterBase
 
   private static Point MaxByY(IList<Point> points)
   {
-    Point maxPoint = points[0];
+    Point maxPoint = points[index: 0];
     foreach (Point p in points)
     {
       if (p.Y > maxPoint.Y)

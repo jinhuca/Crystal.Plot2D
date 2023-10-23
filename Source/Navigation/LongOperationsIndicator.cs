@@ -32,10 +32,7 @@ public sealed class LongOperationsIndicator : IPlotterElement
   }
 
   private PlotterBase plotter;
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 
@@ -89,7 +86,7 @@ public sealed class LongOperationsIndicator : IPlotterElement
   }
 
   private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(value: 100) };
-  private int operationsCounter = 0;
+  private int operationsCounter;
   private void OnLongOperationRunningChanged(IPlotterElement element, bool longOperationRunning)
   {
     int change = longOperationRunning ? +1 : -1;

@@ -15,7 +15,7 @@ public sealed class FilterCollection : NotifiableCollection<IPointsFilter>
   {
     if (item == null)
     {
-      throw new ArgumentNullException("item");
+      throw new ArgumentNullException(paramName: "item");
     }
   }
 
@@ -26,7 +26,7 @@ public sealed class FilterCollection : NotifiableCollection<IPointsFilter>
 
   private void OnItemChanged(object sender, EventArgs e)
   {
-    OnCollectionChanged(new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
+    OnCollectionChanged(e: new NotifyCollectionChangedEventArgs(action: NotifyCollectionChangedAction.Reset));
   }
 
   protected override void OnItemRemoving(IPointsFilter item)
@@ -38,8 +38,8 @@ public sealed class FilterCollection : NotifiableCollection<IPointsFilter>
   {
     foreach (var filter in Items)
     {
-      filter.SetScreenRect(screenRect);
-      points = filter.Filter(points);
+      filter.SetScreenRect(screenRect: screenRect);
+      points = filter.Filter(points: points);
     }
 
     return points;

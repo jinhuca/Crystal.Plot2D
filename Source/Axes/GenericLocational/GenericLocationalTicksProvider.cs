@@ -9,15 +9,15 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
   private IList<TCollection> collection;
   public IList<TCollection> Collection
   {
-    get { return collection; }
+    get => collection;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: "value");
       }
 
-      Changed.Raise(this);
+      Changed.Raise(sender: this);
       collection = value;
     }
   }
@@ -25,15 +25,15 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
   private Func<TCollection, TAxis> axisMapping;
   public Func<TCollection, TAxis> AxisMapping
   {
-    get { return axisMapping; }
+    get => axisMapping;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: "value");
       }
 
-      Changed.Raise(this);
+      Changed.Raise(sender: this);
       axisMapping = value;
     }
   }
@@ -76,8 +76,8 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
     //minResult = searcher.SearchBetween(range.Min, minResult);
     //maxResult = searcher.SearchBetween(range.Max, maxResult);
 
-    minResult = searcher.SearchFirstLess(range.Min);
-    maxResult = searcher.SearchGreater(range.Max);
+    minResult = searcher.SearchFirstLess(x: range.Min);
+    maxResult = searcher.SearchGreater(x: range.Max);
 
     if (!(minResult.IsEmpty && maxResult.IsEmpty))
     {
@@ -89,13 +89,13 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
       TAxis[] ticks = new TAxis[count];
       for (int i = startIndex; i <= endIndex; i++)
       {
-        ticks[i - startIndex] = axisMapping(collection[i]);
+        ticks[i - startIndex] = axisMapping(arg: collection[index: i]);
       }
 
       TicksInfo<TAxis> result = new()
       {
         Info = startIndex,
-        TickSizes = ArrayExtensions.CreateArray(count, 1.0),
+        TickSizes = ArrayExtensions.CreateArray(length: count, defaultValue: 1.0),
         Ticks = ticks
       };
 
@@ -113,10 +113,10 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
     {
       if (collection == null || axisMapping == null)
       {
-        throw new InvalidOperationException(Strings.Exceptions.GenericLocationalProviderInvalidState);
+        throw new InvalidOperationException(message: Strings.Exceptions.GenericLocationalProviderInvalidState);
       }
 
-      searcher = new GenericSearcher1d<TCollection, TAxis>(collection, axisMapping);
+      searcher = new GenericSearcher1d<TCollection, TAxis>(_collection: collection, _selector: axisMapping);
     }
   }
 
@@ -130,15 +130,9 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
     return collection.Count;
   }
 
-  public ITicksProvider<TAxis> MinorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<TAxis> MinorProvider => null;
 
-  public ITicksProvider<TAxis> MajorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<TAxis> MajorProvider => null;
 
   public event EventHandler Changed;
 

@@ -24,22 +24,20 @@ public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
     UIElement[] res = new UIElement[ticks.Length - 1];
     int labelsNum = 3;
 
-    if (info is DifferenceIn)
+    if (info is DifferenceIn differenceIn)
     {
-      DifferenceIn diff = (DifferenceIn)info;
-      DateFormat = GetDateFormat(diff);
+      DateFormat = GetDateFormat(diff: differenceIn);
     }
-    else if (info is MajorLabelsInfo)
+    else if (info is MajorLabelsInfo majorLabelsInfo)
     {
-      MajorLabelsInfo mInfo = (MajorLabelsInfo)info;
-      DifferenceIn diff = (DifferenceIn)mInfo.Info;
-      DateFormat = GetDateFormat(diff);
-      labelsNum = mInfo.MajorLabelsCount + 1;
+      DifferenceIn diff = (DifferenceIn)majorLabelsInfo.Info;
+      DateFormat = GetDateFormat(diff: diff);
+      labelsNum = majorLabelsInfo.MajorLabelsCount + 1;
 
       //DebugVerify.Is(labelsNum < 100);
     }
 
-    DebugVerify.Is(ticks.Length < 10);
+    DebugVerify.Is(condition: ticks.Length < 10);
 
     LabelTickInfo<DateTime> tickInfo = new();
     for (int i = 0; i < ticks.Length - 1; i++)
@@ -47,28 +45,76 @@ public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
       tickInfo.Info = info;
       tickInfo.Tick = ticks[i];
 
-      string tickText = GetString(tickInfo);
+      var tickText = GetString(tickInfo: tickInfo);
 
-      Grid grid = new() { };
+      Grid grid = new()
+      {
+        AllowDrop = false,
+        CacheMode = null,
+        Clip = null,
+        ClipToBounds = false,
+        Effect = null,
+        Focusable = false,
+        IsEnabled = false,
+        IsHitTestVisible = false,
+        IsManipulationEnabled = false,
+        Opacity = 0,
+        OpacityMask = null,
+        RenderSize = default,
+        RenderTransform = null,
+        RenderTransformOrigin = default,
+        SnapsToDevicePixels = false,
+        Uid = null,
+        Visibility = Visibility.Visible,
+        BindingGroup = null,
+        ContextMenu = null,
+        Cursor = null,
+        DataContext = null,
+        FlowDirection = FlowDirection.LeftToRight,
+        FocusVisualStyle = null,
+        ForceCursor = false,
+        Height = 0,
+        HorizontalAlignment = HorizontalAlignment.Left,
+        InputScope = null,
+        Language = null,
+        LayoutTransform = null,
+        Margin = default,
+        MaxHeight = 0,
+        MaxWidth = 0,
+        MinHeight = 0,
+        MinWidth = 0,
+        Name = null,
+        OverridesDefaultStyle = false,
+        Resources = null,
+        Style = null,
+        Tag = null,
+        ToolTip = null,
+        UseLayoutRounding = false,
+        VerticalAlignment = VerticalAlignment.Top,
+        Width = 0,
+        Background = null,
+        IsItemsHost = false,
+        ShowGridLines = false
+      };
 
       // doing binding as described at http://sdolha.spaces.live.com/blog/cns!4121802308C5AB4E!3724.entry?wa=wsignin1.0&sa=835372863
 
-      grid.SetBinding(Panel.BackgroundProperty, new Binding { Path = new PropertyPath("(0)", DateTimeAxis.MajorLabelBackgroundBrushProperty), RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
+      grid.SetBinding(dp: Panel.BackgroundProperty, binding: new Binding { Path = new PropertyPath(path: "(0)", pathParameters: DateTimeAxis.MajorLabelBackgroundBrushProperty), RelativeSource = new RelativeSource(mode: RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
       Rectangle rect = new()
       {
         StrokeThickness = 2
       };
-      rect.SetBinding(Shape.StrokeProperty, new Binding { Path = new PropertyPath("(0)", DateTimeAxis.MajorLabelRectangleBorderPropertyProperty), RelativeSource = new RelativeSource(RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
+      rect.SetBinding(dp: Shape.StrokeProperty, binding: new Binding { Path = new PropertyPath(path: "(0)", pathParameters: DateTimeAxis.MajorLabelRectangleBorderPropertyProperty), RelativeSource = new RelativeSource(mode: RelativeSourceMode.FindAncestor) { AncestorType = typeof(AxisControlBase) } });
 
-      Grid.SetColumn(rect, 0);
-      Grid.SetColumnSpan(rect, labelsNum);
+      Grid.SetColumn(element: rect, value: 0);
+      Grid.SetColumnSpan(element: rect, value: labelsNum);
 
       for (int j = 0; j < labelsNum; j++)
       {
-        grid.ColumnDefinitions.Add(new ColumnDefinition());
+        grid.ColumnDefinitions.Add(value: new ColumnDefinition());
       }
 
-      grid.Children.Add(rect);
+      grid.Children.Add(element: rect);
 
       for (int j = 0; j < labelsNum; j++)
       {
@@ -76,13 +122,13 @@ public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
         {
           Text = tickText,
           HorizontalAlignment = HorizontalAlignment.Center,
-          Margin = new Thickness(0, 3, 0, 3)
+          Margin = new Thickness(left: 0, top: 3, right: 0, bottom: 3)
         };
-        Grid.SetColumn(tb, j);
-        grid.Children.Add(tb);
+        Grid.SetColumn(element: tb, value: j);
+        grid.Children.Add(element: tb);
       }
 
-      ApplyCustomView(tickInfo, grid);
+      ApplyCustomView(info: tickInfo, label: grid);
 
       res[i] = grid;
     }
@@ -116,8 +162,6 @@ public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
         break;
       case DifferenceIn.Millisecond:
         format = "fff";
-        break;
-      default:
         break;
     }
 

@@ -10,7 +10,7 @@ public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
   {
     if (Changed != null)
     {
-      Changed(this, EventArgs.Empty);
+      Changed(sender: this, e: EventArgs.Empty);
     }
   }
 
@@ -21,27 +21,25 @@ public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
     switch (diff)
     {
       case DifferenceIn.Year:
-        res = res.AddYears(1);
+        res = res.AddYears(value: 1);
         break;
       case DifferenceIn.Month:
-        res = res.AddMonths(1);
+        res = res.AddMonths(months: 1);
         break;
       case DifferenceIn.Day:
-        res = res.AddDays(1);
+        res = res.AddDays(value: 1);
         break;
       case DifferenceIn.Hour:
-        res = res.AddHours(1);
+        res = res.AddHours(value: 1);
         break;
       case DifferenceIn.Minute:
-        res = res.AddMinutes(1);
+        res = res.AddMinutes(value: 1);
         break;
       case DifferenceIn.Second:
-        res = res.AddSeconds(1);
+        res = res.AddSeconds(value: 1);
         break;
       case DifferenceIn.Millisecond:
-        res = res.AddMilliseconds(1);
-        break;
-      default:
+        res = res.AddMilliseconds(value: 1);
         break;
     }
 
@@ -55,63 +53,59 @@ public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
     switch (diff)
     {
       case DifferenceIn.Year:
-        res = new DateTime(dateTime.Year, 1, 1);
+        res = new DateTime(year: dateTime.Year, month: 1, day: 1);
         break;
       case DifferenceIn.Month:
-        res = new DateTime(dateTime.Year, dateTime.Month, 1);
+        res = new DateTime(year: dateTime.Year, month: dateTime.Month, day: 1);
         break;
       case DifferenceIn.Day:
         res = dateTime.Date;
         break;
       case DifferenceIn.Hour:
-        res = dateTime.Date.AddHours(dateTime.Hour);
+        res = dateTime.Date.AddHours(value: dateTime.Hour);
         break;
       case DifferenceIn.Minute:
-        res = dateTime.Date.AddHours(dateTime.Hour).AddMinutes(dateTime.Minute);
+        res = dateTime.Date.AddHours(value: dateTime.Hour).AddMinutes(value: dateTime.Minute);
         break;
       case DifferenceIn.Second:
-        res = dateTime.Date.AddHours(dateTime.Hour).AddMinutes(dateTime.Minute).AddSeconds(dateTime.Second);
+        res = dateTime.Date.AddHours(value: dateTime.Hour).AddMinutes(value: dateTime.Minute).AddSeconds(value: dateTime.Second);
         break;
       case DifferenceIn.Millisecond:
-        res = dateTime.Date.AddHours(dateTime.Hour).AddMinutes(dateTime.Minute).AddSeconds(dateTime.Second).AddMilliseconds(dateTime.Millisecond);
-        break;
-      default:
+        res = dateTime.Date.AddHours(value: dateTime.Hour).AddMinutes(value: dateTime.Minute).AddSeconds(value: dateTime.Second).AddMilliseconds(value: dateTime.Millisecond);
         break;
     }
 
-    DebugVerify.Is(res <= dateTime);
+    DebugVerify.Is(condition: res <= dateTime);
 
     return res;
   }
 
   protected static DateTime RoundUp(DateTime dateTime, DifferenceIn diff)
   {
-    DateTime res = RoundDown(dateTime, diff);
+    DateTime res = RoundDown(dateTime: dateTime, diff: diff);
 
     switch (diff)
     {
       case DifferenceIn.Year:
-        res = res.AddYears(1);
+        res = res.AddYears(value: 1);
         break;
       case DifferenceIn.Month:
-        res = res.AddMonths(1);
+        res = res.AddMonths(months: 1);
         break;
       case DifferenceIn.Day:
-        res = res.AddDays(1);
+        res = res.AddDays(value: 1);
         break;
       case DifferenceIn.Hour:
-        res = res.AddHours(1);
+        res = res.AddHours(value: 1);
         break;
       case DifferenceIn.Minute:
-        res = res.AddMinutes(1);
+        res = res.AddMinutes(value: 1);
         break;
       case DifferenceIn.Second:
-        res = res.AddSeconds(1);
+        res = res.AddSeconds(value: 1);
         break;
       case DifferenceIn.Millisecond:
-        res = res.AddMilliseconds(1);
-        break;
-      default:
+        res = res.AddMilliseconds(value: 1);
         break;
     }
 

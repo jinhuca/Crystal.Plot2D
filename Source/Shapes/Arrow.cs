@@ -23,18 +23,18 @@ public class Arrow : Segment
   ///   The start point of arrow.
   /// </param>
   /// <param name="endPoint">
-  ///   The end pointof arrow.
+  ///   The end point of arrow.
   /// </param>
-  public Arrow(Point startPoint, Point endPoint) : base(startPoint, endPoint)
+  public Arrow(Point startPoint, Point endPoint) : base(startPoint: startPoint, endPoint: endPoint)
   {
     Init();
   }
 
   private void Init()
   {
-    geometryGroup.Children.Add(LineGeometry);
-    geometryGroup.Children.Add(leftLineGeometry);
-    geometryGroup.Children.Add(rightLineGeometry);
+    geometryGroup.Children.Add(value: LineGeometry);
+    geometryGroup.Children.Add(value: leftLineGeometry);
+    geometryGroup.Children.Add(value: rightLineGeometry);
   }
 
   #region ArrowLength property
@@ -45,18 +45,18 @@ public class Arrow : Segment
   /// <value>The length of the arrow.</value>
   public double ArrowLength
   {
-    get { return (double)GetValue(ArrowLengthProperty); }
-    set { SetValue(ArrowLengthProperty, value); }
+    get => (double)GetValue(dp: ArrowLengthProperty);
+    set => SetValue(dp: ArrowLengthProperty, value: value);
   }
 
   /// <summary>
   /// Identifies ArrowLength dependency property.
   /// </summary>
   public static readonly DependencyProperty ArrowLengthProperty = DependencyProperty.Register(
-    "ArrowLength",
-    typeof(double),
-    typeof(Arrow),
-    new FrameworkPropertyMetadata(0.1, OnPointChanged));
+    name: nameof(ArrowLength),
+    propertyType: typeof(double),
+    ownerType: typeof(Arrow),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: 0.1, propertyChangedCallback: OnPointChanged));
 
   #endregion
 
@@ -68,18 +68,18 @@ public class Arrow : Segment
   /// <value>The arrow angle.</value>
   public double ArrowAngle
   {
-    get { return (double)GetValue(ArrowAngleProperty); }
-    set { SetValue(ArrowAngleProperty, value); }
+    get => (double)GetValue(dp: ArrowAngleProperty);
+    set => SetValue(dp: ArrowAngleProperty, value: value);
   }
 
   /// <summary>
   /// Identifies ArrowAngle dependency property.
   /// </summary>
   public static readonly DependencyProperty ArrowAngleProperty = DependencyProperty.Register(
-    "ArrowAngle",
-    typeof(double),
-    typeof(Arrow),
-    new FrameworkPropertyMetadata(15.0, OnPointChanged));
+    name: nameof(ArrowAngle),
+    propertyType: typeof(double),
+    ownerType: typeof(Arrow),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: 15.0, propertyChangedCallback: OnPointChanged));
 
   #endregion
 
@@ -89,20 +89,20 @@ public class Arrow : Segment
 
     var transform = Plotter.Viewport.Transform;
 
-    Point p1 = StartPoint.DataToScreen(transform);
-    Point p2 = EndPoint.DataToScreen(transform);
+    Point p1 = StartPoint.DataToScreen(transform: transform);
+    Point p2 = EndPoint.DataToScreen(transform: transform);
 
     Vector arrowVector = p1 - p2;
     Vector arrowCapVector = ArrowLength * arrowVector;
 
     Matrix leftMatrix = Matrix.Identity;
-    leftMatrix.Rotate(ArrowAngle);
+    leftMatrix.Rotate(angle: ArrowAngle);
 
     Matrix rightMatrix = Matrix.Identity;
-    rightMatrix.Rotate(-ArrowAngle);
+    rightMatrix.Rotate(angle: -ArrowAngle);
 
-    Vector leftArrowLine = leftMatrix.Transform(arrowCapVector);
-    Vector rightArrowLine = rightMatrix.Transform(arrowCapVector);
+    Vector leftArrowLine = leftMatrix.Transform(vector: arrowCapVector);
+    Vector rightArrowLine = rightMatrix.Transform(vector: arrowCapVector);
 
     leftLineGeometry.StartPoint = p2;
     rightLineGeometry.StartPoint = p2;
@@ -114,8 +114,5 @@ public class Arrow : Segment
   private readonly LineGeometry leftLineGeometry = new();
   private readonly LineGeometry rightLineGeometry = new();
   private readonly GeometryGroup geometryGroup = new();
-  protected override Geometry DefiningGeometry
-  {
-    get { return geometryGroup; }
-  }
+  protected override Geometry DefiningGeometry => geometryGroup;
 }

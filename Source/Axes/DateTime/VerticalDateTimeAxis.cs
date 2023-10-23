@@ -14,7 +14,7 @@ public class VerticalDateTimeAxis : DateTimeAxis
   {
     if (newPlacement == AxisPlacement.Bottom || newPlacement == AxisPlacement.Top)
     {
-      throw new ArgumentException(Strings.Exceptions.VerticalAxisCannotBeHorizontal);
+      throw new ArgumentException(message: Strings.Exceptions.VerticalAxisCannotBeHorizontal);
     }
   }
 }

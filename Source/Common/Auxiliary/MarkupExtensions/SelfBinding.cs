@@ -12,6 +12,6 @@ public class SelfBinding : Binding
 
   public SelfBinding(string propertyPath) : this()
   {
-    Path = new PropertyPath(propertyPath);
+    Path = new PropertyPath(path: propertyPath);
   }
 }

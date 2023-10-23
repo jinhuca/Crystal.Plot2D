@@ -34,7 +34,7 @@ public class LineGraph : PointsGraphBase
   }
 
   /// <summary>Provides access to filters collection</summary>
-  public FilterCollection Filters { get; } = new FilterCollection();
+  public FilterCollection Filters { get; } = new();
 
   /// <summary>
   /// Initializes a new instance of the <see cref="LineGraph"/> class.

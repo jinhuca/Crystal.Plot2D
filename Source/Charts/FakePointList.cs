@@ -5,7 +5,7 @@ using System.Windows;
 
 namespace Crystal.Plot2D;
 
-[DebuggerDisplay("Count = {Count}")]
+[DebuggerDisplay(value: "Count = {Count}")]
 public sealed class FakePointList : IList<Point>
 {
   private int first;
@@ -36,15 +36,15 @@ public sealed class FakePointList : IList<Point>
 
   private void Calc()
   {
-    Debug.Assert(leftBound <= rightBound);
+    Debug.Assert(condition: leftBound <= rightBound);
 
-    first = points.FindIndex(p => p.X > leftBound);
+    first = points.FindIndex(match: p => p.X > leftBound);
     if (first > 0)
     {
       first--;
     }
 
-    last = points.FindLastIndex(p => p.X < rightBound);
+    last = points.FindLastIndex(match: p => p.X < rightBound);
 
     if (last < points.Count - 1)
     {
@@ -56,19 +56,13 @@ public sealed class FakePointList : IList<Point>
 
     if (hasPoints)
     {
-      startPoint = points[first];
+      startPoint = points[index: first];
     }
   }
 
-  public Point StartPoint
-  {
-    get { return startPoint; }
-  }
+  public Point StartPoint => startPoint;
 
-  public bool HasPoints
-  {
-    get { return hasPoints; }
-  }
+  public bool HasPoints => hasPoints;
 
   #region IList<Point> Members
 
@@ -89,14 +83,8 @@ public sealed class FakePointList : IList<Point>
 
   public Point this[int index]
   {
-    get
-    {
-      return points[first + 1 + index];
-    }
-    set
-    {
-      throw new NotSupportedException();
-    }
+    get => points[index: first + 1 + index];
+    set => throw new NotSupportedException();
   }
 
   #endregion
@@ -123,15 +111,9 @@ public sealed class FakePointList : IList<Point>
     throw new NotSupportedException();
   }
 
-  public int Count
-  {
-    get { return count; }
-  }
+  public int Count => count;
 
-  public bool IsReadOnly
-  {
-    get { throw new NotSupportedException(); }
-  }
+  public bool IsReadOnly => throw new NotSupportedException();
 
   public bool Remove(Point item)
   {
@@ -146,7 +128,7 @@ public sealed class FakePointList : IList<Point>
   {
     for (int i = first + 1; i <= last; i++)
     {
-      yield return points[i];
+      yield return points[index: i];
     }
   }
 
@@ -154,10 +136,7 @@ public sealed class FakePointList : IList<Point>
 
   #region IEnumerable Members
 
-  System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-  {
-    return GetEnumerator();
-  }
+  System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator() => GetEnumerator();
 
   #endregion
 }

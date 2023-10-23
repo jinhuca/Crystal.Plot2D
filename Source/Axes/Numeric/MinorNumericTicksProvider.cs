@@ -16,16 +16,16 @@ public sealed class MinorNumericTicksProvider : ITicksProvider<double>
   private double[] coeffs;
   public double[] Coeffs
   {
-    get { return coeffs; }
+    get => coeffs;
     set
     {
       if (value == null)
       {
-        throw new ArgumentNullException("value");
+        throw new ArgumentNullException(paramName: "value");
       }
 
       coeffs = value;
-      Changed.Raise(this);
+      Changed.Raise(sender: this);
     }
   }
 
@@ -46,11 +46,11 @@ public sealed class MinorNumericTicksProvider : ITicksProvider<double>
       return new TicksInfo<double>();
     }
 
-    var minorTicks = ranges.Select(r => CreateTicks(r)).SelectMany(m => m);
+    var minorTicks = ranges.Select(selector: r => CreateTicks(range: r)).SelectMany(selector: m => m);
     var res = new TicksInfo<double>
     {
-      TickSizes = minorTicks.Select(m => m.Value).ToArray(),
-      Ticks = minorTicks.Select(m => m.Tick).ToArray()
+      TickSizes = minorTicks.Select(selector: m => m.Value).ToArray(),
+      Ticks = minorTicks.Select(selector: m => m.Tick).ToArray()
     };
 
     return res;
@@ -63,7 +63,7 @@ public sealed class MinorNumericTicksProvider : ITicksProvider<double>
     MinorTickInfo<double>[] res = new MinorTickInfo<double>[Coeffs.Length];
     for (int i = 0; i < Coeffs.Length; i++)
     {
-      res[i] = new MinorTickInfo<double>(Coeffs[i], range.Min + step * (i + 1));
+      res[i] = new MinorTickInfo<double>(value: Coeffs[i], tick: range.Min + step * (i + 1));
     }
     return res;
   }
@@ -78,15 +78,9 @@ public sealed class MinorNumericTicksProvider : ITicksProvider<double>
     return ticksCount;
   }
 
-  public ITicksProvider<double> MinorProvider
-  {
-    get { return null; }
-  }
+  public ITicksProvider<double> MinorProvider => null;
 
-  public ITicksProvider<double> MajorProvider
-  {
-    get { return parent; }
-  }
+  public ITicksProvider<double> MajorProvider => parent;
 
   #endregion
 }

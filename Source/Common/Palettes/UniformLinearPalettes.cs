@@ -11,7 +11,10 @@ public static class UniformLinearPalettes
     BlueOrangePalette.IncreaseBrightness = false;
   }
 
-  public static UniformLinearPalette BlackAndWhitePalette { get; } = new UniformLinearPalette(Colors.Black, Colors.White);
-  public static UniformLinearPalette RedGreenBluePalette { get; } = new UniformLinearPalette(Colors.Blue, Color.FromRgb(0, 255, 0), Colors.Red);
-  public static UniformLinearPalette BlueOrangePalette { get; } = new UniformLinearPalette(Colors.Blue, Colors.Cyan, Colors.Yellow, Colors.Orange);
+  public static UniformLinearPalette BlackAndWhitePalette { get; } = new(colors: new[]
+    { Colors.Black, Colors.White });
+  public static UniformLinearPalette RedGreenBluePalette { get; } = new(colors: new[]
+    { Colors.Blue, Color.FromRgb(r: 0, g: 255, b: 0), Colors.Red });
+  public static UniformLinearPalette BlueOrangePalette { get; } = new(colors: new[]
+    { Colors.Blue, Colors.Cyan, Colors.Yellow, Colors.Orange });
 }

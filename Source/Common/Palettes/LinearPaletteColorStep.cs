@@ -6,7 +6,7 @@ namespace Crystal.Plot2D.Common;
 /// <summary>
 /// Represents a color step with its offset in limits [0..1].
 /// </summary>
-[DebuggerDisplay("Color={Color}, Offset={Offset}")]
+[DebuggerDisplay(value: "Color={Color}, Offset={Offset}")]
 public class LinearPaletteColorStep
 {
   /// <summary>

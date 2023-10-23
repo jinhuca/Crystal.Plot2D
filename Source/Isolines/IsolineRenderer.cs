@@ -25,29 +25,27 @@ public abstract class IsolineRenderer : IsolineGraphBase
   protected IEnumerable<double> GetAdditionalLevels(IsolineCollection collection)
   {
     var dataSource = DataSource;
-    var visibleMinMax = dataSource.GetMinMax(Plotter2D.Visible);
+    var visibleMinMax = dataSource.GetMinMax(area: Plotter2D.Visible);
     double totalDelta = collection.Max - collection.Min;
     double visibleMinMaxRatio = totalDelta / visibleMinMax.GetLength();
     double defaultDelta = totalDelta / 12;
 
-    if (true || 2 * defaultDelta < visibleMinMaxRatio)
+    if (true)
     {
-      double number = Math.Ceiling(visibleMinMaxRatio * 4);
-      number = Math.Pow(2, Math.Ceiling(Math.Log(number) / Math.Log(2)));
+      double number = Math.Ceiling(a: visibleMinMaxRatio * 4);
+      number = Math.Pow(x: 2, y: Math.Ceiling(a: Math.Log(d: number) / Math.Log(d: 2)));
       double delta = totalDelta / number;
-      double x = collection.Min + Math.Ceiling((visibleMinMax.Min - collection.Min) / delta) * delta;
+      double x = collection.Min + Math.Ceiling(a: (visibleMinMax.Min - collection.Min) / delta) * delta;
 
       List<double> result = new();
       while (x < visibleMinMax.Max)
       {
-        result.Add(x);
+        result.Add(item: x);
         x += delta;
       }
 
       return result;
     }
-
-    return Enumerable.Empty<double>();
   }
 
   protected void RenderIsolineCollection(DrawingContext dc, double strokeThickness, IsolineCollection collection, CoordinateTransform transform)
@@ -57,21 +55,21 @@ public abstract class IsolineRenderer : IsolineGraphBase
       StreamGeometry lineGeometry = new();
       using (var context = lineGeometry.Open())
       {
-        context.BeginFigure(line.StartPoint.ViewportToScreen(transform), false, false);
+        context.BeginFigure(startPoint: line.StartPoint.ViewportToScreen(transform: transform), isFilled: false, isClosed: false);
         if (!UseBezierCurves)
         {
-          context.PolyLineTo(line.OtherPoints.ViewportToScreen(transform).ToArray(), true, true);
+          context.PolyLineTo(points: line.OtherPoints.ViewportToScreen(transform: transform).ToArray(), isStroked: true, isSmoothJoin: true);
         }
         else
         {
-          context.PolyBezierTo(BezierBuilder.GetBezierPoints(line.AllPoints.ViewportToScreen(transform).ToArray()).Skip(1).ToArray(), true, true);
+          context.PolyBezierTo(points: BezierBuilder.GetBezierPoints(points: line.AllPoints.ViewportToScreen(transform: transform).ToArray()).Skip(count: 1).ToArray(), isStroked: true, isSmoothJoin: true);
         }
       }
       lineGeometry.Freeze();
 
-      Pen pen = new(new SolidColorBrush(Palette.GetColor(line.Value01)), strokeThickness);
+      Pen pen = new(brush: new SolidColorBrush(color: Palette.GetColor(t: line.Value01)), thickness: strokeThickness);
 
-      dc.DrawGeometry(null, pen, lineGeometry);
+      dc.DrawGeometry(brush: null, pen: pen, geometry: lineGeometry);
     }
   }
 

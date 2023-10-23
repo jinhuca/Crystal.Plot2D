@@ -14,19 +14,19 @@ public class DebugMenu : IPlotterElement
   /// </summary>
   public DebugMenu()
   {
-    Panel.SetZIndex(Menu, 1);
+    Panel.SetZIndex(element: Menu, value: 1);
   }
 
-  public Menu Menu { get; } = new Menu
+  public Menu Menu { get; } = new()
   {
     HorizontalAlignment = HorizontalAlignment.Left,
     VerticalAlignment = VerticalAlignment.Top,
-    Margin = new Thickness(3)
+    Margin = new Thickness(uniformLength: 3)
   };
 
   public MenuItem TryFindMenuItem(string itemName)
   {
-    return Menu.Items.OfType<MenuItem>().FirstOrDefault(item => item.Header.ToString() == itemName);
+    return Menu.Items.OfType<MenuItem>().FirstOrDefault(predicate: item => item.Header.ToString() == itemName);
   }
 
   #region IPlotterElement Members
@@ -34,12 +34,12 @@ public class DebugMenu : IPlotterElement
   public void OnPlotterAttached(PlotterBase plotter)
   {
     Plotter = plotter;
-    plotter.CentralGrid.Children.Add(Menu);
+    plotter.CentralGrid.Children.Add(element: Menu);
   }
 
   public void OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.CentralGrid.Children.Remove(Menu);
+    plotter.CentralGrid.Children.Remove(element: Menu);
     Plotter = null;
   }
 

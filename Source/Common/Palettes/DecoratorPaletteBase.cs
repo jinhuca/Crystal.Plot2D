@@ -21,7 +21,7 @@ public abstract class DecoratorPaletteBase : PaletteBase
   /// </param>
   protected DecoratorPaletteBase(IPalette palette) => Palette = palette;
 
-  private IPalette palette = null;
+  private IPalette palette;
 
   /// <summary>
   ///   Gets or sets the palette being decorated.
@@ -31,7 +31,7 @@ public abstract class DecoratorPaletteBase : PaletteBase
   /// </value>
   public IPalette Palette
   {
-    get { return palette; }
+    get => palette;
     set
     {
       if (palette != null)
@@ -39,7 +39,7 @@ public abstract class DecoratorPaletteBase : PaletteBase
         palette.Changed -= OnChildPaletteChanged;
       }
 
-      palette = value ?? throw new ArgumentNullException("value");
+      palette = value ?? throw new ArgumentNullException(paramName: "value");
       palette.Changed += OnChildPaletteChanged;
       RaiseChanged();
     }
@@ -56,5 +56,5 @@ public abstract class DecoratorPaletteBase : PaletteBase
   /// <returns>
   ///   Color.
   /// </returns>
-  public override Color GetColor(double t) => palette.GetColor(t);
+  public override Color GetColor(double t) => palette.GetColor(t: t);
 }

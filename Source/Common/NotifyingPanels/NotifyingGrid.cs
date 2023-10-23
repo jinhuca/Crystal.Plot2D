@@ -10,8 +10,8 @@ internal sealed class NotifyingGrid : Grid, INotifyingPanel
 
   protected override UIElementCollection CreateUIElementCollection(FrameworkElement logicalParent)
   {
-    NotifyingChildren = new NotifyingUIElementCollection(this, logicalParent);
-    ChildrenCreated.Raise(this);
+    NotifyingChildren = new NotifyingUIElementCollection(visualParent: this, logicalParent: logicalParent);
+    ChildrenCreated.Raise(sender: this);
     return NotifyingChildren;
   }
 

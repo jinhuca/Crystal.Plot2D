@@ -13,7 +13,7 @@ namespace Crystal.Plot2D.Charts;
 /// </summary>
 public sealed class IsolineGraph : IsolineRenderer
 {
-  private static readonly Brush labelBackground = new SolidColorBrush(Color.FromArgb(130, 255, 255, 255));
+  private static readonly Brush labelBackground = new SolidColorBrush(color: Color.FromArgb(a: 130, r: 255, g: 255, b: 255));
 
   /// <summary>
   /// Initializes a new instance of the <see cref="IsolineGraph"/> class.
@@ -21,7 +21,7 @@ public sealed class IsolineGraph : IsolineRenderer
   public IsolineGraph()
   {
     Content = content;
-    Viewport2D.SetIsContentBoundsHost(this, true);
+    Viewport2D.SetIsContentBoundsHost(obj: this, value: true);
   }
 
   protected override void OnPlotterAttached()
@@ -69,34 +69,34 @@ public sealed class IsolineGraph : IsolineRenderer
       {
         foreach (var point in line.AllPoints)
         {
-          bounds.Union(point);
+          bounds.Union(point: point);
         }
 
         Path path = new()
         {
-          Stroke = new SolidColorBrush(Palette.GetColor(line.Value01)),
+          Stroke = new SolidColorBrush(color: Palette.GetColor(t: line.Value01)),
           StrokeThickness = StrokeThickness,
-          Data = CreateGeometry(line),
+          Data = CreateGeometry(lineData: line),
           Tag = line
         };
-        content.Children.Add(path);
-        linePaths.Add(path);
+        content.Children.Add(element: path);
+        linePaths.Add(item: path);
       }
 
-      Viewport2D.SetContentBounds(this, bounds);
+      Viewport2D.SetContentBounds(obj: this, value: bounds);
 
       if (DrawLabels)
       {
         var transform = Plotter2D.Viewport.Transform;
-        double wayBeforeText = new Rect(new Size(2000, 2000)).ScreenToData(transform).Width;
+        double wayBeforeText = new Rect(size: new Size(width: 2000, height: 2000)).ScreenToData(transform: transform).Width;
         Annotater.WayBeforeText = wayBeforeText;
-        var textLabels = Annotater.Annotate(Collection, Plotter2D.Viewport.Visible);
+        var textLabels = Annotater.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
 
         foreach (var textLabel in textLabels)
         {
-          var text = CreateTextLabel(textLabel);
-          content.Children.Add(text);
-          textBlocks.Add(text);
+          var text = CreateTextLabel(textLabel: textLabel);
+          content.Children.Add(element: text);
+          textBlocks.Add(item: text);
         }
       }
     }
@@ -105,7 +105,7 @@ public sealed class IsolineGraph : IsolineRenderer
   private FrameworkElement CreateTextLabel(IsolineTextLabel textLabel)
   {
     var transform = Plotter2D.Viewport.Transform;
-    Point screenPos = textLabel.Position.DataToScreen(transform);
+    Point screenPos = textLabel.Position.DataToScreen(transform: transform);
 
     double angle = textLabel.Rotation;
     if (angle < 0)
@@ -118,19 +118,19 @@ public sealed class IsolineGraph : IsolineRenderer
       angle -= 180;
     }
 
-    string tooltip = textLabel.Value.ToString("F"); //String.Format("{0} at ({1}, {2})", textLabel.Text, textLabel.Position.X, textLabel.Position.Y);
+    string tooltip = textLabel.Value.ToString(format: "F"); //String.Format("{0} at ({1}, {2})", textLabel.Text, textLabel.Position.X, textLabel.Position.Y);
     Grid grid = new()
     {
-      RenderTransform = new RotateTransform(angle),
+      RenderTransform = new RotateTransform(angle: angle),
       Tag = textLabel,
-      RenderTransformOrigin = new Point(0.5, 0.5),
+      RenderTransformOrigin = new Point(x: 0.5, y: 0.5),
       ToolTip = tooltip
     };
 
     TextBlock res = new()
     {
-      Text = textLabel.Value.ToString("F"),
-      Margin = new Thickness(3, 1, 3, 1)
+      Text = textLabel.Value.ToString(format: "F"),
+      Margin = new Thickness(left: 3, top: 1, right: 3, bottom: 1)
     };
 
     //res.Measure(SizeHelper.CreateInfiniteSize());
@@ -143,16 +143,16 @@ public sealed class IsolineGraph : IsolineRenderer
       RadiusY = 8
     };
 
-    grid.Children.Add(rect);
-    grid.Children.Add(res);
+    grid.Children.Add(element: rect);
+    grid.Children.Add(element: res);
 
-    grid.Measure(SizeHelper.CreateInfiniteSize());
+    grid.Measure(availableSize: SizeHelper.CreateInfiniteSize());
 
     Size textSize = grid.DesiredSize;
-    Point position = new(screenPos.X - textSize.Width / 2, screenPos.Y - textSize.Height / 2);
+    Point position = new(x: screenPos.X - textSize.Width / 2, y: screenPos.Y - textSize.Height / 2);
 
-    Canvas.SetLeft(grid, position.X);
-    Canvas.SetTop(grid, position.Y);
+    Canvas.SetLeft(element: grid, length: position.X);
+    Canvas.SetTop(element: grid, length: position.Y);
     return grid;
   }
 
@@ -163,8 +163,8 @@ public sealed class IsolineGraph : IsolineRenderer
     StreamGeometry geometry = new();
     using (var context = geometry.Open())
     {
-      context.BeginFigure(lineData.StartPoint.DataToScreen(transform), false, false);
-      context.PolyLineTo(lineData.OtherPoints.DataToScreenAsList(transform), true, true);
+      context.BeginFigure(startPoint: lineData.StartPoint.DataToScreen(transform: transform), isFilled: false, isClosed: false);
+      context.PolyLineTo(points: lineData.OtherPoints.DataToScreenAsList(transform: transform), isStroked: true, isSmoothJoin: true);
     }
     geometry.Freeze();
     return geometry;
@@ -176,13 +176,13 @@ public sealed class IsolineGraph : IsolineRenderer
     if (e.PropertyName == "Visible" || e.PropertyName == "Output")
     {
       bool isVisibleChanged = e.PropertyName == "Visible";
-      DataRect prevRect = isVisibleChanged ? (DataRect)e.OldValue : new DataRect((Rect)e.OldValue);
-      DataRect currRect = isVisibleChanged ? (DataRect)e.NewValue : new DataRect((Rect)e.NewValue);
+      DataRect prevRect = isVisibleChanged ? (DataRect)e.OldValue : new DataRect(rect: (Rect)e.OldValue);
+      DataRect currRect = isVisibleChanged ? (DataRect)e.NewValue : new DataRect(rect: (Rect)e.NewValue);
 
       // completely rebuild text only if width and height have changed many
       const double smallChangePercent = 0.05;
-      bool widthChangedLittle = Math.Abs(currRect.Width - prevRect.Width) / currRect.Width < smallChangePercent;
-      bool heightChangedLittle = Math.Abs(currRect.Height - prevRect.Height) / currRect.Height < smallChangePercent;
+      bool widthChangedLittle = Math.Abs(value: currRect.Width - prevRect.Width) / currRect.Width < smallChangePercent;
+      bool heightChangedLittle = Math.Abs(value: currRect.Height - prevRect.Height) / currRect.Height < smallChangePercent;
 
       rebuildText = !(widthChangedLittle && heightChangedLittle);
     }
@@ -199,7 +199,7 @@ public sealed class IsolineGraph : IsolineRenderer
     foreach (var path in linePaths)
     {
       LevelLine line = (LevelLine)path.Tag;
-      path.Data = CreateGeometry(line);
+      path.Data = CreateGeometry(lineData: line);
     }
 
     var transform = Plotter2D.Viewport.Transform;
@@ -213,21 +213,21 @@ public sealed class IsolineGraph : IsolineRenderer
       {
         if (text.Visibility == Visibility.Visible)
         {
-          content.Children.Remove(text);
+          content.Children.Remove(element: text);
         }
       }
       textBlocks.Clear();
 
-      double wayBeforeText = new Rect(new Size(100, 100)).ScreenToData(transform).Width;
+      double wayBeforeText = new Rect(size: new Size(width: 100, height: 100)).ScreenToData(transform: transform).Width;
       Annotater.WayBeforeText = wayBeforeText;
-      var textLabels = Annotater.Annotate(Collection, Plotter2D.Viewport.Visible);
+      var textLabels = Annotater.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
       foreach (var textLabel in textLabels)
       {
-        var text = CreateTextLabel(textLabel);
-        textBlocks.Add(text);
-        if (visible.Contains(textLabel.Position))
+        var text = CreateTextLabel(textLabel: textLabel);
+        textBlocks.Add(item: text);
+        if (visible.Contains(point: textLabel.Position))
         {
-          content.Children.Add(text);
+          content.Children.Add(element: text);
         }
         else
         {
@@ -240,25 +240,25 @@ public sealed class IsolineGraph : IsolineRenderer
       foreach (var text in textBlocks)
       {
         IsolineTextLabel label = (IsolineTextLabel)text.Tag;
-        Point screenPos = label.Position.DataToScreen(transform);
+        Point screenPos = label.Position.DataToScreen(transform: transform);
         Size textSize = text.DesiredSize;
 
-        Point position = new(screenPos.X - textSize.Width / 2, screenPos.Y - textSize.Height / 2);
+        Point position = new(x: screenPos.X - textSize.Width / 2, y: screenPos.Y - textSize.Height / 2);
 
-        if (output.Contains(position))
+        if (output.Contains(point: position))
         {
-          Canvas.SetLeft(text, position.X);
-          Canvas.SetTop(text, position.Y);
+          Canvas.SetLeft(element: text, length: position.X);
+          Canvas.SetTop(element: text, length: position.Y);
           if (text.Visibility == Visibility.Hidden)
           {
             text.Visibility = Visibility.Visible;
-            content.Children.Add(text);
+            content.Children.Add(element: text);
           }
         }
         else if (text.Visibility == Visibility.Visible)
         {
           text.Visibility = Visibility.Hidden;
-          content.Children.Remove(text);
+          content.Children.Remove(element: text);
         }
       }
     }

@@ -16,23 +16,22 @@ public sealed class PlotterEventHelper
   {
     if (target == null)
     {
-      throw new ArgumentNullException("target");
+      throw new ArgumentNullException(paramName: nameof(target));
     }
 
     if (handler == null)
     {
-      throw new ArgumentNullException("handler");
+      throw new ArgumentNullException(paramName: nameof(handler));
     }
 
-    handlers.Add(target, handler);
+    handlers.Add(key: target, value: handler);
   }
 
   internal void Notify(FrameworkElement target, PlotterChangedEventArgs args)
   {
-    if (args.RoutedEvent == @event && handlers.ContainsKey(target))
+    if (args.RoutedEvent == @event && handlers.TryGetValue(target, out var handler))
     {
-      var handler = handlers[target];
-      handler(target, args);
+      handler(sender: target, e: args);
     }
   }
 }

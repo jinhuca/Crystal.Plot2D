@@ -16,7 +16,7 @@ public class RectElementPointMarker : ShapeElementPointMarker
     result.Height = Size;
     result.Stroke = Brush;
     result.Fill = Fill;
-    if (!string.IsNullOrEmpty(ToolTipText))
+    if (!string.IsNullOrEmpty(value: ToolTipText))
     {
       result.ToolTip = new ToolTip
       {
@@ -35,7 +35,7 @@ public class RectElementPointMarker : ShapeElementPointMarker
     rect.Stroke = Brush;
     rect.Fill = Fill;
 
-    if (!string.IsNullOrEmpty(ToolTipText))
+    if (!string.IsNullOrEmpty(value: ToolTipText))
     {
       rect.ToolTip = new ToolTip
       {
@@ -46,7 +46,7 @@ public class RectElementPointMarker : ShapeElementPointMarker
 
   public override void SetPosition(UIElement marker, Point screenPoint)
   {
-    Canvas.SetLeft(marker, screenPoint.X - Size / 2);
-    Canvas.SetTop(marker, screenPoint.Y - Size / 2);
+    Canvas.SetLeft(element: marker, length: screenPoint.X - Size / 2);
+    Canvas.SetTop(element: marker, length: screenPoint.Y - Size / 2);
   }
 }

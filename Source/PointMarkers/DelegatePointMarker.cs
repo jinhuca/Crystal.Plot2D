@@ -16,13 +16,13 @@ public sealed class DelegatePointMarker : PointMarker
   {
     if (renderCallback == null)
     {
-      throw new ArgumentNullException("renderCallback");
+      throw new ArgumentNullException(paramName: "renderCallback");
     }
     RenderCallback = renderCallback;
   }
 
   public override void Render(DrawingContext dc, Point screenPoint)
   {
-    RenderCallback(dc, screenPoint);
+    RenderCallback(dc: dc, screenPoint: screenPoint);
   }
 }

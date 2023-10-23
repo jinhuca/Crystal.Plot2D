@@ -11,6 +11,6 @@ public class TemplateBinding : Binding
 
   public TemplateBinding(string propertyPath) : this()
   {
-    Path = new System.Windows.PropertyPath(propertyPath);
+    Path = new System.Windows.PropertyPath(path: propertyPath);
   }
 }

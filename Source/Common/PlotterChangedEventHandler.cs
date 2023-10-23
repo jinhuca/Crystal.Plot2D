@@ -5,11 +5,11 @@ namespace Crystal.Plot2D.Common;
 
 public class PlotterChangedEventArgs : RoutedEventArgs
 {
-  public PlotterChangedEventArgs(PlotterBase prevPlotter, PlotterBase currPlotter, RoutedEvent routedEvent) : base(routedEvent)
+  public PlotterChangedEventArgs(PlotterBase prevPlotter, PlotterBase currPlotter, RoutedEvent routedEvent) : base(routedEvent: routedEvent)
   {
     if (prevPlotter == null && currPlotter == null)
     {
-      throw new ArgumentException("Both Plotters cannot be null.");
+      throw new ArgumentException(message: "Both Plotters cannot be null.");
     }
 
     PreviousPlotter = prevPlotter;

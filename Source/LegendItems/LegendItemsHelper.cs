@@ -9,14 +9,14 @@ public static class LegendItemsHelper
   {
     DependencyObject dependencyChart = (DependencyObject)chart;
     LegendItem result = new();
-    SetCommonBindings(result, chart);
+    SetCommonBindings(legendItem: result, chart: chart);
     return result;
   }
 
   public static void SetCommonBindings(LegendItem legendItem, object chart)
   {
     legendItem.DataContext = chart;
-    legendItem.SetBinding(Legend.VisualContentProperty, new Binding { Path = new PropertyPath("(0)", Legend.VisualContentProperty) });
-    legendItem.SetBinding(Legend.DescriptionProperty, new Binding { Path = new PropertyPath("(0)", Legend.DescriptionProperty) });
+    legendItem.SetBinding(dp: Legend.VisualContentProperty, binding: new Binding { Path = new PropertyPath(path: "(0)", pathParameters: Legend.VisualContentProperty) });
+    legendItem.SetBinding(dp: Legend.DescriptionProperty, binding: new Binding { Path = new PropertyPath(path: "(0)", pathParameters: Legend.DescriptionProperty) });
   }
 }

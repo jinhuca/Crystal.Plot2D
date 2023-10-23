@@ -25,15 +25,15 @@ public abstract class GeneralAxis : ContentControl, IPlotterElement
   /// <value>The placement.</value>
   public AxisPlacement Placement
   {
-    get { return placement; }
+    get => placement;
     set
     {
       if (placement != value)
       {
-        ValidatePlacement(value);
+        ValidatePlacement(newPlacement: value);
         AxisPlacement oldPlacement = placement;
         placement = value;
-        OnPlacementChanged(oldPlacement, placement);
+        OnPlacementChanged(oldPlacement: oldPlacement, newPlacement: placement);
       }
     }
   }
@@ -42,7 +42,7 @@ public abstract class GeneralAxis : ContentControl, IPlotterElement
 
   protected Panel GetPanelByPlacement(AxisPlacement placement)
   {
-    Panel panel = placement switch
+    var panel = placement switch
     {
       AxisPlacement.Left => ParentPlotter.LeftPanel,
       AxisPlacement.Right => ParentPlotter.RightPanel,
@@ -64,7 +64,7 @@ public abstract class GeneralAxis : ContentControl, IPlotterElement
 
   protected void RaiseTicksChanged()
   {
-    TicksChanged.Raise(this);
+    TicksChanged.Raise(sender: this);
   }
 
   public abstract void ForceUpdate();
@@ -72,45 +72,45 @@ public abstract class GeneralAxis : ContentControl, IPlotterElement
   /// <summary>
   /// Occurs when ticks changes.
   /// </summary>
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public event EventHandler TicksChanged;
 
   /// <summary>
   /// Gets the screen coordinates of axis ticks.
   /// </summary>
   /// <value>The screen ticks.</value>
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public abstract double[] ScreenTicks { get; }
 
   /// <summary>
   /// Gets the screen coordinates of minor ticks.
   /// </summary>
   /// <value>The minor screen ticks.</value>
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public abstract MinorTickInfo<double>[] MinorScreenTicks { get; }
 
   #region IPlotterElement Members
 
   private PlotterBase plotter;
-  [EditorBrowsable(EditorBrowsableState.Never)]
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public PlotterBase ParentPlotter => plotter;
 
-  void IPlotterElement.OnPlotterAttached(PlotterBase plotter_)
+  void IPlotterElement.OnPlotterAttached(PlotterBase thePlotter)
   {
-    plotter = (PlotterBase)plotter_;
-    OnPlotterAttached(plotter);
+    plotter = thePlotter;
+    OnPlotterAttached(thePlotter: plotter);
   }
 
-  protected virtual void OnPlotterAttached(PlotterBase plotter_) { }
+  protected virtual void OnPlotterAttached(PlotterBase thePlotter) { }
 
-  void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
+  void IPlotterElement.OnPlotterDetaching(PlotterBase thePlotter)
   {
-    OnPlotterDetaching(this.plotter);
-    this.plotter = null;
+    OnPlotterDetaching(thePlotter: plotter);
+    plotter = null;
   }
 
-  protected virtual void OnPlotterDetaching(PlotterBase plotter) { }
+  protected virtual void OnPlotterDetaching(PlotterBase thePlotter) { }
 
   public PlotterBase Plotter => plotter;
 

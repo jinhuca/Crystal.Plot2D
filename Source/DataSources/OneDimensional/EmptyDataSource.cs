@@ -13,8 +13,8 @@ public class EmptyDataSource : IPointDataSource
 
   public IPointEnumerator GetEnumerator(DependencyObject context) => new EmptyPointEnumerator();
 
-  [SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode")]
-  private void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
+  [SuppressMessage(category: "Microsoft.Performance", checkId: "CA1811:AvoidUncalledPrivateCode")]
+  private void RaiseDataChanged() => DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
 
   public event EventHandler DataChanged;
 

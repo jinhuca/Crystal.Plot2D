@@ -17,7 +17,7 @@ public class CircleElementPointMarker : ShapeElementPointMarker
     result.Stroke = Brush;
     result.Fill = Fill;
 
-    if (!string.IsNullOrEmpty(ToolTipText))
+    if (!string.IsNullOrEmpty(value: ToolTipText))
     {
       ToolTip tt = new();
       tt.Content = ToolTipText;
@@ -35,7 +35,7 @@ public class CircleElementPointMarker : ShapeElementPointMarker
     ellipse.Stroke = Brush;
     ellipse.Fill = Fill;
 
-    if (!string.IsNullOrEmpty(ToolTipText))
+    if (!string.IsNullOrEmpty(value: ToolTipText))
     {
       ToolTip tt = new();
       tt.Content = ToolTipText;
@@ -45,7 +45,7 @@ public class CircleElementPointMarker : ShapeElementPointMarker
 
   public override void SetPosition(UIElement marker, Point screenPoint)
   {
-    Canvas.SetLeft(marker, screenPoint.X - Size / 2);
-    Canvas.SetTop(marker, screenPoint.Y - Size / 2);
+    Canvas.SetLeft(element: marker, length: screenPoint.X - Size / 2);
+    Canvas.SetTop(element: marker, length: screenPoint.Y - Size / 2);
   }
 }

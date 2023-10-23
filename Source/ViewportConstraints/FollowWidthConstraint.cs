@@ -27,10 +27,10 @@ public class FollowWidthConstraint : ViewportConstraint
   /// Default value is 1.0.
   /// </summary>
   /// <value>The width.</value>
-  [DefaultValue(1.0)]
+  [DefaultValue(value: 1.0)]
   public double Width
   {
-    get { return width; }
+    get => width;
     set
     {
       if (width != value)
@@ -58,13 +58,13 @@ public class FollowWidthConstraint : ViewportConstraint
     double followWidth = proposedDataRect.Width;
     if (!viewport.UnitedContentBounds.IsEmpty)
     {
-      followWidth = Math.Min(width, viewport.UnitedContentBounds.Width);
+      followWidth = Math.Min(val1: width, val2: viewport.UnitedContentBounds.Width);
     }
     if (followWidth.IsInfinite())
     {
       followWidth = width;
     }
 
-    return new Rect(proposedDataRect.XMin + proposedDataRect.Width - followWidth, proposedDataRect.YMin, followWidth, proposedDataRect.Height);
+    return new Rect(x: proposedDataRect.XMin + proposedDataRect.Width - followWidth, y: proposedDataRect.YMin, width: followWidth, height: proposedDataRect.Height);
   }
 }

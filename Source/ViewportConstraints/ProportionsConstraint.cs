@@ -8,7 +8,7 @@ public sealed class ProportionsConstraint : ViewportConstraint
   private double widthToHeightRatio = 1;
   public double WidthToHeightRatio
   {
-    get { return widthToHeightRatio; }
+    get => widthToHeightRatio;
     set
     {
       if (widthToHeightRatio != value)
@@ -22,13 +22,13 @@ public sealed class ProportionsConstraint : ViewportConstraint
   public override DataRect Apply(DataRect oldDataRect, DataRect newDataRect, Viewport2D viewport)
   {
     double ratio = newDataRect.Width / newDataRect.Height;
-    double coeff = Math.Sqrt(ratio);
+    double coeff = Math.Sqrt(d: ratio);
 
     double newWidth = newDataRect.Width / coeff;
     double newHeight = newDataRect.Height * coeff;
 
     Point center = newDataRect.GetCenter();
-    DataRect res = DataRect.FromCenterSize(center, newWidth, newHeight);
+    DataRect res = DataRect.FromCenterSize(center: center, width: newWidth, height: newHeight);
     return res;
   }
 }

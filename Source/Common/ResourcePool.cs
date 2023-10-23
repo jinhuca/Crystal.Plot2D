@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Crystal.Plot2D.Common;
 
-[DebuggerDisplay("Count = {Count}")]
+[DebuggerDisplay(value: "Count = {Count}")]
 internal sealed class ResourcePool<T>
 {
   private readonly List<T> pool = new();
@@ -20,8 +20,8 @@ internal sealed class ResourcePool<T>
     else
     {
       int index = pool.Count - 1;
-      item = pool[index];
-      pool.RemoveAt(index);
+      item = pool[index: index];
+      pool.RemoveAt(index: index);
     }
 
     return item;
@@ -31,17 +31,17 @@ internal sealed class ResourcePool<T>
   {
     if (item == null)
     {
-      throw new ArgumentNullException("item");
+      throw new ArgumentNullException(paramName: nameof(item));
     }
 
 #if DEBUG
-    if (pool.IndexOf(item) != -1)
+    if (pool.IndexOf(item: item) != -1)
     {
       Debugger.Break();
     }
 #endif
 
-    pool.Add(item);
+    pool.Add(item: item);
   }
 
   public int Count => pool.Count;

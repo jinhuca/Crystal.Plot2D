@@ -4,12 +4,12 @@ using System.Diagnostics;
 
 namespace Crystal.Plot2D.Common;
 
-[DebuggerDisplay("Count = {Count}")]
+[DebuggerDisplay(value: "Count = {Count}")]
 public sealed class ActionStack
 {
   public void Push(UndoAction action)
   {
-    Stack.Push(action);
+    Stack.Push(item: action);
 
     if (Stack.Count == 1)
     {
@@ -37,7 +37,7 @@ public sealed class ActionStack
 
   public int Count => Stack.Count;
   public bool IsEmpty => Stack.Count == 0;
-  public Stack<UndoAction> Stack { get; } = new Stack<UndoAction>();
-  private void RaiseIsEmptyChanged() => IsEmptyChanged.Raise(this);
+  public Stack<UndoAction> Stack { get; } = new();
+  private void RaiseIsEmptyChanged() => IsEmptyChanged.Raise(sender: this);
   public event EventHandler IsEmptyChanged;
 }

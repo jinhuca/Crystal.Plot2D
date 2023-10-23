@@ -10,28 +10,28 @@ public abstract class AxisControlBase : ContentControl
 
   public HorizontalAlignment LabelsHorizontalAlignment
   {
-    get { return (HorizontalAlignment)GetValue(LabelsHorizontalAlignmentProperty); }
-    set { SetValue(LabelsHorizontalAlignmentProperty, value); }
+    get => (HorizontalAlignment)GetValue(dp: LabelsHorizontalAlignmentProperty);
+    set => SetValue(dp: LabelsHorizontalAlignmentProperty, value: value);
   }
 
   public static readonly DependencyProperty LabelsHorizontalAlignmentProperty = DependencyProperty.Register(
-    "LabelsHorizontalAlignment",
-    typeof(HorizontalAlignment),
-    typeof(AxisControlBase),
-    new FrameworkPropertyMetadata(HorizontalAlignment.Center));
+    name: nameof(LabelsHorizontalAlignment),
+    propertyType: typeof(HorizontalAlignment),
+    ownerType: typeof(AxisControlBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: HorizontalAlignment.Center));
 
 
   public VerticalAlignment LabelsVerticalAlignment
   {
-    get { return (VerticalAlignment)GetValue(LabelsVerticalAlignmentProperty); }
-    set { SetValue(LabelsVerticalAlignmentProperty, value); }
+    get => (VerticalAlignment)GetValue(dp: LabelsVerticalAlignmentProperty);
+    set => SetValue(dp: LabelsVerticalAlignmentProperty, value: value);
   }
 
   public static readonly DependencyProperty LabelsVerticalAlignmentProperty = DependencyProperty.Register(
-    "LabelsVerticalAlignment",
-    typeof(VerticalAlignment),
-    typeof(AxisControlBase),
-    new FrameworkPropertyMetadata(VerticalAlignment.Center));
+    name: nameof(LabelsVerticalAlignment),
+    propertyType: typeof(VerticalAlignment),
+    ownerType: typeof(AxisControlBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: VerticalAlignment.Center));
 
   public abstract Path TicksPath { get; }
 

@@ -23,7 +23,7 @@ public abstract class EnumerableDataSourceBase<T> : IPointDataSource
     get => data;
     set
     {
-      data = value ?? throw new ArgumentNullException(nameof(value));
+      data = value ?? throw new ArgumentNullException(paramName: nameof(value));
       if (data is INotifyCollectionChanged observableCollection)
       {
         observableCollection.CollectionChanged += ObservableCollection_CollectionChanged;
@@ -36,9 +36,9 @@ public abstract class EnumerableDataSourceBase<T> : IPointDataSource
 
   #region Constructors
 
-  protected EnumerableDataSourceBase(IEnumerable data) => Data = data ?? throw new ArgumentNullException(nameof(data));
+  protected EnumerableDataSourceBase(IEnumerable data) => Data = data ?? throw new ArgumentNullException(paramName: nameof(data));
 
-  protected EnumerableDataSourceBase(IEnumerable<T> data) : this((IEnumerable)data) { }
+  protected EnumerableDataSourceBase(IEnumerable<T> data) : this(data: (IEnumerable)data) { }
 
   #endregion Constructors
 
@@ -46,7 +46,7 @@ public abstract class EnumerableDataSourceBase<T> : IPointDataSource
 
   public event EventHandler DataChanged;
 
-  public void RaiseDataChanged() => DataChanged?.Invoke(this, EventArgs.Empty);
+  public void RaiseDataChanged() => DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
 
   public abstract IPointEnumerator GetEnumerator(DependencyObject context);
 

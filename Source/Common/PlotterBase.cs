@@ -19,7 +19,7 @@ namespace Crystal.Plot2D;
 /// Plotter is a base control for displaying various graphs. 
 /// It provides means to draw chart itself and side space for axes, annotations, etc.
 /// </summary>
-[ContentProperty("Children")]
+[ContentProperty(name: "Children")]
 [TemplatePart(Name = "PART_HeaderPanel", Type = typeof(StackPanel))]
 [TemplatePart(Name = "PART_FooterPanel", Type = typeof(StackPanel))]
 [TemplatePart(Name = "PART_BottomPanel", Type = typeof(StackPanel))]
@@ -37,7 +37,7 @@ public abstract class PlotterBase : ContentControl
 
   #region Constructors
 
-  protected PlotterBase() : this(PlotterLoadMode.Normal)
+  protected PlotterBase() : this(loadMode: PlotterLoadMode.Normal)
   {
     Children.CollectionChanged += (s, e) => viewportInstance.UpdateIterationCount = 0;
     InitViewport();
@@ -50,12 +50,12 @@ public abstract class PlotterBase : ContentControl
   protected PlotterBase(PlotterLoadMode loadMode)
   {
     LoadMode = loadMode;
-    SetPlotter(this, this);
+    SetPlotter(obj: this, value: this);
     if (loadMode == PlotterLoadMode.Normal)
     {
       UpdateUIParts();
     }
-    Children = new PlotterChildrenCollection(this);
+    Children = new PlotterChildrenCollection(plotter: this);
     Children.CollectionChanged += OnChildrenCollectionChanged;
     Loaded += Plotter_Loaded;
     Unloaded += Plotter_Unloaded;
@@ -63,8 +63,8 @@ public abstract class PlotterBase : ContentControl
     {
       InitViewport();
     }
-    var uri = new Uri(Constants.ThemeUri, UriKind.Relative);
-    GenericResources = (ResourceDictionary)Application.LoadComponent(uri);
+    var uri = new Uri(uriString: Constants.ThemeUri, uriKind: UriKind.Relative);
+    GenericResources = (ResourceDictionary)Application.LoadComponent(resourceLocator: uri);
     ContextMenu = null;
   }
 
@@ -90,9 +90,9 @@ public abstract class PlotterBase : ContentControl
 
   #endregion Unloading
 
-  protected override AutomationPeer OnCreateAutomationPeer() => new PlotterAutomationPeer(this);
+  protected override AutomationPeer OnCreateAutomationPeer() => new PlotterAutomationPeer(owner: this);
 
-  [EditorBrowsable(EditorBrowsableState.Never)]
+  [EditorBrowsable(state: EditorBrowsableState.Never)]
   public override bool ShouldSerializeContent() => false;
 
   /// <summary>
@@ -103,7 +103,7 @@ public abstract class PlotterBase : ContentControl
   /// <returns></returns>
   protected override bool ShouldSerializeProperty(DependencyProperty dp)
   {
-    if (dp == ContextMenuProperty && Children.Any(element => element is DefaultContextMenu))
+    if (dp == ContextMenuProperty && Children.Any(predicate: element => element is DefaultContextMenu))
     {
       return false;
     }
@@ -111,17 +111,17 @@ public abstract class PlotterBase : ContentControl
     {
       return false;
     }
-    return base.ShouldSerializeProperty(dp);
+    return base.ShouldSerializeProperty(dp: dp);
   }
 
   private const string TemplateKey = "defaultPlotterTemplate";
   private const string StyleKey = "defaultPlotterStyle";
   private void UpdateUIParts()
   {
-    var dict = new ResourceDictionary { Source = new Uri("/Crystal.Plot2D;component/Common/PlotterStyle.xaml", UriKind.Relative) };
-    Resources.MergedDictionaries.Add(dict);
-    Style = (Style)dict[StyleKey];
-    var template = (ControlTemplate)dict[TemplateKey];
+    var dict = new ResourceDictionary { Source = new Uri(uriString: "/Crystal.Plot2D;component/Common/PlotterStyle.xaml", uriKind: UriKind.Relative) };
+    Resources.MergedDictionaries.Add(item: dict);
+    Style = (Style)dict[key: StyleKey];
+    var template = (ControlTemplate)dict[key: TemplateKey];
     Template = template;
     ApplyTemplate();
   }
@@ -135,10 +135,10 @@ public abstract class PlotterBase : ContentControl
   {
     _isLoadedIntensionally = true;
     ApplyTemplate();
-    Plotter_Loaded(null, null);
+    Plotter_Loaded(sender: null, e: null);
   }
 
-  private bool _isLoadedIntensionally = false;
+  private bool _isLoadedIntensionally;
   protected virtual bool IsLoadedInternal => _isLoadedIntensionally || IsLoaded;
 
   protected internal void ExecuteWaitingChildrenAdditions()
@@ -167,52 +167,52 @@ public abstract class PlotterBase : ContentControl
       }
     }
 
-    var headerPanel = GetPart<StackPanel>("PART_HeaderPanel");
-    MigrateChildren(HeaderPanel, headerPanel);
+    var headerPanel = GetPart<StackPanel>(name: "PART_HeaderPanel");
+    MigrateChildren(previousParent: HeaderPanel, currentParent: headerPanel);
     HeaderPanel = headerPanel;
 
-    var footerPanel = GetPart<StackPanel>("PART_FooterPanel");
-    MigrateChildren(FooterPanel, footerPanel);
+    var footerPanel = GetPart<StackPanel>(name: "PART_FooterPanel");
+    MigrateChildren(previousParent: FooterPanel, currentParent: footerPanel);
     FooterPanel = footerPanel;
 
-    var leftPanel = GetPart<StackPanel>("PART_LeftPanel");
-    MigrateChildren(LeftPanel, leftPanel);
+    var leftPanel = GetPart<StackPanel>(name: "PART_LeftPanel");
+    MigrateChildren(previousParent: LeftPanel, currentParent: leftPanel);
     LeftPanel = leftPanel;
 
-    var bottomPanel = GetPart<StackPanel>("PART_BottomPanel");
-    MigrateChildren(BottomPanel, bottomPanel);
+    var bottomPanel = GetPart<StackPanel>(name: "PART_BottomPanel");
+    MigrateChildren(previousParent: BottomPanel, currentParent: bottomPanel);
     BottomPanel = bottomPanel;
 
-    var rightPanel = GetPart<StackPanel>("PART_RightPanel");
-    MigrateChildren(RightPanel, rightPanel);
+    var rightPanel = GetPart<StackPanel>(name: "PART_RightPanel");
+    MigrateChildren(previousParent: RightPanel, currentParent: rightPanel);
     RightPanel = rightPanel;
 
-    var topPanel = GetPart<StackPanel>("PART_TopPanel");
-    MigrateChildren(TopPanel, topPanel);
+    var topPanel = GetPart<StackPanel>(name: "PART_TopPanel");
+    MigrateChildren(previousParent: TopPanel, currentParent: topPanel);
     TopPanel = topPanel;
 
-    var mainCanvas = GetPart<Canvas>("PART_MainCanvas");
-    MigrateChildren(MainCanvas, mainCanvas);
+    var mainCanvas = GetPart<Canvas>(name: "PART_MainCanvas");
+    MigrateChildren(previousParent: MainCanvas, currentParent: mainCanvas);
     MainCanvas = mainCanvas;
 
-    var centralGrid = GetPart<Grid>("PART_CentralGrid");
-    MigrateChildren(CentralGrid, centralGrid);
+    var centralGrid = GetPart<Grid>(name: "PART_CentralGrid");
+    MigrateChildren(previousParent: CentralGrid, currentParent: centralGrid);
     CentralGrid = centralGrid;
 
-    var mainGrid = GetPart<Grid>("PART_MainGrid");
-    MigrateChildren(MainGrid, mainGrid);
+    var mainGrid = GetPart<Grid>(name: "PART_MainGrid");
+    MigrateChildren(previousParent: MainGrid, currentParent: mainGrid);
     MainGrid = mainGrid;
 
-    var parallelCanvas = GetPart<Canvas>("PART_ParallelCanvas");
-    MigrateChildren(ParallelCanvas, parallelCanvas);
+    var parallelCanvas = GetPart<Canvas>(name: "PART_ParallelCanvas");
+    MigrateChildren(previousParent: ParallelCanvas, currentParent: parallelCanvas);
     ParallelCanvas = parallelCanvas;
 
-    var _contentsGrid = GetPart<Grid>("PART_ContentsGrid");
-    MigrateChildren(_contentsGrid, _contentsGrid);
+    var _contentsGrid = GetPart<Grid>(name: "PART_ContentsGrid");
+    MigrateChildren(previousParent: _contentsGrid, currentParent: _contentsGrid);
     this._contentsGrid = _contentsGrid;
 
     Content = _contentsGrid;
-    AddLogicalChild(_contentsGrid);
+    AddLogicalChild(child: _contentsGrid);
 
     foreach (var notifyingItem in GetAllPanels())
     {
@@ -235,14 +235,14 @@ public abstract class PlotterBase : ContentControl
     if (previousParent != null && currentParent != null)
     {
       UIElement[] children = new UIElement[previousParent.Children.Count];
-      previousParent.Children.CopyTo(children, 0);
+      previousParent.Children.CopyTo(array: children, index: 0);
       previousParent.Children.Clear();
 
       foreach (var child in children)
       {
-        if (!currentParent.Children.Contains(child))
+        if (!currentParent.Children.Contains(element: child))
         {
-          currentParent.Children.Add(child);
+          currentParent.Children.Add(element: child);
         }
       }
     }
@@ -255,7 +255,7 @@ public abstract class PlotterBase : ContentControl
   private void NotifyingItem_ChildrenCreated(object sender, EventArgs e)
   {
     INotifyingPanel panel = (INotifyingPanel)sender;
-    SubscribePanelEvents(panel);
+    SubscribePanelEvents(panel: panel);
   }
 
   private void SubscribePanelEvents(INotifyingPanel panel)
@@ -283,7 +283,7 @@ public abstract class PlotterBase : ContentControl
             notifyingPanel.ChildrenCreated += NotifyingItem_ChildrenCreated;
           }
         }
-        OnVisualChildAdded((UIElement)item, (UIElementCollection)sender);
+        OnVisualChildAdded(target: (UIElement)item, uIElementCollection: (UIElementCollection)sender);
       }
     }
     if (e.OldItems != null)
@@ -298,11 +298,11 @@ public abstract class PlotterBase : ContentControl
             notifyingPanel.NotifyingChildren.CollectionChanged -= OnVisualCollectionChanged;
           }
         }
-        OnVisualChildRemoved((UIElement)item, (UIElementCollection)sender);
+        OnVisualChildRemoved(target: (UIElement)item, uiElementCollection: (UIElementCollection)sender);
       }
     }
   }
-  public VisualBindingCollection VisualBindings { get; } = new VisualBindingCollection();
+  public VisualBindingCollection VisualBindings { get; } = new();
 
   protected virtual void OnVisualChildAdded(UIElement target, UIElementCollection uIElementCollection)
   {
@@ -311,22 +311,22 @@ public abstract class PlotterBase : ContentControl
       var element = _addingElements.Peek();
 
       var dict = VisualBindings.Cache;
-      var proxy = dict[element];
+      var proxy = dict[key: element];
 
       List<UIElement> visualElements;
-      if (!_addedVisualElements.ContainsKey(element))
+      if (!_addedVisualElements.ContainsKey(key: element))
       {
         visualElements = new List<UIElement>();
-        _addedVisualElements.Add(element, visualElements);
+        _addedVisualElements.Add(key: element, value: visualElements);
       }
       else
       {
-        visualElements = _addedVisualElements[element];
+        visualElements = _addedVisualElements[key: element];
       }
 
-      visualElements.Add(target);
+      visualElements.Add(item: target);
 
-      SetBindings(proxy, target);
+      SetBindings(proxy: proxy, target: target);
     }
   }
 
@@ -336,7 +336,7 @@ public abstract class PlotterBase : ContentControl
     {
       foreach (var property in GetPropertiesToSetBindingOn())
       {
-        BindingOperations.SetBinding(target, property, new Binding { Path = new PropertyPath(property.Name), Source = proxy, Mode = BindingMode.TwoWay });
+        BindingOperations.SetBinding(target: target, dp: property, binding: new Binding { Path = new PropertyPath(path: property.Name), Source = proxy, Mode = BindingMode.TwoWay });
       }
     }
   }
@@ -347,7 +347,7 @@ public abstract class PlotterBase : ContentControl
     {
       foreach (var property in GetPropertiesToSetBindingOn())
       {
-        BindingOperations.ClearBinding(target, property);
+        BindingOperations.ClearBinding(target: target, dp: property);
       }
     }
   }
@@ -367,22 +367,22 @@ public abstract class PlotterBase : ContentControl
       var element = _removingElements.Peek();
 
       var dict = VisualBindings.Cache;
-      var proxy = dict[element];
+      var proxy = dict[key: element];
 
-      if (_addedVisualElements.ContainsKey(element))
+      if (_addedVisualElements.ContainsKey(key: element))
       {
-        var list = _addedVisualElements[element];
-        list.Remove(target);
+        var list = _addedVisualElements[key: element];
+        list.Remove(item: target);
 
         if (list.Count == 0)
         {
-          dict.Remove(element);
+          dict.Remove(key: element);
         }
 
-        _addedVisualElements.Remove(element);
+        _addedVisualElements.Remove(key: element);
       }
 
-      RemoveBindings(proxy, target);
+      RemoveBindings(proxy: proxy, target: target);
     }
   }
 
@@ -405,14 +405,14 @@ public abstract class PlotterBase : ContentControl
 
   private T GetPart<T>(string name)
   {
-    return (T)Template.FindName(name, this);
+    return (T)Template.FindName(name: name, templatedParent: this);
   }
 
   /// <summary>
   /// Provides access to Plotter's children charts.
   /// </summary>
   /// <value>The children.</value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
   public PlotterChildrenCollection Children { [DebuggerStepThrough] get; }
 
   private readonly List<Action> _waitingForExecute = new();
@@ -432,11 +432,11 @@ public abstract class PlotterBase : ContentControl
       {
         if (IsLoadedInternal)
         {
-          OnChildAdded(item);
+          OnChildAdded(child: item);
         }
         else
         {
-          _waitingForExecute.Add(() => OnChildAdded(item));
+          _waitingForExecute.Add(item: () => OnChildAdded(child: item));
         }
       }
     }
@@ -446,11 +446,11 @@ public abstract class PlotterBase : ContentControl
       {
         if (IsLoadedInternal)
         {
-          OnChildRemoving(item);
+          OnChildRemoving(child: item);
         }
         else
         {
-          _waitingForExecute.Add(() => OnChildRemoving(item));
+          _waitingForExecute.Add(item: () => OnChildRemoving(child: item));
         }
       }
     }
@@ -464,40 +464,40 @@ public abstract class PlotterBase : ContentControl
   {
     if (child != null)
     {
-      _addingElements.Push(child);
+      _addingElements.Push(item: child);
       CurrentChild = child;
       try
       {
-        UIElement visualProxy = CreateVisualProxy(child);
-        VisualBindings.Cache.Add(child, visualProxy);
+        UIElement visualProxy = CreateVisualProxy(child: child);
+        VisualBindings.Cache.Add(key: child, value: visualProxy);
 
         if (PerformChildChecks && child.Plotter != null)
         {
-          throw new InvalidOperationException(Strings.Exceptions.PlotterElementAddedToAnotherPlotter);
+          throw new InvalidOperationException(message: Strings.Exceptions.PlotterElementAddedToAnotherPlotter);
         }
 
         if (child is FrameworkElement styleableElement)
         {
           Type key = styleableElement.GetType();
-          if (GenericResources.Contains(key))
+          if (GenericResources.Contains(key: key))
           {
-            Style elementStyle = (Style)GenericResources[key];
+            Style elementStyle = (Style)GenericResources[key: key];
             styleableElement.Style = elementStyle;
           }
         }
 
         if (PerformChildChecks)
         {
-          child.OnPlotterAttached(this);
+          child.OnPlotterAttached(plotter: this);
           if (child.Plotter != this)
           {
-            throw new InvalidOperationException(Strings.Exceptions.InvalidParentPlotterValue);
+            throw new InvalidOperationException(message: Strings.Exceptions.InvalidParentPlotterValue);
           }
         }
 
         if (child is DependencyObject dependencyObject)
         {
-          SetPlotter(dependencyObject, this);
+          SetPlotter(obj: dependencyObject, value: this);
         }
       }
       finally
@@ -510,9 +510,9 @@ public abstract class PlotterBase : ContentControl
 
   private UIElement CreateVisualProxy(IPlotterElement child)
   {
-    if (VisualBindings.Cache.ContainsKey(child))
+    if (VisualBindings.Cache.ContainsKey(key: child))
     {
-      throw new InvalidOperationException(Strings.Exceptions.VisualBindingsWrongState);
+      throw new InvalidOperationException(message: Strings.Exceptions.VisualBindingsWrongState);
     }
 
 
@@ -530,38 +530,38 @@ public abstract class PlotterBase : ContentControl
     if (child != null)
     {
       CurrentChild = child;
-      _removingElements.Push(child);
+      _removingElements.Push(item: child);
       try
       {
         // todo probably here child.Plotter can be null.
         if (PerformChildChecks && child.Plotter != this && child.Plotter != null)
         {
-          throw new InvalidOperationException(Strings.Exceptions.InvalidParentPlotterValueRemoving);
+          throw new InvalidOperationException(message: Strings.Exceptions.InvalidParentPlotterValueRemoving);
         }
 
         if (PerformChildChecks)
         {
           if (child.Plotter != null)
           {
-            child.OnPlotterDetaching(this);
+            child.OnPlotterDetaching(plotter: this);
           }
 
           if (child.Plotter != null)
           {
-            throw new InvalidOperationException(Strings.Exceptions.ParentPlotterNotNull);
+            throw new InvalidOperationException(message: Strings.Exceptions.ParentPlotterNotNull);
           }
         }
 
         if (child is DependencyObject dependencyObject)
         {
-          SetPlotter(dependencyObject, null);
+          SetPlotter(obj: dependencyObject, value: null);
         }
 
-        VisualBindings.Cache.Remove(child);
+        VisualBindings.Cache.Remove(key: child);
 
-        if (_addedVisualElements.ContainsKey(child) && _addedVisualElements[child].Count > 0)
+        if (_addedVisualElements.ContainsKey(key: child) && _addedVisualElements[key: child].Count > 0)
         {
-          throw new InvalidOperationException(string.Format(Strings.Exceptions.PlotterElementDidnotCleanedAfterItself, child.ToString()));
+          throw new InvalidOperationException(message: string.Format(format: Strings.Exceptions.PlotterElementDidnotCleanedAfterItself, arg0: child.ToString()));
         }
       }
       finally
@@ -574,34 +574,34 @@ public abstract class PlotterBase : ContentControl
 
   private readonly Dictionary<IPlotterElement, List<UIElement>> _addedVisualElements = new();
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel ParallelCanvas { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel HeaderPanel { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel FooterPanel { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel LeftPanel { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel RightPanel { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel TopPanel { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel BottomPanel { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel MainCanvas { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel CentralGrid { get; protected set; }
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel MainGrid { get; protected set; }
 
   #region Screenshots & copy to clipboard
@@ -610,7 +610,7 @@ public abstract class PlotterBase : ContentControl
   {
     UIElement parent = (UIElement)Parent;
 
-    Rect renderBounds = new(RenderSize);
+    Rect renderBounds = new(size: RenderSize);
 
     Point p1 = renderBounds.TopLeft;
     Point p2 = renderBounds.BottomRight;
@@ -621,9 +621,9 @@ public abstract class PlotterBase : ContentControl
       //p2 = TranslatePoint(p2, parent);
     }
 
-    Int32Rect rect = new Rect(p1, p2).ToInt32Rect();
+    Int32Rect rect = new Rect(point1: p1, point2: p2).ToInt32Rect();
 
-    return ScreenshotHelper.CreateScreenshot(this, rect);
+    return ScreenshotHelper.CreateScreenshot(uiElement: this, screenshotSource: rect);
   }
 
 
@@ -631,7 +631,7 @@ public abstract class PlotterBase : ContentControl
   /// <param name="filePath">File path.</param>
   public void SaveScreenshot(string filePath)
   {
-    ScreenshotHelper.SaveBitmapToFile(CreateScreenshot(), filePath);
+    ScreenshotHelper.SaveBitmapToFile(bitmap: CreateScreenshot(), filePath: filePath);
   }
 
   /// <summary>
@@ -641,14 +641,14 @@ public abstract class PlotterBase : ContentControl
   /// <param name="fileExtension">The file type extension.</param>
   public void SaveScreenshotToStream(Stream stream, string fileExtension)
   {
-    ScreenshotHelper.SaveBitmapToStream(CreateScreenshot(), stream, fileExtension);
+    ScreenshotHelper.SaveBitmapToStream(bitmap: CreateScreenshot(), stream: stream, fileExtension: fileExtension);
   }
 
   /// <summary>Copies the screenshot to clipboard.</summary>
   public void CopyScreenshotToClipboard()
   {
     Clipboard.Clear();
-    Clipboard.SetImage(CreateScreenshot());
+    Clipboard.SetImage(image: CreateScreenshot());
   }
 
   #endregion
@@ -659,7 +659,7 @@ public abstract class PlotterBase : ContentControl
   {
     foreach (var child in Children.OfType<DependencyObject>())
     {
-      child.SetValue(IsDefaultElementProperty, true);
+      child.SetValue(dp: IsDefaultElementProperty, value: true);
     }
   }
 
@@ -668,19 +668,19 @@ public abstract class PlotterBase : ContentControl
   /// <returns>True if it is default or false otherwise</returns>
   public static bool GetIsDefaultElement(DependencyObject obj)
   {
-    return (bool)obj.GetValue(IsDefaultElementProperty);
+    return (bool)obj.GetValue(dp: IsDefaultElementProperty);
   }
 
   public static void SetIsDefaultElement(DependencyObject obj, bool value)
   {
-    obj.SetValue(IsDefaultElementProperty, value);
+    obj.SetValue(dp: IsDefaultElementProperty, value: value);
   }
 
   public static readonly DependencyProperty IsDefaultElementProperty = DependencyProperty.RegisterAttached(
-    "IsDefaultElement",
-    typeof(bool),
-    typeof(PlotterBase),
-    new UIPropertyMetadata(false));
+    name: "IsDefaultElement",
+    propertyType: typeof(bool),
+    ownerType: typeof(PlotterBase),
+    defaultMetadata: new UIPropertyMetadata(defaultValue: false));
 
   /// <summary>Removes all user graphs from given UIElementCollection, 
   /// leaving only default graphs</summary>
@@ -690,9 +690,9 @@ public abstract class PlotterBase : ContentControl
 
     while (index < elements.Count)
     {
-      if (elements[index] is DependencyObject d && !GetIsDefaultElement(d))
+      if (elements[index: index] is DependencyObject d && !GetIsDefaultElement(obj: d))
       {
-        elements.RemoveAt(index);
+        elements.RemoveAt(index: index);
       }
       else
       {
@@ -703,7 +703,7 @@ public abstract class PlotterBase : ContentControl
 
   public void RemoveUserElements()
   {
-    RemoveUserElements(Children);
+    RemoveUserElements(elements: Children);
   }
 
   #endregion
@@ -712,26 +712,26 @@ public abstract class PlotterBase : ContentControl
 
   public static bool GetIsDefaultAxis(DependencyObject obj)
   {
-    return (bool)obj.GetValue(IsDefaultAxisProperty);
+    return (bool)obj.GetValue(dp: IsDefaultAxisProperty);
   }
 
   public static void SetIsDefaultAxis(DependencyObject obj, bool value)
   {
-    obj.SetValue(IsDefaultAxisProperty, value);
+    obj.SetValue(dp: IsDefaultAxisProperty, value: value);
   }
 
   public static readonly DependencyProperty IsDefaultAxisProperty = DependencyProperty.RegisterAttached(
-    "IsDefaultAxis",
-    typeof(bool),
-    typeof(PlotterBase),
-    new UIPropertyMetadata(false, OnIsDefaultAxisChanged));
+    name: "IsDefaultAxis",
+    propertyType: typeof(bool),
+    ownerType: typeof(PlotterBase),
+    defaultMetadata: new UIPropertyMetadata(defaultValue: false, propertyChangedCallback: OnIsDefaultAxisChanged));
 
   private static void OnIsDefaultAxisChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     if (d is IPlotterElement plotterElement)
     {
       var parentPlotter = plotterElement.Plotter;
-      parentPlotter?.OnIsDefaultAxisChangedCore(d, e);
+      parentPlotter?.OnIsDefaultAxisChangedCore(d: d, e: e);
     }
   }
 
@@ -741,7 +741,7 @@ public abstract class PlotterBase : ContentControl
 
   #region Undo
 
-  public UndoProvider UndoProvider { get; } = new UndoProvider();
+  public UndoProvider UndoProvider { get; } = new();
 
   /// <summary>
   /// Gets or sets the panel, which contains viewport.
@@ -749,7 +749,7 @@ public abstract class PlotterBase : ContentControl
   /// <value>
   /// The viewport panel.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public Panel ViewportPanel { get; protected set; }
 
   /// <summary>
@@ -766,12 +766,12 @@ public abstract class PlotterBase : ContentControl
       bool useDeferredPanning = false;
       if (CurrentChild is DependencyObject dependencyChild)
       {
-        useDeferredPanning = Viewport2D.GetUseDeferredPanning(dependencyChild);
+        useDeferredPanning = Viewport2D.GetUseDeferredPanning(obj: dependencyChild);
       }
 
       if (useDeferredPanning)
       {
-        return deferredPanningProxy ??= new Viewport2dDeferredPanningProxy(viewportInstance);
+        return deferredPanningProxy ??= new Viewport2dDeferredPanningProxy(viewport: viewportInstance);
       }
 
       return viewportInstance;
@@ -785,7 +785,7 @@ public abstract class PlotterBase : ContentControl
   /// <value>
   /// The Transform.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public CoordinateTransform Transform
   {
     get => viewportInstance.Transform;
@@ -798,7 +798,7 @@ public abstract class PlotterBase : ContentControl
   /// <value>
   ///   The visible.
   /// </value>
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public DataRect Visible
   {
     get => viewportInstance.Visible;
@@ -809,22 +809,22 @@ public abstract class PlotterBase : ContentControl
 
   #region Plotter attached property
 
-  [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+  [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public static PlotterBase GetPlotter(DependencyObject obj)
   {
-    return (PlotterBase)obj.GetValue(PlotterProperty);
+    return (PlotterBase)obj.GetValue(dp: PlotterProperty);
   }
 
   public static void SetPlotter(DependencyObject obj, PlotterBase value)
   {
-    obj.SetValue(PlotterProperty, value);
+    obj.SetValue(dp: PlotterProperty, value: value);
   }
 
   public static readonly DependencyProperty PlotterProperty = DependencyProperty.RegisterAttached(
-    "Plotter",
-    typeof(PlotterBase),
-    typeof(PlotterBase),
-    new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, OnPlotterChanged));
+    name: "Plotter",
+    propertyType: typeof(PlotterBase),
+    ownerType: typeof(PlotterBase),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: null, flags: FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnPlotterChanged));
 
   private static void OnPlotterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -834,27 +834,27 @@ public abstract class PlotterBase : ContentControl
     // raise Plotter[*] events, where * is Attached, Detaching, Changed.
     if (d is FrameworkElement element)
     {
-      PlotterChangedEventArgs args = new(prevPlotter, currPlotter, PlotterDetachingEvent);
+      PlotterChangedEventArgs args = new(prevPlotter: prevPlotter, currPlotter: currPlotter, routedEvent: PlotterDetachingEvent);
 
       if (currPlotter == null && prevPlotter != null)
       {
-        RaisePlotterEvent(element, args);
+        RaisePlotterEvent(element: element, args: args);
       }
       else if (currPlotter != null)
       {
         args.RoutedEvent = PlotterAttachedEvent;
-        RaisePlotterEvent(element, args);
+        RaisePlotterEvent(element: element, args: args);
       }
 
       args.RoutedEvent = PlotterChangedEvent;
-      RaisePlotterEvent(element, args);
+      RaisePlotterEvent(element: element, args: args);
     }
   }
 
   private static void RaisePlotterEvent(FrameworkElement element, PlotterChangedEventArgs args)
   {
-    element.RaiseEvent(args);
-    PlotterEvents.Notify(element, args);
+    element.RaiseEvent(e: args);
+    PlotterEvents.Notify(target: element, args: args);
   }
 
   #endregion
@@ -862,22 +862,22 @@ public abstract class PlotterBase : ContentControl
   #region Plotter routed events
 
   public static readonly RoutedEvent PlotterAttachedEvent = EventManager.RegisterRoutedEvent(
-    "PlotterAttached",
-    RoutingStrategy.Direct,
-    typeof(PlotterChangedEventHandler),
-    typeof(PlotterBase));
+    name: "PlotterAttached",
+    routingStrategy: RoutingStrategy.Direct,
+    handlerType: typeof(PlotterChangedEventHandler),
+    ownerType: typeof(PlotterBase));
 
   public static readonly RoutedEvent PlotterDetachingEvent = EventManager.RegisterRoutedEvent(
-    "PlotterDetaching",
-    RoutingStrategy.Direct,
-    typeof(PlotterChangedEventHandler),
-    typeof(PlotterBase));
+    name: "PlotterDetaching",
+    routingStrategy: RoutingStrategy.Direct,
+    handlerType: typeof(PlotterChangedEventHandler),
+    ownerType: typeof(PlotterBase));
 
   public static readonly RoutedEvent PlotterChangedEvent = EventManager.RegisterRoutedEvent(
-    "PlotterChanged",
-    RoutingStrategy.Direct,
-    typeof(PlotterChangedEventHandler),
-    typeof(PlotterBase));
+    name: "PlotterChanged",
+    routingStrategy: RoutingStrategy.Direct,
+    handlerType: typeof(PlotterChangedEventHandler),
+    ownerType: typeof(PlotterBase));
 
   protected Viewport2D viewportInstance;
   private Viewport2dDeferredPanningProxy deferredPanningProxy;
@@ -892,11 +892,11 @@ public abstract class PlotterBase : ContentControl
       viewportInstance.UpdateIterationCount = 0;
       if (!viewportInstance.EnforceRestrictions)
       {
-        Debug.WriteLine("Plotter: enabling viewport constraints");
+        Debug.WriteLine(message: "Plotter: enabling viewport constraints");
         viewportInstance.EnforceRestrictions = true;
       }
     }
-    base.OnRenderSizeChanged(sizeInfo);
+    base.OnRenderSizeChanged(sizeInfo: sizeInfo);
   }
 
   /// <summary>
@@ -907,13 +907,13 @@ public abstract class PlotterBase : ContentControl
   protected void InitViewport()
   {
     ViewportPanel = new Canvas();
-    Grid.SetColumn(ViewportPanel, 1);
-    Grid.SetRow(ViewportPanel, 1);
+    Grid.SetColumn(element: ViewportPanel, value: 1);
+    Grid.SetRow(element: ViewportPanel, value: 1);
 
-    viewportInstance = new Viewport2D(ViewportPanel, this);
+    viewportInstance = new Viewport2D(host: ViewportPanel, plotter: this);
     if (LoadMode != PlotterLoadMode.Empty)
     {
-      MainGrid.Children.Add(ViewportPanel);
+      MainGrid.Children.Add(element: ViewportPanel);
     }
   }
 }

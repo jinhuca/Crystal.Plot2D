@@ -17,21 +17,21 @@ public sealed class TouchpadScroll : NavigationBase
 
   private void OnLoaded(object sender, RoutedEventArgs e)
   {
-    WindowInteropHelper helper = new(Window.GetWindow(this));
-    HwndSource source = HwndSource.FromHwnd(helper.Handle);
-    source.AddHook(OnMessageAppeared);
+    WindowInteropHelper helper = new(window: Window.GetWindow(dependencyObject: this));
+    HwndSource source = HwndSource.FromHwnd(hwnd: helper.Handle);
+    source.AddHook(hook: OnMessageAppeared);
   }
 
   private IntPtr OnMessageAppeared(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
   {
     if (msg == WindowsMessages.WM_MOUSEWHEEL)
     {
-      Point mousePos = MessagesHelper.GetMousePosFromLParam(lParam);
-      mousePos = TranslatePoint(mousePos, this);
+      Point mousePos = MessagesHelper.GetMousePosFromLParam(lParam: lParam);
+      mousePos = TranslatePoint(point: mousePos, relativeTo: this);
 
-      if (Viewport.Output.Contains(mousePos))
+      if (Viewport.Output.Contains(point: mousePos))
       {
-        MouseWheelZoom(MessagesHelper.GetMousePosFromLParam(lParam), MessagesHelper.GetWheelDataFromWParam(wParam));
+        MouseWheelZoom(mousePos: MessagesHelper.GetMousePosFromLParam(lParam: lParam), wheelRotationDelta: MessagesHelper.GetWheelDataFromWParam(wParam: wParam));
         handled = true;
       }
     }
@@ -41,20 +41,20 @@ public sealed class TouchpadScroll : NavigationBase
   double wheelZoomSpeed = 1.2;
   public double WheelZoomSpeed
   {
-    get { return wheelZoomSpeed; }
-    set { wheelZoomSpeed = value; }
+    get => wheelZoomSpeed;
+    set => wheelZoomSpeed = value;
   }
 
   private void MouseWheelZoom(Point mousePos, int wheelRotationDelta)
   {
-    Point zoomTo = mousePos.ScreenToData(Viewport.Transform);
+    Point zoomTo = mousePos.ScreenToData(transform: Viewport.Transform);
 
-    double zoomSpeed = Math.Abs(wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
+    double zoomSpeed = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed *= wheelZoomSpeed;
     if (wheelRotationDelta < 0)
     {
       zoomSpeed = 1 / zoomSpeed;
     }
-    Viewport.Visible = Viewport.Visible.Zoom(zoomTo, zoomSpeed);
+    Viewport.Visible = Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
   }
 }

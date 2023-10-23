@@ -11,7 +11,7 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
   {
     foreach (var propertyName in propertiesNames)
     {
-      this[propertyName] = "";
+      this[propertyName: propertyName] = "";
     }
   }
 
@@ -19,14 +19,14 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
 
   public object this[string propertyName]
   {
-    get { return cache[propertyName]; }
-    set { SetValue(propertyName, value); }
+    get => cache[key: propertyName];
+    set => SetValue(propertyName: propertyName, value: value);
   }
 
   public ValueStore SetValue(string propertyName, object value)
   {
-    cache[propertyName] = value;
-    PropertyChanged.Raise(this, propertyName);
+    cache[key: propertyName] = value;
+    PropertyChanged.Raise(sender: this, propertyName: propertyName);
 
     return this;
   }
@@ -38,10 +38,10 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
     var keys = cache.Keys.ToArray();
     for (int i = 0; i < keys.Length; i++)
     {
-      propertyDescriptors[i] = new ValueStorePropertyDescriptor(keys[i]);
+      propertyDescriptors[i] = new ValueStorePropertyDescriptor(name: keys[i]);
     }
 
-    collection = new PropertyDescriptorCollection(propertyDescriptors);
+    collection = new PropertyDescriptorCollection(properties: propertyDescriptors);
     return collection;
   }
 
@@ -50,7 +50,7 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
     private readonly string name;
 
     public ValueStorePropertyDescriptor(string name)
-      : base(name, null)
+      : base(name: name, attrs: null)
     {
       this.name = name;
     }
@@ -60,26 +60,17 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
       return false;
     }
 
-    public override Type ComponentType
-    {
-      get { return typeof(ValueStore); }
-    }
+    public override Type ComponentType => typeof(ValueStore);
 
     public override object GetValue(object component)
     {
       ValueStore store = (ValueStore)component;
-      return store[name];
+      return store[propertyName: name];
     }
 
-    public override bool IsReadOnly
-    {
-      get { return false; }
-    }
+    public override bool IsReadOnly => false;
 
-    public override Type PropertyType
-    {
-      get { return typeof(string); }
-    }
+    public override Type PropertyType => typeof(string);
 
     public override void ResetValue(object component)
     {

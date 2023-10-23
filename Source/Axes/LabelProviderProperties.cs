@@ -6,17 +6,17 @@ internal class LabelProviderProperties : DependencyObject
 {
   public static bool GetExponentialIsCommonLabel(DependencyObject obj)
   {
-    return (bool)obj.GetValue(ExponentialIsCommonLabelProperty);
+    return (bool)obj.GetValue(dp: ExponentialIsCommonLabelProperty);
   }
 
   public static void SetExponentialIsCommonLabel(DependencyObject obj, bool value)
   {
-    obj.SetValue(ExponentialIsCommonLabelProperty, value);
+    obj.SetValue(dp: ExponentialIsCommonLabelProperty, value: value);
   }
 
   public static readonly DependencyProperty ExponentialIsCommonLabelProperty = DependencyProperty.RegisterAttached(
-    "ExponentialIsCommonLabel",
-    typeof(bool),
-    typeof(LabelProviderProperties),
-    new FrameworkPropertyMetadata(true));
+    name: "ExponentialIsCommonLabel",
+    propertyType: typeof(bool),
+    ownerType: typeof(LabelProviderProperties),
+    defaultMetadata: new FrameworkPropertyMetadata(defaultValue: true));
 }

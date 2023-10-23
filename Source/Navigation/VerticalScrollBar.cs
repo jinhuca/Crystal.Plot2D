@@ -4,7 +4,7 @@ using System.Windows.Controls;
 
 namespace Crystal.Plot2D.Charts;
 
-[Obsolete("Working wrongly.", true)]
+[Obsolete(message: "Working wrongly.", error: true)]
 public sealed class VerticalScrollBar : PlotterScrollBar
 {
   /// <summary>
@@ -17,7 +17,7 @@ public sealed class VerticalScrollBar : PlotterScrollBar
 
   private Range<double> GetRange(Rect domain)
   {
-    return new Range<double>(domain.Top, domain.Bottom);
+    return new Range<double>(min: domain.Top, max: domain.Bottom);
   }
 
   protected override DataRect CreateVisibleRect(DataRect rect, double scrollValue)
@@ -40,8 +40,8 @@ public sealed class VerticalScrollBar : PlotterScrollBar
         //ScrollBar.Track.IsDirectionReversed = true;
       }
 
-      visibleRange = new Range<double>(viewport.Visible.YMin, viewport.Visible.YMax);
-      domainRange = new Range<double>(viewport.Domain.YMin, viewport.Domain.YMax);
+      visibleRange = new Range<double>(min: viewport.Visible.YMin, max: viewport.Visible.YMax);
+      domainRange = new Range<double>(min: viewport.Domain.YMin, max: viewport.Domain.YMax);
 
       double size = visibleRange.Max - visibleRange.Min;
       ScrollBar.ViewportSize = size;

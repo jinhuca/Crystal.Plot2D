@@ -19,12 +19,12 @@ public sealed class SwapTransform : DataTransform
   /// <returns>
   /// Transformed point in viewport coordinates.
   /// </returns>
-  public override Point DataToViewport(Point pt) => new(pt.Y, pt.X);
+  public override Point DataToViewport(Point pt) => new(x: pt.Y, y: pt.X);
 
   /// <summary>
   /// Transforms the point in viewport coordinates to data coordinates.
   /// </summary>
   /// <param name="pt">The point in viewport coordinates.</param>
   /// <returns>Transformed point in data coordinates.</returns>
-  public override Point ViewportToData(Point pt) => new(pt.Y, pt.X);
+  public override Point ViewportToData(Point pt) => new(x: pt.Y, y: pt.X);
 }

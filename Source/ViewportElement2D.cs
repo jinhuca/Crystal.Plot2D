@@ -19,14 +19,14 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
 
   #region IPlotterElement Members
 
-  void IPlotterElement.OnPlotterAttached(PlotterBase plotter) => OnPlotterAttached(plotter);
-  void IPlotterElement.OnPlotterDetaching(PlotterBase plotter) => OnPlotterDetaching(plotter);
+  void IPlotterElement.OnPlotterAttached(PlotterBase plotter) => OnPlotterAttached(plotter: plotter);
+  void IPlotterElement.OnPlotterDetaching(PlotterBase plotter) => OnPlotterDetaching(plotter: plotter);
   public PlotterBase Plotter { get; private set; }
 
   protected virtual void OnPlotterAttached(PlotterBase plotter)
   {
     Plotter = plotter;
-    GetHostPanel(plotter).Children.Add(this);
+    GetHostPanel(plotter: plotter).Children.Add(element: this);
     Viewport = Plotter.Viewport;
     Viewport.PropertyChanged += OnViewportPropertyChanged;
   }
@@ -36,10 +36,10 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
     switch (e.PropertyName)
     {
       case "Visible":
-        OnVisibleChanged((DataRect)e.NewValue, (DataRect)e.OldValue);
+        OnVisibleChanged(newRect: (DataRect)e.NewValue, oldRect: (DataRect)e.OldValue);
         break;
       case "Output":
-        OnOutputChanged((Rect)e.NewValue, (Rect)e.OldValue);
+        OnOutputChanged(newRect: (Rect)e.NewValue, oldRect: (Rect)e.OldValue);
         break;
       case "Transform":
         Update();
@@ -51,7 +51,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   {
     Viewport.PropertyChanged -= OnViewportPropertyChanged;
     Viewport = null;
-    GetHostPanel(plotter).Children.Remove(this);
+    GetHostPanel(plotter: plotter).Children.Remove(element: this);
     Plotter = null;
   }
 
@@ -59,8 +59,8 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
 
   public int ZIndex
   {
-    get => Panel.GetZIndex(this);
-    set => Panel.SetZIndex(this, value);
+    get => Panel.GetZIndex(element: this);
+    set => Panel.SetZIndex(element: this, value: value);
   }
 
   #region Viewport
@@ -92,7 +92,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
       if (description == null)
       {
         description = CreateDefaultDescription();
-        description.Attach(this);
+        description.Attach(element: this);
       }
       return description;
     }
@@ -105,7 +105,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
       description = value;
       if (description != null)
       {
-        description.Attach(this);
+        description.Attach(element: this);
       }
       RaisePropertyChanged();
     }
@@ -133,7 +133,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
     if (newRect.Size == oldRect.Size)
     {
       var transform = Viewport.Transform;
-      Offset += oldRect.Location.DataToScreen(transform) - newRect.Location.DataToScreen(transform);
+      Offset += oldRect.Location.DataToScreen(transform: transform) - newRect.Location.DataToScreen(transform: transform);
       if (ManualTranslate)
       {
         Update();
@@ -164,25 +164,25 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
 
   public bool IsLayer
   {
-    get { return (bool)GetValue(IsLayerProperty); }
-    set { SetValue(IsLayerProperty, value); }
+    get => (bool)GetValue(dp: IsLayerProperty);
+    set => SetValue(dp: IsLayerProperty, value: value);
   }
 
   public static readonly DependencyProperty IsLayerProperty = DependencyProperty.Register(
-    "IsLayer",
-    typeof(bool),
-    typeof(ViewportElement2D),
-    new FrameworkPropertyMetadata(false));
+    name: nameof(IsLayer),
+    propertyType: typeof(bool),
+    ownerType: typeof(ViewportElement2D),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: false));
 
   #endregion
 
   #region Rendering & caching options
 
   protected object GetValueSync(DependencyProperty property) =>
-    Dispatcher.Invoke(DispatcherPriority.Send, (DispatcherOperationCallback)delegate { return GetValue(property); }, property);
+    Dispatcher.Invoke(priority: DispatcherPriority.Send, method: (DispatcherOperationCallback)delegate { return GetValue(dp: property); }, arg: property);
 
   protected void SetValueAsync(DependencyProperty property, object value)
-    => Dispatcher.BeginInvoke(DispatcherPriority.Send, (SendOrPostCallback)delegate { SetValue(property, value); }, value);
+    => Dispatcher.BeginInvoke(priority: DispatcherPriority.Send, method: (SendOrPostCallback)delegate { SetValue(dp: property, value: value); }, arg: value);
 
   private bool manualClip;
 
@@ -192,8 +192,8 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   /// </summary>
   public bool ManualClip
   {
-    get { return manualClip; }
-    set { manualClip = value; }
+    get => manualClip;
+    set => manualClip = value;
   }
 
   private bool manualTranslate;
@@ -202,8 +202,8 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   /// </summary>
   public bool ManualTranslate
   {
-    get { return manualTranslate; }
-    set { manualTranslate = value; }
+    get => manualTranslate;
+    set => manualTranslate = value;
   }
 
   private RenderTo renderTarget = RenderTo.Screen;
@@ -212,8 +212,8 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   /// </summary>
   public RenderTo RenderTarget
   {
-    get { return renderTarget; }
-    set { renderTarget = value; }
+    get => renderTarget;
+    set => renderTarget = value;
   }
 
   private enum ImageKind
@@ -226,11 +226,11 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   #endregion
 
   private RenderState CreateRenderState(DataRect renderVisible, RenderTo renderingType)
-    => new(renderVisible, Viewport.Visible, Viewport.Output, renderingType);
+    => new(renderVisible: renderVisible, visible: Viewport.Visible, output: Viewport.Output, renderingType: renderingType);
 
   protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
   {
-    base.OnPropertyChanged(e);
+    base.OnPropertyChanged(e: e);
     if (e.Property == VisibilityProperty)
     {
       Update();
@@ -284,7 +284,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   private bool createThumbnail;
   public bool CreateThumbnail
   {
-    get { return createThumbnail; }
+    get => createThumbnail;
     set
     {
       if (createThumbnail != value)
@@ -297,7 +297,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
         else
         {
           thumbnail = null;
-          RaisePropertyChanged("Thumbnail");
+          RaisePropertyChanged(propertyNamme: "Thumbnail");
         }
       }
     }
@@ -323,20 +323,20 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
     DrawingVisual visual = new();
     using (DrawingContext dc = visual.RenderOpen())
     {
-      Point outputStart = visible.Location.DataToScreen(transform);
+      Point outputStart = visible.Location.DataToScreen(transform: transform);
       double x = -outputStart.X + Offset.X;
       double y = -outputStart.Y + output.Bottom - output.Top + Offset.Y;
       bool translate = !manualTranslate && IsTranslated;
       if (translate)
       {
-        dc.PushTransform(new TranslateTransform(x, y));
+        dc.PushTransform(transform: new TranslateTransform(offsetX: x, offsetY: y));
       }
 
       const byte c = 240;
-      Brush brush = new SolidColorBrush(Color.FromArgb(120, c, c, c));
-      Pen pen = new(Brushes.Black, 1);
-      dc.DrawRectangle(brush, pen, output);
-      dc.DrawDrawing(graphContents);
+      Brush brush = new SolidColorBrush(color: Color.FromArgb(a: 120, r: c, g: c, b: c));
+      Pen pen = new(brush: Brushes.Black, thickness: 1);
+      dc.DrawRectangle(brush: brush, pen: pen, rectangle: output);
+      dc.DrawDrawing(drawing: graphContents);
 
       if (translate)
       {
@@ -344,10 +344,10 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
       }
     }
 
-    RenderTargetBitmap bmp = new((int)output.Width, (int)output.Height, 96, 96, PixelFormats.Pbgra32);
-    bmp.Render(visual);
+    RenderTargetBitmap bmp = new(pixelWidth: (int)output.Width, pixelHeight: (int)output.Height, dpiX: 96, dpiY: 96, pixelFormat: PixelFormats.Pbgra32);
+    bmp.Render(visual: visual);
     thumbnail = bmp;
-    RaisePropertyChanged("Thumbnail");
+    RaisePropertyChanged(propertyNamme: "Thumbnail");
   }
 
   #endregion
@@ -376,10 +376,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
     }
     if (shouldReRender || manualTranslate || renderTarget == RenderTo.Image || beforeFirstUpdate || updateCalled)
     {
-      if (graphContents == null)
-      {
-        graphContents = new DrawingGroup();
-      }
+      graphContents ??= new DrawingGroup();
       if (beforeFirstUpdate)
       {
         Update();
@@ -389,8 +386,8 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
       {
         if (renderTarget == RenderTo.Screen)
         {
-          RenderState state = CreateRenderState(Viewport.Visible, RenderTo.Screen);
-          OnRenderCore(context, state);
+          RenderState state = CreateRenderState(renderVisible: Viewport.Visible, renderingType: RenderTo.Screen);
+          OnRenderCore(dc: context, state: state);
         }
       }
       updateCalled = false;
@@ -406,15 +403,15 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
 
     if (!manualClip)
     {
-      drawingContext.PushClip(new RectangleGeometry(output));
+      drawingContext.PushClip(clipGeometry: new RectangleGeometry(rect: output));
     }
     bool translate = !manualTranslate && IsTranslated;
     if (translate)
     {
-      drawingContext.PushTransform(new TranslateTransform(Offset.X, Offset.Y));
+      drawingContext.PushTransform(transform: new TranslateTransform(offsetX: Offset.X, offsetY: Offset.Y));
     }
 
-    drawingContext.DrawDrawing(graphContents);
+    drawingContext.DrawDrawing(drawing: graphContents);
 
     if (translate)
     {
@@ -434,7 +431,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   public event PropertyChangedEventHandler PropertyChanged;
 
   protected void RaisePropertyChanged([CallerMemberName] string propertyNamme = "")
-    => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyNamme));
+    => PropertyChanged?.Invoke(sender: this, e: new PropertyChangedEventArgs(propertyName: propertyNamme));
 
   #endregion
 }

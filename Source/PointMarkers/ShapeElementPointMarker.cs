@@ -13,63 +13,63 @@ public abstract class ShapeElementPointMarker : ElementPointMarker
   /// </summary>
   public double Size
   {
-    get { return (double)GetValue(SizeProperty); }
-    set { SetValue(SizeProperty, value); }
+    get => (double)GetValue(dp: SizeProperty);
+    set => SetValue(dp: SizeProperty, value: value);
   }
 
   public static readonly DependencyProperty SizeProperty = DependencyProperty.Register(
-    "Diameter",
-    typeof(double),
-    typeof(ShapeElementPointMarker),
-    new FrameworkPropertyMetadata(5.0));
+    name: "Diameter",
+    propertyType: typeof(double),
+    ownerType: typeof(ShapeElementPointMarker),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: 5.0));
 
   /// <summary>Tooltip to show when cursor on over</summary>
   public string ToolTipText
   {
-    get { return (string)GetValue(ToolTipTextProperty); }
-    set { SetValue(ToolTipTextProperty, value); }
+    get => (string)GetValue(dp: ToolTipTextProperty);
+    set => SetValue(dp: ToolTipTextProperty, value: value);
   }
 
   public static readonly DependencyProperty ToolTipTextProperty = DependencyProperty.Register(
-    "ToolTipText",
-    typeof(string),
-    typeof(ShapeElementPointMarker),
-    new FrameworkPropertyMetadata(string.Empty));
+    name: nameof(ToolTipText),
+    propertyType: typeof(string),
+    ownerType: typeof(ShapeElementPointMarker),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: string.Empty));
 
   /// <summary>OutlinePen to outline marker</summary>
   public Pen Pen
   {
-    get { return (Pen)GetValue(PenProperty); }
-    set { SetValue(PenProperty, value); }
+    get => (Pen)GetValue(dp: PenProperty);
+    set => SetValue(dp: PenProperty, value: value);
   }
 
   public static readonly DependencyProperty PenProperty = DependencyProperty.Register(
-    "OutlinePen",
-    typeof(Pen),
-    typeof(ShapeElementPointMarker),
-    new FrameworkPropertyMetadata(null));
+    name: "OutlinePen",
+    propertyType: typeof(Pen),
+    ownerType: typeof(ShapeElementPointMarker),
+    typeMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
 
   public Brush Brush
   {
-    get { return (Brush)GetValue(BrushProperty); }
-    set { SetValue(BrushProperty, value); }
+    get => (Brush)GetValue(dp: BrushProperty);
+    set => SetValue(dp: BrushProperty, value: value);
   }
 
   public static readonly DependencyProperty BrushProperty = DependencyProperty.Register(
-    "Brush",
-    typeof(Brush),
-    typeof(ShapeElementPointMarker),
-    new FrameworkPropertyMetadata(Brushes.Red));
+    name: nameof(Brush),
+    propertyType: typeof(Brush),
+    ownerType: typeof(ShapeElementPointMarker),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Red));
 
   public Brush Fill
   {
-    get { return (Brush)GetValue(FillProperty); }
-    set { SetValue(FillProperty, value); }
+    get => (Brush)GetValue(dp: FillProperty);
+    set => SetValue(dp: FillProperty, value: value);
   }
 
   public static readonly DependencyProperty FillProperty = DependencyProperty.Register(
-    "FillBrush",
-    typeof(Brush),
-    typeof(ShapeElementPointMarker),
-    new FrameworkPropertyMetadata(Brushes.Red));
+    name: "FillBrush",
+    propertyType: typeof(Brush),
+    ownerType: typeof(ShapeElementPointMarker),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Red));
 }

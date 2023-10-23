@@ -15,7 +15,7 @@ public static class PlotterBaseExtensions
 
   public static void AddCursor(this PlotterBase plotter, CursorCoordinateGraph cursorGraph)
   {
-    plotter.Children.Add(cursorGraph);
+    plotter.Children.Add(content: cursorGraph);
   }
 
   #endregion [-- Cursor Coordinate Graphs --]
@@ -34,11 +34,11 @@ public static class PlotterBaseExtensions
   {
     if (pointSource == null)
     {
-      throw new ArgumentNullException(nameof(pointSource));
+      throw new ArgumentNullException(paramName: nameof(pointSource));
     }
 
-    linePen ??= new Pen { Brush = new SolidColorBrush(Colors.Red), Thickness = 1 };
-    descriptionForPen ??= new PenDescription(nameof(pointSource));
+    linePen ??= new Pen { Brush = new SolidColorBrush(color: Colors.Red), Thickness = 1 };
+    descriptionForPen ??= new PenDescription(description: nameof(pointSource));
 
     var lineGraph = new LineGraph
     {
@@ -46,9 +46,9 @@ public static class PlotterBaseExtensions
       LinePen = linePen,
       Description = descriptionForPen
     };
-    Legend.SetDescription(lineGraph, descriptionForPen.Brief);
-    lineGraph.Filters.Add(new FrequencyFilter());
-    plotter.Children.Add(lineGraph);
+    Legend.SetDescription(obj: lineGraph, value: descriptionForPen.Brief);
+    lineGraph.Filters.Add(item: new FrequencyFilter());
+    plotter.Children.Add(content: lineGraph);
     return lineGraph;
   }
 
@@ -69,11 +69,11 @@ public static class PlotterBaseExtensions
   {
     if (pointSource == null)
     {
-      throw new ArgumentNullException(nameof(pointSource));
+      throw new ArgumentNullException(paramName: nameof(pointSource));
     }
     marker ??= new CirclePointMarker();
     var markerPointGraph = new MarkerPointsGraph { DataSource = pointSource, Marker = marker, Description = description };
-    plotter.Children.Add(markerPointGraph);
+    plotter.Children.Add(content: markerPointGraph);
     return markerPointGraph;
   }
 
@@ -104,7 +104,7 @@ public static class PlotterBaseExtensions
   /// <param name="marker">Marker to draw on points. If marker is null no points will be drawn</param>
   /// <param name="description">Description of graph to put in legend</param>
   /// <returns></returns>
-  [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+  [SuppressMessage(category: "Microsoft.Design", checkId: "CA1011:ConsiderPassingBaseTypesAsParameters")]
   public static LineAndMarker<MarkerPointsGraph> AddLineAndMarkerGraph(
     this PlotterBase plotter,
     IPointDataSource pointSource,
@@ -114,7 +114,7 @@ public static class PlotterBaseExtensions
   {
     if (pointSource == null)
     {
-      throw new ArgumentNullException(nameof(pointSource));
+      throw new ArgumentNullException(paramName: nameof(pointSource));
     }
 
     var res = new LineAndMarker<MarkerPointsGraph>();
@@ -128,7 +128,7 @@ public static class PlotterBaseExtensions
       };
       if (description != null)
       {
-        Legend.SetDescription(graph, description.Brief);
+        Legend.SetDescription(obj: graph, value: description.Brief);
         graph.Description = description;
       }
       if (marker == null)
@@ -139,8 +139,8 @@ public static class PlotterBaseExtensions
 
       res.LineGraph = graph;
 
-      graph.Filters.Add(new FrequencyFilter());
-      plotter.Children.Add(graph);
+      graph.Filters.Add(item: new FrequencyFilter());
+      plotter.Children.Add(content: graph);
     }
 
     if (marker != null) // We are requested to draw marker graphs
@@ -153,7 +153,7 @@ public static class PlotterBaseExtensions
 
       res.MarkerGraph = markerGraph;
 
-      plotter.Children.Add(markerGraph);
+      plotter.Children.Add(content: markerGraph);
     }
 
     return res;
@@ -167,7 +167,7 @@ public static class PlotterBaseExtensions
   /// <param name="marker">Marker to draw on points. If marker is null no points will be drawn</param>
   /// <param name="description">Description of graph to put in legend</param>
   /// <returns></returns>
-  [SuppressMessage("Microsoft.Design", "CA1011:ConsiderPassingBaseTypesAsParameters")]
+  [SuppressMessage(category: "Microsoft.Design", checkId: "CA1011:ConsiderPassingBaseTypesAsParameters")]
   public static ElementMarkerPointsGraph AddElementMarkerPointsGraph(
     this PlotterBase plotter,
     IPointDataSource pointSource,
@@ -176,11 +176,11 @@ public static class PlotterBaseExtensions
   {
     if (pointSource == null)
     {
-      throw new ArgumentNullException(nameof(pointSource));
+      throw new ArgumentNullException(paramName: nameof(pointSource));
     }
     if (marker == null)
     {
-      throw new ArgumentNullException(nameof(marker));
+      throw new ArgumentNullException(paramName: nameof(marker));
     }
 
     //if (penForDrawingLine != null) // We are requested to draw line graphs
@@ -214,7 +214,7 @@ public static class PlotterBaseExtensions
       Marker = marker,
       Description = description
     };
-    plotter.Children.Add(markerGraph);
+    plotter.Children.Add(content: markerGraph);
     return markerGraph;
   }
 

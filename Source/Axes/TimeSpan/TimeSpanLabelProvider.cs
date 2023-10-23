@@ -19,7 +19,7 @@ public class TimeSpanLabelProvider : LabelProviderBase<TimeSpan>
       tickInfo.Tick = ticks[i];
       tickInfo.Info = info;
 
-      string tickText = GetString(tickInfo);
+      string tickText = GetString(tickInfo: tickInfo);
       UIElement label = new TextBlock { Text = tickText, ToolTip = ticks[i] };
       res[i] = label;
     }

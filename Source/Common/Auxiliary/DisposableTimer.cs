@@ -8,7 +8,7 @@ public sealed class DisposableTimer : IDisposable
   private readonly bool isActive = true;
   private readonly string name;
   readonly Stopwatch timer;
-  public DisposableTimer(string name) : this(name, true) { }
+  public DisposableTimer(string name) : this(name: name, isActive: true) { }
 
   public DisposableTimer(string name, bool isActive)
   {
@@ -17,7 +17,7 @@ public sealed class DisposableTimer : IDisposable
     if (isActive)
     {
       timer = Stopwatch.StartNew();
-      Trace.WriteLine(name + ": started " + DateTime.Now.TimeOfDay);
+      Trace.WriteLine(message: name + ": started " + DateTime.Now.TimeOfDay);
     }
   }
 
@@ -29,7 +29,7 @@ public sealed class DisposableTimer : IDisposable
     if (isActive)
     {
       var duration = timer.ElapsedMilliseconds;
-      Trace.WriteLine(name + ": elapsed " + duration + " ms.");
+      Trace.WriteLine(message: name + ": elapsed " + duration + " ms.");
       timer.Stop();
     }
     //#endif

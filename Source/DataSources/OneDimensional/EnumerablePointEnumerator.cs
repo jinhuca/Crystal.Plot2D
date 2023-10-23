@@ -21,9 +21,9 @@ public sealed class EnumerablePointEnumerator<T> : IPointEnumerator
 
   public bool MoveNext() => Enumerator.MoveNext();
 
-  public void GetCurrent(ref Point p) => DataSource.FillPoint((T)Enumerator.Current, ref p);
+  public void GetCurrent(ref Point p) => DataSource.FillPoint(elem: (T)Enumerator.Current, point: ref p);
 
-  public void ApplyMappings(DependencyObject target) => DataSource.ApplyMappings(target, (T)Enumerator.Current);
+  public void ApplyMappings(DependencyObject target) => DataSource.ApplyMappings(target: target, elem: (T)Enumerator.Current);
 
   public void Dispose()
   {

@@ -14,7 +14,7 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
 {
   static AxisCursorGraph()
   {
-    Shape.StrokeProperty.AddOwner(typeof(AxisCursorGraph), new FrameworkPropertyMetadata(Brushes.Red));
+    Shape.StrokeProperty.AddOwner(ownerType: typeof(AxisCursorGraph), typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Red));
   }
 
   /// <summary>
@@ -30,18 +30,18 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
   /// <value><c>true</c> if line upon vertical axis is shown; otherwise, <c>false</c>.</value>
   public bool ShowVerticalLine
   {
-    get { return (bool)GetValue(ShowVerticalLineProperty); }
-    set { SetValue(ShowVerticalLineProperty, value); }
+    get => (bool)GetValue(dp: ShowVerticalLineProperty);
+    set => SetValue(dp: ShowVerticalLineProperty, value: value);
   }
 
   /// <summary>
   /// Identifies ShowVerticalLine dependency property.
   /// </summary>
   public static readonly DependencyProperty ShowVerticalLineProperty = DependencyProperty.Register(
-    "ShowVerticalLine",
-    typeof(bool),
-    typeof(AxisCursorGraph),
-    new FrameworkPropertyMetadata(true, OnShowLinePropertyChanged));
+    name: nameof(ShowVerticalLine),
+    propertyType: typeof(bool),
+    ownerType: typeof(AxisCursorGraph),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: true, propertyChangedCallback: OnShowLinePropertyChanged));
 
   private static void OnShowLinePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -59,15 +59,15 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
   /// <value><c>true</c> if lien upon horizontal axis is shown; otherwise, <c>false</c>.</value>
   public bool ShowHorizontalLine
   {
-    get { return (bool)GetValue(ShowHorizontalLineProperty); }
-    set { SetValue(ShowHorizontalLineProperty, value); }
+    get => (bool)GetValue(dp: ShowHorizontalLineProperty);
+    set => SetValue(dp: ShowHorizontalLineProperty, value: value);
   }
 
   public static readonly DependencyProperty ShowHorizontalLineProperty = DependencyProperty.Register(
-    "ShowHorizontalLine",
-    typeof(bool),
-    typeof(AxisCursorGraph),
-    new FrameworkPropertyMetadata(true, OnShowLinePropertyChanged));
+    name: nameof(ShowHorizontalLine),
+    propertyType: typeof(bool),
+    ownerType: typeof(AxisCursorGraph),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: true, propertyChangedCallback: OnShowLinePropertyChanged));
 
   #endregion
 
@@ -90,31 +90,31 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
     parent.MouseEnter += parent_MouseEnter;
     parent.MouseLeave += parent_MouseLeave;
 
-    Style lineStyle = new(typeof(Line));
-    AddBindingSetter(lineStyle, Shape.StrokeProperty);
-    AddBindingSetter(lineStyle, Shape.StrokeThicknessProperty);
+    Style lineStyle = new(targetType: typeof(Line));
+    AddBindingSetter(style: lineStyle, property: Shape.StrokeProperty);
+    AddBindingSetter(style: lineStyle, property: Shape.StrokeThicknessProperty);
 
     leftCanvas = new Canvas();
-    Grid.SetRow(leftCanvas, 1);
-    Grid.SetColumn(leftCanvas, 0);
+    Grid.SetRow(element: leftCanvas, value: 1);
+    Grid.SetColumn(element: leftCanvas, value: 0);
     leftLine = new Line { Style = lineStyle, IsHitTestVisible = false };
-    leftCanvas.Children.Add(leftLine);
-    parent.Children.Add(leftCanvas);
+    leftCanvas.Children.Add(element: leftLine);
+    parent.Children.Add(element: leftCanvas);
 
     bottomCanvas = new Canvas();
-    Grid.SetRow(bottomCanvas, 2);
-    Grid.SetColumn(bottomCanvas, 1);
+    Grid.SetRow(element: bottomCanvas, value: 2);
+    Grid.SetColumn(element: bottomCanvas, value: 1);
     bottomLine = new Line { Style = lineStyle, IsHitTestVisible = false };
-    bottomCanvas.Children.Add(bottomLine);
-    parent.Children.Add(bottomCanvas);
+    bottomCanvas.Children.Add(element: bottomLine);
+    parent.Children.Add(element: bottomCanvas);
   }
 
   private void AddBindingSetter(Style style, DependencyProperty property)
   {
-    style.Setters.Add(new Setter(property,
-      new Binding
+    style.Setters.Add(item: new Setter(property: property,
+      value: new Binding
       {
-        Path = new PropertyPath(property.Name),
+        Path = new PropertyPath(path: property.Name),
         Source = this
       }));
   }
@@ -135,7 +135,7 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
     DataRect visible = plotter.Viewport.Visible;
     Rect output = plotter.Viewport.Output;
 
-    Point mousePos = Mouse.GetPosition(plotter.CentralGrid);
+    Point mousePos = Mouse.GetPosition(relativeTo: plotter.CentralGrid);
 
     if (ShowVerticalLine)
     {
@@ -204,16 +204,13 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
     parent.MouseEnter -= parent_MouseEnter;
     parent.MouseLeave -= parent_MouseLeave;
 
-    parent.Children.Remove(leftCanvas);
-    parent.Children.Remove(bottomCanvas);
+    parent.Children.Remove(element: leftCanvas);
+    parent.Children.Remove(element: bottomCanvas);
 
     this.plotter = null;
   }
 
-  PlotterBase IPlotterElement.Plotter
-  {
-    get { return plotter; }
-  }
+  PlotterBase IPlotterElement.Plotter => plotter;
 
   #endregion
 }

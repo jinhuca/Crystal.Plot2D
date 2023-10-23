@@ -11,9 +11,9 @@ public class LiveToolTipAdorner : Adorner
   private readonly Canvas canvas = new() { IsHitTestVisible = false };
   private readonly VisualCollection visualChildren;
   public LiveToolTipAdorner(UIElement adornedElement, LiveToolTip tooltip)
-    : base(adornedElement)
+    : base(adornedElement: adornedElement)
   {
-    visualChildren = new VisualCollection(this);
+    visualChildren = new VisualCollection(parent: this);
 
     adornedElement.MouseLeave += adornedElement_MouseLeave;
     adornedElement.MouseEnter += adornedElement_MouseEnter;
@@ -25,9 +25,9 @@ public class LiveToolTipAdorner : Adorner
 
     tooltip.Visibility = Visibility.Hidden;
 
-    canvas.Children.Add(liveTooltip);
-    AddLogicalChild(canvas);
-    visualChildren.Add(canvas);
+    canvas.Children.Add(element: liveTooltip);
+    AddLogicalChild(child: canvas);
+    visualChildren.Add(visual: canvas);
 
     Unloaded += LiveTooltipAdorner_Unloaded;
   }
@@ -42,7 +42,7 @@ public class LiveToolTipAdorner : Adorner
 
   void LiveTooltipAdorner_Unloaded(object sender, RoutedEventArgs e)
   {
-    canvas.Children.Remove(liveTooltip);
+    canvas.Children.Remove(element: liveTooltip);
   }
 
   void adornedElement_MouseLeave(object sender, MouseEventArgs e)
@@ -59,7 +59,7 @@ public class LiveToolTipAdorner : Adorner
   private void adornedElement_MouseMove(object sender, MouseEventArgs e)
   {
     liveTooltip.Visibility = Visibility.Visible;
-    mousePosition = e.GetPosition(AdornedElement);
+    mousePosition = e.GetPosition(relativeTo: AdornedElement);
     InvalidateMeasure();
   }
 
@@ -68,46 +68,40 @@ public class LiveToolTipAdorner : Adorner
     Size tooltipSize = liveTooltip.DesiredSize;
 
     Point location = mousePosition;
-    location.Offset(-tooltipSize.Width / 2, -tooltipSize.Height - 1);
+    location.Offset(offsetX: -tooltipSize.Width / 2, offsetY: -tooltipSize.Height - 1);
 
-    liveTooltip.Arrange(new Rect(location, tooltipSize));
+    liveTooltip.Arrange(finalRect: new Rect(location: location, size: tooltipSize));
   }
 
   readonly LiveToolTip liveTooltip;
-  public LiveToolTip LiveTooltip
-  {
-    get { return liveTooltip; }
-  }
+  public LiveToolTip LiveTooltip => liveTooltip;
 
   #region Overrides
 
   protected override Visual GetVisualChild(int index)
   {
-    return visualChildren[index];
+    return visualChildren[index: index];
   }
 
-  protected override int VisualChildrenCount
-  {
-    get { return visualChildren.Count; }
-  }
+  protected override int VisualChildrenCount => visualChildren.Count;
 
   protected override Size MeasureOverride(Size constraint)
   {
     foreach (UIElement item in visualChildren)
     {
-      item.Measure(constraint);
+      item.Measure(availableSize: constraint);
     }
 
-    liveTooltip.Measure(constraint);
+    liveTooltip.Measure(availableSize: constraint);
 
-    return base.MeasureOverride(constraint);
+    return base.MeasureOverride(constraint: constraint);
   }
 
   protected override Size ArrangeOverride(Size finalSize)
   {
     foreach (UIElement item in visualChildren)
     {
-      item.Arrange(new Rect(item.DesiredSize));
+      item.Arrange(finalRect: new Rect(size: item.DesiredSize));
     }
 
     ArrangeTooltip();

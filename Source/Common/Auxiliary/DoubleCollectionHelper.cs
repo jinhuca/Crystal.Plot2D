@@ -6,6 +6,6 @@ public static class DoubleCollectionHelper
 {
   public static DoubleCollection Create(params double[] collection)
   {
-    return new DoubleCollection(collection);
+    return new DoubleCollection(collection: collection);
   }
 }

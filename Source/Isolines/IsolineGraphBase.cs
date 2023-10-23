@@ -13,21 +13,15 @@ public abstract class IsolineGraphBase : ContentGraph
   private IsolineCollection collection = new();
   protected IsolineCollection Collection
   {
-    get { return collection; }
-    set { collection = value; }
+    get => collection;
+    set => collection = value;
   }
 
   private readonly IsolineBuilder isolineBuilder = new();
-  protected IsolineBuilder IsolineBuilder
-  {
-    get { return isolineBuilder; }
-  }
+  protected IsolineBuilder IsolineBuilder => isolineBuilder;
 
   private readonly IsolineTextAnnotater annotater = new();
-  protected IsolineTextAnnotater Annotater
-  {
-    get { return annotater; }
-  }
+  protected IsolineTextAnnotater Annotater => annotater;
 
   #region Properties
 
@@ -35,15 +29,15 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public IsolineCollection IsolineCollection
   {
-    get { return (IsolineCollection)GetValue(IsolineCollectionProperty); }
-    set { SetValue(IsolineCollectionProperty, value); }
+    get => (IsolineCollection)GetValue(dp: IsolineCollectionProperty);
+    set => SetValue(dp: IsolineCollectionProperty, value: value);
   }
 
   public static readonly DependencyProperty IsolineCollectionProperty = DependencyProperty.Register(
-    "IsolineCollection",
-    typeof(IsolineCollection),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits));
+    name: nameof(IsolineCollection),
+    propertyType: typeof(IsolineCollection),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, flags: FrameworkPropertyMetadataOptions.Inherits));
 
   #endregion // end of IsolineCollection property
 
@@ -51,15 +45,15 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public double WayBeforeTextMultiplier
   {
-    get { return (double)GetValue(WayBeforeTextMultiplierProperty); }
-    set { SetValue(WayBeforeTextMultiplierProperty, value); }
+    get => (double)GetValue(dp: WayBeforeTextMultiplierProperty);
+    set => SetValue(dp: WayBeforeTextMultiplierProperty, value: value);
   }
 
   public static readonly DependencyProperty WayBeforeTextMultiplierProperty = DependencyProperty.Register(
-    "WayBeforeTextCoeff",
-    typeof(double),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata(1.0, FrameworkPropertyMetadataOptions.Inherits, OnIsolinePropertyChanged));
+    name: "WayBeforeTextCoeff",
+    propertyType: typeof(double),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: 1.0, flags: FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnIsolinePropertyChanged));
 
   #endregion // end of WayBeforeTextCoeff
 
@@ -72,15 +66,15 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public IPalette Palette
   {
-    get { return (IPalette)GetValue(PaletteProperty); }
-    set { SetValue(PaletteProperty, value); }
+    get => (IPalette)GetValue(dp: PaletteProperty);
+    set => SetValue(dp: PaletteProperty, value: value);
   }
 
   public static readonly DependencyProperty PaletteProperty = DependencyProperty.Register(
-    "Palette",
-    typeof(IPalette),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata(new HsbPalette(), FrameworkPropertyMetadataOptions.Inherits, OnIsolinePropertyChanged), ValidatePalette);
+    name: nameof(Palette),
+    propertyType: typeof(IPalette),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: new HsbPalette(), flags: FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnIsolinePropertyChanged), validateValueCallback: ValidatePalette);
 
   private static bool ValidatePalette(object value)
   {
@@ -93,20 +87,20 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public DataSource DataSource
   {
-    get { return (DataSource)GetValue(DataSourceProperty); }
-    set { SetValue(DataSourceProperty, value); }
+    get => (DataSource)GetValue(dp: DataSourceProperty);
+    set => SetValue(dp: DataSourceProperty, value: value);
   }
 
   public static readonly DependencyProperty DataSourceProperty = DependencyProperty.Register(
-    "DataSource",
-    typeof(DataSource),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata(null, FrameworkPropertyMetadataOptions.Inherits, OnDataSourceChanged));
+    name: nameof(DataSource),
+    propertyType: typeof(DataSource),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, flags: FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnDataSourceChanged));
 
   private static void OnDataSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     IsolineGraphBase owner = (IsolineGraphBase)d;
-    owner.OnDataSourceChanged((DataSource)e.OldValue, (DataSource)e.NewValue);
+    owner.OnDataSourceChanged(prevDataSource: (DataSource)e.OldValue, currDataSource: (DataSource)e.NewValue);
   }
 
   protected virtual void OnDataSourceChanged(IDataSource2D<double> prevDataSource, IDataSource2D<double> currDataSource)
@@ -124,7 +118,7 @@ public abstract class IsolineGraphBase : ContentGraph
     UpdateDataSource();
     CreateUIRepresentation();
 
-    RaiseEvent(new RoutedEventArgs(BackgroundRenderer.UpdateRequested));
+    RaiseEvent(e: new RoutedEventArgs(routedEvent: BackgroundRenderer.UpdateRequested));
   }
 
   #endregion // end of DataSource property
@@ -133,15 +127,15 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public bool DrawLabels
   {
-    get { return (bool)GetValue(DrawLabelsProperty); }
-    set { SetValue(DrawLabelsProperty, value); }
+    get => (bool)GetValue(dp: DrawLabelsProperty);
+    set => SetValue(dp: DrawLabelsProperty, value: value);
   }
 
   public static readonly DependencyProperty DrawLabelsProperty = DependencyProperty.Register(
-      "DrawLabels",
-      typeof(bool),
-      typeof(IsolineGraphBase),
-      new FrameworkPropertyMetadata(true, FrameworkPropertyMetadataOptions.Inherits, OnIsolinePropertyChanged));
+      name: nameof(DrawLabels),
+      propertyType: typeof(bool),
+      ownerType: typeof(IsolineGraphBase),
+      typeMetadata: new FrameworkPropertyMetadata(defaultValue: true, flags: FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnIsolinePropertyChanged));
 
   #endregion // end of DrawLabels property
 
@@ -149,15 +143,15 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public string LabelStringFormat
   {
-    get { return (string)GetValue(LabelStringFormatProperty); }
-    set { SetValue(LabelStringFormatProperty, value); }
+    get => (string)GetValue(dp: LabelStringFormatProperty);
+    set => SetValue(dp: LabelStringFormatProperty, value: value);
   }
 
   public static readonly DependencyProperty LabelStringFormatProperty = DependencyProperty.Register(
-    "LabelStringFormat",
-    typeof(string),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata("F", FrameworkPropertyMetadataOptions.Inherits, OnIsolinePropertyChanged));
+    name: nameof(LabelStringFormat),
+    propertyType: typeof(string),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: "F", flags: FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnIsolinePropertyChanged));
 
   #endregion // end of LabelStringFormat
 
@@ -165,29 +159,29 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public bool UseBezierCurves
   {
-    get { return (bool)GetValue(UseBezierCurvesProperty); }
-    set { SetValue(UseBezierCurvesProperty, value); }
+    get => (bool)GetValue(dp: UseBezierCurvesProperty);
+    set => SetValue(dp: UseBezierCurvesProperty, value: value);
   }
 
   public static readonly DependencyProperty UseBezierCurvesProperty = DependencyProperty.Register(
-    "UseBezierCurves",
-    typeof(bool),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.Inherits));
+    name: nameof(UseBezierCurves),
+    propertyType: typeof(bool),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: false, flags: FrameworkPropertyMetadataOptions.Inherits));
 
   #endregion // end of UseBezierCurves
 
   public double LabelsScaling
   {
-    get { return (double)GetValue(LabelsScalingProperty); }
-    set { SetValue(LabelsScalingProperty, value); }
+    get => (double)GetValue(dp: LabelsScalingProperty);
+    set => SetValue(dp: LabelsScalingProperty, value: value);
   }
 
   public static readonly DependencyProperty LabelsScalingProperty = DependencyProperty.Register(
-    "LabelsScaling",
-    typeof(double),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata(1.0, FrameworkPropertyMetadataOptions.Inherits));
+    name: nameof(LabelsScaling),
+    propertyType: typeof(double),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: 1.0, flags: FrameworkPropertyMetadataOptions.Inherits));
 
 
   #endregion // end of Properties
@@ -219,15 +213,15 @@ public abstract class IsolineGraphBase : ContentGraph
 
   public double MissingValue
   {
-    get { return (double)GetValue(MissingValueProperty); }
-    set { SetValue(MissingValueProperty, value); }
+    get => (double)GetValue(dp: MissingValueProperty);
+    set => SetValue(dp: MissingValueProperty, value: value);
   }
 
   public static readonly DependencyProperty MissingValueProperty = DependencyProperty.Register(
-    "MissingValue",
-    typeof(double),
-    typeof(IsolineGraphBase),
-    new FrameworkPropertyMetadata(double.NaN, FrameworkPropertyMetadataOptions.Inherits, OnMissingValueChanged));
+    name: nameof(MissingValue),
+    propertyType: typeof(double),
+    ownerType: typeof(IsolineGraphBase),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: double.NaN, flags: FrameworkPropertyMetadataOptions.Inherits, propertyChangedCallback: OnMissingValueChanged));
 
   private static void OnMissingValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
@@ -269,8 +263,8 @@ public abstract class IsolineGraphBase : ContentGraph
   /// <value>The stroke thickness.</value>
   public double StrokeThickness
   {
-    get { return (double)GetValue(StrokeThicknessProperty); }
-    set { SetValue(StrokeThicknessProperty, value); }
+    get => (double)GetValue(dp: StrokeThicknessProperty);
+    set => SetValue(dp: StrokeThicknessProperty, value: value);
   }
 
   /// <summary>
@@ -278,10 +272,10 @@ public abstract class IsolineGraphBase : ContentGraph
   /// </summary>
   public static readonly DependencyProperty StrokeThicknessProperty =
       DependencyProperty.Register(
-        "StrokeThickness",
-        typeof(double),
-        typeof(IsolineGraphBase),
-        new FrameworkPropertyMetadata(2.0, OnLineThicknessChanged));
+        name: nameof(StrokeThickness),
+        propertyType: typeof(double),
+        ownerType: typeof(IsolineGraphBase),
+        typeMetadata: new FrameworkPropertyMetadata(defaultValue: 2.0, propertyChangedCallback: OnLineThicknessChanged));
 
   private static void OnLineThicknessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {

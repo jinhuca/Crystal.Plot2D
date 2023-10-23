@@ -14,18 +14,18 @@ public class Footer : ContentControl, IPlotterElement
   public Footer()
   {
     HorizontalAlignment = HorizontalAlignment.Center;
-    Margin = new Thickness(0, 0, 0, 3);
+    Margin = new Thickness(left: 0, top: 0, right: 0, bottom: 3);
   }
 
-  void IPlotterElement.OnPlotterAttached(PlotterBase _plotter)
+  void IPlotterElement.OnPlotterAttached(PlotterBase thePlotter)
   {
-    Plotter = _plotter;
-    _plotter.FooterPanel.Children.Add(this);
+    Plotter = thePlotter;
+    thePlotter.FooterPanel.Children.Add(element: this);
   }
 
-  void IPlotterElement.OnPlotterDetaching(PlotterBase _plotter)
+  void IPlotterElement.OnPlotterDetaching(PlotterBase thePlotter)
   {
-    _plotter.FooterPanel.Children.Remove(this);
+    thePlotter.FooterPanel.Children.Remove(element: this);
     Plotter = null;
   }
 

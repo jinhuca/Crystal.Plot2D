@@ -6,50 +6,50 @@ namespace Crystal.Plot2D.Common;
 
 internal static class DebugVerify
 {
-  [Conditional("DEBUG")]
+  [Conditional(conditionString: "DEBUG")]
   [DebuggerStepThrough]
   public static void Is(bool condition)
   {
     if (!condition)
     {
-      throw new ArgumentException(Strings.Exceptions.AssertionFailed);
+      throw new ArgumentException(message: Strings.Exceptions.AssertionFailed);
     }
   }
 
-  [Conditional("DEBUG")]
+  [Conditional(conditionString: "DEBUG")]
   [DebuggerStepThrough]
   public static void IsNotNaN(double d)
   {
-    Is(!double.IsNaN(d));
+    Is(condition: !double.IsNaN(d: d));
   }
 
-  [Conditional("DEBUG")]
+  [Conditional(conditionString: "DEBUG")]
   [DebuggerStepThrough]
   public static void IsNotNaN(Vector vec)
   {
-    IsNotNaN(vec.X);
-    IsNotNaN(vec.Y);
+    IsNotNaN(d: vec.X);
+    IsNotNaN(d: vec.Y);
   }
 
-  [Conditional("DEBUG")]
+  [Conditional(conditionString: "DEBUG")]
   [DebuggerStepThrough]
   public static void IsNotNaN(Point point)
   {
-    IsNotNaN(point.X);
-    IsNotNaN(point.Y);
+    IsNotNaN(d: point.X);
+    IsNotNaN(d: point.Y);
   }
 
-  [Conditional("DEBUG")]
+  [Conditional(conditionString: "DEBUG")]
   [DebuggerStepThrough]
   public static void IsFinite(double d)
   {
-    Is(!double.IsInfinity(d) && !(double.IsNaN(d)));
+    Is(condition: !double.IsInfinity(d: d) && !(double.IsNaN(d: d)));
   }
 
-  [Conditional("DEBUG")]
+  [Conditional(conditionString: "DEBUG")]
   [DebuggerStepThrough]
   public static void IsNotNull(object obj)
   {
-    Is(obj != null);
+    Is(condition: obj != null);
   }
 }

@@ -5,7 +5,7 @@ namespace Crystal.Plot2D;
 internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
 {
   private readonly Viewport2D viewport;
-  internal Viewport2dDeferredPanningProxy(Viewport2D viewport) : base(viewport.HostElement, viewport.PlotterBase)
+  internal Viewport2dDeferredPanningProxy(Viewport2D viewport) : base(host: viewport.HostElement, plotter: viewport.PlotterBase)
   {
     viewport.PropertyChanged += viewport_PropertyChanged;
     viewport.PanningStateChanged += viewport_PanningStateChanged;
@@ -35,23 +35,23 @@ internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
   {
     if (viewport == null)
     {
-      return new DataRect(0, 0, 1, 1);
+      return new DataRect(xMin: 0, yMin: 0, width: 1, height: 1);
     }
 
     if (viewport.PanningState == Viewport2DPanningState.Panning)
     {
       return prevVisible;
     }
-    return base.CoerceVisible(newVisible);
+    return base.CoerceVisible(newVisible: newVisible);
   }
 
-  private bool notMineEvent = false;
+  private bool notMineEvent;
   private void viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     notMineEvent = true;
     try
     {
-      RaisePropertyChanged(e);
+      RaisePropertyChanged(args: e);
     }
     finally
     {
@@ -62,7 +62,7 @@ internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
   public override CoordinateTransform Transform
   {
     get => viewport.PanningState == Viewport2DPanningState.Panning
-        ? viewport.Transform.WithRects(prevVisible, viewport.Output)
+        ? viewport.Transform.WithRects(visibleRect: prevVisible, screenRect: viewport.Output)
         : viewport.Transform;
     set => base.Transform = value;
   }
@@ -75,7 +75,7 @@ internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
       {
         if (viewport.PanningState == Viewport2DPanningState.NotPanning)
         {
-          base.RaisePropertyChanged(args);
+          base.RaisePropertyChanged(args: args);
         }
         else
         {
@@ -85,7 +85,7 @@ internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
     }
     else
     {
-      base.RaisePropertyChanged(args);
+      base.RaisePropertyChanged(args: args);
     }
   }
 }

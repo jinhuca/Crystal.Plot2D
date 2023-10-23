@@ -18,19 +18,19 @@ public class StackCanvas : Panel
   [AttachedPropertyBrowsableForChildren]
   public static double GetEndCoordinate(DependencyObject obj)
   {
-    return (double)obj.GetValue(EndCoordinateProperty);
+    return (double)obj.GetValue(dp: EndCoordinateProperty);
   }
 
   public static void SetEndCoordinate(DependencyObject obj, double value)
   {
-    obj.SetValue(EndCoordinateProperty, value);
+    obj.SetValue(dp: EndCoordinateProperty, value: value);
   }
 
   public static readonly DependencyProperty EndCoordinateProperty = DependencyProperty.RegisterAttached(
-    "EndCoordinate",
-    typeof(double),
-    typeof(StackCanvas),
-    new PropertyMetadata(double.NaN, OnCoordinateChanged));
+    name: "EndCoordinate",
+    propertyType: typeof(double),
+    ownerType: typeof(StackCanvas),
+    defaultMetadata: new PropertyMetadata(defaultValue: double.NaN, propertyChangedCallback: OnCoordinateChanged));
 
   #endregion [-- EndCoordinate attached property --]
 
@@ -39,25 +39,25 @@ public class StackCanvas : Panel
   [AttachedPropertyBrowsableForChildren]
   public static double GetCoordinate(DependencyObject obj)
   {
-    return (double)obj.GetValue(CoordinateProperty);
+    return (double)obj.GetValue(dp: CoordinateProperty);
   }
 
   public static void SetCoordinate(DependencyObject obj, double value)
   {
-    obj.SetValue(CoordinateProperty, value);
+    obj.SetValue(dp: CoordinateProperty, value: value);
   }
 
   public static readonly DependencyProperty CoordinateProperty = DependencyProperty.RegisterAttached(
-    "Coordinate",
-    typeof(double),
-    typeof(StackCanvas),
-    new PropertyMetadata(0.0, OnCoordinateChanged));
+    name: "Coordinate",
+    propertyType: typeof(double),
+    ownerType: typeof(StackCanvas),
+    defaultMetadata: new PropertyMetadata(defaultValue: 0.0, propertyChangedCallback: OnCoordinateChanged));
 
   private static void OnCoordinateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     if (d is UIElement reference)
     {
-      if (VisualTreeHelper.GetParent(reference) is StackCanvas parent)
+      if (VisualTreeHelper.GetParent(reference: reference) is StackCanvas parent)
       {
         parent.InvalidateArrange();
       }
@@ -70,22 +70,19 @@ public class StackCanvas : Panel
 
   public AxisPlacement Placement
   {
-    get { return (AxisPlacement)GetValue(PlacementProperty); }
-    set { SetValue(PlacementProperty, value); }
+    get => (AxisPlacement)GetValue(dp: PlacementProperty);
+    set => SetValue(dp: PlacementProperty, value: value);
   }
 
   public static readonly DependencyProperty PlacementProperty = DependencyProperty.Register(
-    "Placement",
-    typeof(AxisPlacement),
-    typeof(StackCanvas),
-    new FrameworkPropertyMetadata(AxisPlacement.Bottom, FrameworkPropertyMetadataOptions.AffectsArrange));
+    name: nameof(Placement),
+    propertyType: typeof(AxisPlacement),
+    ownerType: typeof(StackCanvas),
+    typeMetadata: new FrameworkPropertyMetadata(defaultValue: AxisPlacement.Bottom, flags: FrameworkPropertyMetadataOptions.AffectsArrange));
 
   #endregion [-- AxisPlacement property --]
 
-  private bool IsHorizontal
-  {
-    get { return Placement == AxisPlacement.Top || Placement == AxisPlacement.Bottom; }
-  }
+  private bool IsHorizontal => Placement == AxisPlacement.Top || Placement == AxisPlacement.Bottom;
 
   protected override Size MeasureOverride(Size constraint)
   {
@@ -110,27 +107,27 @@ public class StackCanvas : Panel
     {
       if (element != null)
       {
-        Size childSize = GetChildSize(element, availableSize);
-        element.Measure(childSize);
+        Size childSize = GetChildSize(element: element, availableSize: availableSize);
+        element.Measure(availableSize: childSize);
         Size desiredSize = element.DesiredSize;
 
         if (isHorizontal)
         {
-          size.Height = Math.Max(size.Height, desiredSize.Height);
+          size.Height = Math.Max(val1: size.Height, val2: desiredSize.Height);
         }
         else
         {
-          size.Width = Math.Max(size.Width, desiredSize.Width);
+          size.Width = Math.Max(val1: size.Width, val2: desiredSize.Width);
         }
       }
     }
 
-    if (double.IsPositiveInfinity(size.Width))
+    if (double.IsPositiveInfinity(d: size.Width))
     {
       size.Width = 0;
     }
 
-    if (double.IsPositiveInfinity(size.Height))
+    if (double.IsPositiveInfinity(d: size.Height))
     {
       size.Height = 0;
     }
@@ -140,8 +137,8 @@ public class StackCanvas : Panel
 
   private Size GetChildSize(UIElement element, Size availableSize)
   {
-    var coordinate = GetCoordinate(element);
-    var endCoordinate = GetEndCoordinate(element);
+    var coordinate = GetCoordinate(obj: element);
+    var endCoordinate = GetEndCoordinate(obj: element);
 
     if (coordinate.IsNotNaN() && endCoordinate.IsNotNaN())
     {
@@ -151,7 +148,7 @@ public class StackCanvas : Panel
       }
       else
       {
-        availableSize.Height = Math.Abs(endCoordinate - coordinate);
+        availableSize.Height = Math.Abs(value: endCoordinate - coordinate);
       }
     }
 
@@ -187,15 +184,13 @@ public class StackCanvas : Panel
         case AxisPlacement.Bottom:
           y = 0;
           break;
-        default:
-          break;
       }
 
-      double coordinate = GetCoordinate(element);
+      double coordinate = GetCoordinate(obj: element);
 
-      if (!double.IsNaN(GetEndCoordinate(element)))
+      if (!double.IsNaN(d: GetEndCoordinate(obj: element)))
       {
-        double endCoordinate = GetEndCoordinate(element);
+        double endCoordinate = GetEndCoordinate(obj: element);
         double size = endCoordinate - coordinate;
         if (size < 0)
         {
@@ -237,8 +232,8 @@ public class StackCanvas : Panel
         }
       }
 
-      Rect bounds = new(new Point(x, y), elementSize);
-      element.Arrange(bounds);
+      Rect bounds = new(location: new Point(x: x, y: y), size: elementSize);
+      element.Arrange(finalRect: bounds);
     }
 
     return finalSize;
