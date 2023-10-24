@@ -330,7 +330,7 @@ public class KeyboardNavigation : IPlotterElement
     if (dlg.ShowDialog().GetValueOrDefault(defaultValue: false))
     {
       string filePath = dlg.FileName;
-      plotter2D.SaveScreenshot(filePath: filePath);
+      plotter2D.SaveScreenShot(filePath: filePath);
       e.Handled = true;
     }
   }

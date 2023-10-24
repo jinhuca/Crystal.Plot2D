@@ -9,4 +9,5 @@ public static class Constants
   public const string NavigationResourceUri = @"/Crystal.Plot2D;component/Navigation/LongOperationsIndicatorResources.xaml";
   public const string ShapeResourceUri = @"/Crystal.Plot2D;component/Shapes/RangeHighlightStyle.xaml";
   public const string AxisResourceUri = @"/Crystal.Plot2D;component/Axes/AxisControlStyle.xaml";
+  public const string PlotterResourceUri = @"/Crystal.Plot2D;component/Common/PlotterStyle.xaml";
 }

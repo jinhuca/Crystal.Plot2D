@@ -23,23 +23,22 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// <param name="convertToDouble">The convert to double.</param>
   protected AxisBase(AxisControl<T> axisControl, Func<double, T> convertFromDouble, Func<T, double> convertToDouble)
   {
-    this.convertToDouble = convertToDouble ?? throw new ArgumentNullException(paramName: nameof(convertToDouble));
-    this.convertFromDouble = convertFromDouble ?? throw new ArgumentNullException(paramName: nameof(convertFromDouble));
-    this.axisControl = axisControl ?? throw new ArgumentNullException(paramName: nameof(axisControl));
+    _convertToDouble = convertToDouble ?? throw new ArgumentNullException(paramName: nameof(convertToDouble));
+    _convertFromDouble = convertFromDouble ?? throw new ArgumentNullException(paramName: nameof(convertFromDouble));
+    _axisControl = axisControl ?? throw new ArgumentNullException(paramName: nameof(axisControl));
 
     axisControl.MakeDependent();
     axisControl.ConvertToDouble = convertToDouble;
     axisControl.ScreenTicksChanged += axisControl_ScreenTicksChanged;
 
     Content = axisControl;
-    axisControl.SetBinding(dp: BackgroundProperty, binding: new Binding(path: "Background") { Source = this });
-
+    axisControl.SetBinding(dp: BackgroundProperty, binding: new Binding(path: nameof(Background)) { Source = this });
     Focusable = false;
 
     Loaded += OnLoaded;
   }
 
-  public override void ForceUpdate() => axisControl.UpdateUI();
+  public override void ForceUpdate() => _axisControl.UpdateUI();
 
   private void axisControl_ScreenTicksChanged(object sender, EventArgs e) => RaiseTicksChanged();
 
@@ -58,13 +57,15 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
 
   private void OnLoaded(object sender, RoutedEventArgs e) => RaiseTicksChanged();
 
+  private readonly AxisControl<T> _axisControl;
+  
   /// <summary>
   /// Gets the screen coordinates of axis ticks.
   /// </summary>
   /// <value>The screen ticks.</value>
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   [EditorBrowsable(state: EditorBrowsableState.Never)]
-  public override double[] ScreenTicks => axisControl.ScreenTicks;
+  public override double[] ScreenTicks => _axisControl.ScreenTicks;
 
   /// <summary>
   /// Gets the screen coordinates of minor ticks.
@@ -72,15 +73,14 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// <value>The minor screen ticks.</value>
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   [EditorBrowsable(state: EditorBrowsableState.Never)]
-  public override MinorTickInfo<double>[] MinorScreenTicks => axisControl.MinorScreenTicks;
-
-  private readonly AxisControl<T> axisControl;
+  public override MinorTickInfo<double>[] MinorScreenTicks => _axisControl.MinorScreenTicks;
+  
   /// <summary>
   /// Gets the axis control - actual UI representation of axis.
   /// </summary>
   /// <value>The axis control.</value>
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
-  public AxisControl<T> AxisControl => axisControl;
+  public AxisControl<T> AxisControl => _axisControl;
 
   /// <summary>
   /// Gets or sets the ticks provider, which is used to generate ticks in given range.
@@ -89,8 +89,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public ITicksProvider<T> TicksProvider
   {
-    get => axisControl.TicksProvider;
-    set => axisControl.TicksProvider = value;
+    get => _axisControl.TicksProvider;
+    set => _axisControl.TicksProvider = value;
   }
 
   /// <summary>
@@ -103,8 +103,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   [NotNull]
   public LabelProviderBase<T> LabelProvider
   {
-    get => axisControl.LabelProvider;
-    set => axisControl.LabelProvider = value;
+    get => _axisControl.LabelProvider;
+    set => _axisControl.LabelProvider = value;
   }
 
   /// <summary>
@@ -114,8 +114,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// <value>The major label provider.</value>
   public LabelProviderBase<T> MajorLabelProvider
   {
-    get => axisControl.MajorLabelProvider;
-    set => axisControl.MajorLabelProvider = value;
+    get => _axisControl.MajorLabelProvider;
+    set => _axisControl.MajorLabelProvider = value;
   }
 
   /// <summary>
@@ -138,8 +138,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// <value><c>true</c> if show minor ticks; otherwise, <c>false</c>.</value>
   public bool ShowMinorTicks
   {
-    get => axisControl.DrawMinorTicks;
-    set => axisControl.DrawMinorTicks = value;
+    get => _axisControl.DrawMinorTicks;
+    set => _axisControl.DrawMinorTicks = value;
   }
 
   /// <summary>
@@ -148,8 +148,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   /// <value><c>true</c> if show major labels; otherwise, <c>false</c>.</value>
   public bool ShowMajorLabels
   {
-    get => axisControl.DrawMajorLabels;
-    set => axisControl.DrawMajorLabels = value;
+    get => _axisControl.DrawMajorLabels;
+    set => _axisControl.DrawMajorLabels = value;
   }
 
   protected override void OnPlotterAttached(PlotterBase thePlotter)
@@ -163,7 +163,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
       panel.Children.Insert(index: index, element: this);
     }
 
-    using (axisControl.OpenUpdateRegion(forceUpdate: true))
+    using (_axisControl.OpenUpdateRegion(forceUpdate: true))
     {
       UpdateAxisControl(plotter2d: thePlotter);
     }
@@ -171,8 +171,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
 
   private void UpdateAxisControl(PlotterBase plotter2d)
   {
-    axisControl.Transform = plotter2d.Viewport.Transform;
-    axisControl.Range = CreateRangeFromRect(visible: plotter2d.Visible.ViewportToData(transform: plotter2d.Viewport.Transform));
+    _axisControl.Transform = plotter2d.Viewport.Transform;
+    _axisControl.Range = CreateRangeFromRect(visible: plotter2d.Visible.ViewportToData(transform: plotter2d.Viewport.Transform));
   }
 
   private int GetInsertionIndexByPlacement(AxisPlacement placement, Panel panel)
@@ -218,10 +218,10 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
 
     Range<T> range = CreateRangeFromRect(visible: dataRect);
 
-    using (axisControl.OpenUpdateRegion(forceUpdate: false)) // todo was forceUpdate
+    using (_axisControl.OpenUpdateRegion(forceUpdate: false)) // todo was forceUpdate
     {
-      axisControl.Range = range;
-      axisControl.Transform = viewport.Transform;
+      _axisControl.Range = range;
+      _axisControl.Transform = viewport.Transform;
     }
 
     Dispatcher.BeginInvoke(method: () =>
@@ -235,7 +235,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     }, priority: DispatcherPriority.Render);
   }
 
-  private Func<double, T> convertFromDouble;
+  private Func<double, T> _convertFromDouble;
   /// <summary>
   /// Gets or sets the delegate that is used to create each tick from double.
   /// Is used to create typed range to display for internal AxisControl.
@@ -247,7 +247,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   [NotNull]
   public Func<double, T> ConvertFromDouble
   {
-    get => convertFromDouble;
+    get => _convertFromDouble;
     set
     {
       if (value == null)
@@ -255,9 +255,9 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
         throw new ArgumentNullException(paramName: nameof(value));
       }
 
-      if (convertFromDouble != value)
+      if (_convertFromDouble != value)
       {
-        convertFromDouble = value;
+        _convertFromDouble = value;
         if (ParentPlotter != null)
         {
           UpdateAxisControl(plotter2d: ParentPlotter);
@@ -266,7 +266,8 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     }
   }
 
-  private Func<T, double> convertToDouble;
+  private Func<T, double> _convertToDouble;
+
   /// <summary>
   /// Gets or sets the delegate that is used to convert each tick to double.
   /// Is used by internal AxisControl to convert tick to double to get tick's coordinates inside of viewport.
@@ -278,19 +279,16 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   [NotNull]
   public Func<T, double> ConvertToDouble
   {
-    get => convertToDouble;
+    get => _convertToDouble;
     set
     {
       if (value == null)
       {
         throw new ArgumentNullException(paramName: nameof(value));
       }
-
-      if (convertToDouble != value)
-      {
-        convertToDouble = value;
-        axisControl.ConvertToDouble = value;
-      }
+      if (_convertToDouble == value) return;
+      _convertToDouble = value;
+      _axisControl.ConvertToDouble = value;
     }
   }
 
@@ -349,7 +347,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
 
   protected override void OnPlacementChanged(AxisPlacement oldPlacement, AxisPlacement newPlacement)
   {
-    axisControl.Placement = Placement;
+    _axisControl.Placement = Placement;
     if (ParentPlotter != null)
     {
       Panel panel = GetPanelByPlacement(placement: oldPlacement);
@@ -375,6 +373,6 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     }
 
     thePlotter.Viewport.PropertyChanged -= OnViewportPropertyChanged;
-    axisControl.Transform = null;
+    _axisControl.Transform = null;
   }
 }

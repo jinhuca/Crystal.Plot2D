@@ -7,50 +7,40 @@ using System.Windows.Controls;
 namespace Crystal.Plot2D;
 
 /// <summary>
-///   Represents a title of horizontal axis. Can be placed from top or bottom of Plotter.
+/// Represents a title of horizontal axis. Can be placed from top or bottom of Plotter.
 /// </summary>
 public class HorizontalAxisTitle : ContentControl, IPlotterElement
 {
-  /// <summary>
-  ///   Initializes a new instance of the <see cref="HorizontalAxisTitle"/> class.
-  /// </summary>
   public HorizontalAxisTitle()
   {
     FontSize = 16;
     HorizontalAlignment = HorizontalAlignment.Center;
   }
 
-  /// <summary>
-  ///   Initializes a new instance of the <see cref="HorizontalAxisTitle"/> class.
-  /// </summary>
-  /// <param name="content">The content.</param>
   public HorizontalAxisTitle(object content) : this() => Content = content;
 
-  private PlotterBase plotter;
-  public PlotterBase Plotter => plotter;
+  public PlotterBase Plotter { get; private set; }
 
-  public void OnPlotterAttached(PlotterBase _plotter)
+  public void OnPlotterAttached(PlotterBase plotter)
   {
-    plotter = _plotter;
+    Plotter = plotter;
     AddToPlotter();
   }
 
-  public void OnPlotterDetaching(PlotterBase _plotter)
+  public void OnPlotterDetaching(PlotterBase plotter)
   {
     RemoveFromPlotter();
-    plotter = null;
+    Plotter = null;
   }
 
-  private Panel GetHostPanel(PlotterBase _plotter) => placement == AxisPlacement.Bottom ? _plotter.BottomPanel : _plotter.TopPanel;
+  private Panel GetHostPanel(PlotterBase plotter) 
+    => placement == AxisPlacement.Bottom ? plotter.BottomPanel : plotter.TopPanel;
 
-  private int GetInsertPosition(Panel panel) => placement == AxisPlacement.Bottom ? panel.Children.Count : 0;
+  private int GetInsertPosition(Panel panel) 
+    => placement == AxisPlacement.Bottom ? panel.Children.Count : 0;
 
   private AxisPlacement placement = AxisPlacement.Bottom;
 
-  /// <summary>
-  ///   Gets or sets the placement of axis title.
-  /// </summary>
-  /// <value>The placement.</value>
   public AxisPlacement Placement
   {
     get => placement;
@@ -58,33 +48,34 @@ public class HorizontalAxisTitle : ContentControl, IPlotterElement
     {
       if (!value.IsBottomOrTop())
       {
-        throw new ArgumentException(message: string.Format(format: "HorizontalAxisTitle only supports Top and Bottom values of AxisPlacement, you passed '{0}'", arg0: value), paramName: "Placement");
+        throw new ArgumentException(message:
+          $"HorizontalAxisTitle only supports Top and Bottom values of AxisPlacement, you passed '{value}'", 
+          paramName: nameof(Placement));
       }
-      if (placement != value)
+
+      if (placement == value) return;
+      if (Plotter != null)
       {
-        if (plotter != null)
-        {
-          RemoveFromPlotter();
-        }
-        placement = value;
-        if (plotter != null)
-        {
-          AddToPlotter();
-        }
+        RemoveFromPlotter();
+      }
+      placement = value;
+      if (Plotter != null)
+      {
+        AddToPlotter();
       }
     }
   }
 
-  private void RemoveFromPlotter()
-  {
-    var oldPanel = GetHostPanel(_plotter: plotter);
-    oldPanel.Children.Remove(element: this);
-  }
-
   private void AddToPlotter()
   {
-    var hostPanel = GetHostPanel(_plotter: plotter);
-    var index = GetInsertPosition(panel: hostPanel);
-    hostPanel.Children.Insert(index: index, element: this);
+    var hostPanel_ = GetHostPanel(plotter: Plotter);
+    var index_ = GetInsertPosition(panel: hostPanel_);
+    hostPanel_.Children.Insert(index: index_, element: this);
+  }
+
+  private void RemoveFromPlotter()
+  {
+    var hostPanel_ = GetHostPanel(plotter: Plotter);
+    hostPanel_.Children.Remove(element: this);
   }
 }

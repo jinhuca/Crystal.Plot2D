@@ -5,14 +5,14 @@
   <ResourceDictionary.MergedDictionaries>
     <ResourceDictionary Source="/Crystal.Plot2D;component/Common/SendFeedbackIcon.xaml"/>
   </ResourceDictionary.MergedDictionaries>
-  <Style TargetType="{x:Type local:PlotterBase}" x:Key="defaultPlotterStyle">
+  <Style TargetType="{x:Type local:PlotterBase}" x:Key="DefaultPlotterStyle">
     <Setter Property="Background" Value="White"/>
     <Setter Property="BorderBrush" Value="Black"/>
     <Setter Property="ClipToBounds" Value="True"/>
   </Style>
  
   <!--Plotter template-->
-  <ControlTemplate TargetType="{x:Type local:PlotterBase}" x:Key="defaultPlotterTemplate">
+  <ControlTemplate TargetType="{x:Type local:PlotterBase}" x:Key="DefaultPlotterTemplate">
     <common:NotifyingGrid x:Name="PART_ContentsGrid" Background="{TemplateBinding Background}" DataContext="{TemplateBinding DataContext}">
       <Grid.RowDefinitions>
         <RowDefinition Height="auto"/>

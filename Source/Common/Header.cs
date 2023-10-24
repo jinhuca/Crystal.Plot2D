@@ -9,20 +9,20 @@ public class Header : ContentControl, IPlotterElement
   {
     FontSize = 12;
     HorizontalAlignment = HorizontalAlignment.Center;
-    Margin = new Thickness(left: 0, top: 0, right: 0, bottom: 3);
+    Margin = new Thickness(left: 0, top: 3, right: 0, bottom: 3);
   }
 
   public PlotterBase Plotter { get; private set; }
 
-  public void OnPlotterAttached(PlotterBase thePlotter)
+  public void OnPlotterAttached(PlotterBase plotter)
   {
-    Plotter = thePlotter;
-    thePlotter.HeaderPanel.Children.Add(element: this);
+    Plotter = plotter;
+    plotter.HeaderPanel.Children.Add(element: this);
   }
 
-  public void OnPlotterDetaching(PlotterBase thePlotter)
+  public void OnPlotterDetaching(PlotterBase plotter)
   {
     Plotter = null;
-    thePlotter.HeaderPanel.Children.Remove(element: this);
+    plotter.HeaderPanel.Children.Remove(element: this);
   }
 }

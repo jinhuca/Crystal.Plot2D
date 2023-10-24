@@ -47,7 +47,7 @@
     </TypeIdentifier>
   </Class>
   <Class Name="Crystal.Plot2D.DataSources.CompositeDataSource">
-    <Position X="15.25" Y="1" Width="2.75" />
+    <Position X="12.25" Y="7.75" Width="2.75" />
     <Compartments>
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
@@ -66,7 +66,7 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="Crystal.Plot2D.DataSources.EnumerablePointEnumerator&lt;T&gt;">
-    <Position X="1.25" Y="3.75" Width="2.5" />
+    <Position X="8.5" Y="8.75" Width="2.5" />
     <TypeIdentifier>
       <HashCode>AACAAAEAACAAAgAAAAAAAAAAAAAAIAAAIAAAAAAAAAA=</HashCode>
       <FileName>DataSources\OneDimensional\EnumerablePointEnumerator.cs</FileName>
@@ -74,14 +74,14 @@
     <Lollipop Position="0.2" />
   </Class>
   <Interface Name="Crystal.Plot2D.DataSources.IPointDataSource">
-    <Position X="4" Y="1" Width="1.5" />
+    <Position X="4.5" Y="8.5" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAACAAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DataSources\OneDimensional\IPointDataSource.cs</FileName>
     </TypeIdentifier>
   </Interface>
   <Interface Name="Crystal.Plot2D.DataSources.IPointEnumerator">
-    <Position X="1.25" Y="1" Width="1.5" />
+    <Position X="4.5" Y="11" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAIAAAIAAAAAAAAAA=</HashCode>
       <FileName>DataSources\OneDimensional\IPointEnumerator.cs</FileName>

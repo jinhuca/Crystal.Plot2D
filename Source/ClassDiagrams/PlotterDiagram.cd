@@ -1,34 +1,34 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ClassDiagram MajorVersion="1" MinorVersion="1">
-  <Class Name="Crystal.Plot2D.TimeChartPlotter" Collapsed="true">
-    <Position X="6.25" Y="2" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
+  <Class Name="Crystal.Plot2D.PlotterBase">
+    <Position X="1.75" Y="2" Width="2.75" />
     <TypeIdentifier>
-      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
-      <FileName>TimeChartPlotter.cs</FileName>
-    </TypeIdentifier>
-  </Class>
-  <Class Name="Crystal.Plot2D.PlotterBase" Collapsed="true">
-    <Position X="1.75" Y="2" Width="1.75" />
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
-    <TypeIdentifier>
-      <HashCode>AMIUAxAAgAHMIBRUTEAMKIdQAQQJjmIYkWRAyhITBDA=</HashCode>
+      <HashCode>AMIUAxgAgADMIDRUTEAMKIdQAQQJjWIYkWRAyhITBDA=</HashCode>
       <FileName>Common\PlotterBase.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Crystal.Plot2D.Plotter" Collapsed="true">
-    <Position X="4.25" Y="2" Width="1.25" />
+  <Class Name="Crystal.Plot2D.Plotter">
+    <Position X="7" Y="2" Width="2.5" />
     <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
       <Compartment Name="Nested Types" Collapsed="false" />
     </Compartments>
+    <NestedTypes>
+      <Enum Name="Crystal.Plot2D.Plotter.AxisType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Plotter.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
     <TypeIdentifier>
       <HashCode>IQAAAAGGBQAAAUQuAAAUAgQAEAAAAAQZQEEQAABBAIA=</HashCode>
       <FileName>Plotter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.TimeChartPlotter">
+    <Position X="6.75" Y="12.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>TimeChartPlotter.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

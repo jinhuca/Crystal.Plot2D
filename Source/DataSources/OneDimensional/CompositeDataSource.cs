@@ -68,11 +68,7 @@ public class CompositeDataSource : IPointDataSource
   #region IPointSource Members
 
   public event EventHandler DataChanged;
-  protected void RaiseDataChanged()
-  {
-    DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
-  }
-
+  protected void RaiseDataChanged() => DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
   public IPointEnumerator GetEnumerator(DependencyObject context) => new CompositeEnumerator(dataSource: this, context: context);
 
   #endregion

@@ -19,7 +19,7 @@ internal static class ScreenshotHelper
   /// <returns>BitmapEncoder object</returns>
   internal static BitmapEncoder GetEncoderByExtension(string extension)
   {
-    switch (extension)
+    switch(extension)
     {
       case "bmp":
         return new BmpBitmapEncoder();
@@ -45,7 +45,7 @@ internal static class ScreenshotHelper
   internal static BitmapSource CreateScreenshot(UIElement uiElement, Int32Rect screenshotSource)
   {
     Window window = Window.GetWindow(dependencyObject: uiElement);
-    if (window == null)
+    if(window == null)
     {
       return CreateElementScreenshot(uiElement: uiElement);
     }
@@ -74,18 +74,18 @@ internal static class ScreenshotHelper
   {
     bool measureValid = uiElement.IsMeasureValid;
 
-    if (!measureValid)
+    if(!measureValid)
     {
       double width = 300;
       double height = 300;
 
-      if (uiElement is FrameworkElement frElement)
+      if(uiElement is FrameworkElement frElement)
       {
-        if (!double.IsNaN(d: frElement.Width))
+        if(!double.IsNaN(d: frElement.Width))
         {
           width = frElement.Width;
         }
-        if (!double.IsNaN(d: frElement.Height))
+        if(!double.IsNaN(d: frElement.Height))
         {
           height = frElement.Height;
         }
@@ -120,31 +120,35 @@ internal static class ScreenshotHelper
 
   internal static void SaveBitmapToStream(BitmapSource bitmap, Stream stream, string fileExtension)
   {
-    if (bitmap == null)
+    if(bitmap == null)
     {
-      throw new ArgumentNullException(paramName: "bitmap");
+      throw new ArgumentNullException(paramName: nameof(bitmap));
     }
-    if (stream == null)
+    if(stream == null)
     {
-      throw new ArgumentNullException(paramName: "stream");
+      throw new ArgumentNullException(paramName: nameof(stream));
     }
-    if (string.IsNullOrEmpty(value: fileExtension))
+    if(string.IsNullOrEmpty(value: fileExtension))
     {
       throw new ArgumentException(message: Strings.Exceptions.ExtensionCannotBeNullOrEmpty, paramName: fileExtension);
     }
-    BitmapEncoder encoder = GetEncoderByExtension(extension: fileExtension);
-    encoder.Frames.Add(item: BitmapFrame.Create(source: bitmap, thumbnail: null, metadata: new BitmapMetadata(containerFormat: fileExtension.Trim(trimChar: '.')), colorContexts: null));
-    encoder.Save(stream: stream);
+    BitmapEncoder encoder_ = GetEncoderByExtension(extension: fileExtension);
+    encoder_.Frames.Add(item: BitmapFrame.Create(
+      source: bitmap, 
+      thumbnail: null, 
+      metadata: new BitmapMetadata(containerFormat: fileExtension.Trim(trimChar: '.')), 
+      colorContexts: null));
+    encoder_.Save(stream: stream);
   }
 
   internal static void SaveBitmapToFile(BitmapSource bitmap, string filePath)
   {
-    if (string.IsNullOrEmpty(value: filePath))
+    if(string.IsNullOrEmpty(value: filePath))
     {
-      throw new ArgumentException(message: Strings.Exceptions.FilePathCannotbeNullOrEmpty, paramName: "filePath");
+      throw new ArgumentException(message: Strings.Exceptions.FilePathCannotbeNullOrEmpty, paramName: nameof(filePath));
     }
 
-    if (bitmap.IsDownloading)
+    if(bitmap.IsDownloading)
     {
       pendingBitmaps[key: bitmap] = filePath;
       bitmap.DownloadCompleted += OnBitmapDownloadCompleted;
@@ -152,23 +156,21 @@ internal static class ScreenshotHelper
     }
 
     string dirPath = System.IO.Path.GetDirectoryName(path: filePath);
-    if (!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
+    if(!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
     {
       Directory.CreateDirectory(path: dirPath);
     }
 
-    bool fileExistedBefore = File.Exists(path: filePath);
+    bool fileExistedBefore_ = File.Exists(path: filePath);
     try
     {
-      using (FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write))
-      {
-        string extension = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
-        SaveBitmapToStream(bitmap: bitmap, stream: fs, fileExtension: extension);
-      }
+      using FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write);
+      string extension_ = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
+      SaveBitmapToStream(bitmap: bitmap, stream: fs, fileExtension: extension_);
     }
-    catch (ArgumentException)
+    catch(ArgumentException)
     {
-      if (!fileExistedBefore && File.Exists(path: filePath))
+      if(!fileExistedBefore_ && File.Exists(path: filePath))
       {
         try
         {
@@ -177,7 +179,7 @@ internal static class ScreenshotHelper
         catch { }
       }
     }
-    catch (IOException exc)
+    catch(IOException exc)
     {
       Debug.WriteLine(message: "Exception while saving bitmap to file: " + exc.Message);
     }
@@ -186,15 +188,15 @@ internal static class ScreenshotHelper
   public static void SaveStreamToFile(Stream stream, string filePath)
   {
     string dirPath = System.IO.Path.GetDirectoryName(path: filePath);
-    if (!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
+    if(!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
     {
       Directory.CreateDirectory(path: dirPath);
     }
 
-    using (FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write))
+    using(FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write))
     {
       string extension = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
-      if (stream.CanSeek)
+      if(stream.CanSeek)
       {
         stream.Seek(offset: 0, origin: SeekOrigin.Begin);
       }

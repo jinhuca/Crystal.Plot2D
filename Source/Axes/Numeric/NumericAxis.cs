@@ -25,9 +25,9 @@ public class NumericAxis : AxisBase<double>
   /// <param name="maxValue">The value of axis type, corresponding to maximal viewport value.</param>
   public override void SetConversion(double min, double minValue, double max, double maxValue)
   {
-    var conversion = new NumericConversion(min: min, minValue: minValue, max: max, maxValue: maxValue);
+    var conversion_ = new NumericConversion(min: min, minValue: minValue, max: max, maxValue: maxValue);
 
-    ConvertFromDouble = conversion.FromDouble;
-    ConvertToDouble = conversion.ToDouble;
+    ConvertFromDouble = conversion_.FromDouble;
+    ConvertToDouble = conversion_.ToDouble;
   }
 }
