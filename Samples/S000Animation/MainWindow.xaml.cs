@@ -12,13 +12,13 @@ namespace S000Animation
   public partial class MainWindow : Window
   {
     double phase = 0;
-    readonly double[] animatedX = new double[1000];
-    readonly double[] animatedY = new double[1000];
-    EnumerableDataSource<double> animatedDataSource = null;
+    private readonly double[] animatedX = new double[1000];
+    private readonly double[] animatedY = new double[1000];
+    private EnumerableDataSource<double> animatedDataSource = null;
 
-    readonly Header chartHeader = new Header();
-    TextBlock headerContent = new TextBlock();
-    readonly DispatcherTimer timer = new DispatcherTimer();
+    private readonly Header chartHeader = new Header();
+    private TextBlock headerContent = new TextBlock();
+    private readonly DispatcherTimer timer = new DispatcherTimer();
 
     public MainWindow()
     {
@@ -28,19 +28,24 @@ namespace S000Animation
 
     private void InitializeChart()
     {
-      headerContent = new TextBlock() { FontSize = 24, Text = "Phase = 0.00", HorizontalAlignment = HorizontalAlignment.Center };
+      headerContent = new TextBlock
+      {
+        FontSize = 24,
+        Text = "Phase = 0.00",
+        HorizontalAlignment = HorizontalAlignment.Center
+      };
       chartHeader.Content = headerContent;
       plotter.Children.Add(chartHeader);
     }
 
     private void Window_Loaded(object sender, RoutedEventArgs e)
     {
-      for (int i = 0; i < animatedX.Length; i++)
+      for(int i = 0; i < animatedX.Length; i++)
       {
         animatedX[i] = 2 * Math.PI * i / animatedX.Length;
         animatedY[i] = Math.Sin(animatedX[i]);
       }
-      EnumerableDataSource<double> xSrc = new EnumerableDataSource<double>(animatedX);
+      var xSrc = new EnumerableDataSource<double>(animatedX);
       xSrc.XMapping = x => x;
       //xSrc.SetXMapping(x => x);
       animatedDataSource = new EnumerableDataSource<double>(animatedY);
@@ -48,8 +53,11 @@ namespace S000Animation
       animatedDataSource.YMapping = y => y;
 
       var lineGraph_ = new LineGraph();
-      
-      plotter.AddLineGraph(new CompositeDataSource(xSrc, animatedDataSource), new Pen(Brushes.Magenta, 3), new PenDescription("Sin(x + phase)"));
+
+      plotter.AddLineGraph(
+        new CompositeDataSource(xSrc, animatedDataSource),
+        new Pen(Brushes.Magenta, 3),
+        new PenDescription("Sin(x + phase)"));
 
       timer.Interval = TimeSpan.FromMilliseconds(10);
       timer.Tick += AnimatedPlot_Timer;
@@ -61,11 +69,11 @@ namespace S000Animation
     private void AnimatedPlot_Timer(object? sender, EventArgs e)
     {
       phase += 0.01;
-      if (phase > 2 * Math.PI)
+      if(phase > 2 * Math.PI)
       {
         phase -= 2 * Math.PI;
       }
-      for (int i = 0; i < animatedX.Length; i++)
+      for(var i = 0; i < animatedX.Length; i++)
       {
         animatedY[i] = Math.Cos(animatedX[i] + phase);
       }

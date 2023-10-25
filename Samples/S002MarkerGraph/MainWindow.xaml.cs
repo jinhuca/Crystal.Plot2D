@@ -26,7 +26,10 @@ namespace S002MarkerGraph
 
       for (int i = 0; i < 1000; i++)
       {
-        table.Rows.Add(Math.Sin(i / 100.0), DateTime.Now + new TimeSpan(0, 0, i), i,
+        table.Rows.Add(
+          Math.Sin(i / 100.0), 
+          DateTime.Now + new TimeSpan(0, 0, i), 
+          i,
           Math.Sqrt(i / 100.0),
           Math.Cos(i / 100.0));
       }

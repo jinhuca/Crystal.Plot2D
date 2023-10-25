@@ -34,7 +34,7 @@ public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
   private static void OnDataSourceChangedCallback(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     var graph = (PointsGraphBase)d;
-    if (e.NewValue != e.OldValue)
+    if(e.NewValue != e.OldValue)
     {
       graph.DetachDataSource(source: e.OldValue as IPointDataSource);
       graph.AttachDataSource(source: e.NewValue as IPointDataSource);
@@ -44,7 +44,7 @@ public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
 
   private void AttachDataSource(IPointDataSource source)
   {
-    if (source != null)
+    if(source != null)
     {
       source.DataChanged += OnDataChanged;
     }
@@ -52,7 +52,7 @@ public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
 
   private void DetachDataSource(IPointDataSource source)
   {
-    if (source != null)
+    if(source != null)
     {
       source.DataChanged -= OnDataChanged;
     }
@@ -72,22 +72,20 @@ public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
 
   protected virtual void OnDataSourceChanged(DependencyPropertyChangedEventArgs args)
   {
-    var newDataSource = (IPointDataSource)args.NewValue;
-    if (newDataSource != null)
+    var newDataSource_ = (IPointDataSource)args.NewValue;
+    if(newDataSource_ != null)
     {
-      UpdateBounds(dataSource: newDataSource);
+      UpdateBounds(dataSource: newDataSource_);
     }
     Update();
   }
 
   private void UpdateBounds(IPointDataSource dataSource)
   {
-    if (Plotter != null)
-    {
-      var transform = GetTransform();
-      DataRect bounds = BoundsHelper.GetViewportBounds(dataPoints: dataSource.GetPoints(), transform: transform.DataTransform);
-      Viewport2D.SetContentBounds(obj: this, value: bounds);
-    }
+    if (Plotter == null) return;
+    var transform_ = GetTransform();
+    var bounds_ = BoundsHelper.GetViewportBounds(dataPoints: dataSource.GetPoints(), transform: transform_.DataTransform);
+    Viewport2D.SetContentBounds(obj: this, value: bounds_);
   }
 
   #endregion DataSource
@@ -100,26 +98,24 @@ public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
     get => _dataTransform;
     set
     {
-      if (_dataTransform != value)
-      {
-        _dataTransform = value;
-        Update();
-      }
+      if(_dataTransform == value) return;
+      _dataTransform = value;
+      Update();
     }
   }
 
   protected CoordinateTransform GetTransform()
   {
-    if (Plotter == null)
+    if(Plotter == null)
     {
       return null;
     }
-    var transform = Plotter.Viewport.Transform;
-    if (_dataTransform != null)
+    var transform_ = Plotter.Viewport.Transform;
+    if(_dataTransform != null)
     {
-      transform = transform.WithDataTransform(dataTransform: _dataTransform);
+      transform_ = transform_.WithDataTransform(dataTransform: _dataTransform);
     }
-    return transform;
+    return transform_;
   }
 
   #endregion
@@ -132,9 +128,11 @@ public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
     protected set => SetVisiblePoints(obj: this, value: value);
   }
 
-  public static ReadOnlyCollection<Point> GetVisiblePoints(DependencyObject obj) => (ReadOnlyCollection<Point>)obj.GetValue(dp: VisiblePointsProperty);
+  public static ReadOnlyCollection<Point> GetVisiblePoints(DependencyObject obj) 
+    => (ReadOnlyCollection<Point>)obj.GetValue(dp: VisiblePointsProperty);
 
-  public static void SetVisiblePoints(DependencyObject obj, ReadOnlyCollection<Point> value) => obj.SetValue(dp: VisiblePointsProperty, value: value);
+  public static void SetVisiblePoints(DependencyObject obj, ReadOnlyCollection<Point> value) 
+    => obj.SetValue(dp: VisiblePointsProperty, value: value);
 
   public static readonly DependencyProperty VisiblePointsProperty = DependencyProperty.RegisterAttached(
     name: nameof(VisiblePoints),
@@ -144,7 +142,7 @@ public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
 
   private static void OnVisiblePointsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    if (d is PointsGraphBase graph)
+    if(d is PointsGraphBase graph)
     {
       graph.RaiseVisiblePointsChanged();
     }

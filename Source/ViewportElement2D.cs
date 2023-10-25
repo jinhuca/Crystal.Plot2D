@@ -179,16 +179,22 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   #region Rendering & caching options
 
   protected object GetValueSync(DependencyProperty property) =>
-    Dispatcher.Invoke(priority: DispatcherPriority.Send, method: (DispatcherOperationCallback)delegate { return GetValue(dp: property); }, arg: property);
+    Dispatcher.Invoke(
+      priority: DispatcherPriority.Send, 
+      method: (DispatcherOperationCallback)delegate { return GetValue(dp: property); }, 
+      arg: property);
 
   protected void SetValueAsync(DependencyProperty property, object value)
-    => Dispatcher.BeginInvoke(priority: DispatcherPriority.Send, method: (SendOrPostCallback)delegate { SetValue(dp: property, value: value); }, arg: value);
+    => Dispatcher.BeginInvoke(
+      priority: DispatcherPriority.Send, 
+      method: (SendOrPostCallback)delegate { SetValue(dp: property, value: value); }, 
+      arg: value);
 
   private bool manualClip;
 
   /// <summary>
-  ///   Gets or sets a value indicating whether descendant graph class relies on autotic clipping by Viewport.Output or
-  ///   does its own clipping.
+  /// Gets or sets a value indicating whether descendant graph class relies on automatic clipping
+  /// by Viewport.Output or does its own clipping.
   /// </summary>
   public bool ManualClip
   {
@@ -297,7 +303,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
         else
         {
           thumbnail = null;
-          RaisePropertyChanged(propertyNamme: "Thumbnail");
+          RaisePropertyChanged(propertyName: nameof(Thumbnail));
         }
       }
     }
@@ -347,7 +353,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
     RenderTargetBitmap bmp = new(pixelWidth: (int)output.Width, pixelHeight: (int)output.Height, dpiX: 96, dpiY: 96, pixelFormat: PixelFormats.Pbgra32);
     bmp.Render(visual: visual);
     thumbnail = bmp;
-    RaisePropertyChanged(propertyNamme: "Thumbnail");
+    RaisePropertyChanged(propertyName: nameof(Thumbnail));
   }
 
   #endregion
@@ -430,8 +436,8 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
 
   public event PropertyChangedEventHandler PropertyChanged;
 
-  protected void RaisePropertyChanged([CallerMemberName] string propertyNamme = "")
-    => PropertyChanged?.Invoke(sender: this, e: new PropertyChangedEventArgs(propertyName: propertyNamme));
+  protected void RaisePropertyChanged([CallerMemberName] string propertyName = "")
+    => PropertyChanged?.Invoke(sender: this, e: new PropertyChangedEventArgs(propertyName: propertyName));
 
   #endregion
 }

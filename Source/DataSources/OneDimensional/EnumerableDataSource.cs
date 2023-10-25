@@ -10,8 +10,6 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   public EnumerableDataSource(IEnumerable<T> data) : base(data: data) { }
   public EnumerableDataSource(IEnumerable data) : base(data: data) { }
 
-  #region Property XYMapping
-
   private Func<T, Point> _xyMapping;
   public Func<T, Point> XYMapping
   {
@@ -23,12 +21,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     }
   }
 
-  #endregion Property XYMapping
-
-  #region Property XMapping
-
   private Func<T, double> _xMapping;
-
   [NotNull]
   public Func<T, double> XMapping
   {
@@ -40,12 +33,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     }
   }
 
-  #endregion Property XMapping
-
-  #region Property YMapping
-
   private Func<T, double> _yMapping;
-
   [NotNull]
   public Func<T, double> YMapping
   {
@@ -57,43 +45,37 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     }
   }
 
-  #endregion Property YMapping
-
-  /// <summary>
-  /// Method to apply a mapping from a object value to a DependencyProperty of DependencyObject.
-  /// </summary>
-  /// <param name="property">DependencyProperty</param>
-  /// <param name="mapping">mapping from value to dp</param>
   public void AddMapping(DependencyProperty property, Func<T, object> mapping)
   {
-    if (property == null)
+    if(property == null)
     {
       throw new ArgumentNullException(paramName: nameof(property));
     }
-    if (mapping == null)
+    if(mapping == null)
     {
       throw new ArgumentNullException(paramName: nameof(mapping));
     }
     Mappings.Add(item: new Mapping<T> { Property = property, F = mapping });
   }
 
-  public override IPointEnumerator GetEnumerator(DependencyObject context) => new EnumerablePointEnumerator<T>(_dataSource: this);
+  public override IPointEnumerator GetEnumerator(DependencyObject context)
+    => new EnumerablePointEnumerator<T>(dataSource: this);
 
   internal List<Mapping<T>> Mappings { get; } = new();
 
   internal void FillPoint(T elem, ref Point point)
   {
-    if (XYMapping != null)
+    if(XYMapping != null)
     {
       point = XYMapping(arg: elem);
     }
     else
     {
-      if (XMapping != null)
+      if(XMapping != null)
       {
         point.X = XMapping(arg: elem);
       }
-      if (YMapping != null)
+      if(YMapping != null)
       {
         point.Y = YMapping(arg: elem);
       }
@@ -102,12 +84,10 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
 
   internal void ApplyMappings(DependencyObject target, T elem)
   {
-    if (target != null)
+    if(target == null) return;
+    foreach(var mapping_ in Mappings)
     {
-      foreach (var mapping in Mappings)
-      {
-        target.SetValue(dp: mapping.Property, value: mapping.F(arg: elem));
-      }
+      target.SetValue(dp: mapping_.Property, value: mapping_.F(arg: elem));
     }
   }
 }

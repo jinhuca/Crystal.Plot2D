@@ -13,17 +13,19 @@ public sealed class EnumerablePointEnumerator<T> : IPointEnumerator
 
   public IEnumerator Enumerator { get; }
 
-  public EnumerablePointEnumerator(EnumerableDataSource<T> _dataSource)
+  public EnumerablePointEnumerator(EnumerableDataSource<T> dataSource)
   {
-    DataSource = _dataSource;
-    Enumerator = _dataSource.Data.GetEnumerator();
+    DataSource = dataSource;
+    Enumerator = dataSource.Data.GetEnumerator();
   }
 
   public bool MoveNext() => Enumerator.MoveNext();
 
-  public void GetCurrent(ref Point p) => DataSource.FillPoint(elem: (T)Enumerator.Current, point: ref p);
+  public void GetCurrent(ref Point p) 
+    => DataSource.FillPoint(elem: (T)Enumerator.Current, point: ref p);
 
-  public void ApplyMappings(DependencyObject target) => DataSource.ApplyMappings(target: target, elem: (T)Enumerator.Current);
+  public void ApplyMappings(DependencyObject target) 
+    => DataSource.ApplyMappings(target: target, elem: (T)Enumerator.Current);
 
   public void Dispose()
   {

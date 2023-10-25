@@ -16,22 +16,12 @@ public class ResolveLegendItemEventArgs : EventArgs
 public abstract class Description : FrameworkElement
 {
   private LegendItem legendItem;
-  public LegendItem LegendItem
-  {
-    get
-    {
-      if (legendItem == null)
-      {
-        legendItem = CreateLegendItem();
-      }
-      return legendItem;
-    }
-  }
+  public LegendItem LegendItem => legendItem ??= CreateLegendItem();
 
   private LegendItem CreateLegendItem()
   {
-    LegendItem item = CreateLegendItemCore();
-    return RaiseResolveLegendItem(uncustomizedLegendItem: item);
+    LegendItem item_ = CreateLegendItemCore();
+    return RaiseResolveLegendItem(uncustomizedLegendItem: item_);
   }
 
   protected virtual LegendItem CreateLegendItemCore()
@@ -48,11 +38,10 @@ public abstract class Description : FrameworkElement
       ResolveLegendItem(sender: this, e: e);
       return e.LegendItem;
     }
-    else
-    {
-      return uncustomizedLegendItem;
-    }
+
+    return uncustomizedLegendItem;
   }
+
   public UIElement ViewportElement { get; private set; }
 
   internal void Attach(UIElement element)

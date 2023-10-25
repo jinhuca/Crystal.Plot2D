@@ -12,14 +12,14 @@
     <Position X="1.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>KAgIAAAQkCAAUlAQAMAAACYAgAESAgRBAAAAAEgAAAA=</HashCode>
-      <FileName>Charts\Isolines\IsolineGraphBase.cs</FileName>
+      <FileName>Isolines\IsolineGraphBase.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Crystal.Plot2D.Charts.CursorCoordinateGraph" Collapsed="true">
     <Position X="3.5" Y="3.25" Width="2" />
     <TypeIdentifier>
-      <HashCode>gIiBAAAAAEAAkAAiEXYgQBQgAABBGABIQTAAEBGAARA=</HashCode>
-      <FileName>Charts\Navigation\CursorCoordinateGraph.xaml.cs</FileName>
+      <HashCode>gIiBAAAAAEAAkAAiEXYgQBQgAABBGABIQDAAEBGAARA=</HashCode>
+      <FileName>Navigation\CursorCoordinateGraph.xaml.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -27,16 +27,88 @@
     <Position X="6" Y="3.25" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AABHAAAMgQQAAACAAAAAAAQEABkAAAAAAAABAAAIAIA=</HashCode>
-      <FileName>Charts\Navigation\OldAxisNavigation.cs</FileName>
+      <FileName>Navigation\OldAxisNavigation.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Crystal.Plot2D.Charts.AxisNavigation" Collapsed="true">
     <Position X="9.25" Y="1.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AABAIAgCQAIAAACkAAAoIAwECRkACAAQiAABAAAIJoA=</HashCode>
-      <FileName>Charts\Navigation\AxisNavigation.cs</FileName>
+      <FileName>Navigation\AxisNavigation.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Crystal.Plot2D.PointsGraphBase" Collapsed="true">
+    <Position X="13.25" Y="4" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAEAYCAAAAAARkAAAJBAQBQMAAAAgASAAmAgAAAAAgA=</HashCode>
+      <FileName>Graphs\PointGraphBase.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Crystal.Plot2D.LineGraph" Collapsed="true">
+    <Position X="8.75" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AABEIIQIAAAASAIAAIAAAABAAAEQQAAAAAAAADgAAQA=</HashCode>
+      <FileName>Graphs\LineGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.ElementMarkerPointsGraph" Collapsed="true">
+    <Position X="11.75" Y="5.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAwIAAAIIAAQAAAEAACAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graphs\MarkerElementPointGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.MarkerGraph&lt;T&gt;" Collapsed="true">
+    <Position X="14.5" Y="5.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graphs\MarkerGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.MarkerPointsGraph" Collapsed="true">
+    <Position X="16.75" Y="5.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAIAAAAAAQAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Graphs\MarkerPointsGraph.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.ViewportElement2D" Collapsed="true">
+    <Position X="13.25" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQCCAwGAAAmgIIMIAQgCAAAgRAAKgCBAAIAJBoEhQg=</HashCode>
+      <FileName>ViewportElement2D.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Crystal.Plot2D.ResolveLegendItemEventArgs" Collapsed="true">
+    <Position X="5.75" Y="5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAQAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Descriptions\Description.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Description" Collapsed="true">
+    <Position X="3" Y="5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AQSAAAAAQAAAAAIEgAAAAAAAQIBAEAAAAgAEAAAAAAA=</HashCode>
+      <FileName>Descriptions\Description.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.StandardDescription" Collapsed="true">
+    <Position X="2.5" Y="6.5" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAAAAAAAAAAAAAAAAAAAAAEAABAgAAAAAAAAA=</HashCode>
+      <FileName>Descriptions\StandardDescription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.PenDescription" Collapsed="true">
+    <Position X="2.5" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAIAAAAACAAAAAAAIAAAAAAAAhAEAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Descriptions\PenDescription.cs</FileName>
+    </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

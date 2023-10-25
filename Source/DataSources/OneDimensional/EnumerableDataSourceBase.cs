@@ -24,9 +24,9 @@ public abstract class EnumerableDataSourceBase<T> : IPointDataSource
     set
     {
       data = value ?? throw new ArgumentNullException(paramName: nameof(value));
-      if (data is INotifyCollectionChanged observableCollection)
+      if (data is INotifyCollectionChanged observableCollection_)
       {
-        observableCollection.CollectionChanged += ObservableCollection_CollectionChanged;
+        observableCollection_.CollectionChanged += ObservableCollection_CollectionChanged;
       }
     }
   }

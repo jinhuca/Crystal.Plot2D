@@ -22,6 +22,15 @@ public static class PlotterBaseExtensions
 
   #region [-- Line graphs --]
 
+  public static LineGraph AddLineGraph(this PlotterBase plotter, IPointDataSource pointDataSource)
+  {
+    return AddLineGraph(
+      plotter,
+      pointDataSource,
+      new Pen { Brush = new SolidColorBrush(Colors.Black), Thickness = 1 },
+      new PenDescription(nameof(pointDataSource)));
+  }
+
   /// <summary>
   /// Extended method to add a LineGraph with a PointDataSource, and optional pen parameters.
   /// </summary>
@@ -30,26 +39,28 @@ public static class PlotterBaseExtensions
   /// <param name="linePen">Optional OutlinePen</param>
   /// <param name="descriptionForPen">Optional descriptionForPen for OutlinePen</param>
   /// <returns>LineGraph</returns>
-  public static LineGraph AddLineGraph(this PlotterBase plotter, IPointDataSource pointSource, Pen linePen, PenDescription descriptionForPen)
+  public static LineGraph AddLineGraph(
+    this PlotterBase plotter, 
+    IPointDataSource pointSource, 
+    Pen linePen, 
+    PenDescription descriptionForPen)
   {
     if (pointSource == null)
     {
       throw new ArgumentNullException(paramName: nameof(pointSource));
     }
-
-    linePen ??= new Pen { Brush = new SolidColorBrush(color: Colors.Red), Thickness = 1 };
+    linePen ??= new Pen { Brush = new SolidColorBrush(color: Colors.Black), Thickness = 1 };
     descriptionForPen ??= new PenDescription(description: nameof(pointSource));
-
-    var lineGraph = new LineGraph
+    var lineGraph_ = new LineGraph
     {
       DataSource = pointSource,
       LinePen = linePen,
       Description = descriptionForPen
     };
-    Legend.SetDescription(obj: lineGraph, value: descriptionForPen.Brief);
-    lineGraph.Filters.Add(item: new FrequencyFilter());
-    plotter.Children.Add(content: lineGraph);
-    return lineGraph;
+    Legend.SetDescription(obj: lineGraph_, value: descriptionForPen.Brief);
+    lineGraph_.Filters.Add(item: new FrequencyFilter());
+    plotter.Children.Add(content: lineGraph_);
+    return lineGraph_;
   }
 
   #endregion [-- Line graphs --]
@@ -64,21 +75,33 @@ public static class PlotterBaseExtensions
   /// <param name="marker">Marker to add</param>
   /// <param name="description">Description</param>
   /// <returns></returns>
-  public static MarkerPointsGraph AddMarkerPointsGraph(this PlotterBase plotter, IPointDataSource pointSource,
-    PointMarker marker = default, Description description = default)
+  public static MarkerPointsGraph AddMarkerPointsGraph(
+    this PlotterBase plotter, 
+    IPointDataSource pointSource,
+    PointMarker marker = default, 
+    Description description = default)
   {
     if (pointSource == null)
     {
       throw new ArgumentNullException(paramName: nameof(pointSource));
     }
     marker ??= new CirclePointMarker();
-    var markerPointGraph = new MarkerPointsGraph { DataSource = pointSource, Marker = marker, Description = description };
-    plotter.Children.Add(content: markerPointGraph);
-    return markerPointGraph;
+    var markerPointGraph_ = new MarkerPointsGraph
+    {
+      DataSource = pointSource, 
+      Marker = marker, 
+      Description = description
+    };
+    plotter.Children.Add(content: markerPointGraph_);
+    return markerPointGraph_;
   }
 
-  public static MarkerPointsGraph AddMarkerGraph<TMarker>(this PlotterBase plotter, IPointDataSource pointSource,
-    TMarker marker = default, Description description = default) where TMarker : PointMarker
+  public static MarkerPointsGraph AddMarkerGraph<TMarker>(
+    this PlotterBase plotter, 
+    IPointDataSource pointSource,
+    TMarker marker = default, 
+    Description description = default) 
+    where TMarker : PointMarker
   {
     var res = new MarkerPointsGraph();
     switch (marker)
@@ -99,6 +122,7 @@ public static class PlotterBaseExtensions
   /// Adds one dimensional graph to plotter. This method allows you to specify
   /// as much graph parameters as possible.
   /// </summary>
+  /// <param name="plotter"></param>
   /// <param name="pointSource">Source of points to plot</param>
   /// <param name="penForDrawingLine">OutlinePen to draw the line. If pen is null no lines will be drawn</param>
   /// <param name="marker">Marker to draw on points. If marker is null no points will be drawn</param>
@@ -163,6 +187,7 @@ public static class PlotterBaseExtensions
   /// Adds one dimensional graph to plotter. This method allows you to specify
   /// as much graph parameters as possible.
   /// </summary>
+  /// <param name="plotter"></param>
   /// <param name="pointSource">Source of points to plot</param>
   /// <param name="marker">Marker to draw on points. If marker is null no points will be drawn</param>
   /// <param name="description">Description of graph to put in legend</param>
@@ -208,14 +233,14 @@ public static class PlotterBaseExtensions
     //  plotter.Children.Add(graph);
     //}
 
-    var markerGraph = new ElementMarkerPointsGraph
+    var markerGraph_ = new ElementMarkerPointsGraph
     {
       DataSource = pointSource,
       Marker = marker,
       Description = description
     };
-    plotter.Children.Add(content: markerGraph);
-    return markerGraph;
+    plotter.Children.Add(content: markerGraph_);
+    return markerGraph_;
   }
 
   #endregion [-- LineAndMarker graphs --]
