@@ -13,60 +13,41 @@ public static class DataSourceExtensions
 
   public static EnumerableDataSource<T> AsXDataSource<T>(this IEnumerable<T> collection)
   {
-    if (typeof(T) == typeof(double))
+    if(typeof(T) == typeof(double))
     {
       return ((IEnumerable<double>)collection).AsXDataSource() as EnumerableDataSource<T>;
     }
-    else if (typeof(T) == typeof(float))
+    if(typeof(T) == typeof(float))
     {
-      return ((IEnumerable<float>)collection).AsXDataSource() as EnumerableDataSource<T>;
+      return ((IEnumerable<float>)collection).AsXDataSource<float>() as EnumerableDataSource<T>;
     }
     return new EnumerableXDataSource<T>(data: collection);
   }
-
-  public static EnumerableDataSource<float> AsXDataSource(this IEnumerable<float> collection)
-  {
-    EnumerableXDataSource<float> ds = new(data: collection);
-    ds.XMapping = f => f;
-    return ds;
-  }
-
+  
   public static EnumerableDataSource<T> AsYDataSource<T>(this IEnumerable<T> collection)
   {
-    if (typeof(T) == typeof(double))
+    if(typeof(T) == typeof(double))
     {
       return ((IEnumerable<double>)collection).AsYDataSource() as EnumerableDataSource<T>;
     }
-    else if (typeof(T) == typeof(float))
+    if(typeof(T) == typeof(float))
     {
-      return ((IEnumerable<float>)collection).AsYDataSource() as EnumerableDataSource<T>;
+      return ((IEnumerable<float>)collection).AsYDataSource<float>() as EnumerableDataSource<T>;
     }
     return new EnumerableYDataSource<T>(data: collection);
   }
 
-  public static EnumerableDataSource<double> AsXDataSource(this IEnumerable<double> collection)
-  {
-    EnumerableXDataSource<double> ds = new(data: collection);
-    ds.XMapping = x => x;
-    //ds.SetXMapping(x => x);
-    return ds;
-  }
-
-  public static EnumerableDataSource<double> AsYDataSource(this IEnumerable<double> collection)
-  {
-    EnumerableYDataSource<double> ds = new(data: collection);
-    ds.YMapping = y => y;
-    //ds.SetYMapping(y => y);
-    return ds;
-  }
+  public static EnumerableDataSource<float> AsXDataSource(this IEnumerable<float> collection)
+    => new(data: collection) { XMapping = f => f };
 
   public static EnumerableDataSource<float> AsYDataSource(this IEnumerable<float> collection)
-  {
-    EnumerableYDataSource<float> ds = new(data: collection);
-    ds.YMapping = f => f;
-    //ds.SetYMapping(f => f);
-    return ds;
-  }
+    => new(data: collection) { YMapping = f => f };
+
+  public static EnumerableDataSource<double> AsXDataSource(this IEnumerable<double> collection) 
+    => new(data: collection) { XMapping = x => x };
+
+  public static EnumerableDataSource<double> AsYDataSource(this IEnumerable<double> collection) 
+    => new(data: collection) { YMapping = y => y };
 
   public static CompositeDataSource Join(this IPointDataSource ds1, IPointDataSource ds2)
     => new(dataSources: new[] { ds1, ds2 });

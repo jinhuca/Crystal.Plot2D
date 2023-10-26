@@ -11,6 +11,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   public EnumerableDataSource(IEnumerable data) : base(data: data) { }
 
   private Func<T, Point> _xyMapping;
+  [NotNull]
   public Func<T, Point> XYMapping
   {
     get => _xyMapping;
@@ -22,7 +23,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   }
 
   private Func<T, double> _xMapping;
-  [NotNull]
+  [NotNull] 
   public Func<T, double> XMapping
   {
     get => _xMapping;
@@ -34,7 +35,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   }
 
   private Func<T, double> _yMapping;
-  [NotNull]
+  [NotNull] 
   public Func<T, double> YMapping
   {
     get => _yMapping;

@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace Crystal.Plot2D;
 
-public abstract class PointsGraphBase : ViewportElement2D, IOneDimensionalChart
+public abstract class PointsGraphBase : Viewport2DElement, IOneDimensionalChart
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="PointsGraphBase"/> class.

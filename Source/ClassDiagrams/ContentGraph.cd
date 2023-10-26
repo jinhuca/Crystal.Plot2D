@@ -74,11 +74,11 @@
       <FileName>Graphs\MarkerPointsGraph.cs</FileName>
     </TypeIdentifier>
   </Class>
-  <Class Name="Crystal.Plot2D.ViewportElement2D" Collapsed="true">
+  <Class Name="Crystal.Plot2D.Viewport2DElement" Collapsed="true">
     <Position X="13.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQCCAwGAAAmgIIMIAQgCAAAgRAAKgCBAAIAJBoEhQg=</HashCode>
-      <FileName>ViewportElement2D.cs</FileName>
+      <FileName>Viewport2DElement.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
@@ -108,6 +108,21 @@
     <TypeIdentifier>
       <HashCode>AAAIAAAAACAAAAAAAIAAAAAAAAhAEAAAAAAAAAAAAAA=</HashCode>
       <FileName>Descriptions\PenDescription.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Viewport2D" Collapsed="true">
+    <Position X="8.25" Y="8" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>JEKJCABCAJkpBAKQKQYKDRaAptEMAZhYEAITQCDQIAA=</HashCode>
+      <FileName>Viewport2D.cs</FileName>
+      <NewMemberFileName>Viewport2D.AttachedProperties.cs</NewMemberFileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.Viewport2dDeferredPanningProxy" Collapsed="true">
+    <Position X="7.75" Y="9.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACAAEAAAAABAAEAAQAACAAAgAAAAACAAAAAAA=</HashCode>
+      <FileName>Viewport2dDeferredPanningProxy.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Font Name="Segoe UI" Size="9" />

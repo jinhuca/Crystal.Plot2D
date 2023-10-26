@@ -13,7 +13,7 @@ using System.Windows.Shapes;
 
 namespace Crystal.Plot2D;
 
-public abstract class BitmapBasedGraph : ViewportElement2D, IDisposable
+public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
 {
   static BitmapBasedGraph()
   {

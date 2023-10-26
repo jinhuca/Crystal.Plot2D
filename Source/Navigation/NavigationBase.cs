@@ -6,7 +6,7 @@ namespace Crystal.Plot2D;
 ///<summary>
 /// Base class for all navigation providers.
 ///</summary>
-public abstract class NavigationBase : ViewportElement2D
+public abstract class NavigationBase : Viewport2DElement
 {
   protected NavigationBase()
   {

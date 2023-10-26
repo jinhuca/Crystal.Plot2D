@@ -4,7 +4,8 @@
     <Position X="1.5" Y="1" Width="1.5" />
     <TypeIdentifier>
       <HashCode>JEKJCABCAJkpBAKQKQYKDRaAptEMAZhYEAITQCDQIAA=</HashCode>
-      <FileName>Viewport2D.AttachedProperties.cs</FileName>
+      <FileName>Viewport2D.cs</FileName>
+      <NewMemberFileName>Viewport2D.AttachedProperties.cs</NewMemberFileName>
     </TypeIdentifier>
   </Class>
   <Class Name="Crystal.Plot2D.Viewport2dDeferredPanningProxy" Collapsed="true">

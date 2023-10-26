@@ -1,0 +1,17 @@
+﻿<Window x:Class="E00HelloPlotter.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p2="http://schemas.crystal.com/Plot2D"
+        xmlns:local="clr-namespace:E00HelloPlotter"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+  <Grid>
+    <p2:Plotter x:Name="_plotter">
+      <p2:Header FontSize="20" Content="Simple Chart"/>
+      <p2:VerticalAxisTitle Content="Sine value"/>
+      <p2:HorizontalAxisTitle Content="Sine argument"/>
+    </p2:Plotter>
+  </Grid>
+</Window>

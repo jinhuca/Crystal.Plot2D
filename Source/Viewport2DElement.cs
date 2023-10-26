@@ -10,10 +10,10 @@ using System.Windows.Threading;
 namespace Crystal.Plot2D;
 
 /// <summary>
-/// ViewportElement2D is intended to be a child of Viewport2D. 
-/// Specifics of ViewportElement2D is Viewport2D attached property.
+/// Viewport2DElement is intended to be a child of Viewport2D. 
+/// Specifics of Viewport2DElement is Viewport2D attached property.
 /// </summary>
-public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INotifyPropertyChanged
+public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INotifyPropertyChanged
 {
   protected virtual Panel GetHostPanel(PlotterBase plotter) => plotter.CentralGrid;
 
@@ -171,7 +171,7 @@ public abstract class ViewportElement2D : FrameworkElement, IPlotterElement, INo
   public static readonly DependencyProperty IsLayerProperty = DependencyProperty.Register(
     name: nameof(IsLayer),
     propertyType: typeof(bool),
-    ownerType: typeof(ViewportElement2D),
+    ownerType: typeof(Viewport2DElement),
     typeMetadata: new FrameworkPropertyMetadata(defaultValue: false));
 
   #endregion

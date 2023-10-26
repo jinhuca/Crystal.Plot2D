@@ -16,8 +16,8 @@ namespace Crystal.Plot2D;
 public class Viewport2D : DependencyObject
 {
   /// <summary>
-  ///   This counter is a part of workaround for endless axis resize loop. 
-  ///   It is reset on Viewport property assignment and on entire plotter resize.
+  /// This counter is a part of workaround for endless axis resize loop. 
+  /// It is reset on Viewport property assignment and on entire plotter resize.
   /// </summary>
   internal int UpdateIterationCount { get; set; }
 
