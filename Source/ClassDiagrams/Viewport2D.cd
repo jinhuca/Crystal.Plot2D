@@ -19,5 +19,90 @@
     <Position X="3.75" Y="2.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
+  <Class Name="Crystal.Plot2D.ViewportConstraint" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAEAAAABAAAAAABAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\ViewportConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.DataHeightConstraint" Collapsed="true">
+    <Position X="0.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABBIAACACAAAAAAAAAAAAIAAAAAAAACAAAA=</HashCode>
+      <FileName>ViewportConstraints\DataHeightConstraint.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="Crystal.Plot2D.DateTimeHorizontalAxisConstraint" Collapsed="true">
+    <Position X="3" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\DateTimeHorizontalAxisConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.DateTimeVerticalAxisConstraint" Collapsed="true">
+    <Position X="5.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AEAAAAAAQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\DateTimeVerticalAxisConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.DomainConstraint" Collapsed="true">
+    <Position X="7.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAACAAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\DomainConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.FollowWidthConstraint" Collapsed="true">
+    <Position X="9.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAQAAAAEAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\FollowWidthConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.InjectionDelegateConstraint" Collapsed="true">
+    <Position X="12" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAACAAAAAAAAAAAAAAAAAAAAAAAAAAARAA=</HashCode>
+      <FileName>ViewportConstraints\InjectionDelegateConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.MaximalSizeConstraint" Collapsed="true">
+    <Position X="14.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAAAAAAAAAACAAAAAgAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\MaximalSizeConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.MinimalSizeConstraint" Collapsed="true">
+    <Position X="16.5" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACAAAAAgBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\MinimalSizeConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.PhysicalProportionsConstraint" Collapsed="true">
+    <Position X="18.75" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAACAAAAAgAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\PhysicalProportionsConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.ProportionsConstraint" Collapsed="true">
+    <Position X="21" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAAAABAAAAAAAAAAEAAAAAAAAAAAA=</HashCode>
+      <FileName>ViewportConstraints\ProportionsConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="Crystal.Plot2D.ScaleInjectionConstraint" Collapsed="true">
+    <Position X="23.25" Y="6.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAQBAAAJAgAAAAAAAAAIAAAABAAAAAAAAAAAABACA=</HashCode>
+      <FileName>ViewportConstraints\ScaleInjectionConstraint.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

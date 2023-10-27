@@ -1,6 +1,8 @@
 ﻿using Crystal.Plot2D.DataSources;
 using Crystal.Plot2D;
 using System;
+using System.Collections.ObjectModel;
+using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
@@ -10,6 +12,10 @@ namespace E002UpdateDataSources
   public partial class MainWindow
   {
     private readonly DispatcherTimer _timer;
+    private ObservableCollection<Point> _data = new();
+    private EnumerableDataSource<double> _xDataSource;
+    private EnumerableDataSource<double> _yDataSource;
+    private CompositeDataSource _compositeDataSource;
 
     public MainWindow()
     {
@@ -22,11 +28,10 @@ namespace E002UpdateDataSources
     {
     }
 
-    private CompositeDataSource compositeDataSource;
-
     private void MainWindow_OnLoaded(object sender, RoutedEventArgs e)
     {
       InitializePlotter();
+
     }
 
     private void InitializePlotter()
@@ -43,20 +48,23 @@ namespace E002UpdateDataSources
           y_[i_] = Math.Sin(x_[i_]) * 5;
         }
 
-        var xDataSource_ = x_.AsXDataSource();
-        var yDataSource_ = y_.AsYDataSource();
-        compositeDataSource = new CompositeDataSource(xDataSource_, yDataSource_);
+        _xDataSource = x_.AsXDataSource();
+        _yDataSource = y_.AsYDataSource();
+        _compositeDataSource = new CompositeDataSource(_xDataSource, _yDataSource);
+
         var pen_ = new Pen { Brush = new SolidColorBrush(Colors.OrangeRed), Thickness = 1.5 };
         var penDescription_ = new PenDescription("Sine");
 
         _plotter.AddLineGraph(
-          compositeDataSource,
+          _compositeDataSource,
           pen_,
           penDescription_
         );
 
         _plotter.FitToView();
+        Thread.Sleep(5000);
       });
     }
+
   }
 }

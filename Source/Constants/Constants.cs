@@ -3,7 +3,7 @@
 public static class Constants
 {
   public const double DoubleMinimum = 0.01d;
-
+  public const double FloatComparisonTolerance = 1.0e-3;
   public const string ThemeUri = @"/Crystal.Plot2D;component/Themes/Generic.xaml";
   public const string LegendResourceUri = @"/Crystal.Plot2D;component/LegendItems/LegendResources.xaml";
   public const string NavigationResourceUri = @"/Crystal.Plot2D;component/Navigation/LongOperationsIndicatorResources.xaml";
