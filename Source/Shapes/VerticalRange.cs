@@ -12,10 +12,10 @@ public sealed class VerticalRange : RangeHighlight
     var transform = Plotter.Viewport.Transform;
     var visible = Plotter.Viewport.Visible;
 
-    var p1Top = new Point(x: Value1, y: visible.YMin).DataToScreen(transform: transform);
-    var p1Bottom = new Point(x: Value1, y: visible.YMax).DataToScreen(transform: transform);
-    var p2Top = new Point(x: Value2, y: visible.YMin).DataToScreen(transform: transform);
-    var p2Bottom = new Point(x: Value2, y: visible.YMax).DataToScreen(transform: transform);
+    var p1Top = new Point(x: StartValue, y: visible.YMin).DataToScreen(transform: transform);
+    var p1Bottom = new Point(x: StartValue, y: visible.YMax).DataToScreen(transform: transform);
+    var p2Top = new Point(x: EndValue, y: visible.YMin).DataToScreen(transform: transform);
+    var p2Bottom = new Point(x: EndValue, y: visible.YMax).DataToScreen(transform: transform);
 
     LineGeometry1.StartPoint = p1Top;
     LineGeometry1.EndPoint = p1Bottom;

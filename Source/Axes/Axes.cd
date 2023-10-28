@@ -142,5 +142,13 @@
       <FileName>Axes\Integer\VerticalIntegerAxis.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Crystal.Plot2D.AxisGrid">
+    <Position X="1" Y="2.25" Width="2.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAKAgAIGAAACIEAAAiACBCABgAABYQAAACAAQgEEA=</HashCode>
+      <FileName>Axes\AxisGrid.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

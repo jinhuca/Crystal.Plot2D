@@ -173,16 +173,16 @@ public abstract class RangeHighlight : Control, IPlotterElement
   /// <summary>
   /// Gets or sets the first value determining position of rectangle in viewport coordinates.
   /// </summary>
-  /// <value>The value1.</value>
-  public double Value1
+  /// <value>The StartValue.</value>
+  public double StartValue
   {
-    get => (double)GetValue(dp: Value1Property);
-    set => SetValue(dp: Value1Property, value: value);
+    get => (double)GetValue(dp: StartValueProperty);
+    set => SetValue(dp: StartValueProperty, value: value);
   }
 
-  public static readonly DependencyProperty Value1Property =
+  public static readonly DependencyProperty StartValueProperty =
     DependencyProperty.Register(
-      name: nameof(Value1),
+      name: nameof(StartValue),
       propertyType: typeof(double),
       ownerType: typeof(RangeHighlight),
       typeMetadata: new FrameworkPropertyMetadata(defaultValue: 0.0, propertyChangedCallback: OnValueChanged));
@@ -196,16 +196,16 @@ public abstract class RangeHighlight : Control, IPlotterElement
   /// <summary>
   /// Gets or sets the second value determining position of rectangle in viewport coordinates.
   /// </summary>
-  /// <value>The value2.</value>
-  public double Value2
+  /// <value>The EndValue.</value>
+  public double EndValue
   {
-    get => (double)GetValue(dp: Value2Property);
-    set => SetValue(dp: Value2Property, value: value);
+    get => (double)GetValue(dp: EndValueProperty);
+    set => SetValue(dp: EndValueProperty, value: value);
   }
 
-  public static readonly DependencyProperty Value2Property =
+  public static readonly DependencyProperty EndValueProperty =
     DependencyProperty.Register(
-      name: nameof(Value2),
+      name: nameof(EndValue),
       propertyType: typeof(double),
       ownerType: typeof(RangeHighlight),
       typeMetadata: new FrameworkPropertyMetadata(defaultValue: 0.0, propertyChangedCallback: OnValueChanged));

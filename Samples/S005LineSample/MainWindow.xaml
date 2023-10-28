@@ -9,8 +9,8 @@
   <c:Plotter>
     <c:RectangleHighlight Bounds="0.1, 0.6, 0.15, 0.2" StrokeThickness="1" Fill="MidnightBlue" ToolTip="Sample region"/>
 
-    <c:HorizontalRange Value1="0.12" Value2="0.21" Fill="Blue"/>
-    <c:VerticalRange Value1="0.1" Value2="0.16" Fill="Red" Stroke="Black" StrokeThickness="3" StrokeStartLineCap="Square"
+    <c:HorizontalRange StartValue="0.12" EndValue="0.21" Fill="Blue"/>
+    <c:VerticalRange StartValue="0.1" EndValue="0.16" Fill="Red" Stroke="Black" StrokeThickness="3" StrokeStartLineCap="Square"
                        StrokeDashCap="Triangle" StrokeDashArray="3"/>
 
     <c:HorizontalLine Value="0.5" Stroke="Red" StrokeThickness="3" StrokeDashArray="1"/>

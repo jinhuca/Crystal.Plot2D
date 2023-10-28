@@ -138,7 +138,7 @@ public abstract class AxisControl<T> : AxisControlBase
     };
 
     AxisPlacement placement = GetBetterPlacement(placement: this.placement);
-    ControlTemplate template = (ControlTemplate)resources[key: TemplateKey + placement.ToString()];
+    ControlTemplate template = (ControlTemplate)resources[key: TemplateKey + placement];
     Verify.AssertNotNull(obj: template);
     var content = (FrameworkElement)template.LoadContent();
 
@@ -361,7 +361,7 @@ public abstract class AxisControl<T> : AxisControlBase
     {
       if (value == null)
       {
-        throw new ArgumentNullException(paramName: "value");
+        throw new ArgumentNullException(paramName: nameof(value));
       }
 
       if (ticksProvider != value)
@@ -482,7 +482,7 @@ public abstract class AxisControl<T> : AxisControlBase
     {
       if (value == null)
       {
-        throw new ArgumentNullException(paramName: "value");
+        throw new ArgumentNullException(paramName: nameof(value));
       }
 
       if (labelProvider != value)

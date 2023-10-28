@@ -3,6 +3,7 @@ using System;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace Crystal.Plot2D;
 
@@ -42,8 +43,12 @@ public class Plotter : PlotterBase
     _mouseNavigation = new MouseNavigation();
     _keyboardNavigation = new KeyboardNavigation();
     _defaultContextMenu = new DefaultContextMenu();
-    horizontalAxisNavigation = new AxisNavigation { Placement = AxisPlacement.Bottom };
-    verticalAxisNavigation = new AxisNavigation { Placement = AxisPlacement.Left };
+    _horizontalAxisNavigation = new AxisNavigation { Placement = AxisPlacement.Bottom };
+    _verticalAxisNavigation = new AxisNavigation { Placement = AxisPlacement.Left };
+
+    AxisGrid.GridPath.Stroke = Brushes.LightGreen;
+    AxisGrid.GridPath.StrokeDashArray = new DoubleCollection { 2 };
+    AxisGrid.GridPath.StrokeThickness = 1;
 
     Children.AddMany(
       children: new IPlotterElement[]
@@ -54,8 +59,8 @@ public class Plotter : PlotterBase
         _mouseNavigation,
         _keyboardNavigation,
         _defaultContextMenu,
-        horizontalAxisNavigation,
-        verticalAxisNavigation,
+        _horizontalAxisNavigation,
+        _verticalAxisNavigation,
         new LongOperationsIndicator(),
         Legend
       });
@@ -67,7 +72,9 @@ public class Plotter : PlotterBase
     SetAllChildrenAsDefault();
   }
 
-  protected Plotter(PlotterLoadMode loadMode) : base(loadMode: loadMode) { }
+  protected Plotter(PlotterLoadMode loadMode) : base(loadMode: loadMode) 
+  {
+  }
 
   #region Default charts
 
@@ -88,6 +95,7 @@ public class Plotter : PlotterBase
   public KeyboardNavigation KeyboardNavigation => _keyboardNavigation;
 
   private readonly DefaultContextMenu _defaultContextMenu;
+  
   /// <summary>
   /// Gets the default context menu of Plotter.
   /// </summary>
@@ -95,21 +103,23 @@ public class Plotter : PlotterBase
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
   public DefaultContextMenu DefaultContextMenu => _defaultContextMenu;
 
-  private readonly AxisNavigation horizontalAxisNavigation;
+  private readonly AxisNavigation _horizontalAxisNavigation;
+  
   /// <summary>
   /// Gets the default horizontal axis navigation of Plotter.
   /// </summary>
   /// <value>The horizontal axis navigation.</value>
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
-  public AxisNavigation HorizontalAxisNavigation => horizontalAxisNavigation;
+  public AxisNavigation HorizontalAxisNavigation => _horizontalAxisNavigation;
 
-  private readonly AxisNavigation verticalAxisNavigation;
+  private readonly AxisNavigation _verticalAxisNavigation;
+
   /// <summary>
   /// Gets the default vertical axis navigation of Plotter.
   /// </summary>
   /// <value>The vertical axis navigation.</value>
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
-  public AxisNavigation VerticalAxisNavigation => verticalAxisNavigation;
+  public AxisNavigation VerticalAxisNavigation => _verticalAxisNavigation;
 
   /// <summary>
   /// Gets the default axis grid of Plotter.

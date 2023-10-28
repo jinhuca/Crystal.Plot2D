@@ -119,8 +119,10 @@ public class AxisGrid : ContentControl, IPlotterElement
 
   private readonly double gridBrushThickness = 1;
 
-  private readonly Path path = new();
+  public Path GridPath { get; set; } = new();
+
   private readonly Canvas canvas = new();
+
   /// <summary>
   /// Initializes a new instance of the <see cref="AxisGrid"/> class.
   /// </summary>
@@ -130,8 +132,9 @@ public class AxisGrid : ContentControl, IPlotterElement
 
     canvas.ClipToBounds = true;
 
-    path.Stroke = Brushes.LightGray;
-    path.StrokeThickness = gridBrushThickness;
+    GridPath.Stroke = Brushes.LightGray;
+    GridPath.StrokeThickness = gridBrushThickness;
+    GridPath.StrokeDashArray = new DoubleCollection { 2 };
 
     Content = canvas;
   }
@@ -155,7 +158,7 @@ public class AxisGrid : ContentControl, IPlotterElement
     DrawMinorHorizontalTicks();
     DrawMinorVerticalTicks();
 
-    if (path.Data is GeometryGroup prevGroup)
+    if (GridPath.Data is GeometryGroup prevGroup)
     {
       foreach (LineGeometry geometry in prevGroup.Children)
       {
@@ -194,8 +197,8 @@ public class AxisGrid : ContentControl, IPlotterElement
       }
     }
 
-    canvas.Children.Add(element: path);
-    path.Data = group;
+    canvas.Children.Add(element: GridPath);
+    GridPath.Data = group;
   }
 
   private void DrawMinorVerticalTicks()

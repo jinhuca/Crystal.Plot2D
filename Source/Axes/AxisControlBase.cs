@@ -6,8 +6,6 @@ namespace Crystal.Plot2D.Charts;
 
 public abstract class AxisControlBase : ContentControl
 {
-  #region Properties
-
   public HorizontalAlignment LabelsHorizontalAlignment
   {
     get => (HorizontalAlignment)GetValue(dp: LabelsHorizontalAlignmentProperty);
@@ -34,6 +32,4 @@ public abstract class AxisControlBase : ContentControl
     typeMetadata: new FrameworkPropertyMetadata(defaultValue: VerticalAlignment.Center));
 
   public abstract Path TicksPath { get; }
-
-  #endregion // end of Properties
 }

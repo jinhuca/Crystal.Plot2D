@@ -62,7 +62,6 @@ namespace E002UpdateDataSources
         );
 
         _plotter.FitToView();
-        Thread.Sleep(5000);
       });
     }
 

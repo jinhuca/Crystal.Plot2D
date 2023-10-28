@@ -22,7 +22,7 @@
       <d3:VerticalAxis></d3:VerticalAxis>
       <!--<d3:CursorCoordinateGraph ></d3:CursorCoordinateGraph>-->
       <d3:AxisNavigation Placement="Bottom" ></d3:AxisNavigation>
-      <d3:VerticalRange Value1="0.1" Value2="0.16" Fill="LightBlue"/>
+      <d3:VerticalRange StartValue="0.1" EndValue="0.16" Fill="LightBlue"/>
     </d3:Plotter>
   </Grid>
 </Window>

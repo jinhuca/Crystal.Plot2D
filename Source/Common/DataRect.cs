@@ -80,8 +80,8 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   {
     xMin = Math.Min(val1: point1.X, val2: point2.X);
     yMin = Math.Min(val1: point1.Y, val2: point2.Y);
-    width = Math.Max(val1: (double)(Math.Max(val1: point1.X, val2: point2.X) - xMin), val2: 0);
-    height = Math.Max(val1: (double)(Math.Max(val1: point1.Y, val2: point2.Y) - yMin), val2: 0);
+    width = Math.Max(val1: Math.Max(val1: point1.X, val2: point2.X) - xMin, val2: 0);
+    height = Math.Max(val1: Math.Max(val1: point1.Y, val2: point2.Y) - yMin, val2: 0);
   }
 
   /// <summary>
@@ -100,7 +100,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <param name="height">The height.</param>
   public DataRect(double xMin, double yMin, double width, double height)
   {
-    if ((width < 0) || (height < 0))
+    if (width < 0 || height < 0)
     {
       throw new ArgumentException(message: Strings.Exceptions.WidthAndHeightCannotBeNegative);
     }
@@ -151,16 +151,16 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return;
     }
 
-    DataRect res = new();
+    DataRect res_ = new();
 
-    double x = Math.Max(val1: XMin, val2: rect.XMin);
-    double y = Math.Max(val1: YMin, val2: rect.YMin);
-    res.width = Math.Max(val1: Math.Min(val1: XMax, val2: rect.XMax) - x, val2: 0.0);
-    res.height = Math.Max(val1: Math.Min(val1: YMax, val2: rect.YMax) - y, val2: 0.0);
-    res.xMin = x;
-    res.yMin = y;
+    var x_ = Math.Max(val1: XMin, val2: rect.XMin);
+    var y_ = Math.Max(val1: YMin, val2: rect.YMin);
+    res_.width = Math.Max(val1: Math.Min(val1: XMax, val2: rect.XMax) - x_, val2: 0.0);
+    res_.height = Math.Max(val1: Math.Min(val1: YMax, val2: rect.YMax) - y_, val2: 0.0);
+    res_.xMin = x_;
+    res_.yMin = y_;
 
-    this = res;
+    this = res_;
   }
 
   public bool IntersectsWith(DataRect rect)
@@ -170,11 +170,9 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return false;
     }
 
-    return ((((rect.XMin <= XMax) && (rect.XMax >= XMin)) && (rect.YMax >= YMin)) && (rect.YMin <= YMax));
+    return rect.XMin <= XMax && rect.XMax >= XMin && rect.YMax >= YMin && rect.YMin <= YMax;
   }
-
-  private double xMin;
-  private double yMin;
+  
   private double width;
   private double height;
 
@@ -185,6 +183,8 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   ///   <c>true</c> if this instance is empty; otherwise, <c>false</c>.
   /// </value>
   public bool IsEmpty => width < 0;
+
+  private double yMin;
 
   /// <summary>
   ///   Gets the bottom.
@@ -214,6 +214,8 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// </value>
   public double YMax => IsEmpty ? double.PositiveInfinity : yMin + height;
 
+  private double xMin;
+
   /// <summary>
   ///   Gets the minimal x value.
   /// </summary>
@@ -229,6 +231,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       {
         throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
+
       xMin = value;
     }
   }
@@ -256,6 +259,7 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       {
         throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
+
       xMin = value.X;
       yMin = value.Y;
     }
@@ -300,10 +304,12 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       {
         throw new InvalidOperationException(message: Strings.Exceptions.CannotModifyEmptyDataRect);
       }
+
       if (value < 0)
       {
         throw new ArgumentOutOfRangeException(paramName: Strings.Exceptions.DataRectSizeCannotBeNegative);
       }
+
       width = value;
     }
   }
@@ -333,13 +339,16 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   private static DataRect CreateEmptyRect()
   {
-    DataRect rect = new();
-    rect.xMin = double.PositiveInfinity;
-    rect.yMin = double.PositiveInfinity;
-    rect.width = double.NegativeInfinity;
-    rect.height = double.NegativeInfinity;
-    return rect;
+    DataRect rect_ = new()
+    {
+      xMin = double.PositiveInfinity,
+      yMin = double.PositiveInfinity,
+      width = double.NegativeInfinity,
+      height = double.NegativeInfinity
+    };
+    return rect_;
   }
+
   public static DataRect Infinite { get; } = new(xMin: double.MinValue / 2, yMin: double.MinValue / 2, width: double.MaxValue, height: double.MaxValue);
 
   #region Object overrides
@@ -363,9 +372,9 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return false;
     }
 
-    DataRect other = (DataRect)obj;
+    var other_ = (DataRect)obj;
 
-    return Equals(other: other);
+    return Equals(other: other_);
   }
 
   /// <summary>
@@ -427,12 +436,12 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
 
   public static bool EqualEps(DataRect rect1, DataRect rect2, double eps)
   {
-    double width = Math.Min(val1: rect1.Width, val2: rect2.Width);
-    double height = Math.Min(val1: rect1.Height, val2: rect2.Height);
-    return Math.Abs(value: rect1.XMin - rect2.XMin) < width * eps &&
-         Math.Abs(value: rect1.XMax - rect2.XMax) < width * eps &&
-         Math.Abs(value: rect1.YMin - rect2.YMin) < height * eps &&
-         Math.Abs(value: rect1.YMax - rect2.YMax) < height * eps;
+    var width_ = Math.Min(val1: rect1.Width, val2: rect2.Width);
+    var height_ = Math.Min(val1: rect1.Height, val2: rect2.Height);
+    return Math.Abs(value: rect1.XMin - rect2.XMin) < width_ * eps &&
+         Math.Abs(value: rect1.XMax - rect2.XMax) < width_ * eps &&
+         Math.Abs(value: rect1.YMin - rect2.YMin) < height_ * eps &&
+         Math.Abs(value: rect1.YMax - rect2.YMax) < height_ * eps;
   }
 
   #endregion
@@ -453,10 +462,10 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return other.IsEmpty;
     }
 
-    return xMin == other.xMin &&
-        width == other.width &&
-        yMin == other.yMin &&
-        height == other.height;
+    return Math.Abs(xMin - other.xMin) < Constants.FloatComparisonTolerance && 
+           Math.Abs(width - other.width) < Constants.FloatComparisonTolerance && 
+           Math.Abs(yMin - other.yMin) < Constants.FloatComparisonTolerance && 
+           Math.Abs(height - other.height) < Constants.FloatComparisonTolerance;
   }
 
   #endregion
@@ -562,35 +571,34 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
     if (IsEmpty)
     {
       this = rect;
-      return;
     }
     else if (!rect.IsEmpty)
     {
-      double minX = Math.Min(val1: xMin, val2: rect.xMin);
-      double minY = Math.Min(val1: yMin, val2: rect.yMin);
+      var minX_ = Math.Min(val1: xMin, val2: rect.xMin);
+      var minY_ = Math.Min(val1: yMin, val2: rect.yMin);
 
-      if (rect.width == double.PositiveInfinity || width == double.PositiveInfinity)
+      if (double.IsPositiveInfinity(rect.width) || double.IsPositiveInfinity(width))
       {
         width = double.PositiveInfinity;
       }
       else
       {
-        double maxX = Math.Max(val1: XMax, val2: rect.XMax);
-        width = Math.Max(val1: maxX - minX, val2: 0.0);
+        var maxX_ = Math.Max(val1: XMax, val2: rect.XMax);
+        width = Math.Max(val1: maxX_ - minX_, val2: 0.0);
       }
 
-      if (rect.height == double.PositiveInfinity || height == double.PositiveInfinity)
+      if (double.IsPositiveInfinity(rect.height) || double.IsPositiveInfinity(height))
       {
         height = double.PositiveInfinity;
       }
       else
       {
-        double maxY = Math.Max(val1: YMax, val2: rect.YMax);
-        height = Math.Max(val1: maxY - minY, val2: 0.0);
+        var maxY_ = Math.Max(val1: YMax, val2: rect.YMax);
+        height = Math.Max(val1: maxY_ - minY_, val2: 0.0);
       }
 
-      xMin = minX;
-      yMin = minY;
+      xMin = minX_;
+      yMin = minY_;
     }
   }
 
@@ -620,9 +628,9 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return "Empty";
     }
 
-    char listSeparator = TokenizerHelper.GetNumericListSeparator(provider: provider);
+    var listSeparator_ = TokenizerHelper.GetNumericListSeparator(provider: provider);
     return string.Format(provider: provider, format: "{1:" + format + "}{0}{2:" + format + "}{0}{3:" + format + "}{0}{4:" + format + "}",
-      args: new object[] { listSeparator, xMin, yMin, width, height });
+      args: new object[] { listSeparator_, xMin, yMin, width, height });
   }
 
   /// <summary>
@@ -640,40 +648,40 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <returns>DataRect, parsed from the given input string.</returns>
   public static DataRect Parse(string source)
   {
-    DataRect rect;
-    IFormatProvider cultureInfo = CultureInfo.GetCultureInfo(name: "en-us");
+    DataRect rect_;
+    IFormatProvider cultureInfo_ = CultureInfo.GetCultureInfo(name: "en-us");
 
+    var values_ = source.Split(separator: ',');
     if (source == "Empty")
     {
-      rect = Empty;
+      rect_ = Empty;
     }
     else
     {
       // format X,Y,Width,Height
-      string[] values = source.Split(separator: ',');
-      if (values.Length == 4)
+      if (values_.Length == 4)
       {
-        rect = new DataRect(
-          xMin: Convert.ToDouble(value: values[0], provider: cultureInfo),
-          yMin: Convert.ToDouble(value: values[1], provider: cultureInfo),
-          width: Convert.ToDouble(value: values[2], provider: cultureInfo),
-          height: Convert.ToDouble(value: values[3], provider: cultureInfo)
+        rect_ = new DataRect(
+          xMin: Convert.ToDouble(value: values_[0], provider: cultureInfo_),
+          yMin: Convert.ToDouble(value: values_[1], provider: cultureInfo_),
+          width: Convert.ToDouble(value: values_[2], provider: cultureInfo_),
+          height: Convert.ToDouble(value: values_[3], provider: cultureInfo_)
           );
       }
       else
       {
         // format XMin, YMin - XMax, YMax
-        values = source.Split(separator: new char[] { ',', ' ' }, options: StringSplitOptions.RemoveEmptyEntries);
-        rect = Create(
-          xMin: Convert.ToDouble(value: values[0], provider: cultureInfo),
-          yMin: Convert.ToDouble(value: values[1], provider: cultureInfo),
-          xMax: Convert.ToDouble(value: values[2], provider: cultureInfo),
-          yMax: Convert.ToDouble(value: values[3], provider: cultureInfo)
+        values_ = source.Split(separator: new[] { ',', ' ' }, options: StringSplitOptions.RemoveEmptyEntries);
+        rect_ = Create(
+          xMin: Convert.ToDouble(value: values_[0], provider: cultureInfo_),
+          yMin: Convert.ToDouble(value: values_[1], provider: cultureInfo_),
+          xMax: Convert.ToDouble(value: values_[2], provider: cultureInfo_),
+          yMax: Convert.ToDouble(value: values_[3], provider: cultureInfo_)
           );
       }
     }
 
-    return rect;
+    return rect_;
   }
 
   #region IFormattable Members

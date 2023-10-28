@@ -5,9 +5,28 @@
         xmlns:p2="http://schemas.crystal.com/Plot2D"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:E003StartToEnd"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        mc:Ignorable="d" Background="DarkGray"
+        Title="MainWindow" Height="500" Width="1200">
+  <Window.Resources>
+    <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
+      <GradientStop Color="#FF393939" Offset="0.0"/>
+      <GradientStop Color="#FF292929" Offset="0.5"/>
+      <GradientStop Color="#FF393939" Offset="1.0"/>
+    </LinearGradientBrush>
+  </Window.Resources>
   <Grid>
-    <p2:Plotter x:Name="_plotter"/>
+    <p2:Plotter x:Name="_plotter" Background="{StaticResource BackgroundBrush}"
+                Foreground="White" Margin="20">
+      <p2:HorizontalAxisTitle Content="Time (second)" Margin="0,5"
+                              FontFamily="Impact" FontSize="20"/>
+      <p2:HorizontalAxisTitle Content="State" Margin="0,5" Placement="Top" HorizontalContentAlignment="Stretch"
+                              HorizontalAlignment="Stretch"
+                              FontFamily="Impact" FontSize="20"/>
+      <p2:VerticalAxisTitle Content="Temperature (C)" Margin="10,0" Background="DarkGreen"
+                            FontFamily="Impact" FontSize="20"/>
+      <p2:VerticalRange StartValue="0" EndValue="2" Fill="LightBlue"/>
+      <!--<p2:VerticalRange StartValue="2" EndValue="4" Fill="LightCoral"/>-->
+      <p2:VerticalRange StartValue="5" EndValue="8" Fill="Aquamarine"/>
+    </p2:Plotter>
   </Grid>
 </Window>

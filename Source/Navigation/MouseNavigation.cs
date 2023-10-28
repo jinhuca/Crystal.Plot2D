@@ -5,7 +5,9 @@ using System.Windows.Input;
 
 namespace Crystal.Plot2D;
 
-/// <summary>Provides common methods of mouse navigation around viewport</summary>
+/// <summary>
+/// Provides common methods of mouse navigation around viewport.
+/// </summary>
 public class MouseNavigation : NavigationBase
 {
   /// <summary>

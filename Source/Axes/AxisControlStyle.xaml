@@ -27,7 +27,6 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-
 			<Path Name="PART_TicksPath" Grid.Row="2" Stroke="Black">
 				<Path.LayoutTransform>
 					<MatrixTransform Matrix="1,0,0,-1.1,0,0"/>
