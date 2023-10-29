@@ -16,6 +16,9 @@ using Crystal.Plot2D;
 using System.Windows.Threading;
 using Crystal.Plot2D.DataSources;
 using System.Globalization;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Descriptions;
 
 namespace S004Layout;
 

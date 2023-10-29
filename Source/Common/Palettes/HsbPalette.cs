@@ -1,8 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 public sealed class HsbPalette : IPalette
 {

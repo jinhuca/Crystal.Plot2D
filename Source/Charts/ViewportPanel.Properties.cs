@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
 
 namespace Crystal.Plot2D.Charts;
 
@@ -198,12 +199,12 @@ public partial class ViewportPanel
 
   protected static void OnLayoutPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    if (d is FrameworkElement uiElement)
+    if (d is FrameworkElement uiElement_)
     {
-      if (VisualTreeHelper.GetParent(reference: uiElement) is ViewportPanel panel)
+      if (VisualTreeHelper.GetParent(reference: uiElement_) is ViewportPanel panel_)
       {
         // invalidating not self arrange, but calling Arrange method of only that uiElement which has changed position
-        panel.InvalidatePosition(child: uiElement);
+        panel_.InvalidatePosition(child: uiElement_);
       }
     }
   }

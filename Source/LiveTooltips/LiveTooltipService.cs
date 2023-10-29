@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.LiveTooltips;
 
 public static class LiveToolTipService
 {
@@ -64,7 +65,7 @@ public static class LiveToolTipService
 
   private static void OnTooltipOpacityChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    LiveToolTip liveTooltip = GetLiveToolTip(obj: d);
+    var liveTooltip = GetLiveToolTip(obj: d);
     if (liveTooltip != null)
     {
       liveTooltip.Opacity = (double)e.NewValue;
@@ -97,7 +98,7 @@ public static class LiveToolTipService
 
   private static void OnToolTipChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    FrameworkElement source = (FrameworkElement)d;
+    var source = (FrameworkElement)d;
 
     if (e.NewValue == null)
     {
@@ -148,7 +149,7 @@ public static class LiveToolTipService
 
   private static void AddTooltipForElement(FrameworkElement source, LiveToolTip tooltip)
   {
-    AdornerLayer layer = AdornerLayer.GetAdornerLayer(visual: source);
+    var layer = AdornerLayer.GetAdornerLayer(visual: source);
 
     LiveToolTipAdorner adorner = new(adornedElement: source, tooltip: tooltip);
     layer.Add(adorner: adorner);
@@ -156,7 +157,7 @@ public static class LiveToolTipService
 
   private static void source_Loaded(object sender, RoutedEventArgs e)
   {
-    FrameworkElement source = (FrameworkElement)sender;
+    var source = (FrameworkElement)sender;
 
     if (source.IsLoaded)
     {
@@ -171,10 +172,10 @@ public static class LiveToolTipService
       return;
     }
 
-    LiveToolTip tooltip = GetLiveToolTip(obj: source);
+    var tooltip = GetLiveToolTip(obj: source);
 
-    Window window = Window.GetWindow(dependencyObject: source);
-    FrameworkElement child = source;
+    var window = Window.GetWindow(dependencyObject: source);
+    var child = source;
     FrameworkElement parent = null;
     if (window != null)
     {
@@ -182,28 +183,28 @@ public static class LiveToolTipService
       {
         parent = (FrameworkElement)VisualTreeHelper.GetParent(reference: child);
         child = parent;
-        var nameScope = NameScope.GetNameScope(dependencyObject: parent);
-        if (nameScope != null)
+        var nameScope_ = NameScope.GetNameScope(dependencyObject: parent ?? throw new InvalidOperationException());
+        if (nameScope_ != null)
         {
-          string nameScopeName = nameScope.ToString();
-          if (nameScopeName != "System.Windows.TemplateNameScope")
+          var nameScopeName_ = nameScope_.ToString();
+          if (nameScopeName_ != "System.Windows.TemplateNameScope")
           {
-            NameScope.SetNameScope(dependencyObject: tooltip, value: nameScope);
+            NameScope.SetNameScope(dependencyObject: tooltip, value: nameScope_);
             break;
           }
         }
       }
     }
 
-    var binding = BindingOperations.GetBinding(target: tooltip, dp: ContentControl.ContentProperty);
-    if (binding != null)
+    var binding_ = BindingOperations.GetBinding(target: tooltip, dp: ContentControl.ContentProperty);
+    if (binding_ != null)
     {
       BindingOperations.ClearBinding(target: tooltip, dp: ContentControl.ContentProperty);
-      BindingOperations.SetBinding(target: tooltip, dp: ContentControl.ContentProperty, binding: binding);
+      BindingOperations.SetBinding(target: tooltip, dp: ContentControl.ContentProperty, binding: binding_);
     }
 
-    Binding dataContextBinding = new() { Path = new PropertyPath(path: "DataContext"), Source = source };
-    tooltip.SetBinding(dp: FrameworkElement.DataContextProperty, binding: dataContextBinding);
+    Binding dataContextBinding_ = new() { Path = new PropertyPath(path: "DataContext"), Source = source };
+    tooltip.SetBinding(dp: FrameworkElement.DataContextProperty, binding: dataContextBinding_);
 
     tooltip.Owner = source;
     if (GetTooltipOpacity(obj: source) != (double)TooltipOpacityProperty.DefaultMetadata.DefaultValue)

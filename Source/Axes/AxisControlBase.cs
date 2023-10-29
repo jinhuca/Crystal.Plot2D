@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 public abstract class AxisControlBase : ContentControl
 {
@@ -31,5 +31,5 @@ public abstract class AxisControlBase : ContentControl
     ownerType: typeof(AxisControlBase),
     typeMetadata: new FrameworkPropertyMetadata(defaultValue: VerticalAlignment.Center));
 
-  public abstract Path TicksPath { get; }
+  public abstract Path TicksPath { get; set; }
 }

@@ -1,13 +1,14 @@
-﻿<d3:IsolineGraphBase x:Class="Crystal.Plot2D.Charts.IsolineTrackingGraph"
+﻿<isolines:IsolineGraphBase x:Class="Crystal.Plot2D.Isolines.IsolineTrackingGraph"
                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                      xmlns:d3="clr-namespace:Crystal.Plot2D.Charts"
-                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-  <d3:IsolineGraphBase.Style>
-    <Style TargetType="{x:Type d3:IsolineGraphBase}">
+                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                     xmlns:isolines="clr-namespace:Crystal.Plot2D.Isolines">
+  <isolines:IsolineGraphBase.Style>
+    <Style TargetType="{x:Type isolines:IsolineGraphBase}">
       <Setter Property="Cursor" Value="Cross"/>
       <Setter Property="StrokeThickness" Value="3"/>
     </Style>
-  </d3:IsolineGraphBase.Style>
+  </isolines:IsolineGraphBase.Style>
 
   <Canvas Name="content" Background="Transparent">
     <Grid Name="labelGrid" Visibility="Hidden" Panel.ZIndex="1">
@@ -16,4 +17,4 @@
       <TextBlock Name="textBlock" Margin="10,5,10,5"/>
     </Grid>
   </Canvas>
-</d3:IsolineGraphBase>
+</isolines:IsolineGraphBase>

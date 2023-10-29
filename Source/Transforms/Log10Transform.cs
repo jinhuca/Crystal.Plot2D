@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Transforms;
 
 /// <summary>
 /// Represents a logarithmic transform of both x- and y-values.
@@ -22,8 +23,8 @@ public sealed class Log10Transform : DataTransform
   /// </returns>
   public override Point DataToViewport(Point pt)
   {
-    double x = pt.X;
-    double y = pt.Y;
+    var x = pt.X;
+    var y = pt.Y;
 
     x = x < 0 ? double.MinValue : Math.Log10(d: x);
     y = y < 0 ? double.MinValue : Math.Log10(d: y);

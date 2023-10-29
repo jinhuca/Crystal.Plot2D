@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.TimeSpan;
 
-public class TimeSpanAxisControl : AxisControl<TimeSpan>
+public sealed class TimeSpanAxisControl : AxisControl<System.TimeSpan>
 {
   public TimeSpanAxisControl()
   {
@@ -11,6 +11,6 @@ public class TimeSpanAxisControl : AxisControl<TimeSpan>
 
     ConvertToDouble = time => time.Ticks;
 
-    Range = new Range<TimeSpan>(min: new TimeSpan(), max: new TimeSpan(hours: 1, minutes: 0, seconds: 0));
+    Range = new Range<System.TimeSpan>(min: new System.TimeSpan(), max: new System.TimeSpan(hours: 1, minutes: 0, seconds: 0));
   }
 }

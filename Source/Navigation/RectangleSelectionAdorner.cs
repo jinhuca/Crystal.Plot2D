@@ -2,7 +2,7 @@
 using System.Windows.Documents;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 ///<summary>
 /// Helper class to draw semitransparent rectangle over the selection area.
@@ -32,24 +32,25 @@ public sealed class RectangleSelectionAdorner : Adorner
         defaultValue: new SolidColorBrush(color: Color.FromArgb(a: 60, r: 100, g: 100, b: 100)),
         flags: FrameworkPropertyMetadataOptions.AffectsRender));
 
-  private Pen pen;
+  private Pen _pen;
+  
   public Pen Pen
   {
-    get => pen;
-    set => pen = value;
+    get => _pen;
+    set => _pen = value;
   }
 
   public RectangleSelectionAdorner(UIElement element)
     : base(adornedElement: element)
   {
-    pen = new Pen(brush: Brushes.Black, thickness: 1.0);
+    _pen = new Pen(brush: Brushes.Black, thickness: 1.0);
   }
 
   protected override void OnRender(DrawingContext dc)
   {
     if (border.HasValue)
     {
-      dc.DrawRectangle(brush: Fill, pen: pen, rectangle: border.Value);
+      dc.DrawRectangle(brush: Fill, pen: _pen, rectangle: border.Value);
     }
   }
 }

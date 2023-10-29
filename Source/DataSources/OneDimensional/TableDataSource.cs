@@ -1,11 +1,11 @@
 ﻿using System.Data;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 /// <summary>
 ///   Data source that extracts sequence of points and their attributes from DataTable.
 /// </summary>
-public class TableDataSource : EnumerableDataSource<DataRow>
+public sealed class TableDataSource : EnumerableDataSource<DataRow>
 {
   public TableDataSource(DataTable table) : base(data: table.Rows)
   {

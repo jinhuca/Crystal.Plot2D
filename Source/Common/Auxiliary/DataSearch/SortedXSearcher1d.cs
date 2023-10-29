@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary.DataSearch;
 
-internal class SortedXSearcher1d
+internal sealed class SortedXSearcher1d
 {
   public SortedXSearcher1d(IList<Point> _collection)
   {
@@ -22,7 +22,7 @@ internal class SortedXSearcher1d
       return SearchResult1d.Empty;
     }
 
-    int lastIndex = Collection.Count - 1;
+    var lastIndex = Collection.Count - 1;
 
     if (_x < Collection[index: 0].X)
     {
@@ -33,12 +33,12 @@ internal class SortedXSearcher1d
       return SearchResult1d.Empty;
     }
 
-    int startIndex = !_result.IsEmpty ? Math.Min(val1: _result.Index, val2: lastIndex) : 0;
+    var startIndex = !_result.IsEmpty ? Math.Min(val1: _result.Index, val2: lastIndex) : 0;
 
     // searching ascending
     if (Collection[index: startIndex].X < _x)
     {
-      for (int i = startIndex + 1; i <= lastIndex; i++)
+      for (var i = startIndex + 1; i <= lastIndex; i++)
       {
         if (Collection[index: i].X >= _x)
         {
@@ -48,7 +48,7 @@ internal class SortedXSearcher1d
     }
     else // searching descending
     {
-      for (int i = startIndex - 1; i >= 0; i--)
+      for (var i = startIndex - 1; i >= 0; i--)
       {
         if (Collection[index: i].X <= _x)
         {

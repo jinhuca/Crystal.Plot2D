@@ -1,6 +1,4 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows;
@@ -10,15 +8,19 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Graphs;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Charts;
 
 public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
 {
   static BitmapBasedGraph()
   {
-    Type thisType = typeof(BitmapBasedGraph);
-    BackgroundRenderer.UsesBackgroundRenderingProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: true));
+    var thisType_ = typeof(BitmapBasedGraph);
+    BackgroundRenderer.UsesBackgroundRenderingProperty.OverrideMetadata(forType: thisType_, typeMetadata: new FrameworkPropertyMetadata(defaultValue: true));
   }
 
   private int disposed;
@@ -75,14 +77,14 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
       return popup;
     }
 
-    foreach (var item in Plotter.Children)
+    foreach (var item_ in Plotter.Children)
     {
-      if (item is ViewportUIContainer)
+      if (item_ is ViewportUIContainer)
       {
-        ViewportUIContainer container = (ViewportUIContainer)item;
-        if (container.Content is PopupTip)
+        var container_ = (ViewportUIContainer)item_;
+        if (container_.Content is PopupTip)
         {
-          return popup = (PopupTip)container.Content;
+          return popup = (PopupTip)container_.Content;
         }
       }
     }
@@ -99,10 +101,10 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
   protected override void OnMouseMove(System.Windows.Input.MouseEventArgs e)
   {
     base.OnMouseMove(e: e);
-    var popup = GetPopupTipWindow();
-    if (popup.IsOpen)
+    var popup_ = GetPopupTipWindow();
+    if (popup_.IsOpen)
     {
-      popup.Hide();
+      popup_.Hide();
     }
 
     if (bitmapInvalidated)
@@ -110,42 +112,42 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
       return;
     }
 
-    Point p = e.GetPosition(relativeTo: this);
-    Point dp = p.ScreenToData(transform: Plotter.Transform);
+    var p_ = e.GetPosition(relativeTo: this);
+    var dp_ = p_.ScreenToData(transform: Plotter.Transform);
 
-    var tooltip = GetTooltipForPoint(point: p, visible: completedRequest.Visible, output: completedRequest.Output);
-    if (tooltip == null)
+    var tooltip_ = GetTooltipForPoint(point: p_, visible: completedRequest.Visible, output: completedRequest.Output);
+    if (tooltip_ == null)
     {
       return;
     }
 
-    popup.VerticalOffset = p.Y + 20;
-    popup.HorizontalOffset = p.X;
-    popup.ShowDelayed(delay: new TimeSpan(hours: 0, minutes: 0, seconds: 1));
+    popup_.VerticalOffset = p_.Y + 20;
+    popup_.HorizontalOffset = p_.X;
+    popup_.ShowDelayed(delay: new TimeSpan(hours: 0, minutes: 0, seconds: 1));
 
-    Grid grid = new();
-    Rectangle rect = new()
+    Grid grid_ = new();
+    Rectangle rect_ = new()
     {
       Stroke = Brushes.Black,
       Fill = SystemColors.InfoBrush
     };
 
-    StackPanel sp = new();
-    sp.Orientation = Orientation.Vertical;
-    sp.Children.Add(element: tooltip);
-    sp.Margin = new Thickness(left: 4, top: 2, right: 4, bottom: 2);
+    StackPanel sp_ = new();
+    sp_.Orientation = Orientation.Vertical;
+    sp_.Children.Add(element: tooltip_);
+    sp_.Margin = new Thickness(left: 4, top: 2, right: 4, bottom: 2);
 
-    var tb = new TextBlock
+    var tb_ = new TextBlock
     {
-      Text = $"Location: {dp.X:F2}, {dp.Y:F2}", //String.Format("Location: {0:F2}, {1:F2}", dp.X, dp.Y);
+      Text = $"Location: {dp_.X:F2}, {dp_.Y:F2}", //String.Format("Location: {0:F2}, {1:F2}", dp.X, dp.Y);
       Foreground = SystemColors.GrayTextBrush
     };
-    sp.Children.Add(element: tb);
+    sp_.Children.Add(element: tb_);
 
-    grid.Children.Add(element: rect);
-    grid.Children.Add(element: sp);
-    grid.Measure(availableSize: SizeHelper.CreateInfiniteSize());
-    popup.Child = grid;
+    grid_.Children.Add(element: rect_);
+    grid_.Children.Add(element: sp_);
+    grid_.Measure(availableSize: SizeHelper.CreateInfiniteSize());
+    popup_.Child = grid_;
   }
 
   protected override void OnMouseLeave(MouseEventArgs e)
@@ -164,8 +166,8 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
       return;
     }
 
-    Rect output = new(size: RenderSize);
-    CreateRenderTask(visible: Viewport.Visible, output: output);
+    Rect output_ = new(size: RenderSize);
+    CreateRenderTask(visible: Viewport.Visible, output: output_);
     InvalidateVisual();
   }
 
@@ -187,7 +189,7 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
 
   private void RenderThreadFunc()
   {
-    WaitHandle[] events = new WaitHandle[] { renderRequested, shutdownRequested };
+    WaitHandle[] events_ = { renderRequested, shutdownRequested };
     while (true)
     {
       lock (this)
@@ -201,7 +203,7 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
       }
       if (activeRequest == null)
       {
-        WaitHandle.WaitAny(waitHandles: events);
+        WaitHandle.WaitAny(waitHandles: events_);
         if (shutdownRequested.WaitOne(millisecondsTimeout: 0))
         {
           break;
@@ -211,15 +213,15 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
       {
         try
         {
-          BitmapSource result = (BitmapSource)RenderFrame(visible: activeRequest.Visible, output: activeRequest.Output);
-          if (result != null && !IsDisposed)
+          var result_ = (BitmapSource)RenderFrame(visible: activeRequest.Visible, output: activeRequest.Output);
+          if (result_ != null && !IsDisposed)
           {
-            Dispatcher.BeginInvoke(method: new RenderCompletionHandler(OnRenderCompleted), args: new RenderResult(request: activeRequest, result: result));
+            Dispatcher.BeginInvoke(method: new RenderCompletionHandler(OnRenderCompleted), args: new RenderResult(request: activeRequest, result: result_));
           }
         }
-        catch (Exception exc)
+        catch (Exception exc_)
         {
-          Trace.WriteLine(message: $"RenderRequest {activeRequest.RequestID} failed: {exc.Message}");
+          Trace.WriteLine(message: $"RenderRequest {activeRequest.RequestId} failed: {exc_.Message}");
         }
       }
     }
@@ -285,7 +287,7 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
   #endregion
 }
 
-public class RenderRequest
+public sealed class RenderRequest
 {
   private readonly int requestId;
   private readonly DataRect visible;
@@ -299,7 +301,7 @@ public class RenderRequest
     this.output = output;
   }
 
-  public int RequestID => requestId;
+  public int RequestId => requestId;
 
   public DataRect Visible => visible;
 
@@ -313,7 +315,7 @@ public class RenderRequest
   }
 }
 
-public class RenderResult
+public sealed class RenderResult
 {
   private readonly RenderRequest request;
   private readonly BitmapSource bitmap;

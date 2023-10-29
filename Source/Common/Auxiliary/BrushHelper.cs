@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class BrushHelper
 {
@@ -8,7 +8,7 @@ public static class BrushHelper
   ///   Creates a SolidColorBrush with random hue of its color.
   /// </summary>
   /// <returns>
-  ///   A SolicColorBrush with random hue of its color.
+  ///   A SolidColorBrush with random hue of its color.
   /// </returns>
   public static SolidColorBrush CreateBrushWithRandomHue()
   {
@@ -27,7 +27,7 @@ public static class BrushHelper
   /// <returns></returns>
   public static SolidColorBrush MakeTransparent(this SolidColorBrush brush, int alpha)
   {
-    Color color = brush.Color;
+    var color = brush.Color;
     color.A = (byte)alpha;
     return new SolidColorBrush(color: color);
   }

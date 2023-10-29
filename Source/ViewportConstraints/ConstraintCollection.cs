@@ -1,8 +1,8 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Specialized;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 ///   Represents a collection of <see cref="ViewportConstraint"/>s.
@@ -21,10 +21,7 @@ public sealed class ConstraintCollection : NotifiableCollection<ViewportConstrai
 
   protected override void OnItemAdding(ViewportConstraint item)
   {
-    if (item == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(item));
-    }
+    ArgumentNullException.ThrowIfNull(item);
   }
 
   protected override void OnItemAdded(ViewportConstraint item)

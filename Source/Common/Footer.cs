@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
-public class Footer : ContentControl, IPlotterElement
+public sealed class Footer : ContentControl, IPlotterElement
 {
   public Footer()
   {

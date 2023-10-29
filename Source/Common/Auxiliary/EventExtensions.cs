@@ -1,11 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class EventExtensions
 {
@@ -42,10 +41,7 @@ public static class EventExtensions
   [DebuggerHidden]
   public static void Raise(this NotifyCollectionChangedEventHandler @event, object sender, NotifyCollectionChangedEventArgs e)
   {
-    if (e == null)
-    {
-      throw new ArgumentNullException(paramName: "e");
-    }
+    ArgumentNullException.ThrowIfNull(e);
 
     @event?.Invoke(sender: sender, e: e);
   }

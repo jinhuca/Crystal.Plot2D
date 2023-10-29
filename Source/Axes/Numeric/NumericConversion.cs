@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D.Charts;
+﻿namespace Crystal.Plot2D.Axes.Numeric;
 
 internal sealed class NumericConversion
 {
@@ -18,14 +18,14 @@ internal sealed class NumericConversion
 
   public double FromDouble(double value)
   {
-    double ratio = (value - min) / length;
+    var ratio = (value - min) / length;
 
     return minValue + ratio * valueLength;
   }
 
   public double ToDouble(double value)
   {
-    double ratio = (value - minValue) / valueLength;
+    var ratio = (value - minValue) / valueLength;
 
     return min + length * ratio;
   }

@@ -1,9 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
-public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
+public abstract class DateTimeTicksProviderBase : ITicksProvider<System.DateTime>
 {
   public event EventHandler Changed;
   protected void RaiseChanged()
@@ -14,9 +15,9 @@ public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
     }
   }
 
-  protected static DateTime Shift(DateTime dateTime, DifferenceIn diff)
+  protected static System.DateTime Shift(System.DateTime dateTime, DifferenceIn diff)
   {
-    DateTime res = dateTime;
+    var res = dateTime;
 
     switch (diff)
     {
@@ -46,17 +47,17 @@ public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
     return res;
   }
 
-  protected static DateTime RoundDown(DateTime dateTime, DifferenceIn diff)
+  protected static System.DateTime RoundDown(System.DateTime dateTime, DifferenceIn diff)
   {
-    DateTime res = dateTime;
+    var res = dateTime;
 
     switch (diff)
     {
       case DifferenceIn.Year:
-        res = new DateTime(year: dateTime.Year, month: 1, day: 1);
+        res = new System.DateTime(year: dateTime.Year, month: 1, day: 1);
         break;
       case DifferenceIn.Month:
-        res = new DateTime(year: dateTime.Year, month: dateTime.Month, day: 1);
+        res = new System.DateTime(year: dateTime.Year, month: dateTime.Month, day: 1);
         break;
       case DifferenceIn.Day:
         res = dateTime.Date;
@@ -80,9 +81,9 @@ public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
     return res;
   }
 
-  protected static DateTime RoundUp(DateTime dateTime, DifferenceIn diff)
+  protected static System.DateTime RoundUp(System.DateTime dateTime, DifferenceIn diff)
   {
-    DateTime res = RoundDown(dateTime: dateTime, diff: diff);
+    var res = RoundDown(dateTime: dateTime, diff: diff);
 
     switch (diff)
     {
@@ -114,11 +115,11 @@ public abstract class DateTimeTicksProviderBase : ITicksProvider<DateTime>
 
   #region ITicksProvider<DateTime> Members
 
-  public abstract ITicksInfo<DateTime> GetTicks(Range<DateTime> range, int ticksCount);
+  public abstract ITicksInfo<System.DateTime> GetTicks(Range<System.DateTime> range, int ticksCount);
   public abstract int DecreaseTickCount(int ticksCount);
   public abstract int IncreaseTickCount(int ticksCount);
-  public abstract ITicksProvider<DateTime> MinorProvider { get; }
-  public abstract ITicksProvider<DateTime> MajorProvider { get; }
+  public abstract ITicksProvider<System.DateTime> MinorProvider { get; }
+  public abstract ITicksProvider<System.DateTime> MajorProvider { get; }
 
   #endregion
 }

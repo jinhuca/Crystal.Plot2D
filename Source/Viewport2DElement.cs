@@ -6,6 +6,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Descriptions;
+using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D;
 
@@ -318,21 +321,21 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
       return;
     }
 
-    Rect output = Viewport.Output;
+    var output = Viewport.Output;
     if (output.Width == 0 || output.Height == 0)
     {
       return;
     }
 
-    DataRect visible = Viewport.Visible;
+    var visible = Viewport.Visible;
     var transform = Viewport.Transform;
     DrawingVisual visual = new();
-    using (DrawingContext dc = visual.RenderOpen())
+    using (var dc = visual.RenderOpen())
     {
-      Point outputStart = visible.Location.DataToScreen(transform: transform);
-      double x = -outputStart.X + Offset.X;
-      double y = -outputStart.Y + output.Bottom - output.Top + Offset.Y;
-      bool translate = !manualTranslate && IsTranslated;
+      var outputStart = visible.Location.DataToScreen(transform: transform);
+      var x = -outputStart.X + Offset.X;
+      var y = -outputStart.Y + output.Bottom - output.Top + Offset.Y;
+      var translate = !manualTranslate && IsTranslated;
       if (translate)
       {
         dc.PushTransform(transform: new TranslateTransform(offsetX: x, offsetY: y));
@@ -367,7 +370,7 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
       return;
     }
 
-    Rect output = Viewport.Output;
+    var output = Viewport.Output;
     if (output.Width == 0 || output.Height == 0)
     {
       return;
@@ -388,11 +391,11 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
         Update();
       }
 
-      using (DrawingContext context = graphContents.Open())
+      using (var context = graphContents.Open())
       {
         if (renderTarget == RenderTo.Screen)
         {
-          RenderState state = CreateRenderState(renderVisible: Viewport.Visible, renderingType: RenderTo.Screen);
+          var state = CreateRenderState(renderVisible: Viewport.Visible, renderingType: RenderTo.Screen);
           OnRenderCore(dc: context, state: state);
         }
       }
@@ -411,7 +414,7 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
     {
       drawingContext.PushClip(clipGeometry: new RectangleGeometry(rect: output));
     }
-    bool translate = !manualTranslate && IsTranslated;
+    var translate = !manualTranslate && IsTranslated;
     if (translate)
     {
       drawingContext.PushTransform(transform: new TranslateTransform(offsetX: Offset.X, offsetY: Offset.Y));

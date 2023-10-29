@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.GenericLocational;
 
 public class GenericLocationalLabelProvider<TItem, TAxis> : LabelProviderBase<TAxis>
 {
@@ -12,21 +12,15 @@ public class GenericLocationalLabelProvider<TItem, TAxis> : LabelProviderBase<TA
 
   public GenericLocationalLabelProvider(IList<TItem> collection, Func<TItem, string> displayMemberMapping)
   {
-    if (collection == null)
-    {
-      throw new ArgumentNullException(paramName: "collection");
-    }
+    ArgumentNullException.ThrowIfNull(collection);
 
-    if (displayMemberMapping == null)
-    {
-      throw new ArgumentNullException(paramName: "displayMemberMapping");
-    }
+    ArgumentNullException.ThrowIfNull(displayMemberMapping);
 
     this.collection = collection;
     this.displayMemberMapping = displayMemberMapping;
   }
 
-  int startIndex;
+  private int startIndex;
   public override UIElement[] CreateLabels(ITicksInfo<TAxis> ticksInfo)
   {
     var ticks = ticksInfo.Ticks;
@@ -38,17 +32,17 @@ public class GenericLocationalLabelProvider<TItem, TAxis> : LabelProviderBase<TA
 
     startIndex = (int)ticksInfo.Info;
 
-    UIElement[] result = new UIElement[ticks.Length];
+    var result = new UIElement[ticks.Length];
 
     LabelTickInfo<TAxis> labelInfo = new() { Info = ticksInfo.Info };
 
-    for (int i = 0; i < result.Length; i++)
+    for (var i = 0; i < result.Length; i++)
     {
       var tick = ticks[i];
       labelInfo.Tick = tick;
       labelInfo.Index = i;
 
-      string labelText = GetString(tickInfo: labelInfo);
+      var labelText = GetString(tickInfo: labelInfo);
 
       TextBlock label = new() { Text = labelText };
 

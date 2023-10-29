@@ -2,8 +2,9 @@
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Represents a base class for simple shapes with viewport-bound coordinates.
@@ -12,7 +13,7 @@ public abstract class ViewportShape : Shape, IPlotterElement
 {
   static ViewportShape()
   {
-    Type type = typeof(ViewportShape);
+    var type = typeof(ViewportShape);
     StrokeProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Blue));
     StrokeThicknessProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: 2.0));
   }
@@ -40,7 +41,7 @@ public abstract class ViewportShape : Shape, IPlotterElement
   {
     plotter.CentralGrid.Children.Add(element: this);
 
-    PlotterBase plotter2d = (PlotterBase)plotter;
+    var plotter2d = (PlotterBase)plotter;
     this.plotter = plotter2d;
     plotter2d.Viewport.PropertyChanged += Viewport_PropertyChanged;
 
@@ -59,7 +60,7 @@ public abstract class ViewportShape : Shape, IPlotterElement
 
   void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
   {
-    PlotterBase plotter2d = (PlotterBase)plotter;
+    var plotter2d = (PlotterBase)plotter;
     plotter2d.Viewport.PropertyChanged -= Viewport_PropertyChanged;
     plotter.CentralGrid.Children.Remove(element: this);
 

@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
 /// Abstract class that extends PointMarker and contains marker property as OutlinePen, Brush and Diameter.

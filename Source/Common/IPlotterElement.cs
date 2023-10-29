@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D;
+﻿namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// Main interface of Plotter2D: each item that is going to be added to Plotter should implement it.

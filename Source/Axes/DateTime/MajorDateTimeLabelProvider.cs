@@ -1,28 +1,27 @@
-﻿using Crystal.Plot2D.Common;
-using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents a label provider for major ticks of <see cref="System.DateTime"/> type.
 /// </summary>
-public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
+public sealed class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="MajorDateTimeLabelProvider"/> class.
   /// </summary>
   public MajorDateTimeLabelProvider() { }
 
-  public override UIElement[] CreateLabels(ITicksInfo<DateTime> ticksInfo)
+  public override UIElement[] CreateLabels(ITicksInfo<System.DateTime> ticksInfo)
   {
-    object info = ticksInfo.Info;
+    var info = ticksInfo.Info;
     var ticks = ticksInfo.Ticks;
-    UIElement[] res = new UIElement[ticks.Length - 1];
-    int labelsNum = 3;
+    var res = new UIElement[ticks.Length - 1];
+    var labelsNum = 3;
 
     if (info is DifferenceIn differenceIn)
     {
@@ -30,7 +29,7 @@ public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
     }
     else if (info is MajorLabelsInfo majorLabelsInfo)
     {
-      DifferenceIn diff = (DifferenceIn)majorLabelsInfo.Info;
+      var diff = (DifferenceIn)majorLabelsInfo.Info;
       DateFormat = GetDateFormat(diff: diff);
       labelsNum = majorLabelsInfo.MajorLabelsCount + 1;
 
@@ -39,8 +38,8 @@ public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
 
     DebugVerify.Is(condition: ticks.Length < 10);
 
-    LabelTickInfo<DateTime> tickInfo = new();
-    for (int i = 0; i < ticks.Length - 1; i++)
+    LabelTickInfo<System.DateTime> tickInfo = new();
+    for (var i = 0; i < ticks.Length - 1; i++)
     {
       tickInfo.Info = info;
       tickInfo.Tick = ticks[i];
@@ -109,14 +108,14 @@ public class MajorDateTimeLabelProvider : DateTimeLabelProviderBase
       Grid.SetColumn(element: rect, value: 0);
       Grid.SetColumnSpan(element: rect, value: labelsNum);
 
-      for (int j = 0; j < labelsNum; j++)
+      for (var j = 0; j < labelsNum; j++)
       {
         grid.ColumnDefinitions.Add(value: new ColumnDefinition());
       }
 
       grid.Children.Add(element: rect);
 
-      for (int j = 0; j < labelsNum; j++)
+      for (var j = 0; j < labelsNum; j++)
       {
         var tb = new TextBlock
         {

@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class MenuItemExtensions
 {

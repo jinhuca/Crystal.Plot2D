@@ -1,7 +1,11 @@
-﻿using System.Collections.Specialized;
+﻿using System;
+using System.Collections.Specialized;
 using System.Windows;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Graphs;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
 {
@@ -11,7 +15,7 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
     get => yEnlargeCoeff;
     set
     {
-      if (yEnlargeCoeff != value)
+      if (Math.Abs(yEnlargeCoeff - value) > Constants.Constants.FloatComparisonTolerance)
       {
         yEnlargeCoeff = value;
         RaiseChanged();
@@ -21,93 +25,93 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
 
   public override DataRect Apply(DataRect oldDataRect, DataRect newDataRect, Viewport2D viewport)
   {
-    DataRect overallBounds = DataRect.Empty;
+    var overallBounds_ = DataRect.Empty;
 
-    foreach (var chart in viewport.ContentBoundsHosts)
+    foreach (var chart_ in viewport.ContentBoundsHosts)
     {
-      var plotterElement = chart as IPlotterElement;
-      var visual = viewport.Plotter.VisualBindings[element: plotterElement];
-      var points = PointsGraphBase.GetVisiblePoints(obj: visual);
-      if (points != null)
+      var plotterElement_ = chart_ as IPlotterElement;
+      var visual_ = viewport.Plotter.VisualBindings[element: plotterElement_];
+      var points_ = PointsGraphBase.GetVisiblePoints(obj: visual_);
+      if (points_ != null)
       {
         // searching for indices of chart's visible points which are near left and right borders of newDataRect
-        double startX = newDataRect.XMin;
-        double endX = newDataRect.XMax;
+        var startX_ = newDataRect.XMin;
+        var endX_ = newDataRect.XMax;
 
-        if (points[index: 0].X > endX || points[index: points.Count - 1].X < startX)
+        if (points_[index: 0].X > endX_ || points_[index: points_.Count - 1].X < startX_)
         {
           continue;
         }
 
-        int startIndex = -1;
+        var startIndex_ = -1;
 
         // we assume that points are sorted by x values ascending
-        if (startX <= points[index: 0].X)
+        if (startX_ <= points_[index: 0].X)
         {
-          startIndex = 0;
+          startIndex_ = 0;
         }
         else
         {
-          for (int i = 1; i < points.Count - 1; i++)
+          for (var i_ = 1; i_ < points_.Count - 1; i_++)
           {
-            if (points[index: i].X <= startX && startX < points[index: i + 1].X)
+            if (points_[index: i_].X <= startX_ && startX_ < points_[index: i_ + 1].X)
             {
-              startIndex = i;
+              startIndex_ = i_;
               break;
             }
           }
         }
 
-        int endIndex = points.Count;
+        var endIndex_ = points_.Count;
 
-        if (points[index: points.Count - 1].X < endX)
+        if (points_[index: points_.Count - 1].X < endX_)
         {
-          endIndex = points.Count;
+          endIndex_ = points_.Count;
         }
         else
         {
-          for (int i = points.Count - 1; i >= 1; i--)
+          for (var i_ = points_.Count - 1; i_ >= 1; i_--)
           {
-            if (points[index: i - 1].X <= endX && endX < points[index: i].X)
+            if (points_[index: i_ - 1].X <= endX_ && endX_ < points_[index: i_].X)
             {
-              endIndex = i;
+              endIndex_ = i_;
               break;
             }
           }
         }
 
-        Rect bounds = Rect.Empty;
-        for (int i = startIndex; i < endIndex; i++)
+        var bounds_ = Rect.Empty;
+        for (var i_ = startIndex_; i_ < endIndex_; i_++)
         {
-          bounds.Union(point: points[index: i]);
+          bounds_.Union(point: points_[index: i_]);
         }
-        if (startIndex > 0)
+        if (startIndex_ > 0)
         {
-          Point pt = GetInterpolatedPoint(x: startX, p1: points[index: startIndex], p2: points[index: startIndex - 1]);
-          bounds.Union(point: pt);
+          var pt_ = GetInterpolatedPoint(x: startX_, p1: points_[index: startIndex_], p2: points_[index: startIndex_ - 1]);
+          bounds_.Union(point: pt_);
         }
-        if (endIndex < points.Count - 1)
+        if (endIndex_ < points_.Count - 1)
         {
-          Point pt = GetInterpolatedPoint(x: endX, p1: points[index: endIndex], p2: points[index: endIndex + 1]);
-          bounds.Union(point: pt);
+          var pt_ = GetInterpolatedPoint(x: endX_, p1: points_[index: endIndex_], p2: points_[index: endIndex_ + 1]);
+          bounds_.Union(point: pt_);
         }
 
-        overallBounds.Union(rect: bounds);
+        overallBounds_.Union(rect: bounds_);
       }
     }
 
-    if (!overallBounds.IsEmpty)
+    if (!overallBounds_.IsEmpty)
     {
-      double y = overallBounds.YMin;
-      double height = overallBounds.Height;
+      var y_ = overallBounds_.YMin;
+      var height_ = overallBounds_.Height;
 
-      if (height == 0)
+      if (height_ == 0)
       {
-        height = newDataRect.Height;
-        y -= height / 2;
+        height_ = newDataRect.Height;
+        y_ -= height_ / 2;
       }
 
-      newDataRect = new DataRect(xMin: newDataRect.XMin, yMin: y, width: newDataRect.Width, height: height);
+      newDataRect = new DataRect(xMin: newDataRect.XMin, yMin: y_, width: newDataRect.Width, height: height_);
       newDataRect = DataRectExtensions.ZoomY(rect: newDataRect, to: newDataRect.GetCenter(), ratio: yEnlargeCoeff);
     }
 
@@ -116,10 +120,10 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
 
   private static Point GetInterpolatedPoint(double x, Point p1, Point p2)
   {
-    double xRatio = (x - p1.X) / (p2.X - p1.X);
-    double y = (1 - xRatio) * p1.Y + xRatio * p2.Y;
+    var xRatio_ = (x - p1.X) / (p2.X - p1.X);
+    var y_ = (1 - xRatio_) * p1.Y + xRatio_ * p2.Y;
 
-    return new Point(x: x, y: y);
+    return new Point(x: x, y: y_);
   }
 
   #region ISupportAttach Members
@@ -128,11 +132,11 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
   {
     ((INotifyCollectionChanged)viewport.ContentBoundsHosts).CollectionChanged += OnContentBoundsHostsChanged;
 
-    foreach (var item in viewport.ContentBoundsHosts)
+    foreach (var item_ in viewport.ContentBoundsHosts)
     {
-      if (item is PointsGraphBase chart)
+      if (item_ is PointsGraphBase chart_)
       {
-        chart.ProvideVisiblePoints = true;
+        chart_.ProvideVisiblePoints = true;
       }
     }
   }
@@ -141,11 +145,11 @@ public class DataHeightConstraint : ViewportConstraint, ISupportAttachToViewport
   {
     if (e.NewItems != null)
     {
-      foreach (var item in e.NewItems)
+      foreach (var item_ in e.NewItems)
       {
-        if (item is PointsGraphBase chart)
+        if (item_ is PointsGraphBase chart_)
         {
-          chart.ProvideVisiblePoints = true;
+          chart_.ProvideVisiblePoints = true;
         }
       }
     }

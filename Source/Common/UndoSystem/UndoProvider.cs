@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Windows;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.UndoSystem;
 
-public class UndoProvider : INotifyPropertyChanged
+public sealed class UndoProvider : INotifyPropertyChanged
 {
   public UndoProvider()
   {
     UndoStack.IsEmptyChanged += OnUndoStackIsEmptyChanged;
     RedoStack.IsEmptyChanged += OnRedoStackIsEmptyChanged;
   }
-  public bool IsEnabled { get; set; } = true;
+  public bool IsEnabled { get; } = true;
 
   private void OnUndoStackIsEmptyChanged(object sender, EventArgs e)
   {
@@ -96,7 +97,7 @@ public class UndoProvider : INotifyPropertyChanged
     var holder = new CaptureKeyHolder { Target = target, Property = property };
     if (CaptureHolders.ContainsKey(key: holder))
     {
-      object oldValue = CaptureHolders[key: holder];
+      var oldValue = CaptureHolders[key: holder];
       CaptureHolders.Remove(key: holder);
 
       if (!object.Equals(objA: oldValue, objB: newValue))

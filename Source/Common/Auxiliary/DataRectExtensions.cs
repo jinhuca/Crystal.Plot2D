@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class DataRectExtensions
 {
@@ -39,13 +39,13 @@ public static class DataRectExtensions
   /// </returns>
   public static bool IsCloseTo(this DataRect rect1, DataRect rect2, double difference)
   {
-    DataRect intersection = DataRect.Intersect(rect1: rect1, rect2: rect2);
-    double square1 = rect1.GetSquare();
-    double square2 = rect2.GetSquare();
-    double intersectionSquare = intersection.GetSquare();
+    var intersection = DataRect.Intersect(rect1: rect1, rect2: rect2);
+    var square1 = rect1.GetSquare();
+    var square2 = rect2.GetSquare();
+    var intersectionSquare = intersection.GetSquare();
 
-    bool areClose = MathHelper.AreClose(d1: square1, d2: intersectionSquare, diffRatio: difference) &&
-      MathHelper.AreClose(d1: square2, d2: intersectionSquare, diffRatio: difference);
+    var areClose = MathHelper.AreClose(d1: square1, d2: intersectionSquare, diffRatio: difference) &&
+                   MathHelper.AreClose(d1: square2, d2: intersectionSquare, diffRatio: difference);
     return areClose;
   }
 }

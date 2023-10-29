@@ -2,13 +2,16 @@
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
 /// Provides common methods of mouse navigation around viewport.
 /// </summary>
-public class MouseNavigation : NavigationBase
+public sealed class MouseNavigation : NavigationBase
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="MouseNavigation"/> class.
@@ -16,7 +19,8 @@ public class MouseNavigation : NavigationBase
   public MouseNavigation() { }
 
   private AdornerLayer adornerLayer;
-  protected AdornerLayer AdornerLayer
+
+  private AdornerLayer AdornerLayer
   {
     get
     {
@@ -77,8 +81,8 @@ public class MouseNavigation : NavigationBase
   {
     if (!e.Handled)
     {
-      Point mousePos = e.GetPosition(relativeTo: this);
-      int delta = -e.Delta;
+      var mousePos = e.GetPosition(relativeTo: this);
+      var delta = -e.Delta;
       MouseWheelZoom(mousePos: mousePos, wheelRotationDelta: delta);
 
       e.Handled = true;
@@ -96,13 +100,13 @@ public class MouseNavigation : NavigationBase
   }
 #endif
 
-  bool adornerAdded;
-  RectangleSelectionAdorner selectionAdorner;
+  private bool adornerAdded;
+  private RectangleSelectionAdorner selectionAdorner;
   private void AddSelectionAdorner()
   {
     if (!adornerAdded)
     {
-      AdornerLayer layer = AdornerLayer;
+      var layer = AdornerLayer;
       if (layer != null)
       {
         selectionAdorner = new RectangleSelectionAdorner(element: this) { Border = zoomRect };
@@ -115,7 +119,7 @@ public class MouseNavigation : NavigationBase
 
   private void RemoveSelectionAdorner()
   {
-    AdornerLayer layer = AdornerLayer;
+    var layer = AdornerLayer;
     if (layer != null)
     {
       layer.Remove(adorner: selectionAdorner);
@@ -129,18 +133,18 @@ public class MouseNavigation : NavigationBase
     selectionAdorner.InvalidateVisual();
   }
 
-  Rect? zoomRect;
+  private Rect? zoomRect;
   private const double wheelZoomSpeed = 1.2;
   private bool shouldKeepRatioWhileZooming;
 
   private bool isZooming;
-  protected bool IsZooming => isZooming;
+  private bool IsZooming => isZooming;
 
   private bool isPanning;
-  protected bool IsPanning => isPanning;
+  private bool IsPanning => isPanning;
 
   private Point panningStartPointInViewport;
-  protected Point PanningStartPointInViewport => panningStartPointInViewport;
+  private Point PanningStartPointInViewport => panningStartPointInViewport;
 
   private Point zoomStartPoint;
 
@@ -148,24 +152,25 @@ public class MouseNavigation : NavigationBase
   {
     get
     {
-      ModifierKeys currKeys = Keyboard.Modifiers;
+      var currKeys = Keyboard.Modifiers;
       return (currKeys | ModifierKeys.Shift) == currKeys ||
         (currKeys | ModifierKeys.Control) == currKeys;
     }
   }
 
-  protected virtual bool ShouldStartPanning(MouseButtonEventArgs e)
+  private bool ShouldStartPanning(MouseButtonEventArgs e)
   {
     return e.ChangedButton == MouseButton.Left && Keyboard.Modifiers == ModifierKeys.None;
   }
 
-  protected virtual bool ShouldStartZoom(MouseButtonEventArgs e)
+  private bool ShouldStartZoom(MouseButtonEventArgs e)
   {
     return e.ChangedButton == MouseButton.Left && IsShiftOrCtrl;
   }
 
-  Point panningStartPointInScreen;
-  protected virtual void StartPanning(MouseButtonEventArgs e)
+  private Point panningStartPointInScreen;
+
+  private void StartPanning(MouseButtonEventArgs e)
   {
     panningStartPointInScreen = e.GetPosition(relativeTo: this);
     panningStartPointInViewport = panningStartPointInScreen.ScreenToViewport(transform: Viewport.Transform);
@@ -184,7 +189,7 @@ public class MouseNavigation : NavigationBase
     //e.Handled = true;
   }
 
-  protected virtual void StartZoom(MouseButtonEventArgs e)
+  private void StartZoom(MouseButtonEventArgs e)
   {
     zoomStartPoint = e.GetPosition(relativeTo: this);
     if (Viewport.Output.Contains(point: zoomStartPoint))
@@ -201,14 +206,14 @@ public class MouseNavigation : NavigationBase
   private void OnMouseDown(object sender, MouseButtonEventArgs e)
   {
     // dragging
-    bool shouldStartDrag = ShouldStartPanning(e: e);
+    var shouldStartDrag = ShouldStartPanning(e: e);
     if (shouldStartDrag)
     {
       StartPanning(e: e);
     }
 
     // zooming
-    bool shouldStartZoom = ShouldStartZoom(e: e);
+    var shouldStartZoom = ShouldStartZoom(e: e);
     if (shouldStartZoom)
     {
       StartZoom(e: e);
@@ -247,10 +252,10 @@ public class MouseNavigation : NavigationBase
         CaptureMouse();
       }
 
-      Point endPoint = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Viewport.Transform);
+      var endPoint = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Viewport.Transform);
 
-      Point loc = Viewport.Visible.Location;
-      Vector shift = panningStartPointInViewport - endPoint;
+      var loc = Viewport.Visible.Location;
+      var shift = panningStartPointInViewport - endPoint;
       loc += shift;
 
       // preventing unnecessary changes, if actually visible hasn't change.
@@ -258,7 +263,7 @@ public class MouseNavigation : NavigationBase
       {
         Cursor = Cursors.ScrollAll;
 
-        DataRect visible = Viewport.Visible;
+        var visible = Viewport.Visible;
 
         visible.Location = loc;
         Viewport.Visible = visible;
@@ -269,7 +274,7 @@ public class MouseNavigation : NavigationBase
     // zooming
     else if (isZooming && e.LeftButton == MouseButtonState.Pressed)
     {
-      Point zoomEndPoint = e.GetPosition(relativeTo: this);
+      var zoomEndPoint = e.GetPosition(relativeTo: this);
       UpdateZoomRect(zoomEndPoint: zoomEndPoint);
 
       e.Handled = true;
@@ -283,19 +288,19 @@ public class MouseNavigation : NavigationBase
 
   private void UpdateZoomRect(Point zoomEndPoint)
   {
-    Rect output = Viewport.Output;
+    var output = Viewport.Output;
     Rect tmpZoomRect = new(point1: zoomStartPoint, point2: zoomEndPoint);
     tmpZoomRect = Rect.Intersect(rect1: tmpZoomRect, rect2: output);
 
     shouldKeepRatioWhileZooming = IsShiftPressed();
     if (shouldKeepRatioWhileZooming)
     {
-      double currZoomRatio = tmpZoomRect.Width / tmpZoomRect.Height;
-      double zoomRatio = output.Width / output.Height;
+      var currZoomRatio = tmpZoomRect.Width / tmpZoomRect.Height;
+      var zoomRatio = output.Width / output.Height;
       if (currZoomRatio < zoomRatio)
       {
-        double oldHeight = tmpZoomRect.Height;
-        double height = tmpZoomRect.Width / zoomRatio;
+        var oldHeight = tmpZoomRect.Height;
+        var height = tmpZoomRect.Width / zoomRatio;
         tmpZoomRect.Height = height;
         if (!tmpZoomRect.Contains(point: zoomStartPoint))
         {
@@ -304,8 +309,8 @@ public class MouseNavigation : NavigationBase
       }
       else
       {
-        double oldWidth = tmpZoomRect.Width;
-        double width = tmpZoomRect.Height * zoomRatio;
+        var oldWidth = tmpZoomRect.Width;
+        var width = tmpZoomRect.Height * zoomRatio;
         tmpZoomRect.Width = width;
         if (!tmpZoomRect.Contains(point: zoomStartPoint))
         {
@@ -323,7 +328,7 @@ public class MouseNavigation : NavigationBase
     OnParentMouseUp(e: e);
   }
 
-  protected virtual void OnParentMouseUp(MouseButtonEventArgs e)
+  private void OnParentMouseUp(MouseButtonEventArgs e)
   {
     if (isPanning && e.ChangedButton == MouseButton.Left)
     {
@@ -337,14 +342,14 @@ public class MouseNavigation : NavigationBase
     }
   }
 
-  protected virtual void StopZooming()
+  private void StopZooming()
   {
     if (zoomRect.HasValue)
     {
-      Rect output = Viewport.Output;
+      var output = Viewport.Output;
 
-      Point p1 = zoomRect.Value.TopLeft.ScreenToViewport(transform: Viewport.Transform);
-      Point p2 = zoomRect.Value.BottomRight.ScreenToViewport(transform: Viewport.Transform);
+      var p1 = zoomRect.Value.TopLeft.ScreenToViewport(transform: Viewport.Transform);
+      var p2 = zoomRect.Value.BottomRight.ScreenToViewport(transform: Viewport.Transform);
       DataRect newVisible = new(point1: p1, point2: p2);
       Viewport.Visible = newVisible;
 
@@ -354,7 +359,7 @@ public class MouseNavigation : NavigationBase
     }
   }
 
-  protected virtual void StopPanning(MouseButtonEventArgs e)
+  private void StopPanning(MouseButtonEventArgs e)
   {
     Plotter.UndoProvider.CaptureNewValue(target: Plotter.Viewport, property: Viewport2D.VisibleProperty, newValue: Viewport.Visible);
 
@@ -387,9 +392,9 @@ public class MouseNavigation : NavigationBase
 
   private void MouseWheelZoom(Point mousePos, double wheelRotationDelta)
   {
-    Point zoomTo = mousePos.ScreenToViewport(transform: Viewport.Transform);
+    var zoomTo = mousePos.ScreenToViewport(transform: Viewport.Transform);
 
-    double zoomSpeed = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
+    var zoomSpeed = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed *= wheelZoomSpeed;
     if (wheelRotationDelta < 0)
     {

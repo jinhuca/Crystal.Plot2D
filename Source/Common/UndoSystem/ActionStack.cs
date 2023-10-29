@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.UndoSystem;
 
 [DebuggerDisplay(value: "Count = {Count}")]
 public sealed class ActionStack

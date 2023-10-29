@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Data;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class BindingHelper
 {

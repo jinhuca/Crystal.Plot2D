@@ -2,8 +2,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
 {
@@ -48,14 +49,8 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
 
   public void AddMapping(DependencyProperty property, Func<T, object> mapping)
   {
-    if(property == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(property));
-    }
-    if(mapping == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(mapping));
-    }
+    ArgumentNullException.ThrowIfNull(property);
+    ArgumentNullException.ThrowIfNull(mapping);
     Mappings.Add(item: new Mapping<T> { Property = property, F = mapping });
   }
 

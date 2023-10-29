@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Numeric;
 
 public sealed class MinorNumericTicksProvider : ITicksProvider<double>
 {
@@ -14,15 +16,13 @@ public sealed class MinorNumericTicksProvider : ITicksProvider<double>
   }
 
   private double[] coeffs;
+
   public double[] Coeffs
   {
     get => coeffs;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: "value");
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       coeffs = value;
       Changed.Raise(sender: this);
@@ -32,7 +32,7 @@ public sealed class MinorNumericTicksProvider : ITicksProvider<double>
   internal MinorNumericTicksProvider(ITicksProvider<double> parent)
   {
     this.parent = parent;
-    Coeffs = new double[] { 0.3, 0.3, 0.3, 0.3, 0.6, 0.3, 0.3, 0.3, 0.3 };
+    Coeffs = new[] { 0.3, 0.3, 0.3, 0.3, 0.6, 0.3, 0.3, 0.3, 0.3 };
   }
 
   #region ITicksProvider<double> Members
@@ -58,10 +58,10 @@ public sealed class MinorNumericTicksProvider : ITicksProvider<double>
 
   public MinorTickInfo<double>[] CreateTicks(Range<double> range)
   {
-    double step = (range.Max - range.Min) / (Coeffs.Length + 1);
+    var step = (range.Max - range.Min) / (Coeffs.Length + 1);
 
-    MinorTickInfo<double>[] res = new MinorTickInfo<double>[Coeffs.Length];
-    for (int i = 0; i < Coeffs.Length; i++)
+    var res = new MinorTickInfo<double>[Coeffs.Length];
+    for (var i = 0; i < Coeffs.Length; i++)
     {
       res[i] = new MinorTickInfo<double>(value: Coeffs[i], tick: range.Min + step * (i + 1));
     }

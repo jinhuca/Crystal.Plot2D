@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Common;
 
@@ -15,7 +16,7 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
 
   public void Add(T item)
   {
-    int index = (startIndex + Count) % Capacity;
+    var index = (startIndex + Count) % Capacity;
     if (startIndex + Count >= Capacity)
     {
       startIndex++;
@@ -49,7 +50,7 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
 
   public IEnumerator<T> GetEnumerator()
   {
-    for (int i = 0; i < Count; i++)
+    for (var i = 0; i < Count; i++)
     {
       yield return this[index: i];
     }
@@ -69,7 +70,7 @@ public class RingArray<T> : INotifyCollectionChanged, IList<T>
 
   public int IndexOf(T item)
   {
-    int index = Array.IndexOf(array: array, value: item);
+    var index = Array.IndexOf(array: array, value: item);
 
     if (index == -1)
     {

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class BoundsHelper
 {

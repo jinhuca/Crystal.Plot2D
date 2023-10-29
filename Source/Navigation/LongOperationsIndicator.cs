@@ -3,8 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 public sealed class LongOperationsIndicator : IPlotterElement
 {
@@ -66,7 +67,7 @@ public sealed class LongOperationsIndicator : IPlotterElement
 
   private static void OnLongOperationRunningChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    IPlotterElement element = d as IPlotterElement;
+    var element = d as IPlotterElement;
     var plotter = element == null ? PlotterBase.GetPlotter(obj: d) : element.Plotter;
 
     if (plotter != null)
@@ -76,12 +77,12 @@ public sealed class LongOperationsIndicator : IPlotterElement
     }
   }
 
-  readonly UIElement indicator = LoadIndicator();
+  private readonly UIElement indicator = LoadIndicator();
 
   private static UIElement LoadIndicator()
   {
-    var resources = (ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.NavigationResourceUri, uriKind: UriKind.Relative));
-    UIElement indicator = (UIElement)resources[key: "Indicator"];
+    var resources = (ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.Constants.NavigationResourceUri, uriKind: UriKind.Relative));
+    var indicator = (UIElement)resources[key: "Indicator"];
     return indicator;
   }
 
@@ -89,7 +90,7 @@ public sealed class LongOperationsIndicator : IPlotterElement
   private int operationsCounter;
   private void OnLongOperationRunningChanged(IPlotterElement element, bool longOperationRunning)
   {
-    int change = longOperationRunning ? +1 : -1;
+    var change = longOperationRunning ? +1 : -1;
     operationsCounter += change;
 
     if (plotter == null)

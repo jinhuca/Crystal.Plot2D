@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.MultiDimensional;
 
 /// <summary>
 ///   Defines empty two-dimensional data source.
@@ -18,7 +19,7 @@ public sealed class EmptyDataSource2D<T> : IDataSource2D<T> where T : struct
 
   #region IDataSource2D<T> Members
 
-  public Charts.Range<T>? Range => throw new NotImplementedException();
+  public Range<T>? Range => throw new NotImplementedException();
   public T? MissingValue => throw new NotImplementedException();
 
   #endregion

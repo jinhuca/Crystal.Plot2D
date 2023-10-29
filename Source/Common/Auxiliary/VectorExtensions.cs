@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media.Media3D;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class VectorExtensions
 {
@@ -10,10 +10,10 @@ internal static class VectorExtensions
     return new Point(x: vector.X, y: vector.Y);
   }
 
-  public static Vector DecreaseLength(this Vector vector, double width, double heigth)
+  public static Vector DecreaseLength(this Vector vector, double width, double height)
   {
     vector.X /= width;
-    vector.Y /= heigth;
+    vector.Y /= height;
 
     return vector;
   }

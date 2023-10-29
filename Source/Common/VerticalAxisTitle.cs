@@ -1,16 +1,17 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// Represents a title of vertical axis. Can be placed from left or right of Plotter.
 /// </summary>
-public class VerticalAxisTitle : ContentControl, IPlotterElement
+public sealed class VerticalAxisTitle : ContentControl, IPlotterElement
 {
   public VerticalAxisTitle()
   {

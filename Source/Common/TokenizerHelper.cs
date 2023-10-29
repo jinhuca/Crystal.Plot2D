@@ -7,9 +7,9 @@ internal static class TokenizerHelper
 {
   public static char GetNumericListSeparator(IFormatProvider provider)
   {
-    char separator = ',';
+    var separator = ',';
 
-    NumberFormatInfo numberInfo = NumberFormatInfo.GetInstance(formatProvider: provider);
+    var numberInfo = NumberFormatInfo.GetInstance(formatProvider: provider);
     if (numberInfo.NumberDecimalSeparator.Length > 0 && separator == numberInfo.NumberDecimalSeparator[index: 0])
     {
       separator = ';';

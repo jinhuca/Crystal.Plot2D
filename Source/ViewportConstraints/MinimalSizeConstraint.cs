@@ -1,11 +1,12 @@
 ﻿using System;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 /// Represents a ViewportConstraint, which the minimal size of <see cref="Viewport"/>'s Visible.
 /// </summary>
-public class MinimalSizeConstraint : ViewportConstraint
+public sealed class MinimalSizeConstraint : ViewportConstraint
 {
   private double minSize = 1E-11;
 
@@ -18,7 +19,7 @@ public class MinimalSizeConstraint : ViewportConstraint
     get => minSize;
     set
     {
-      if (Math.Abs(minSize - value) < Constants.FloatComparisonTolerance) return;
+      if (Math.Abs(minSize - value) < Constants.Constants.FloatComparisonTolerance) return;
       minSize = value;
       RaiseChanged();
     }

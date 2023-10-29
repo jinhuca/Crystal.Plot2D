@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 /// <summary>
 ///   Represents a base class for decorating palette, which wraps another palette and intercepts calls to it.
@@ -39,13 +39,13 @@ public abstract class DecoratorPaletteBase : PaletteBase
         palette.Changed -= OnChildPaletteChanged;
       }
 
-      palette = value ?? throw new ArgumentNullException(paramName: "value");
+      palette = value ?? throw new ArgumentNullException(paramName: nameof(value));
       palette.Changed += OnChildPaletteChanged;
       RaiseChanged();
     }
   }
 
-  void OnChildPaletteChanged(object sender, EventArgs e) => RaiseChanged();
+  private void OnChildPaletteChanged(object sender, EventArgs e) => RaiseChanged();
 
   /// <summary>
   ///   Gets the color by interpolation coefficient.

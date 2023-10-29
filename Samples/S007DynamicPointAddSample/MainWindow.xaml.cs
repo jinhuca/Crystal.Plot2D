@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Threading;
 using Crystal.Plot2D;
 using Crystal.Plot2D.DataSources;
+using Crystal.Plot2D.DataSources.OneDimensional;
 
 namespace S007DynamicPointAddSample;
 

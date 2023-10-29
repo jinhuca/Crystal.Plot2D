@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Transforms;
 
 /// <summary>
 /// Base class for all data transforms.
@@ -79,16 +80,9 @@ public sealed class Log10YTransform : DataTransform
   /// <returns></returns>
   public override Point DataToViewport(Point pt)
   {
-    double y = pt.Y;
+    var y = pt.Y;
 
-    if (y < 0)
-    {
-      y = double.MinValue;
-    }
-    else
-    {
-      y = Math.Log10(d: y);
-    }
+    y = y < 0 ? double.MinValue : Math.Log10(d: y);
 
     return new Point(x: pt.X, y: y);
   }
@@ -124,16 +118,9 @@ public sealed class Log10XTransform : DataTransform
   /// <returns></returns>
   public override Point DataToViewport(Point pt)
   {
-    double x = pt.X;
+    var x = pt.X;
 
-    if (x < 0)
-    {
-      x = double.MinValue;
-    }
-    else
-    {
-      x = Math.Log10(d: x);
-    }
+    x = x < 0 ? double.MinValue : Math.Log10(d: x);
 
     return new Point(x: x, y: pt.Y);
   }
@@ -175,8 +162,8 @@ public sealed class MercatorTransform : DataTransform
 
   private void CalcScale(double maxLatitude)
   {
-    double maxLatDeg = maxLatitude;
-    double maxLatRad = maxLatDeg * Math.PI / 180;
+    var maxLatDeg = maxLatitude;
+    var maxLatRad = maxLatDeg * Math.PI / 180;
     Scale = maxLatDeg / Math.Log(d: Math.Tan(a: maxLatRad / 2 + Math.PI / 4));
   }
   /// <summary>
@@ -198,7 +185,7 @@ public sealed class MercatorTransform : DataTransform
   /// <returns></returns>
   public sealed override Point DataToViewport(Point pt)
   {
-    double y = pt.Y;
+    var y = pt.Y;
     if (-MaxLatitude <= y && y <= MaxLatitude)
     {
       y = Scale * Math.Log(d: Math.Tan(a: Math.PI * (pt.Y + 90) / 360));
@@ -214,10 +201,10 @@ public sealed class MercatorTransform : DataTransform
   /// <returns></returns>
   public sealed override Point ViewportToData(Point pt)
   {
-    double y = pt.Y;
+    var y = pt.Y;
     if (-MaxLatitude <= y && y <= MaxLatitude)
     {
-      double e = Math.Exp(d: y / Scale);
+      var e = Math.Exp(d: y / Scale);
       y = 360 * Math.Atan(d: e) / Math.PI - 90;
     }
 
@@ -242,11 +229,11 @@ public sealed class PolarToRectTransform : DataTransform
   /// <returns></returns>
   public override Point DataToViewport(Point pt)
   {
-    double r = pt.X;
-    double phi = pt.Y;
+    var r = pt.X;
+    var phi = pt.Y;
 
-    double x = r * Math.Cos(d: phi);
-    double y = r * Math.Sin(a: phi);
+    var x = r * Math.Cos(d: phi);
+    var y = r * Math.Sin(a: phi);
 
     return new Point(x: x, y: y);
   }
@@ -258,10 +245,10 @@ public sealed class PolarToRectTransform : DataTransform
   /// <returns></returns>
   public override Point ViewportToData(Point pt)
   {
-    double x = pt.X;
-    double y = pt.Y;
-    double r = Math.Sqrt(d: x * x + y * y);
-    double phi = Math.Atan2(y: y, x: x);
+    var x = pt.X;
+    var y = pt.Y;
+    var r = Math.Sqrt(d: x * x + y * y);
+    var phi = Math.Atan2(y: y, x: x);
 
     return new Point(x: r, y: phi);
   }
@@ -320,10 +307,10 @@ public sealed class RotateDataTransform : DataTransform
 
   private Point Transform(Point pt, double angle)
   {
-    Vector vec = pt - Center;
-    double currAngle = Math.Atan2(y: vec.Y, x: vec.X);
+    var vec = pt - Center;
+    var currAngle = Math.Atan2(y: vec.Y, x: vec.X);
     currAngle += angle;
-    Vector rotatedVec = new Vector(x: Math.Cos(d: currAngle), y: Math.Sin(a: currAngle)) * vec.Length;
+    var rotatedVec = new Vector(x: Math.Cos(d: currAngle), y: Math.Sin(a: currAngle)) * vec.Length;
     return Center + rotatedVec;
   }
 }
@@ -374,16 +361,13 @@ public sealed class CompositeDataTransform : DataTransform
   /// <param name="transforms">The transforms.</param>
   public CompositeDataTransform(params DataTransform[] transforms)
   {
-    if (transforms == null)
-    {
-      throw new ArgumentNullException(paramName: "transforms");
-    }
+    ArgumentNullException.ThrowIfNull(transforms);
 
     foreach (var transform in transforms)
     {
       if (transform == null)
       {
-        throw new ArgumentNullException(paramName: "transforms", message: Strings.Exceptions.EachTransformShouldNotBeNull);
+        throw new ArgumentNullException(paramName: nameof(transforms), message: Strings.Exceptions.EachTransformShouldNotBeNull);
       }
     }
 
@@ -396,7 +380,7 @@ public sealed class CompositeDataTransform : DataTransform
   /// <param name="transforms">The transforms.</param>
   public CompositeDataTransform(IEnumerable<DataTransform> transforms)
   {
-    Transforms = transforms ?? throw new ArgumentNullException(paramName: "transforms");
+    Transforms = transforms ?? throw new ArgumentNullException(paramName: nameof(transforms));
   }
 
   /// <summary>
@@ -448,8 +432,8 @@ public sealed class LambdaDataTransform : DataTransform
   /// <param name="viewportToData">The viewport to data transform delegate.</param>
   public LambdaDataTransform(Func<Point, Point> dataToViewport, Func<Point, Point> viewportToData)
   {
-    DataToViewportFunc = dataToViewport ?? throw new ArgumentNullException(paramName: "dataToViewport");
-    ViewportToDataFunc = viewportToData ?? throw new ArgumentNullException(paramName: "viewportToData");
+    DataToViewportFunc = dataToViewport ?? throw new ArgumentNullException(paramName: nameof(dataToViewport));
+    ViewportToDataFunc = viewportToData ?? throw new ArgumentNullException(paramName: nameof(viewportToData));
   }
   /// <summary>
   /// Gets the data to viewport transform delegate.

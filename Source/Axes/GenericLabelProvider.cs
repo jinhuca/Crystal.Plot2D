@@ -1,13 +1,14 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Charts;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents default implementation of label provider for specified type.
 /// </summary>
 /// <typeparam name="T">Axis values type.</typeparam>
-public class GenericLabelProvider<T> : LabelProviderBase<T>
+public sealed class GenericLabelProvider<T> : LabelProviderBase<T>
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="GenericLabelProvider&lt;T&gt;"/> class.
@@ -29,13 +30,13 @@ public class GenericLabelProvider<T> : LabelProviderBase<T>
     var info = ticksInfo.Info;
 
     LabelTickInfo<T> tickInfo = new();
-    UIElement[] res = new UIElement[ticks.Length];
-    for (int i = 0; i < res.Length; i++)
+    var res = new UIElement[ticks.Length];
+    for (var i = 0; i < res.Length; i++)
     {
       tickInfo.Tick = ticks[i];
       tickInfo.Info = info;
 
-      string text = GetString(tickInfo: tickInfo);
+      var text = GetString(tickInfo: tickInfo);
 
       res[i] = new TextBlock
       {

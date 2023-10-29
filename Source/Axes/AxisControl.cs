@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -9,8 +8,12 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Defines a base class for axis UI representation.
@@ -56,24 +59,20 @@ public abstract class AxisControl<T> : AxisControlBase
   /// <returns></returns>
   private static AxisPlacement GetBetterPlacement(AxisPlacement placement)
   {
-    switch (placement)
+    return placement switch
     {
-      case AxisPlacement.Left:
-        return AxisPlacement.Left;
-      case AxisPlacement.Right:
-        return AxisPlacement.Right;
-      case AxisPlacement.Top:
-        return AxisPlacement.Top;
-      case AxisPlacement.Bottom:
-        return AxisPlacement.Bottom;
-      default:
-        throw new NotSupportedException();
-    }
+      AxisPlacement.Left => AxisPlacement.Left,
+      AxisPlacement.Right => AxisPlacement.Right,
+      AxisPlacement.Top => AxisPlacement.Top,
+      AxisPlacement.Bottom => AxisPlacement.Bottom,
+      _ => throw new NotSupportedException()
+    };
   }
 
   #region Properties
 
   private AxisPlacement placement = AxisPlacement.Bottom;
+
   /// <summary>
   /// Gets or sets the placement of axis control.
   /// Relative positioning of parts of axis depends on this value.
@@ -84,7 +83,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => placement;
     set
     {
-      if (placement != value)
+      if(placement != value)
       {
         placement = value;
         UpdateUIResources();
@@ -101,71 +100,66 @@ public abstract class AxisControl<T> : AxisControlBase
       case AxisPlacement.Right:
         getSize = size => size.Height;
         getCoordinate = p => p.Y;
-        createScreenPoint1 = d => new Point(x: scrCoord1, y: d);
+        createScreenPoint1 = d => new Point(x: ScrCoord1, y: d);
         createScreenPoint2 = (d, size) => new Point(x: scrCoord2 * size, y: d);
         break;
       case AxisPlacement.Top:
       case AxisPlacement.Bottom:
         getSize = size => size.Width;
         getCoordinate = p => p.X;
-        createScreenPoint1 = d => new Point(x: d, y: scrCoord1);
+        createScreenPoint1 = d => new Point(x: d, y: ScrCoord1);
         createScreenPoint2 = (d, size) => new Point(x: d, y: scrCoord2 * size);
         break;
+      default:
+        throw new ArgumentOutOfRangeException();
     }
 
-    switch (placement)
+    createDataPoint = placement switch
     {
-      case AxisPlacement.Left:
-        createDataPoint = d => new Point(x: 0, y: d);
-        break;
-      case AxisPlacement.Right:
-        createDataPoint = d => new Point(x: 1, y: d);
-        break;
-      case AxisPlacement.Top:
-        createDataPoint = d => new Point(x: d, y: 1);
-        break;
-      case AxisPlacement.Bottom:
-        createDataPoint = d => new Point(x: d, y: 0);
-        break;
-    }
+      AxisPlacement.Left => d => new Point(x: 0, y: d),
+      AxisPlacement.Right => d => new Point(x: 1, y: d),
+      AxisPlacement.Top => d => new Point(x: d, y: 1),
+      AxisPlacement.Bottom => d => new Point(x: d, y: 0),
+      _ => createDataPoint
+    };
   }
 
   private void UpdateUIResources()
   {
-    ResourceDictionary resources = new()
+    ResourceDictionary resources_ = new()
     {
-      Source = new Uri(uriString: Constants.AxisResourceUri, uriKind: UriKind.Relative)
+      Source = new Uri(uriString: Constants.Constants.AxisResourceUri, uriKind: UriKind.Relative)
     };
 
-    AxisPlacement placement = GetBetterPlacement(placement: this.placement);
-    ControlTemplate template = (ControlTemplate)resources[key: TemplateKey + placement];
-    Verify.AssertNotNull(obj: template);
-    var content = (FrameworkElement)template.LoadContent();
+    var placement_ = GetBetterPlacement(placement: placement);
+    var template_ = (ControlTemplate)resources_[key: TemplateKey + placement_];
+    Verify.AssertNotNull(obj: template_);
+    var content_ = (FrameworkElement)template_.LoadContent();
 
-    if (ticksPath != null && ticksPath.Data != null)
+    if(_ticksPath != null && _ticksPath.Data != null)
     {
-      GeometryGroup group = (GeometryGroup)ticksPath.Data;
-      foreach (var child in group.Children)
+      var group_ = (GeometryGroup)_ticksPath.Data;
+      foreach(var child_ in group_.Children)
       {
-        LineGeometry geometry = (LineGeometry)child;
-        lineGeomPool.Put(item: geometry);
+        var geometry_ = (LineGeometry)child_;
+        lineGeomPool.Put(item: geometry_);
       }
-      group.Children.Clear();
+      group_.Children.Clear();
     }
 
-    ticksPath = (Path)content.FindName(name: PartTicksPath);
-    ticksPath.SnapsToDevicePixels = true;
-    Verify.AssertNotNull(obj: ticksPath);
+    _ticksPath = (Path)content_.FindName(name: PartTicksPath);
+    _ticksPath.SnapsToDevicePixels = true;
+    Verify.AssertNotNull(obj: _ticksPath);
 
     // as this method can be called not only on loading of axisControl, but when its placement changes, internal panels
     // can be not empty and their contents should be released
-    if (commonLabelsCanvas != null && labelProvider != null)
+    if(commonLabelsCanvas != null && labelProvider != null)
     {
-      foreach (UIElement child in commonLabelsCanvas.Children)
+      foreach(UIElement child_ in commonLabelsCanvas.Children)
       {
-        if (child != null)
+        if(child_ != null)
         {
-          labelProvider.ReleaseLabel(label: child);
+          labelProvider.ReleaseLabel(label: child_);
         }
       }
 
@@ -173,26 +167,26 @@ public abstract class AxisControl<T> : AxisControlBase
       commonLabelsCanvas.Children.Clear();
     }
 
-    commonLabelsCanvas = (StackCanvas)content.FindName(name: PartCommonLabelsCanvas);
+    commonLabelsCanvas = (StackCanvas)content_.FindName(name: PartCommonLabelsCanvas);
     Verify.AssertNotNull(obj: commonLabelsCanvas);
-    commonLabelsCanvas.Placement = placement;
+    commonLabelsCanvas.Placement = placement_;
 
-    if (additionalLabelsCanvas != null && majorLabelProvider != null)
+    if(additionalLabelsCanvas != null && majorLabelProvider != null)
     {
-      foreach (UIElement child in additionalLabelsCanvas.Children)
+      foreach(UIElement child_ in additionalLabelsCanvas.Children)
       {
-        if (child != null)
+        if(child_ != null)
         {
-          majorLabelProvider.ReleaseLabel(label: child);
+          majorLabelProvider.ReleaseLabel(label: child_);
         }
       }
     }
 
-    additionalLabelsCanvas = (StackCanvas)content.FindName(name: PartAdditionalLabelsCanvas);
+    additionalLabelsCanvas = (StackCanvas)content_.FindName(name: PartAdditionalLabelsCanvas);
     Verify.AssertNotNull(obj: additionalLabelsCanvas);
-    additionalLabelsCanvas.Placement = placement;
+    additionalLabelsCanvas.Placement = placement_;
 
-    mainGrid = (Grid)content.FindName(name: PartContentsGrid);
+    mainGrid = (Grid)content_.FindName(name: PartContentsGrid);
     Verify.AssertNotNull(obj: mainGrid);
 
     mainGrid.SetBinding(dp: BackgroundProperty, binding: new Binding { Path = new PropertyPath(path: "Background"), Source = this });
@@ -200,16 +194,16 @@ public abstract class AxisControl<T> : AxisControlBase
 
     Content = mainGrid;
 
-    string transformKey = AdditionalLabelTransformKey + placement.ToString();
-    if (resources.Contains(key: transformKey))
+    var transformKey_ = AdditionalLabelTransformKey + placement_.ToString();
+    if(resources_.Contains(key: transformKey_))
     {
-      additionalLabelTransform = (Transform)resources[key: transformKey];
+      additionalLabelTransform = (Transform)resources_[key: transformKey_];
     }
   }
 
-  void mainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
+  private void mainGrid_SizeChanged(object sender, SizeChangedEventArgs e)
   {
-    if (placement.IsBottomOrTop() && e.WidthChanged ||
+    if(placement.IsBottomOrTop() && e.WidthChanged ||
        e.HeightChanged)
     {
       // this is performed because if not, whole axisControl's size was measured wrongly.
@@ -250,23 +244,23 @@ public abstract class AxisControl<T> : AxisControlBase
     {
       owner.updateOnCommonChange = true;
 
-      bool shouldUpdate = owner.range != prevRange;
+      var shouldUpdate_ = owner.range != prevRange;
 
-      var screenRect = owner.Transform.ScreenRect;
-      var prevScreenRect = prevTransform.ScreenRect;
-      if (owner.placement.IsBottomOrTop())
+      var screenRect_ = owner.Transform.ScreenRect;
+      var prevScreenRect_ = prevTransform.ScreenRect;
+      if(owner.placement.IsBottomOrTop())
       {
-        shouldUpdate |= prevScreenRect.Width != screenRect.Width;
+        shouldUpdate_ |= prevScreenRect_.Width != screenRect_.Width;
       }
       else
       {
-        shouldUpdate |= prevScreenRect.Height != screenRect.Height;
+        shouldUpdate_ |= prevScreenRect_.Height != screenRect_.Height;
       }
 
-      shouldUpdate |= owner.transform.DataTransform != prevTransform.DataTransform;
-      shouldUpdate |= forceUpdate;
+      shouldUpdate_ |= owner.transform.DataTransform != prevTransform.DataTransform;
+      shouldUpdate_ |= forceUpdate;
 
-      if (shouldUpdate)
+      if(shouldUpdate_)
       {
         owner.UpdateUI();
       }
@@ -288,7 +282,7 @@ public abstract class AxisControl<T> : AxisControlBase
     set
     {
       range = value;
-      if (updateOnCommonChange)
+      if(updateOnCommonChange)
       {
         UpdateUI();
       }
@@ -305,7 +299,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => drawMinorTicks;
     set
     {
-      if (drawMinorTicks != value)
+      if(drawMinorTicks != value)
       {
         drawMinorTicks = value;
         UpdateUI();
@@ -323,7 +317,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => drawMajorLabels;
     set
     {
-      if (drawMajorLabels != value)
+      if(drawMajorLabels != value)
       {
         drawMajorLabels = value;
         UpdateUI();
@@ -337,7 +331,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => drawTicks;
     set
     {
-      if (drawTicks != value)
+      if(drawTicks != value)
       {
         drawTicks = value;
         UpdateUI();
@@ -359,12 +353,9 @@ public abstract class AxisControl<T> : AxisControlBase
     get => ticksProvider;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: nameof(value));
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
-      if (ticksProvider != value)
+      if(ticksProvider != value)
       {
         DetachTicksProvider();
 
@@ -379,7 +370,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void AttachTicksProvider()
   {
-    if (ticksProvider != null)
+    if(ticksProvider != null)
     {
       ticksProvider.Changed += ticksProvider_Changed;
     }
@@ -392,7 +383,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void DetachTicksProvider()
   {
-    if (ticksProvider != null)
+    if(ticksProvider != null)
     {
       ticksProvider.Changed -= ticksProvider_Changed;
     }
@@ -409,7 +400,7 @@ public abstract class AxisControl<T> : AxisControlBase
   protected override bool ShouldSerializeProperty(DependencyProperty dp)
   {
     // do not serialize template - for XAML serialization
-    if (dp == TemplateProperty)
+    if(dp == TemplateProperty)
     {
       return false;
     }
@@ -430,7 +421,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => majorLabelProvider;
     set
     {
-      if (majorLabelProvider != value)
+      if(majorLabelProvider != value)
       {
         DetachMajorLabelProvider();
 
@@ -445,7 +436,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void AttachMajorLabelProvider()
   {
-    if (majorLabelProvider != null)
+    if(majorLabelProvider != null)
     {
       majorLabelProvider.Changed += majorLabelProvider_Changed;
     }
@@ -458,7 +449,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void DetachMajorLabelProvider()
   {
-    if (majorLabelProvider != null)
+    if(majorLabelProvider != null)
     {
       majorLabelProvider.Changed -= majorLabelProvider_Changed;
     }
@@ -480,12 +471,9 @@ public abstract class AxisControl<T> : AxisControlBase
     get => labelProvider;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: nameof(value));
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
-      if (labelProvider != value)
+      if(labelProvider != value)
       {
         DetachLabelProvider();
 
@@ -500,7 +488,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void AttachLabelProvider()
   {
-    if (labelProvider != null)
+    if(labelProvider != null)
     {
       labelProvider.Changed += labelProvider_Changed;
     }
@@ -513,7 +501,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void DetachLabelProvider()
   {
-    if (labelProvider != null)
+    if(labelProvider != null)
     {
       labelProvider.Changed -= labelProvider_Changed;
     }
@@ -530,7 +518,7 @@ public abstract class AxisControl<T> : AxisControlBase
     set
     {
       transform = value;
-      if (updateOnCommonChange)
+      if(updateOnCommonChange)
       {
         UpdateUI();
       }
@@ -539,27 +527,27 @@ public abstract class AxisControl<T> : AxisControlBase
 
   #endregion
 
-  private const double defaultSmallerSize = 1;
-  private const double defaultBiggerSize = 150;
+  private const double DefaultSmallerSize = 1;
+  private const double DefaultBiggerSize = 150;
   protected override Size MeasureOverride(Size constraint)
   {
-    var baseSize = base.MeasureOverride(constraint: constraint);
+    var baseSize_ = base.MeasureOverride(constraint: constraint);
 
     mainGrid.Measure(availableSize: constraint);
-    Size gridSize = mainGrid.DesiredSize;
-    Size result = gridSize;
+    var gridSize_ = mainGrid.DesiredSize;
+    var result_ = gridSize_;
 
-    bool isHorizontal = placement == AxisPlacement.Bottom || placement == AxisPlacement.Top;
-    if (double.IsInfinity(d: constraint.Width) && isHorizontal)
+    var isHorizontal_ = placement == AxisPlacement.Bottom || placement == AxisPlacement.Top;
+    if(double.IsInfinity(d: constraint.Width) && isHorizontal_)
     {
-      result = new Size(width: defaultBiggerSize, height: gridSize.Height != 0 ? gridSize.Height : defaultSmallerSize);
+      result_ = new Size(width: DefaultBiggerSize, height: gridSize_.Height != 0 ? gridSize_.Height : DefaultSmallerSize);
     }
-    else if (double.IsInfinity(d: constraint.Height) && !isHorizontal)
+    else if(double.IsInfinity(d: constraint.Height) && !isHorizontal_)
     {
-      result = new Size(width: gridSize.Width != 0 ? gridSize.Width : defaultSmallerSize, height: defaultBiggerSize);
+      result_ = new Size(width: gridSize_.Width != 0 ? gridSize_.Width : DefaultSmallerSize, height: DefaultBiggerSize);
     }
 
-    return result;
+    return result_;
   }
 
   //protected override void OnRenderSizeChanged(SizeChangedInfo sizeInfo)
@@ -575,50 +563,52 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void InitTransform(Size newRenderSize)
   {
-    Rect dataRect = CreateDataRect();
+    var dataRect_ = CreateDataRect();
 
-    transform = transform.WithRects(visibleRect: dataRect, screenRect: new Rect(size: newRenderSize));
+    transform = transform.WithRects(visibleRect: dataRect_, screenRect: new Rect(size: newRenderSize));
   }
 
   private Rect CreateDataRect()
   {
-    double min = convertToDouble(arg: range.Min);
-    double max = convertToDouble(arg: range.Max);
+    var min_ = convertToDouble(arg: range.Min);
+    var max_ = convertToDouble(arg: range.Max);
 
-    Rect dataRect;
-    switch (placement)
+    Rect dataRect_;
+    switch(placement)
     {
       case AxisPlacement.Left:
       case AxisPlacement.Right:
-        dataRect = new Rect(point1: new Point(x: min, y: min), point2: new Point(x: max, y: max));
+        dataRect_ = new Rect(point1: new Point(x: min_, y: min_), point2: new Point(x: max_, y: max_));
         break;
       case AxisPlacement.Top:
       case AxisPlacement.Bottom:
-        dataRect = new Rect(point1: new Point(x: min, y: min), point2: new Point(x: max, y: max));
+        dataRect_ = new Rect(point1: new Point(x: min_, y: min_), point2: new Point(x: max_, y: max_));
         break;
       default:
         throw new NotSupportedException();
     }
-    return dataRect;
+    return dataRect_;
   }
 
-  /// <summary>
-  /// Gets the Path with ticks strokes.
-  /// </summary>
-  /// <value>The ticks path.</value>
-  public override Path TicksPath => ticksPath;
+  private Path _ticksPath;
+
+  public override Path TicksPath
+  {
+    get => _ticksPath;
+    set => _ticksPath = value;
+  }
 
   private Grid mainGrid;
   private StackCanvas additionalLabelsCanvas;
   private StackCanvas commonLabelsCanvas;
-  private Path ticksPath;
+
   private bool rendered;
 
   protected override void OnRender(DrawingContext dc)
   {
     base.OnRender(drawingContext: dc);
 
-    if (!rendered)
+    if(!rendered)
     {
       UpdateUI();
     }
@@ -627,8 +617,9 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private bool independent = true;
 
-  private readonly double scrCoord1 = 0; // px
+  private const double ScrCoord1 = 0; // px
   private double scrCoord2 = 10; // px
+  
   /// <summary>
   /// Gets or sets the size of main axis ticks.
   /// </summary>
@@ -638,7 +629,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => scrCoord2;
     set
     {
-      if (scrCoord2 != value)
+      if(scrCoord2 != value)
       {
         scrCoord2 = value;
         UpdateUI();
@@ -649,66 +640,66 @@ public abstract class AxisControl<T> : AxisControlBase
   private GeometryGroup geomGroup = new();
   internal void UpdateUI()
   {
-    if (range.IsEmpty)
+    if(range.IsEmpty)
     {
       return;
     }
 
-    if (transform == null)
+    if(transform == null)
     {
       return;
     }
 
-    if (independent)
+    if(independent)
     {
       InitTransform(newRenderSize: RenderSize);
     }
 
-    bool isHorizontal = Placement == AxisPlacement.Bottom || Placement == AxisPlacement.Top;
-    if (transform.ScreenRect.Width == 0 && isHorizontal
-        || transform.ScreenRect.Height == 0 && !isHorizontal)
+    var isHorizontal_ = Placement == AxisPlacement.Bottom || Placement == AxisPlacement.Top;
+    if(transform.ScreenRect.Width == 0 && isHorizontal_
+        || transform.ScreenRect.Height == 0 && !isHorizontal_)
     {
       return;
     }
 
-    if (!IsMeasureValid)
+    if(!IsMeasureValid)
     {
       InvalidateMeasure();
     }
 
     CreateTicks();
 
-    // removing unfinite screen ticks
-    var tempTicks = new List<T>(collection: ticks);
-    var tempScreenTicks = new List<double>(capacity: ticks.Length);
-    var tempLabels = new List<UIElement>(collection: labels);
+    // removing infinite screen ticks
+    var tempTicks_ = new List<T>(collection: ticks);
+    var tempScreenTicks_ = new List<double>(capacity: ticks.Length);
+    var tempLabels_ = new List<UIElement>(collection: labels);
 
-    int i = 0;
-    while (i < tempTicks.Count)
+    var i_ = 0;
+    while(i_ < tempTicks_.Count)
     {
-      T tick = tempTicks[index: i];
-      double screenTick = getCoordinate(arg: createDataPoint(arg: convertToDouble(arg: tick)).DataToScreen(transform: transform));
-      if (screenTick.IsFinite())
+      var tick_ = tempTicks_[index: i_];
+      var screenTick_ = getCoordinate(arg: createDataPoint(arg: convertToDouble(arg: tick_)).DataToScreen(transform: transform));
+      if(screenTick_.IsFinite())
       {
-        tempScreenTicks.Add(item: screenTick);
-        i++;
+        tempScreenTicks_.Add(item: screenTick_);
+        i_++;
       }
       else
       {
-        tempTicks.RemoveAt(index: i);
-        tempLabels.RemoveAt(index: i);
+        tempTicks_.RemoveAt(index: i_);
+        tempLabels_.RemoveAt(index: i_);
       }
     }
 
-    ticks = tempTicks.ToArray();
-    screenTicks = tempScreenTicks.ToArray();
-    labels = tempLabels.ToArray();
+    ticks = tempTicks_.ToArray();
+    screenTicks = tempScreenTicks_.ToArray();
+    labels = tempLabels_.ToArray();
 
     // saving generated lines into pool
-    for (i = 0; i < geomGroup.Children.Count; i++)
+    for(i_ = 0; i_ < geomGroup.Children.Count; i_++)
     {
-      var geometry = (LineGeometry)geomGroup.Children[index: i];
-      lineGeomPool.Put(item: geometry);
+      var geometry_ = (LineGeometry)geomGroup.Children[index: i_];
+      lineGeomPool.Put(item: geometry_);
     }
 
     geomGroup = new GeometryGroup
@@ -716,21 +707,21 @@ public abstract class AxisControl<T> : AxisControlBase
       Children = new GeometryCollection(capacity: lineGeomPool.Count)
     };
 
-    if (drawTicks)
+    if(drawTicks)
     {
       DoDrawTicks(screenTicksX: screenTicks, lines: geomGroup.Children);
     }
 
-    if (drawMinorTicks)
+    if(drawMinorTicks)
     {
       DoDrawMinorTicks(lines: geomGroup.Children);
     }
 
-    ticksPath.Data = geomGroup;
+    _ticksPath.Data = geomGroup;
 
     DoDrawCommonLabels(screenTicksX: screenTicks);
 
-    if (drawMajorLabels)
+    if(drawMajorLabels)
     {
       DoDrawMajorLabels();
     }
@@ -738,7 +729,7 @@ public abstract class AxisControl<T> : AxisControlBase
     ScreenTicksChanged.Raise(sender: this);
   }
 
-  bool drawTicksOnEmptyLabel;
+  private bool drawTicksOnEmptyLabel;
   /// <summary>
   /// Gets or sets a value indicating whether to draw ticks on empty label.
   /// </summary>
@@ -750,7 +741,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => drawTicksOnEmptyLabel;
     set
     {
-      if (drawTicksOnEmptyLabel != value)
+      if(drawTicksOnEmptyLabel != value)
       {
         drawTicksOnEmptyLabel = value;
         UpdateUI();
@@ -761,90 +752,90 @@ public abstract class AxisControl<T> : AxisControlBase
   private readonly ResourcePool<LineGeometry> lineGeomPool = new();
   private void DoDrawTicks(double[] screenTicksX, ICollection<Geometry> lines)
   {
-    for (int i = 0; i < screenTicksX.Length; i++)
+    for(var i_ = 0; i_ < screenTicksX.Length; i_++)
     {
-      if (labels[i] == null && !drawTicksOnEmptyLabel)
+      if(labels[i_] == null && !drawTicksOnEmptyLabel)
       {
         continue;
       }
 
-      Point p1 = createScreenPoint1(arg: screenTicksX[i]);
-      Point p2 = createScreenPoint2(arg1: screenTicksX[i], arg2: 1);
+      var p1_ = createScreenPoint1(arg: screenTicksX[i_]);
+      var p2_ = createScreenPoint2(arg1: screenTicksX[i_], arg2: 1);
 
-      LineGeometry line = lineGeomPool.GetOrCreate();
+      var line_ = lineGeomPool.GetOrCreate();
 
-      line.StartPoint = p1;
-      line.EndPoint = p2;
-      lines.Add(item: line);
+      line_.StartPoint = p1_;
+      line_.EndPoint = p2_;
+      lines.Add(item: line_);
     }
   }
 
   private double GetRangesRatio(Range<T> nominator, Range<T> denominator)
   {
-    double nomMin = ConvertToDouble(arg: nominator.Min);
-    double nomMax = ConvertToDouble(arg: nominator.Max);
-    double denMin = ConvertToDouble(arg: denominator.Min);
-    double denMax = ConvertToDouble(arg: denominator.Max);
+    var nomMin_ = ConvertToDouble(arg: nominator.Min);
+    var nomMax_ = ConvertToDouble(arg: nominator.Max);
+    var denMin_ = ConvertToDouble(arg: denominator.Min);
+    var denMax_ = ConvertToDouble(arg: denominator.Max);
 
-    return (nomMax - nomMin) / (denMax - denMin);
+    return (nomMax_ - nomMin_) / (denMax_ - denMin_);
   }
 
-  Transform additionalLabelTransform;
+  private Transform additionalLabelTransform;
   private void DoDrawMajorLabels()
   {
-    ITicksProvider<T> majorTicksProvider = ticksProvider.MajorProvider;
+    var majorTicksProvider_ = ticksProvider.MajorProvider;
     additionalLabelsCanvas.Children.Clear();
 
-    if (majorTicksProvider != null && majorLabelProvider != null)
+    if(majorTicksProvider_ != null && majorLabelProvider != null)
     {
       additionalLabelsCanvas.Visibility = Visibility.Visible;
 
-      Size renderSize = RenderSize;
-      var majorTicks = majorTicksProvider.GetTicks(range: range, ticksCount: DefaultTicksProvider.DefaultTicksCount);
+      var renderSize_ = RenderSize;
+      var majorTicks_ = majorTicksProvider_.GetTicks(range: range, ticksCount: DefaultTicksProvider.DefaultTicksCount);
 
-      double[] screenCoords = majorTicks.Ticks.Select(selector: tick => createDataPoint(arg: convertToDouble(arg: tick))).
+      var screenCoords_ = majorTicks_.Ticks.Select(selector: tick => createDataPoint(arg: convertToDouble(arg: tick))).
           Select(selector: p => p.DataToScreen(transform: transform)).Select(selector: p => getCoordinate(arg: p)).ToArray();
 
       // todo this is not the best decision - when displaying, for example,
       // milliseconds, it causes to create hundreds and thousands of textBlocks.
-      double rangesRatio = GetRangesRatio(nominator: majorTicks.Ticks.GetPairs().ToArray()[0], denominator: range);
+      var rangesRatio_ = GetRangesRatio(nominator: majorTicks_.Ticks.GetPairs().ToArray()[0], denominator: range);
 
-      object info = majorTicks.Info;
-      MajorLabelsInfo newInfo = new()
+      var info_ = majorTicks_.Info;
+      MajorLabelsInfo newInfo_ = new()
       {
-        Info = info,
-        MajorLabelsCount = (int)Math.Ceiling(a: rangesRatio)
+        Info = info_,
+        MajorLabelsCount = (int)Math.Ceiling(a: rangesRatio_)
       };
 
-      var newMajorTicks = new TicksInfo<T>
+      var newMajorTicks_ = new TicksInfo<T>
       {
-        Info = newInfo,
-        Ticks = majorTicks.Ticks,
-        TickSizes = majorTicks.TickSizes
+        Info = newInfo_,
+        Ticks = majorTicks_.Ticks,
+        TickSizes = majorTicks_.TickSizes
       };
 
-      UIElement[] additionalLabels = MajorLabelProvider.CreateLabels(ticksInfo: newMajorTicks);
+      var additionalLabels_ = MajorLabelProvider.CreateLabels(ticksInfo: newMajorTicks_);
 
-      for (int i = 0; i < additionalLabels.Length; i++)
+      for(var i_ = 0; i_ < additionalLabels_.Length; i_++)
       {
-        if (screenCoords[i].IsNaN())
+        if(screenCoords_[i_].IsNaN())
         {
           continue;
         }
 
-        UIElement tickLabel = additionalLabels[i];
+        var tickLabel_ = additionalLabels_[i_];
 
-        tickLabel.Measure(availableSize: renderSize);
+        tickLabel_.Measure(availableSize: renderSize_);
 
-        StackCanvas.SetCoordinate(obj: tickLabel, value: screenCoords[i]);
-        StackCanvas.SetEndCoordinate(obj: tickLabel, value: screenCoords[i + 1]);
+        StackCanvas.SetCoordinate(obj: tickLabel_, value: screenCoords_[i_]);
+        StackCanvas.SetEndCoordinate(obj: tickLabel_, value: screenCoords_[i_ + 1]);
 
-        if (tickLabel is FrameworkElement)
+        if(tickLabel_ is FrameworkElement)
         {
-          ((FrameworkElement)tickLabel).LayoutTransform = additionalLabelTransform;
+          ((FrameworkElement)tickLabel_).LayoutTransform = additionalLabelTransform;
         }
 
-        additionalLabelsCanvas.Children.Add(element: tickLabel);
+        additionalLabelsCanvas.Children.Add(element: tickLabel_);
       }
     }
     else
@@ -854,95 +845,95 @@ public abstract class AxisControl<T> : AxisControlBase
   }
 
   private int prevMinorTicksCount = DefaultTicksProvider.DefaultTicksCount;
-  private const int maxTickArrangeIterations = 12;
+  private const int MaxTickArrangeIterations = 12;
   private void DoDrawMinorTicks(ICollection<Geometry> lines)
   {
-    ITicksProvider<T> minorTicksProvider = ticksProvider.MinorProvider;
-    if (minorTicksProvider != null)
+    var minorTicksProvider_ = ticksProvider.MinorProvider;
+    if(minorTicksProvider_ != null)
     {
-      int minorTicksCount = prevMinorTicksCount;
-      int prevActualTicksCount = -1;
-      ITicksInfo<T> minorTicks;
-      TickCountChange result = TickCountChange.OK;
-      int iteration = 0;
+      var minorTicksCount_ = prevMinorTicksCount;
+      var prevActualTicksCount_ = -1;
+      ITicksInfo<T> minorTicks_;
+      var result_ = TickCountChange.Ok;
+      var iteration_ = 0;
       do
       {
-        Verify.IsTrue(condition: ++iteration < maxTickArrangeIterations);
+        Verify.IsTrue(condition: ++iteration_ < MaxTickArrangeIterations);
 
-        minorTicks = minorTicksProvider.GetTicks(range: range, ticksCount: minorTicksCount);
+        minorTicks_ = minorTicksProvider_.GetTicks(range: range, ticksCount: minorTicksCount_);
 
-        prevActualTicksCount = minorTicks.Ticks.Length;
-        var prevResult = result;
-        result = CheckMinorTicksArrangement(minorTicks: minorTicks);
-        if (prevResult == TickCountChange.Decrease && result == TickCountChange.Increase)
+        prevActualTicksCount_ = minorTicks_.Ticks.Length;
+        var prevResult_ = result_;
+        result_ = CheckMinorTicksArrangement(minorTicks: minorTicks_);
+        if(prevResult_ == TickCountChange.Decrease && result_ == TickCountChange.Increase)
         {
           // stop tick number oscillating
-          result = TickCountChange.OK;
+          result_ = TickCountChange.Ok;
         }
-        if (result == TickCountChange.Decrease)
+        if(result_ == TickCountChange.Decrease)
         {
-          int newMinorTicksCount = minorTicksProvider.DecreaseTickCount(ticksCount: minorTicksCount);
-          if (newMinorTicksCount == minorTicksCount)
+          var newMinorTicksCount_ = minorTicksProvider_.DecreaseTickCount(ticksCount: minorTicksCount_);
+          if(newMinorTicksCount_ == minorTicksCount_)
           {
-            result = TickCountChange.OK;
+            result_ = TickCountChange.Ok;
           }
-          minorTicksCount = newMinorTicksCount;
+          minorTicksCount_ = newMinorTicksCount_;
         }
-        else if (result == TickCountChange.Increase)
+        else if(result_ == TickCountChange.Increase)
         {
-          int newCount = minorTicksProvider.IncreaseTickCount(ticksCount: minorTicksCount);
-          if (newCount == minorTicksCount)
+          var newCount_ = minorTicksProvider_.IncreaseTickCount(ticksCount: minorTicksCount_);
+          if(newCount_ == minorTicksCount_)
           {
-            result = TickCountChange.OK;
+            result_ = TickCountChange.Ok;
           }
-          minorTicksCount = newCount;
+          minorTicksCount_ = newCount_;
         }
 
-      } while (result != TickCountChange.OK);
-      prevMinorTicksCount = minorTicksCount;
+      } while(result_ != TickCountChange.Ok);
+      prevMinorTicksCount = minorTicksCount_;
 
-      double[] sizes = minorTicks.TickSizes;
+      var sizes_ = minorTicks_.TickSizes;
 
-      double[] screenCoords = minorTicks.Ticks.Select(
+      var screenCoords_ = minorTicks_.Ticks.Select(
           selector: coord => getCoordinate(arg: createDataPoint(arg: convertToDouble(arg: coord)).
               DataToScreen(transform: transform))).ToArray();
 
-      minorScreenTicks = new MinorTickInfo<double>[screenCoords.Length];
-      for (int i = 0; i < screenCoords.Length; i++)
+      minorScreenTicks = new MinorTickInfo<double>[screenCoords_.Length];
+      for(var i_ = 0; i_ < screenCoords_.Length; i_++)
       {
-        minorScreenTicks[i] = new MinorTickInfo<double>(value: sizes[i], tick: screenCoords[i]);
+        minorScreenTicks[i_] = new MinorTickInfo<double>(value: sizes_[i_], tick: screenCoords_[i_]);
       }
 
-      for (int i = 0; i < screenCoords.Length; i++)
+      for(var i_ = 0; i_ < screenCoords_.Length; i_++)
       {
-        double screenCoord = screenCoords[i];
+        var screenCoord_ = screenCoords_[i_];
 
-        Point p1 = createScreenPoint1(arg: screenCoord);
-        Point p2 = createScreenPoint2(arg1: screenCoord, arg2: sizes[i]);
+        var p1_ = createScreenPoint1(arg: screenCoord_);
+        var p2_ = createScreenPoint2(arg1: screenCoord_, arg2: sizes_[i_]);
 
-        LineGeometry line = lineGeomPool.GetOrCreate();
-        line.StartPoint = p1;
-        line.EndPoint = p2;
+        var line_ = lineGeomPool.GetOrCreate();
+        line_.StartPoint = p1_;
+        line_.EndPoint = p2_;
 
-        lines.Add(item: line);
+        lines.Add(item: line_);
       }
     }
   }
 
   private TickCountChange CheckMinorTicksArrangement(ITicksInfo<T> minorTicks)
   {
-    Size renderSize = RenderSize;
-    TickCountChange result = TickCountChange.OK;
-    if (minorTicks.Ticks.Length * 3 > getSize(arg: renderSize))
+    var renderSize_ = RenderSize;
+    var result_ = TickCountChange.Ok;
+    if(minorTicks.Ticks.Length * 3 > getSize(arg: renderSize_))
     {
-      result = TickCountChange.Decrease;
+      result_ = TickCountChange.Decrease;
     }
-    else if (minorTicks.Ticks.Length * 6 < getSize(arg: renderSize))
+    else if(minorTicks.Ticks.Length * 6 < getSize(arg: renderSize_))
     {
-      result = TickCountChange.Increase;
+      result_ = TickCountChange.Increase;
     }
 
-    return result;
+    return result_;
   }
 
   private bool isStaticAxis;
@@ -958,7 +949,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => isStaticAxis;
     set
     {
-      if (isStaticAxis != value)
+      if(isStaticAxis != value)
       {
         isStaticAxis = value;
         UpdateUI();
@@ -971,99 +962,99 @@ public abstract class AxisControl<T> : AxisControlBase
     return getCoordinate(arg: createDataPoint(arg: convertToDouble(arg: value)).DataToScreen(transform: transform));
   }
 
-  private readonly double staticAxisMargin = 1; // px
+  private const double StaticAxisMargin = 1; // px
 
   private void DoDrawCommonLabels(double[] screenTicksX)
   {
-    Size renderSize = RenderSize;
+    var renderSize_ = RenderSize;
 
     commonLabelsCanvas.Children.Clear();
 
 #if DEBUG
-    if (labels != null)
+    if(labels != null)
     {
-      foreach (FrameworkElement item in labels)
+      foreach(FrameworkElement item_ in labels)
       {
-        if (item != null)
+        if(item_ != null)
         {
-          Debug.Assert(condition: item.Parent == null);
+          Debug.Assert(condition: item_.Parent == null);
         }
       }
     }
 #endif
 
-    double minCoordUnsorted = ToScreen(value: range.Min);
-    double maxCoordUnsorted = ToScreen(value: range.Max);
+    var minCoordUnsorted_ = ToScreen(value: range.Min);
+    var maxCoordUnsorted_ = ToScreen(value: range.Max);
 
-    double minCoord = Math.Min(val1: minCoordUnsorted, val2: maxCoordUnsorted);
-    double maxCoord = Math.Max(val1: minCoordUnsorted, val2: maxCoordUnsorted);
+    var minCoord_ = Math.Min(val1: minCoordUnsorted_, val2: maxCoordUnsorted_);
+    var maxCoord_ = Math.Max(val1: minCoordUnsorted_, val2: maxCoordUnsorted_);
 
-    double maxCoordDiff = (maxCoord - minCoord) / labels.Length / 2.0;
+    var maxCoordDiff_ = (maxCoord_ - minCoord_) / labels.Length / 2.0;
 
-    double minCoordToAdd = minCoord - maxCoordDiff;
-    double maxCoordToAdd = maxCoord + maxCoordDiff;
+    var minCoordToAdd_ = minCoord_ - maxCoordDiff_;
+    var maxCoordToAdd_ = maxCoord_ + maxCoordDiff_;
 
-    for (int i = 0; i < ticks.Length; i++)
+    for(var i_ = 0; i_ < ticks.Length; i_++)
     {
-      FrameworkElement tickLabel = (FrameworkElement)labels[i];
-      if (tickLabel == null)
+      var tickLabel_ = (FrameworkElement)labels[i_];
+      if(tickLabel_ == null)
       {
         continue;
       }
 
-      Debug.Assert(condition: tickLabel.Parent == null);
+      Debug.Assert(condition: tickLabel_.Parent == null);
 
-      tickLabel.Measure(availableSize: new Size(width: double.PositiveInfinity, height: double.PositiveInfinity));
+      tickLabel_.Measure(availableSize: new Size(width: double.PositiveInfinity, height: double.PositiveInfinity));
 
-      double screenX = screenTicksX[i];
-      double coord = screenX;
+      var screenX_ = screenTicksX[i_];
+      var coord_ = screenX_;
 
-      tickLabel.HorizontalAlignment = HorizontalAlignment.Center;
-      tickLabel.VerticalAlignment = VerticalAlignment.Center;
+      tickLabel_.HorizontalAlignment = HorizontalAlignment.Center;
+      tickLabel_.VerticalAlignment = VerticalAlignment.Center;
 
-      if (isStaticAxis)
+      if(isStaticAxis)
       {
         // getting real size of label
-        tickLabel.Measure(availableSize: renderSize);
-        Size tickLabelSize = tickLabel.DesiredSize;
+        tickLabel_.Measure(availableSize: renderSize_);
+        var tickLabelSize_ = tickLabel_.DesiredSize;
 
-        if (Math.Abs(value: screenX - minCoord) < maxCoordDiff)
+        if(Math.Abs(value: screenX_ - minCoord_) < maxCoordDiff_)
         {
-          coord = minCoord + staticAxisMargin;
-          if (placement.IsBottomOrTop())
+          coord_ = minCoord_ + StaticAxisMargin;
+          if(placement.IsBottomOrTop())
           {
-            tickLabel.HorizontalAlignment = HorizontalAlignment.Left;
+            tickLabel_.HorizontalAlignment = HorizontalAlignment.Left;
           }
           else
           {
-            tickLabel.VerticalAlignment = VerticalAlignment.Top;
+            tickLabel_.VerticalAlignment = VerticalAlignment.Top;
           }
         }
-        else if (Math.Abs(value: screenX - maxCoord) < maxCoordDiff)
+        else if(Math.Abs(value: screenX_ - maxCoord_) < maxCoordDiff_)
         {
-          coord = maxCoord - getSize(arg: tickLabelSize) / 2 - staticAxisMargin;
-          if (!placement.IsBottomOrTop())
+          coord_ = maxCoord_ - getSize(arg: tickLabelSize_) / 2 - StaticAxisMargin;
+          if(!placement.IsBottomOrTop())
           {
-            tickLabel.VerticalAlignment = VerticalAlignment.Bottom;
-            coord = maxCoord - staticAxisMargin;
+            tickLabel_.VerticalAlignment = VerticalAlignment.Bottom;
+            coord_ = maxCoord_ - StaticAxisMargin;
           }
         }
       }
 
       // label is out of visible area
-      if (coord < minCoord || coord > maxCoord)
+      if(coord_ < minCoord_ || coord_ > maxCoord_)
       {
         continue;
       }
 
-      if (coord.IsNaN())
+      if(coord_.IsNaN())
       {
         continue;
       }
 
-      StackCanvas.SetCoordinate(obj: tickLabel, value: coord);
+      StackCanvas.SetCoordinate(obj: tickLabel_, value: coord_);
 
-      commonLabelsCanvas.Children.Add(element: tickLabel);
+      commonLabelsCanvas.Children.Add(element: tickLabel_);
     }
   }
 
@@ -1073,8 +1064,9 @@ public abstract class AxisControl<T> : AxisControlBase
   }
 
   private Func<T, double> convertToDouble;
+  
   /// <summary>
-  /// Gets or sets the convertion of tick to double.
+  /// Gets or sets the conversation of tick to double.
   /// Should not be null.
   /// </summary>
   /// <value>The convert to double.</value>
@@ -1084,10 +1076,7 @@ public abstract class AxisControl<T> : AxisControlBase
     get => convertToDouble;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: "value");
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       convertToDouble = value;
       UpdateUI();
@@ -1105,11 +1094,11 @@ public abstract class AxisControl<T> : AxisControlBase
   [EditorBrowsable(state: EditorBrowsableState.Never)]
   public MinorTickInfo<double>[] MinorScreenTicks => minorScreenTicks;
 
-  ITicksInfo<T> ticksInfo;
+  private ITicksInfo<T> ticksInfo;
   private T[] ticks;
   private UIElement[] labels;
-  private const double increaseRatio = 3.0;
-  private const double decreaseRatio = 1.6;
+  private const double IncreaseRatio = 3.0;
+  private const double DecreaseRatio = 1.6;
 
   private Func<Size, double> getSize = size => size.Width;
   private Func<Point, double> getCoordinate = p => p.X;
@@ -1121,105 +1110,100 @@ public abstract class AxisControl<T> : AxisControlBase
   private int previousTickCount = DefaultTicksProvider.DefaultTicksCount;
   private void CreateTicks()
   {
-    TickCountChange result = TickCountChange.OK;
+    var result_ = TickCountChange.Ok;
 
-    int prevActualTickCount = -1;
+    var prevActualTickCount_ = -1;
 
-    int tickCount = previousTickCount;
-    int iteration = 0;
+    var tickCount_ = previousTickCount;
+    var iteration_ = 0;
 
     do
     {
-      Verify.IsTrue(condition: ++iteration < maxTickArrangeIterations);
+      Verify.IsTrue(condition: ++iteration_ < MaxTickArrangeIterations);
 
-      ticksInfo = ticksProvider.GetTicks(range: range, ticksCount: tickCount);
+      ticksInfo = ticksProvider.GetTicks(range: range, ticksCount: tickCount_);
       ticks = ticksInfo.Ticks;
 
-      if (ticks.Length == prevActualTickCount)
+      if(ticks.Length == prevActualTickCount_)
       {
         break;
       }
 
-      prevActualTickCount = ticks.Length;
+      prevActualTickCount_ = ticks.Length;
 
-      if (labels != null)
+      if(labels != null)
       {
-        for (int i = 0; i < labels.Length; i++)
+        for(var i_ = 0; i_ < labels.Length; i_++)
         {
-          labelProvider.ReleaseLabel(label: labels[i]);
+          labelProvider.ReleaseLabel(label: labels[i_]);
         }
       }
 
       labels = labelProvider.CreateLabels(ticksInfo: ticksInfo);
 
-      var prevResult = result;
-      result = CheckLabelsArrangement(labels: labels, ticks: ticks);
+      var prevResult_ = result_;
+      result_ = CheckLabelsArrangement(labels: labels, ticks: ticks);
 
-      if (prevResult == TickCountChange.Decrease && result == TickCountChange.Increase)
+      if(prevResult_ == TickCountChange.Decrease && result_ == TickCountChange.Increase)
       {
         // stop tick number oscillating
-        result = TickCountChange.OK;
+        result_ = TickCountChange.Ok;
       }
 
-      if (result != TickCountChange.OK)
+      if(result_ != TickCountChange.Ok)
       {
-        int prevTickCount = tickCount;
-        if (result == TickCountChange.Decrease)
-        {
-          tickCount = ticksProvider.DecreaseTickCount(ticksCount: tickCount);
-        }
-        else
-        {
-          tickCount = ticksProvider.IncreaseTickCount(ticksCount: tickCount);
-          //DebugVerify.Is(tickCount >= prevTickCount);
-        }
+        var prevTickCount_ = tickCount_;
+        tickCount_ = result_ == TickCountChange.Decrease 
+          ? ticksProvider.DecreaseTickCount(ticksCount: tickCount_)
+          : ticksProvider.IncreaseTickCount(ticksCount: tickCount_);
 
+        //DebugVerify.Is(tickCount >= prevTickCount);
         // ticks provider could not create less ticks or tick number didn't change
-        if (tickCount == 0 || prevTickCount == tickCount)
+        if(tickCount_ == 0 || prevTickCount_ == tickCount_)
         {
-          tickCount = prevTickCount;
-          result = TickCountChange.OK;
+          tickCount_ = prevTickCount_;
+          result_ = TickCountChange.Ok;
         }
       }
-    } while (result != TickCountChange.OK);
+    } while(result_ != TickCountChange.Ok);
 
-    previousTickCount = tickCount;
+    previousTickCount = tickCount_;
   }
 
   private TickCountChange CheckLabelsArrangement(UIElement[] labels, T[] ticks)
   {
-    var actualLabels = labels.Select(selector: (label, i) => new { Label = label, Index = i })
+    var actualLabels_ = labels.Select(selector: (label, i) => new { Label = label, Index = i })
         .Where(predicate: el => el.Label != null)
         .Select(selector: el => new { Label = el.Label, Tick = ticks[el.Index] })
         .ToList();
 
-    actualLabels.ForEach(action: item => item.Label.Measure(availableSize: RenderSize));
+    actualLabels_.ForEach(action: item => item.Label.Measure(availableSize: RenderSize));
 
-    var sizeInfos = actualLabels.Select(selector: item =>
+    var sizeInfos_ = actualLabels_.Select(selector: item =>
         new { X = GetCoordinateFromTick(tick: item.Tick), Size = getSize(arg: item.Label.DesiredSize) })
         .OrderBy(keySelector: item => item.X).ToArray();
 
-    TickCountChange res = TickCountChange.OK;
+    var res_ = TickCountChange.Ok;
 
-    int increaseCount = 0;
-    for (int i = 0; i < sizeInfos.Length - 1; i++)
+    var increaseCount_ = 0;
+    for(var i_ = 0; i_ < sizeInfos_.Length - 1; i_++)
     {
-      if ((sizeInfos[i].X + sizeInfos[i].Size * decreaseRatio) > sizeInfos[i + 1].X)
+      if(sizeInfos_[i_].X + sizeInfos_[i_].Size * DecreaseRatio > sizeInfos_[i_ + 1].X)
       {
-        res = TickCountChange.Decrease;
+        res_ = TickCountChange.Decrease;
         break;
       }
-      if ((sizeInfos[i].X + sizeInfos[i].Size * increaseRatio) < sizeInfos[i + 1].X)
+      if(sizeInfos_[i_].X + sizeInfos_[i_].Size * IncreaseRatio < sizeInfos_[i_ + 1].X)
       {
-        increaseCount++;
+        increaseCount_++;
       }
     }
-    if (increaseCount > sizeInfos.Length / 2)
+    if(increaseCount_ > sizeInfos_.Length / 2)
     {
-      res = TickCountChange.Increase;
+      res_ = TickCountChange.Increase;
     }
 
-    return res;
+    return res_;
   }
 }
 
@@ -1239,7 +1223,7 @@ internal sealed class SizeInfo : IComparable<SizeInfo>
 internal enum TickCountChange
 {
   Increase = -1,
-  OK = 0,
+  Ok = 0,
   Decrease = 1
 }
 

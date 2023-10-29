@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
-internal class LabelProviderProperties : DependencyObject
+internal sealed class LabelProviderProperties : DependencyObject
 {
   public static bool GetExponentialIsCommonLabel(DependencyObject obj)
   {

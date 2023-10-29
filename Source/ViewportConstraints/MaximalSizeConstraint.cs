@@ -1,4 +1,6 @@
-﻿namespace Crystal.Plot2D;
+﻿using Crystal.Plot2D.Common;
+
+namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 /// Represents a constraint, which limits the maximal size of <see cref="Viewport"/>'s Visible property.
@@ -47,7 +49,7 @@ public class MaximalSizeConstraint : ViewportConstraint
   /// <returns>DataRect</returns>
   public override DataRect Apply(DataRect oldDataRect, DataRect newDataRect, Viewport2D viewport)
   {
-    bool decreasing = newDataRect.Width < oldDataRect.Width || newDataRect.Height < oldDataRect.Height;
+    var decreasing = newDataRect.Width < oldDataRect.Width || newDataRect.Height < oldDataRect.Height;
     if (!decreasing && (newDataRect.Width > maxSize || newDataRect.Height > maxSize))
     {
       return oldDataRect;

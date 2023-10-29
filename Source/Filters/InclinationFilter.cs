@@ -1,9 +1,10 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Filters;
 
 [Obsolete(message: "Works incorrectly", error: true)]
 public sealed class InclinationFilter : PointsFilterBase
@@ -33,23 +34,23 @@ public sealed class InclinationFilter : PointsFilterBase
 
     List<Point> res = new() { points[index: 0] };
 
-    int i = 1;
+    var i = 1;
     while (i < points.Count)
     {
-      bool added = false;
-      int j = i;
-      while (!added && (j < points.Count - 1))
+      var added = false;
+      var j = i;
+      while (!added && j < points.Count - 1)
       {
-        Point x1 = res[index: res.Count - 1];
-        Point x2 = points[index: j];
-        Point x3 = points[index: j + 1];
+        var x1 = res[index: res.Count - 1];
+        var x2 = points[index: j];
+        var x3 = points[index: j + 1];
 
-        double a = (x1 - x2).Length;
-        double b = (x2 - x3).Length;
-        double c = (x1 - x3).Length;
+        var a = (x1 - x2).Length;
+        var b = (x2 - x3).Length;
+        var c = (x1 - x3).Length;
 
-        double angle13 = Math.Acos(d: (a * a + b * b - c * c) / (2 * a * b));
-        double degrees = 180 / Math.PI * angle13;
+        var angle13 = Math.Acos(d: (a * a + b * b - c * c) / (2 * a * b));
+        var degrees = 180 / Math.PI * angle13;
         if (degrees < criticalAngle)
         {
           res.Add(item: x2);

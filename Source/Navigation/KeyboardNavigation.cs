@@ -1,17 +1,18 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using Microsoft.Win32;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Common.UndoSystem;
+using Microsoft.Win32;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 ///<summary>
 /// Provides keyboard navigation around viewport of Plotter.
 ///</summary>
-public class KeyboardNavigation : IPlotterElement
+public sealed class KeyboardNavigation : IPlotterElement
 {
   ///<summary>
   /// Initializes a new instance of the <see cref="KeyboardNavigation"/> class.
@@ -140,9 +141,9 @@ public class KeyboardNavigation : IPlotterElement
 
   private void ZoomToPoint(double coeff)
   {
-    Point pt = Mouse.GetPosition(relativeTo: plotter2D.CentralGrid);
-    Point dataPoint = Viewport.Transform.ScreenToData(screenPoint: pt);
-    DataRect visible = Viewport.Visible;
+    var pt = Mouse.GetPosition(relativeTo: plotter2D.CentralGrid);
+    var dataPoint = Viewport.Transform.ScreenToData(screenPoint: pt);
+    var visible = Viewport.Visible;
 
     Viewport.Visible = visible.Zoom(to: dataPoint, ratio: coeff);
   }
@@ -179,7 +180,7 @@ public class KeyboardNavigation : IPlotterElement
 
   private void ZoomWithParamExecute(object target, ExecutedRoutedEventArgs e)
   {
-    double zoomParam = (double)e.Parameter;
+    var zoomParam = (double)e.Parameter;
     plotter2D.Viewport.Zoom(factor: zoomParam);
     e.Handled = true;
   }
@@ -227,7 +228,7 @@ public class KeyboardNavigation : IPlotterElement
 
   private void FitToViewExecute(object target, ExecutedRoutedEventArgs e)
   {
-    // todo сделать нормально.
+    // todo: do it right.
     (Viewport as Viewport2D).FitToView();
     e.Handled = true;
   }
@@ -245,10 +246,10 @@ public class KeyboardNavigation : IPlotterElement
   private readonly double scrollCoeff = 0.05;
   private void ScrollVisibleProportionally(double xShiftCoeff, double yShiftCoeff)
   {
-    DataRect visible = Viewport.Visible;
-    DataRect oldVisible = visible;
-    double width = visible.Width;
-    double height = visible.Height;
+    var visible = Viewport.Visible;
+    var oldVisible = visible;
+    var width = visible.Width;
+    var height = visible.Height;
 
     double reverseCoeff = isReversed ? -1 : 1;
     visible.Offset(offsetX: reverseCoeff * xShiftCoeff * width, offsetY: reverseCoeff * yShiftCoeff * height);
@@ -329,7 +330,7 @@ public class KeyboardNavigation : IPlotterElement
     dlg.AddExtension = true;
     if (dlg.ShowDialog().GetValueOrDefault(defaultValue: false))
     {
-      string filePath = dlg.FileName;
+      var filePath = dlg.FileName;
       plotter2D.SaveScreenShot(filePath: filePath);
       e.Handled = true;
     }
@@ -377,9 +378,9 @@ public class KeyboardNavigation : IPlotterElement
     }
   }
 
-  void aboutWindow_Closed(object sender, EventArgs e)
+  private void aboutWindow_Closed(object sender, EventArgs e)
   {
-    Window window = (Window)sender;
+    var window = (Window)sender;
     window.Closed -= aboutWindow_Closed;
     aboutWindowOpened = false;
   }

@@ -1,9 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Numeric;
 
 /// <summary>
 /// Represents a ticks provider for <see cref="System.Double"/> values.
@@ -53,15 +54,15 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
   private double[] ticks;
   public ITicksInfo<double> GetTicks(Range<double> range, int ticksCount)
   {
-    double start = range.Min;
-    double finish = range.Max;
+    var start = range.Min;
+    var finish = range.Max;
 
-    double delta = finish - start;
+    var delta = finish - start;
 
-    int log = (int)Math.Round(a: Math.Log10(d: delta));
+    var log = (int)Math.Round(a: Math.Log10(d: delta));
 
-    double newStart = RoundingHelper.Round(number: start, rem: log);
-    double newFinish = RoundingHelper.Round(number: finish, rem: log);
+    var newStart = RoundingHelper.Round(number: start, rem: log);
+    var newFinish = RoundingHelper.Round(number: finish, rem: log);
     if (newStart == newFinish)
     {
       log--;
@@ -70,10 +71,10 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
     }
 
     // calculating step between ticks
-    double unroundedStep = (newFinish - newStart) / ticksCount;
-    int stepLog = log;
+    var unroundedStep = (newFinish - newStart) / ticksCount;
+    var stepLog = log;
     // trying to round step
-    double step = RoundingHelper.Round(number: unroundedStep, rem: stepLog);
+    var step = RoundingHelper.Round(number: unroundedStep, rem: stepLog);
     if (step == 0)
     {
       stepLog--;
@@ -90,14 +91,7 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
       step = minStep;
     }
 
-    if (step != 0.0)
-    {
-      ticks = CreateTicks(start: start, finish: finish, step: step);
-    }
-    else
-    {
-      ticks = new double[] { };
-    }
+    ticks = step != 0.0 ? CreateTicks(start: start, finish: finish, step: step) : new double[] { };
 
     TicksInfo<double> res = new() { Info = log, Ticks = ticks };
 
@@ -108,7 +102,7 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
   {
     DebugVerify.Is(condition: step != 0.0);
 
-    double x = step * Math.Floor(d: start / step);
+    var x = step * Math.Floor(d: start / step);
 
     if (x == x + step)
     {
@@ -117,7 +111,7 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
 
     List<double> res = new();
 
-    double increasedFinish = finish + step * 1.05;
+    var increasedFinish = finish + step * 1.05;
     while (x <= increasedFinish)
     {
       res.Add(item: x);
@@ -127,7 +121,7 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
     return res.ToArray();
   }
 
-  private static readonly int[] tickCounts = new int[] { 20, 10, 5, 4, 2, 1 };
+  private static readonly int[] tickCounts = { 20, 10, 5, 4, 2, 1 };
 
   public const int DefaultPreferredTicksCount = 10;
 
@@ -138,7 +132,7 @@ public sealed class NumericTicksProvider : ITicksProvider<double>
 
   public int IncreaseTickCount(int ticksCount)
   {
-    int newTickCount = tickCounts.Reverse().FirstOrDefault(predicate: tick => tick > ticksCount);
+    var newTickCount = tickCounts.Reverse().FirstOrDefault(predicate: tick => tick > ticksCount);
     if (newTickCount == 0)
     {
       newTickCount = tickCounts[0];

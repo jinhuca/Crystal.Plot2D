@@ -1,8 +1,10 @@
 ﻿using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Graphs;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Descriptions;
 
 public sealed class PenDescription : StandardDescription
 {

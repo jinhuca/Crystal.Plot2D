@@ -1,4 +1,6 @@
-﻿namespace Crystal.Plot2D;
+﻿using Crystal.Plot2D.Common;
+
+namespace Crystal.Plot2D.Transforms;
 
 public static class DataDomains
 {

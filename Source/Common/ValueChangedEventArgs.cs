@@ -4,15 +4,13 @@ namespace Crystal.Plot2D.Common;
 
 public sealed class ValueChangedEventArgs<T> : EventArgs
 {
-  public ValueChangedEventArgs(T prevValue, T currValue)
+  internal ValueChangedEventArgs(T prevValue, T currValue)
   {
-    this.prevValue = prevValue;
-    this.currValue = currValue;
+    PreviousValue = prevValue;
+    CurrentValue = currValue;
   }
 
-  private readonly T prevValue;
-  public T PreviousValue => prevValue;
+  internal T PreviousValue { get; }
 
-  private readonly T currValue;
-  public T CurrentValue => currValue;
+  internal T CurrentValue { get; }
 }

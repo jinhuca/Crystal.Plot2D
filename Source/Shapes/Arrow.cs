@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 ///   Paints an arrow with start and end points in viewport coordinates.
@@ -89,20 +90,20 @@ public class Arrow : Segment
 
     var transform = Plotter.Viewport.Transform;
 
-    Point p1 = StartPoint.DataToScreen(transform: transform);
-    Point p2 = EndPoint.DataToScreen(transform: transform);
+    var p1 = StartPoint.DataToScreen(transform: transform);
+    var p2 = EndPoint.DataToScreen(transform: transform);
 
-    Vector arrowVector = p1 - p2;
-    Vector arrowCapVector = ArrowLength * arrowVector;
+    var arrowVector = p1 - p2;
+    var arrowCapVector = ArrowLength * arrowVector;
 
-    Matrix leftMatrix = Matrix.Identity;
+    var leftMatrix = Matrix.Identity;
     leftMatrix.Rotate(angle: ArrowAngle);
 
-    Matrix rightMatrix = Matrix.Identity;
+    var rightMatrix = Matrix.Identity;
     rightMatrix.Rotate(angle: -ArrowAngle);
 
-    Vector leftArrowLine = leftMatrix.Transform(vector: arrowCapVector);
-    Vector rightArrowLine = rightMatrix.Transform(vector: arrowCapVector);
+    var leftArrowLine = leftMatrix.Transform(vector: arrowCapVector);
+    var rightArrowLine = rightMatrix.Transform(vector: arrowCapVector);
 
     leftLineGeometry.StartPoint = p2;
     rightLineGeometry.StartPoint = p2;

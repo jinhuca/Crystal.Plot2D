@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 /// <summary>
 /// Represents a palette that calculates minimal and maximal values of interpolation coefficient and every 100000 calls writes these values 
@@ -9,7 +9,7 @@ namespace Crystal.Plot2D.Common;
 /// </summary>
 public class MinMaxLoggingPalette : DecoratorPaletteBase
 {
-  int counter;
+  private int counter;
 
   public double Min { get; set; } = double.MaxValue;
   public double Max { get; set; } = double.MinValue;

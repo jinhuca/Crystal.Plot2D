@@ -6,6 +6,8 @@ using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Charts;
 
@@ -23,14 +25,14 @@ public abstract class PopupTipElement : IPlotterElement
       return popup;
     }
 
-    foreach (var item in Plotter.Children)
+    foreach (var item_ in Plotter.Children)
     {
-      if (item is ViewportUIContainer)
+      if (item_ is ViewportUIContainer)
       {
-        ViewportUIContainer container = (ViewportUIContainer)item;
-        if (container.Content is PopupTip)
+        var container_ = (ViewportUIContainer)item_;
+        if (container_.Content is PopupTip)
         {
-          return popup = (PopupTip)container.Content;
+          return popup = (PopupTip)container_.Content;
         }
       }
     }
@@ -51,48 +53,48 @@ public abstract class PopupTipElement : IPlotterElement
 
   private void OnMouseMove(object sender, MouseEventArgs e)
   {
-    var popup = GetPopupTipWindow();
-    if (popup.IsOpen)
+    var popup_ = GetPopupTipWindow();
+    if (popup_.IsOpen)
     {
-      popup.Hide();
+      popup_.Hide();
     }
 
-    Point screenPoint = e.GetPosition(relativeTo: plotter.CentralGrid);
-    Point viewportPoint = screenPoint.ScreenToData(transform: plotter.Transform);
+    var screenPoint_ = e.GetPosition(relativeTo: plotter.CentralGrid);
+    var viewportPoint_ = screenPoint_.ScreenToData(transform: plotter.Transform);
 
-    var tooltip = GetTooltipForPoint(viewportPosition: viewportPoint);
-    if (tooltip == null)
+    var tooltip_ = GetTooltipForPoint(viewportPosition: viewportPoint_);
+    if (tooltip_ == null)
     {
       return;
     }
 
-    popup.VerticalOffset = screenPoint.Y + 20;
-    popup.HorizontalOffset = screenPoint.X;
-    popup.ShowDelayed(delay: TimeSpan.FromSeconds(value: 0));
+    popup_.VerticalOffset = screenPoint_.Y + 20;
+    popup_.HorizontalOffset = screenPoint_.X;
+    popup_.ShowDelayed(delay: TimeSpan.FromSeconds(value: 0));
 
-    Grid grid = new();
-    Rectangle rect = new()
+    Grid grid_ = new();
+    Rectangle rect_ = new()
     {
       Stroke = Brushes.Black,
       Fill = SystemColors.InfoBrush
     };
 
-    StackPanel panel = new();
-    panel.Orientation = Orientation.Vertical;
-    panel.Children.Add(element: tooltip);
-    panel.Margin = new Thickness(left: 4, top: 2, right: 4, bottom: 2);
+    StackPanel panel_ = new();
+    panel_.Orientation = Orientation.Vertical;
+    panel_.Children.Add(element: tooltip_);
+    panel_.Margin = new Thickness(left: 4, top: 2, right: 4, bottom: 2);
 
-    var textBlock = new TextBlock
+    var textBlock_ = new TextBlock
     {
-      Text = $"Location: {viewportPoint.X:F2}, {viewportPoint.Y:F2}",
+      Text = $"Location: {viewportPoint_.X:F2}, {viewportPoint_.Y:F2}",
       Foreground = SystemColors.GrayTextBrush
     };
-    panel.Children.Add(element: textBlock);
+    panel_.Children.Add(element: textBlock_);
 
-    grid.Children.Add(element: rect);
-    grid.Children.Add(element: panel);
-    grid.Measure(availableSize: SizeHelper.CreateInfiniteSize());
-    popup.Child = grid;
+    grid_.Children.Add(element: rect_);
+    grid_.Children.Add(element: panel_);
+    grid_.Measure(availableSize: SizeHelper.CreateInfiniteSize());
+    popup_.Child = grid_;
   }
 
   protected virtual UIElement GetTooltipForPoint(Point viewportPosition)

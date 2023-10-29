@@ -1,14 +1,14 @@
-﻿using System;
+﻿using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.TimeSpan;
 
 internal sealed class TimeSpanToDoubleConversion
 {
-  public TimeSpanToDoubleConversion(TimeSpan minSpan, TimeSpan maxSpan)
+  public TimeSpanToDoubleConversion(System.TimeSpan minSpan, System.TimeSpan maxSpan)
     : this(min: 0, minSpan: minSpan, max: 1, maxSpan: maxSpan)
   { }
 
-  public TimeSpanToDoubleConversion(double min, TimeSpan minSpan, double max, TimeSpan maxSpan)
+  public TimeSpanToDoubleConversion(double min, System.TimeSpan minSpan, double max, System.TimeSpan maxSpan)
   {
     this.min = min;
     length = max - min;
@@ -21,19 +21,19 @@ internal sealed class TimeSpanToDoubleConversion
   private readonly long ticksMin;
   private readonly long ticksLength;
 
-  internal TimeSpan FromDouble(double d)
+  internal System.TimeSpan FromDouble(double d)
   {
-    double ratio = (d - min) / length;
-    long ticks = (long)(ticksMin + ticksLength * ratio);
+    var ratio = (d - min) / length;
+    var ticks = (long)(ticksMin + ticksLength * ratio);
 
-    ticks = MathHelper.Clamp(value: ticks, min: TimeSpan.MinValue.Ticks, max: TimeSpan.MaxValue.Ticks);
+    ticks = MathHelper.Clamp(value: ticks, min: System.TimeSpan.MinValue.Ticks, max: System.TimeSpan.MaxValue.Ticks);
 
-    return new TimeSpan(ticks: ticks);
+    return new System.TimeSpan(ticks: ticks);
   }
 
-  internal double ToDouble(TimeSpan span)
+  internal double ToDouble(System.TimeSpan span)
   {
-    double ratio = (span.Ticks - ticksMin) / (double)ticksLength;
+    var ratio = (span.Ticks - ticksMin) / (double)ticksLength;
     return min + ratio * length;
   }
 }

@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// Target of rendering

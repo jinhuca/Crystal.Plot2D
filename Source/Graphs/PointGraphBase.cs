@@ -1,11 +1,14 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.DataSources;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.DataSources;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Graphs;
 
 public abstract class PointsGraphBase : Viewport2DElement, IOneDimensionalChart
 {

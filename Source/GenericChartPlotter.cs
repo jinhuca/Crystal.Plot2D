@@ -1,6 +1,9 @@
 ﻿using Crystal.Plot2D.Charts;
 using System;
 using System.Windows;
+using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D;
 
@@ -26,7 +29,7 @@ public sealed class GenericChartPlotter<THorizontal, TVertical>
 
   internal GenericChartPlotter(Plotter plotter, AxisBase<THorizontal> horizontalAxis, AxisBase<TVertical> verticalAxis)
   {
-    this.HorizontalAxis = horizontalAxis ?? throw new ArgumentNullException(paramName: Strings.Exceptions.PlotterMainHorizontalAxisShouldNotBeNull);
+    HorizontalAxis = horizontalAxis ?? throw new ArgumentNullException(paramName: Strings.Exceptions.PlotterMainHorizontalAxisShouldNotBeNull);
     this.verticalAxis = verticalAxis ?? throw new ArgumentNullException(paramName: Strings.Exceptions.PlotterMainVerticalAxisShouldNotBeNull);
     this.plotter = plotter;
   }
@@ -45,20 +48,20 @@ public sealed class GenericChartPlotter<THorizontal, TVertical>
 
   private DataRect CreateRect(GenericRect<THorizontal, TVertical> value)
   {
-    double xMin = HorizontalToDoubleConverter(arg: value.XMin);
-    double xMax = HorizontalToDoubleConverter(arg: value.XMax);
-    double yMin = VerticalToDoubleConverter(arg: value.YMin);
-    double yMax = VerticalToDoubleConverter(arg: value.YMax);
+    var xMin = HorizontalToDoubleConverter(arg: value.XMin);
+    var xMax = HorizontalToDoubleConverter(arg: value.XMax);
+    var yMin = VerticalToDoubleConverter(arg: value.YMin);
+    var yMax = VerticalToDoubleConverter(arg: value.YMax);
 
     return new DataRect(point1: new Point(x: xMin, y: yMin), point2: new Point(x: xMax, y: yMax));
   }
 
   private GenericRect<THorizontal, TVertical> CreateGenericRect(DataRect rect)
   {
-    double xMin = rect.XMin;
-    double xMax = rect.XMax;
-    double yMin = rect.YMin;
-    double yMax = rect.YMax;
+    var xMin = rect.XMin;
+    var xMax = rect.XMax;
+    var yMin = rect.YMin;
+    var yMax = rect.YMax;
 
     var res = new GenericRect<THorizontal, TVertical>(
       xMin: DoubleToHorizontalConverter(arg: xMin),

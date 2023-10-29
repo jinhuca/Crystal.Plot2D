@@ -7,6 +7,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Data;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
+using Crystal.Plot2D.ViewportConstraints;
 
 namespace Crystal.Plot2D;
 
@@ -65,9 +68,9 @@ public class Viewport2D : DependencyObject
 
   private static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    Viewport2D viewport = (Viewport2D)d;
+    var viewport = (Viewport2D)d;
     // This counter is a part of workaround for endless axis resize loop
-    // If internal update count exceeds threshold stop enoforcing restrictions
+    // If internal update count exceeds threshold stop enforcing restrictions
     if (e.Property == VisibleProperty)
     {
       if (viewport.UpdateIterationCount++ > 8)
@@ -76,6 +79,7 @@ public class Viewport2D : DependencyObject
         Debug.WriteLine(message: "Plotter: update cycle detected. Viewport constraints disabled.");
       }
     }
+    
     viewport.UpdateTransform();
     viewport.RaisePropertyChangedEvent(e: e);
   }
@@ -209,7 +213,7 @@ public class Viewport2D : DependencyObject
 
   private static void OnUnitedContentBoundsChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    Viewport2D owner = (Viewport2D)d;
+    var owner = (Viewport2D)d;
     owner.ContentBoundsChanged.Raise(sender: owner);
   }
 
@@ -253,7 +257,7 @@ public class Viewport2D : DependencyObject
 
   private static bool ValidateVisibleCallback(object value)
   {
-    DataRect rect = (DataRect)value;
+    var rect = (DataRect)value;
     return !rect.IsNaN();
   }
 
@@ -264,7 +268,7 @@ public class Viewport2D : DependencyObject
     {
       if (item is DependencyObject dependencyObject)
       {
-        bool hasNonEmptyBounds = !GetContentBounds(obj: dependencyObject).IsEmpty;
+        var hasNonEmptyBounds = !GetContentBounds(obj: dependencyObject).IsEmpty;
         if (hasNonEmptyBounds && GetIsContentBoundsHost(obj: dependencyObject))
         {
           contentBoundsHosts.Add(item: dependencyObject);
@@ -317,7 +321,7 @@ public class Viewport2D : DependencyObject
       return newVisible;
     }
 
-    bool isDefaultValue = newVisible == (DataRect)VisibleProperty.DefaultMetadata.DefaultValue;
+    var isDefaultValue = newVisible == (DataRect)VisibleProperty.DefaultMetadata.DefaultValue;
     if (isDefaultValue)
     {
       newVisible = DataRect.Empty;
@@ -326,7 +330,7 @@ public class Viewport2D : DependencyObject
     if (isDefaultValue && IsFittedToView)
     {
       // determining content bounds
-      DataRect bounds = DataRect.Empty;
+      var bounds = DataRect.Empty;
 
       foreach (var item in contentBoundsHosts)
       {
@@ -344,7 +348,7 @@ public class Viewport2D : DependencyObject
         var visual = plotter.VisualBindings[element: plotterElement];
         if (visual.Visibility == Visibility.Visible)
         {
-          DataRect contentBounds = GetContentBounds(obj: item);
+          var contentBounds = GetContentBounds(obj: item);
           if (contentBounds.Width.IsNaN() || contentBounds.Height.IsNaN())
           {
             continue;
@@ -359,16 +363,16 @@ public class Viewport2D : DependencyObject
         var intersection = prevContentBounds;
         intersection.Intersect(rect: bounds);
 
-        double currSquare = bounds.GetSquare();
-        double prevSquare = prevContentBounds.GetSquare();
-        double intersectionSquare = intersection.GetSquare();
-        double squareTopLimit = 1 + maxContentBoundsComparisonMistake;
-        double squareBottomLimit = 1 - maxContentBoundsComparisonMistake;
+        var currSquare = bounds.GetSquare();
+        var prevSquare = prevContentBounds.GetSquare();
+        var intersectionSquare = intersection.GetSquare();
+        var squareTopLimit = 1 + maxContentBoundsComparisonMistake;
+        var squareBottomLimit = 1 - maxContentBoundsComparisonMistake;
 
         if (intersectionSquare != 0)
         {
-          double currRatio = currSquare / intersectionSquare;
-          double prevRatio = prevSquare / intersectionSquare;
+          var currRatio = currSquare / intersectionSquare;
+          var prevRatio = prevSquare / intersectionSquare;
 
           if (squareBottomLimit < currRatio && currRatio < squareTopLimit && squareBottomLimit < prevRatio && prevRatio < squareTopLimit)
           {
@@ -401,9 +405,9 @@ public class Viewport2D : DependencyObject
     }
     else if (newVisible.Width == 0 || newVisible.Height == 0)
     {
-      DataRect defRect = (DataRect)VisibleProperty.DefaultMetadata.DefaultValue;
-      Size size = newVisible.Size;
-      Point location = newVisible.Location;
+      var defRect = (DataRect)VisibleProperty.DefaultMetadata.DefaultValue;
+      var size = newVisible.Size;
+      var location = newVisible.Location;
 
       if (newVisible.Width == 0)
       {
@@ -446,8 +450,8 @@ public class Viewport2D : DependencyObject
 
   private static object OnCoerceVisible(DependencyObject d, object newValue)
   {
-    Viewport2D viewport = (Viewport2D)d;
-    DataRect newRect = viewport.CoerceVisible(newVisible: (DataRect)newValue);
+    var viewport = (Viewport2D)d;
+    var newRect = viewport.CoerceVisible(newVisible: (DataRect)newValue);
     if (newRect.Width == 0 || newRect.Height == 0)
     {
       // doesn't apply rects with zero square
@@ -485,7 +489,7 @@ public class Viewport2D : DependencyObject
 
   private static void OnDomainReplaced(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    Viewport2D owner = (Viewport2D)d;
+    var owner = (Viewport2D)d;
     owner.OnDomainChanged();
   }
 
@@ -539,7 +543,7 @@ public class Viewport2D : DependencyObject
   ///   The transform.
   /// </value>
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Hidden)]
-  [NotNull]
+  [Common.NotNull]
   public virtual CoordinateTransform Transform
   {
     get => transform;
@@ -662,7 +666,7 @@ public class Viewport2D : DependencyObject
   {
     if (d is IPlotterElement plotterElement && plotterElement.Plotter != null)
     {
-      PlotterBase plotter2d = plotterElement.Plotter;
+      var plotter2d = plotterElement.Plotter;
       plotter2d.Viewport.UpdateContentBoundsHosts();
     }
   }
@@ -683,10 +687,10 @@ public class Viewport2D : DependencyObject
 
   private static object CoerceContentBounds(DependencyObject d, object value)
   {
-    DataRect prevBounds = GetContentBounds(obj: d);
-    DataRect currBounds = (DataRect)value;
-    bool approximateComparanceAllowed = GetUsesApproximateContentBoundsComparison(obj: d);
-    bool areClose = approximateComparanceAllowed && currBounds.IsCloseTo(rect2: prevBounds, difference: 0.005);
+    var prevBounds = GetContentBounds(obj: d);
+    var currBounds = (DataRect)value;
+    var approximateComparanceAllowed = GetUsesApproximateContentBoundsComparison(obj: d);
+    var areClose = approximateComparanceAllowed && currBounds.IsCloseTo(rect2: prevBounds, difference: 0.005);
     return areClose ? DependencyProperty.UnsetValue : value;
   }
 

@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public sealed class DisposableTimer : IDisposable
 {
   private readonly bool isActive = true;
   private readonly string name;
-  readonly Stopwatch timer;
+  private readonly Stopwatch timer;
   public DisposableTimer(string name) : this(name: name, isActive: true) { }
 
   public DisposableTimer(string name, bool isActive)

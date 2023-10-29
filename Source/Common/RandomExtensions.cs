@@ -9,8 +9,8 @@ internal static class RandomExtensions
 
   public static Point NextPoint(this Random rnd, double xMin, double xMax, double yMin, double yMax)
   {
-    double x = rnd.NextDouble() * (xMax - xMin) + xMin;
-    double y = rnd.NextDouble() * (yMax - yMin) + yMin;
+    var x = rnd.NextDouble() * (xMax - xMin) + xMin;
+    var y = rnd.NextDouble() * (yMax - yMin) + yMin;
     return new Point(x: x, y: y);
   }
 

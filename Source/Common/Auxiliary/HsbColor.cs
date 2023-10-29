@@ -2,8 +2,9 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// Represents color in Hue Saturation Brightness color space.
@@ -89,64 +90,64 @@ public struct HsbColor
   /// <returns></returns>
   public static HsbColor FromArgbColor(Color color)
   {
-    double limit255 = 255;
+    double limit255_ = 255;
 
-    double r = color.R / limit255;
-    double g = color.G / limit255;
-    double b = color.B / limit255;
+    var r_ = color.R / limit255_;
+    var g_ = color.G / limit255_;
+    var b_ = color.B / limit255_;
 
-    double max = Math.Max(val1: Math.Max(val1: r, val2: g), val2: b);
-    double min = Math.Min(val1: Math.Min(val1: r, val2: g), val2: b);
+    var max_ = Math.Max(val1: Math.Max(val1: r_, val2: g_), val2: b_);
+    var min_ = Math.Min(val1: Math.Min(val1: r_, val2: g_), val2: b_);
 
-    double len = max - min;
+    var len_ = max_ - min_;
 
-    double brightness = max; // 0.5 * (max + min);
-    double sat;
-    double hue;
+    var brightness_ = max_; // 0.5 * (max + min);
+    double sat_;
+    double hue_;
 
 
-    if (max == 0 || len == 0)
+    if (max_ == 0 || len_ == 0)
     {
-      sat = hue = 0;
+      sat_ = hue_ = 0;
     }
     else
     {
-      sat = len / max;
-      if (r == max)
+      sat_ = len_ / max_;
+      if (r_ == max_)
       {
-        hue = (g - b) / len;
+        hue_ = (g_ - b_) / len_;
       }
-      else if (g == max)
+      else if (g_ == max_)
       {
-        hue = 2 + (b - r) / len;
+        hue_ = 2 + (b_ - r_) / len_;
       }
       else
       {
-        hue = 4 + (r - g) / len;
+        hue_ = 4 + (r_ - g_) / len_;
       }
     }
 
-    hue *= 60;
-    if (hue < 0)
+    hue_ *= 60;
+    if (hue_ < 0)
     {
-      hue += 360;
+      hue_ += 360;
     }
 
-    HsbColor res = new();
-    res.hue = hue;
-    res.saturation = sat;
-    res.brightness = brightness;
-    res.alpha = color.A / limit255;
-    return res;
+    HsbColor res_ = new();
+    res_.hue = hue_;
+    res_.saturation = sat_;
+    res_.brightness = brightness_;
+    res_.alpha = color.A / limit255_;
+    return res_;
   }
 
   public static HsbColor FromArgb(int argb)
   {
-    byte a = (byte)(argb >> 24);
-    byte r = (byte)((argb >> 16) & 0xFF);
-    byte g = (byte)((argb >> 8) & 0xFF);
-    byte b = (byte)(argb & 0xFF);
-    return FromArgbColor(color: Color.FromArgb(a: a, r: r, g: g, b: b));
+    var a_ = (byte)(argb >> 24);
+    var r_ = (byte)((argb >> 16) & 0xFF);
+    var g_ = (byte)((argb >> 8) & 0xFF);
+    var b_ = (byte)(argb & 0xFF);
+    return FromArgbColor(color: Color.FromArgb(a: a_, r: r_, g: g_, b: b_));
   }
 
   /// <summary>
@@ -155,68 +156,68 @@ public struct HsbColor
   /// <returns></returns>
   public Color ToArgbColor()
   {
-    double r = 0.0;
-    double g = 0.0;
-    double b = 0.0;
-    double hue = this.hue % 360.0;
+    var r_ = 0.0;
+    var g_ = 0.0;
+    var b_ = 0.0;
+    var hue_ = hue % 360.0;
     if (saturation == 0.0)
     {
-      r = g = b = brightness;
+      r_ = g_ = b_ = brightness;
     }
     else
     {
-      double smallHue = hue / 60.0;
-      int smallHueInt = (int)Math.Floor(d: smallHue);
-      double smallHueFrac = smallHue - smallHueInt;
-      double val1 = brightness * (1.0 - saturation);
-      double val2 = brightness * (1.0 - (saturation * smallHueFrac));
-      double val3 = brightness * (1.0 - (saturation * (1.0 - smallHueFrac)));
-      switch (smallHueInt)
+      var smallHue_ = hue_ / 60.0;
+      var smallHueInt_ = (int)Math.Floor(d: smallHue_);
+      var smallHueFrac_ = smallHue_ - smallHueInt_;
+      var val1_ = brightness * (1.0 - saturation);
+      var val2_ = brightness * (1.0 - saturation * smallHueFrac_);
+      var val3_ = brightness * (1.0 - saturation * (1.0 - smallHueFrac_));
+      switch (smallHueInt_)
       {
         case 0:
-          r = brightness;
-          g = val3;
-          b = val1;
+          r_ = brightness;
+          g_ = val3_;
+          b_ = val1_;
           break;
 
         case 1:
-          r = val2;
-          g = brightness;
-          b = val1;
+          r_ = val2_;
+          g_ = brightness;
+          b_ = val1_;
           break;
 
         case 2:
-          r = val1;
-          g = brightness;
-          b = val3;
+          r_ = val1_;
+          g_ = brightness;
+          b_ = val3_;
           break;
 
         case 3:
-          r = val1;
-          g = val2;
-          b = brightness;
+          r_ = val1_;
+          g_ = val2_;
+          b_ = brightness;
           break;
 
         case 4:
-          r = val3;
-          g = val1;
-          b = brightness;
+          r_ = val3_;
+          g_ = val1_;
+          b_ = brightness;
           break;
 
         case 5:
-          r = brightness;
-          g = val1;
-          b = val2;
+          r_ = brightness;
+          g_ = val1_;
+          b_ = val2_;
           break;
       }
     }
 
 
     return Color.FromArgb(
-      a: (byte)(Math.Round(a: alpha * 255)),
-      r: (byte)(Math.Round(a: r * 255)),
-      g: (byte)(Math.Round(a: g * 255)),
-      b: (byte)(Math.Round(a: b * 255)));
+      a: (byte)Math.Round(a: alpha * 255),
+      r: (byte)Math.Round(a: r_ * 255),
+      g: (byte)Math.Round(a: g_ * 255),
+      b: (byte)Math.Round(a: b_ * 255));
   }
 
   public int ToArgb()
@@ -235,11 +236,11 @@ public struct HsbColor
   {
     if (obj is HsbColor)
     {
-      HsbColor c = (HsbColor)obj;
-      return (c.alpha == alpha &&
-        c.brightness == brightness &&
-        c.hue == hue &&
-        c.saturation == saturation);
+      var c_ = (HsbColor)obj;
+      return c_.alpha == alpha &&
+             c_.brightness == brightness &&
+             c_.hue == hue &&
+             c_.saturation == saturation;
     }
     else
     {
@@ -268,10 +269,10 @@ public struct HsbColor
   /// <param name="second">The second.</param>
   /// <returns>The result of the operator.</returns>
   public static bool operator ==(HsbColor first, HsbColor second) =>
-    (first.alpha == second.alpha &&
-     first.brightness == second.brightness &&
-     first.hue == second.hue &&
-     first.saturation == second.saturation);
+    first.alpha == second.alpha &&
+    first.brightness == second.brightness &&
+    first.hue == second.hue &&
+    first.saturation == second.saturation;
 
   /// <summary>
   /// Implements the operator !=.
@@ -280,10 +281,10 @@ public struct HsbColor
   /// <param name="second">The second.</param>
   /// <returns>The result of the operator.</returns>
   public static bool operator !=(HsbColor first, HsbColor second) =>
-    (first.alpha != second.alpha ||
-     first.brightness != second.brightness ||
-     first.hue != second.hue ||
-     first.saturation != second.saturation);
+    first.alpha != second.alpha ||
+    first.brightness != second.brightness ||
+    first.hue != second.hue ||
+    first.saturation != second.saturation;
 }
 
 public static class ColorExtensions

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class IListExtensions
 {

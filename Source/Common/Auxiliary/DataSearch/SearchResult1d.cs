@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D.Common;
+﻿namespace Crystal.Plot2D.Common.Auxiliary.DataSearch;
 
 internal struct SearchResult1d
 {

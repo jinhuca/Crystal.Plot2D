@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.UndoSystem;
 
-public class DependencyPropertyChangedUndoAction : UndoAction
+public sealed class DependencyPropertyChangedUndoAction : UndoAction
 {
   public DependencyProperty Property { get; }
   public DependencyObject Target { get; }

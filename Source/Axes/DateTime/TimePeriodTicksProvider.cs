@@ -1,52 +1,42 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 internal abstract class TimePeriodTicksProvider<T> : ITicksProvider<T>
 {
   public event EventHandler Changed;
+
   protected void RaiseChanged()
   {
-    if (Changed != null)
-    {
-      Changed(sender: this, e: EventArgs.Empty);
-    }
+    Changed?.Invoke(sender: this, e: EventArgs.Empty);
   }
 
   protected abstract T RoundUp(T time, DifferenceIn diff);
   protected abstract T RoundDown(T time, DifferenceIn diff);
 
-  private bool differenceInited;
+  private bool _differenceInitialized;
   private DifferenceIn difference;
+  
   protected DifferenceIn Difference
   {
     get
     {
-      if (!differenceInited)
-      {
-        difference = GetDifferenceCore();
-        differenceInited = true;
-      }
+      if (_differenceInitialized) return difference;
+      difference = GetDifferenceCore();
+      _differenceInitialized = true;
+
       return difference;
     }
   }
+
   protected abstract DifferenceIn GetDifferenceCore();
 
   private int[] tickCounts;
-  protected int[] TickCounts
-  {
-    get
-    {
-      if (tickCounts == null)
-      {
-        tickCounts = GetTickCountsCore();
-      }
+  protected int[] TickCounts => tickCounts ??= GetTickCountsCore();
 
-      return tickCounts;
-    }
-  }
   protected abstract int[] GetTickCountsCore();
 
   public int DecreaseTickCount(int ticksCount)
@@ -56,11 +46,11 @@ internal abstract class TimePeriodTicksProvider<T> : ITicksProvider<T>
       return TickCounts[0];
     }
 
-    for (int i = 0; i < TickCounts.Length; i++)
+    foreach (var t_ in TickCounts)
     {
-      if (ticksCount > TickCounts[i])
+      if (ticksCount > t_)
       {
-        return TickCounts[i];
+        return t_;
       }
     }
 
@@ -74,11 +64,11 @@ internal abstract class TimePeriodTicksProvider<T> : ITicksProvider<T>
       return TickCounts[0];
     }
 
-    for (int i = TickCounts.Length - 1; i >= 0; i--)
+    for (var i_ = TickCounts.Length - 1; i_ >= 0; i_--)
     {
-      if (ticksCount < TickCounts[i])
+      if (ticksCount < TickCounts[i_])
       {
-        return TickCounts[i];
+        return TickCounts[i_];
       }
     }
 
@@ -92,53 +82,53 @@ internal abstract class TimePeriodTicksProvider<T> : ITicksProvider<T>
 
   public ITicksInfo<T> GetTicks(Range<T> range, int ticksCount)
   {
-    T start = range.Min;
-    T end = range.Max;
-    DifferenceIn diff = Difference;
-    start = RoundDown(start: start, end: end);
-    end = RoundUp(start: start, end: end);
+    var start_ = range.Min;
+    var end_ = range.Max;
+    var diff_ = Difference;
+    start_ = RoundDown(start: start_, end: end_);
+    end_ = RoundUp(start: start_, end: end_);
 
-    RoundingInfo bounds = RoundingHelper.CreateRoundedRange(
-      min: GetSpecificValue(start: start, dt: start),
-      max: GetSpecificValue(start: start, dt: end));
+    var bounds_ = RoundingHelper.CreateRoundedRange(
+      min: GetSpecificValue(start: start_, dt: start_),
+      max: GetSpecificValue(start: start_, dt: end_));
 
-    int delta = (int)(bounds.Max - bounds.Min);
-    if (delta == 0)
+    var delta_ = (int)(bounds_.Max - bounds_.Min);
+    if (delta_ == 0)
     {
-      return new TicksInfo<T> { Ticks = new[] { start } };
+      return new TicksInfo<T> { Ticks = new[] { start_ } };
     }
 
-    int step = delta / ticksCount;
+    var step_ = delta_ / ticksCount;
 
-    if (step == 0)
+    if (step_ == 0)
     {
-      step = 1;
+      step_ = 1;
     }
 
-    T tick = GetStart(start: start, value: (int)bounds.Min, step: step);
-    bool isMinDateTime = IsMinDate(dt: tick) && step != 1;
-    if (isMinDateTime)
+    var tick_ = GetStart(start: start_, value: (int)bounds_.Min, step: step_);
+    var isMinDateTime_ = IsMinDate(dt: tick_) && step_ != 1;
+    if (isMinDateTime_)
     {
-      step--;
+      step_--;
     }
 
-    List<T> ticks = new();
-    T finishTick = AddStep(dt: range.Max, step: step);
-    while (Continue(current: tick, end: finishTick))
+    List<T> ticks_ = new();
+    var finishTick_ = AddStep(dt: range.Max, step: step_);
+    while (Continue(current: tick_, end: finishTick_))
     {
-      ticks.Add(item: tick);
-      tick = AddStep(dt: tick, step: step);
-      if (isMinDateTime)
+      ticks_.Add(item: tick_);
+      tick_ = AddStep(dt: tick_, step: step_);
+      if (isMinDateTime_)
       {
-        isMinDateTime = false;
-        step++;
+        isMinDateTime_ = false;
+        step_++;
       }
     }
 
-    ticks = Trim(ticks: ticks, range: range);
+    ticks_ = Trim(ticks: ticks_, range: range);
 
-    TicksInfo<T> res = new() { Ticks = ticks.ToArray(), Info = diff };
-    return res;
+    TicksInfo<T> res_ = new() { Ticks = ticks_.ToArray(), Info = diff_ };
+    return res_;
   }
 
   protected abstract bool Continue(T current, T end);
@@ -154,129 +144,129 @@ internal abstract class TimePeriodTicksProvider<T> : ITicksProvider<T>
   public ITicksProvider<T> MajorProvider => throw new NotSupportedException();
 }
 
-internal abstract class DatePeriodTicksProvider : TimePeriodTicksProvider<DateTime>
+internal abstract class DatePeriodTicksProvider : TimePeriodTicksProvider<System.DateTime>
 {
-  protected sealed override bool Continue(DateTime current, DateTime end)
+  protected sealed override bool Continue(System.DateTime current, System.DateTime end)
   {
     return current < end;
   }
 
-  protected sealed override List<DateTime> Trim(List<DateTime> ticks, Range<DateTime> range)
+  protected sealed override List<System.DateTime> Trim(List<System.DateTime> ticks, Range<System.DateTime> range)
   {
-    int startIndex = 0;
-    for (int i = 0; i < ticks.Count - 1; i++)
+    var startIndex_ = 0;
+    for (var i_ = 0; i_ < ticks.Count - 1; i_++)
     {
-      if (ticks[index: i] <= range.Min && range.Min <= ticks[index: i + 1])
+      if (ticks[index: i_] <= range.Min && range.Min <= ticks[index: i_ + 1])
       {
-        startIndex = i;
+        startIndex_ = i_;
         break;
       }
     }
 
-    int endIndex = ticks.Count - 1;
-    for (int i = ticks.Count - 1; i >= 1; i--)
+    var endIndex_ = ticks.Count - 1;
+    for (var i_ = ticks.Count - 1; i_ >= 1; i_--)
     {
-      if (ticks[index: i] >= range.Max && range.Max > ticks[index: i - 1])
+      if (ticks[index: i_] >= range.Max && range.Max > ticks[index: i_ - 1])
       {
-        endIndex = i;
+        endIndex_ = i_;
         break;
       }
     }
 
-    List<DateTime> res = new(capacity: endIndex - startIndex + 1);
-    for (int i = startIndex; i <= endIndex; i++)
+    List<System.DateTime> res_ = new(capacity: endIndex_ - startIndex_ + 1);
+    for (var i_ = startIndex_; i_ <= endIndex_; i_++)
     {
-      res.Add(item: ticks[index: i]);
+      res_.Add(item: ticks[index: i_]);
     }
 
-    return res;
+    return res_;
   }
 
-  protected sealed override DateTime RoundUp(DateTime start, DateTime end)
+  protected sealed override System.DateTime RoundUp(System.DateTime start, System.DateTime end)
   {
-    bool isPositive = (end - start).Ticks > 0;
-    return isPositive ? SafelyRoundUp(dt: end) : RoundDown(time: end, diff: Difference);
+    var isPositive_ = (end - start).Ticks > 0;
+    return isPositive_ ? SafelyRoundUp(dt: end) : RoundDown(time: end, diff: Difference);
   }
 
-  private DateTime SafelyRoundUp(DateTime dt)
+  private System.DateTime SafelyRoundUp(System.DateTime dt)
   {
-    if (AddStep(dt: dt, step: 1) == DateTime.MaxValue)
+    if (AddStep(dt: dt, step: 1) == System.DateTime.MaxValue)
     {
-      return DateTime.MaxValue;
+      return System.DateTime.MaxValue;
     }
 
     return RoundUp(dateTime: dt, diff: Difference);
   }
 
-  protected sealed override DateTime RoundDown(DateTime start, DateTime end)
+  protected sealed override System.DateTime RoundDown(System.DateTime start, System.DateTime end)
   {
-    bool isPositive = (end - start).Ticks > 0;
-    return isPositive ? RoundDown(time: start, diff: Difference) : SafelyRoundUp(dt: start);
+    var isPositive_ = (end - start).Ticks > 0;
+    return isPositive_ ? RoundDown(time: start, diff: Difference) : SafelyRoundUp(dt: start);
   }
 
-  protected sealed override DateTime RoundDown(DateTime time, DifferenceIn diff)
+  protected sealed override System.DateTime RoundDown(System.DateTime time, DifferenceIn diff)
   {
-    DateTime res = time;
+    var res_ = time;
 
     switch (diff)
     {
       case DifferenceIn.Year:
-        res = new DateTime(year: time.Year, month: 1, day: 1);
+        res_ = new System.DateTime(year: time.Year, month: 1, day: 1);
         break;
       case DifferenceIn.Month:
-        res = new DateTime(year: time.Year, month: time.Month, day: 1);
+        res_ = new System.DateTime(year: time.Year, month: time.Month, day: 1);
         break;
       case DifferenceIn.Day:
-        res = time.Date;
+        res_ = time.Date;
         break;
       case DifferenceIn.Hour:
-        res = time.Date.AddHours(value: time.Hour);
+        res_ = time.Date.AddHours(value: time.Hour);
         break;
       case DifferenceIn.Minute:
-        res = time.Date.AddHours(value: time.Hour).AddMinutes(value: time.Minute);
+        res_ = time.Date.AddHours(value: time.Hour).AddMinutes(value: time.Minute);
         break;
       case DifferenceIn.Second:
-        res = time.Date.AddHours(value: time.Hour).AddMinutes(value: time.Minute).AddSeconds(value: time.Second);
+        res_ = time.Date.AddHours(value: time.Hour).AddMinutes(value: time.Minute).AddSeconds(value: time.Second);
         break;
       case DifferenceIn.Millisecond:
-        res = time.Date.AddHours(value: time.Hour).AddMinutes(value: time.Minute).AddSeconds(value: time.Second).AddMilliseconds(value: time.Millisecond);
+        res_ = time.Date.AddHours(value: time.Hour).AddMinutes(value: time.Minute).AddSeconds(value: time.Second).AddMilliseconds(value: time.Millisecond);
         break;
     }
 
-    DebugVerify.Is(condition: res <= time);
+    DebugVerify.Is(condition: res_ <= time);
 
-    return res;
+    return res_;
   }
 
-  protected override DateTime RoundUp(DateTime dateTime, DifferenceIn diff)
+  protected override System.DateTime RoundUp(System.DateTime dateTime, DifferenceIn diff)
   {
-    DateTime res = RoundDown(time: dateTime, diff: diff);
+    var res_ = RoundDown(time: dateTime, diff: diff);
 
     switch (diff)
     {
       case DifferenceIn.Year:
-        res = res.AddYears(value: 1);
+        res_ = res_.AddYears(value: 1);
         break;
       case DifferenceIn.Month:
-        res = res.AddMonths(months: 1);
+        res_ = res_.AddMonths(months: 1);
         break;
       case DifferenceIn.Day:
-        res = res.AddDays(value: 1);
+        res_ = res_.AddDays(value: 1);
         break;
       case DifferenceIn.Hour:
-        res = res.AddHours(value: 1);
+        res_ = res_.AddHours(value: 1);
         break;
       case DifferenceIn.Minute:
-        res = res.AddMinutes(value: 1);
+        res_ = res_.AddMinutes(value: 1);
         break;
       case DifferenceIn.Second:
-        res = res.AddSeconds(value: 1);
+        res_ = res_.AddSeconds(value: 1);
         break;
       case DifferenceIn.Millisecond:
-        res = res.AddMilliseconds(value: 1);
+        res_ = res_.AddMilliseconds(value: 1);
         break;
     }
 
-    return res;
+    return res_;
   }
 }

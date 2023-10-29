@@ -1,7 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Represents a rectangle with corners bound to viewport coordinates.
@@ -23,6 +25,7 @@ public sealed class RectangleHighlight : ViewportShape
   }
 
   private DataRect rect = DataRect.Empty;
+
   public DataRect Bounds
   {
     get => rect;

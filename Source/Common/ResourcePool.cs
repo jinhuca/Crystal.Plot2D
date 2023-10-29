@@ -15,11 +15,11 @@ internal sealed class ResourcePool<T>
 
     if (pool.Count < 1)
     {
-      item = default(T);
+      item = default;
     }
     else
     {
-      int index = pool.Count - 1;
+      var index = pool.Count - 1;
       item = pool[index: index];
       pool.RemoveAt(index: index);
     }

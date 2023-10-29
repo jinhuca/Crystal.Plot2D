@@ -3,21 +3,18 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Common;
 
 // todo check a license
 public static class BezierBuilder
 {
   public static IEnumerable<Point> GetBezierPoints(Point[] points)
   {
-    if (points == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(points));
-    }
+    ArgumentNullException.ThrowIfNull(points);
     Point[] firstControlPoints;
     Point[] secondControlPoints;
 
-    int n = points.Length - 1;
+    var n = points.Length - 1;
     if (n < 1)
     {
       throw new ArgumentException(message: Exceptions.BezierBuilder_GetBezierPoints_At_least_two_knot_points_required, paramName: nameof(points));
@@ -41,10 +38,10 @@ public static class BezierBuilder
 
     // Calculate first Bezier control points
     // Right hand side vector
-    double[] rhs = new double[n];
+    var rhs = new double[n];
 
     // Set right hand side X values
-    for (int i = 1; i < n - 1; ++i)
+    for (var i = 1; i < n - 1; ++i)
     {
       rhs[i] = 4 * points[i].X + 2 * points[i + 1].X;
     }
@@ -52,10 +49,10 @@ public static class BezierBuilder
     rhs[0] = points[0].X + 2 * points[1].X;
     rhs[n - 1] = (8 * points[n - 1].X + points[n].X) / 2.0;
     // Get first control points X-values
-    double[] x = GetFirstControlPoints(rhs: rhs);
+    var x = GetFirstControlPoints(rhs: rhs);
 
     // Set right hand side Y values
-    for (int i = 1; i < n - 1; ++i)
+    for (var i = 1; i < n - 1; ++i)
     {
       rhs[i] = 4 * points[i].Y + 2 * points[i + 1].Y;
     }
@@ -63,12 +60,12 @@ public static class BezierBuilder
     rhs[0] = points[0].Y + 2 * points[1].Y;
     rhs[n - 1] = (8 * points[n - 1].Y + points[n].Y) / 2.0;
     // Get first control points Y-values
-    double[] y = GetFirstControlPoints(rhs: rhs);
+    var y = GetFirstControlPoints(rhs: rhs);
 
     // InnerBrush output arrays.
     firstControlPoints = new Point[n];
     secondControlPoints = new Point[n];
-    for (int i = 0; i < n; ++i)
+    for (var i = 0; i < n; ++i)
     {
       // First control point
       firstControlPoints[i] = new Point(x: x[i], y: y[i]);
@@ -89,7 +86,7 @@ public static class BezierBuilder
   private static IEnumerable<Point> Join(Point[] points, Point[] firstControlPoints, Point[] secondControlPoints)
   {
     var length = firstControlPoints.Length;
-    for (int i = 0; i < length; i++)
+    for (var i = 0; i < length; i++)
     {
       yield return points[i];
       yield return firstControlPoints[i];
@@ -106,19 +103,19 @@ public static class BezierBuilder
   /// <returns>Solution vector.</returns>
   private static double[] GetFirstControlPoints(double[] rhs)
   {
-    int n = rhs.Length;
-    double[] x = new double[n];     // Solution vector.
-    double[] tmp = new double[n];   // Temp workspace.
+    var n = rhs.Length;
+    var x = new double[n];     // Solution vector.
+    var tmp = new double[n];   // Temp workspace.
 
-    double b = 2.0;
+    var b = 2.0;
     x[0] = rhs[0] / b;
-    for (int i = 1; i < n; i++)     // Decomposition and forward substitution.
+    for (var i = 1; i < n; i++)     // Decomposition and forward substitution.
     {
       tmp[i] = 1 / b;
       b = (i < n - 1 ? 4.0 : 3.5) - tmp[i];
       x[i] = (rhs[i] - x[i - 1]) / b;
     }
-    for (int i = 1; i < n; i++)
+    for (var i = 1; i < n; i++)
     {
       x[n - i - 1] -= tmp[n - i] * x[n - i];  // Backsubstitution.
     }

@@ -1,11 +1,11 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Markup;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// Describes a rectangle in viewport or data coordinates.
@@ -123,13 +123,17 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
   /// <param name="xMax">The x max.</param>
   /// <param name="yMax">The y max.</param>
   /// <returns></returns>
-  public static DataRect Create(double xMin, double yMin, double xMax, double yMax) => new(xMin: xMin, yMin: yMin, width: xMax - xMin, height: yMax - yMin);
+  public static DataRect Create(double xMin, double yMin, double xMax, double yMax)
+    => new(xMin: xMin, yMin: yMin, width: xMax - xMin, height: yMax - yMin);
 
-  public static DataRect FromPoints(double x1, double y1, double x2, double y2) => new(point1: new Point(x: x1, y: y1), point2: new Point(x: x2, y: y2));
+  public static DataRect FromPoints(double x1, double y1, double x2, double y2) 
+    => new(point1: new Point(x: x1, y: y1), point2: new Point(x: x2, y: y2));
 
-  public static DataRect FromCenterSize(Point center, double width, double height) => new(xMin: center.X - width / 2, yMin: center.Y - height / 2, width: width, height: height);
+  public static DataRect FromCenterSize(Point center, double width, double height) 
+    => new(xMin: center.X - width / 2, yMin: center.Y - height / 2, width: width, height: height);
 
-  public static DataRect FromCenterSize(Point center, Size size) => FromCenterSize(center: center, width: size.Width, height: size.Height);
+  public static DataRect FromCenterSize(Point center, Size size) 
+    => FromCenterSize(center: center, width: size.Width, height: size.Height);
 
   public static DataRect Intersect(DataRect rect1, DataRect rect2)
   {
@@ -462,10 +466,10 @@ public struct DataRect : IEquatable<DataRect>, IFormattable
       return other.IsEmpty;
     }
 
-    return Math.Abs(xMin - other.xMin) < Constants.FloatComparisonTolerance && 
-           Math.Abs(width - other.width) < Constants.FloatComparisonTolerance && 
-           Math.Abs(yMin - other.yMin) < Constants.FloatComparisonTolerance && 
-           Math.Abs(height - other.height) < Constants.FloatComparisonTolerance;
+    return Math.Abs(xMin - other.xMin) < Constants.Constants.FloatComparisonTolerance && 
+           Math.Abs(width - other.width) < Constants.Constants.FloatComparisonTolerance && 
+           Math.Abs(yMin - other.yMin) < Constants.Constants.FloatComparisonTolerance && 
+           Math.Abs(height - other.height) < Constants.Constants.FloatComparisonTolerance;
   }
 
   #endregion

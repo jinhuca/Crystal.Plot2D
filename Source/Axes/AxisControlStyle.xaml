@@ -1,6 +1,6 @@
 ﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
 										xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-										xmlns:local="clr-namespace:Crystal.Plot2D.Charts">
+										xmlns:axes="clr-namespace:Crystal.Plot2D.Axes">
 	<Style TargetType="{x:Type Grid}" x:Key="gridStyle">
 		<Setter Property="ClipToBounds" Value="False"/>
 	</Style>
@@ -14,9 +14,9 @@
 				<RowDefinition Height="Auto"/>
 				<RowDefinition Height="Auto"/>
 			</Grid.RowDefinitions>
-			<Path Name="PART_TicksPath" Grid.Row="0" Stroke="Black"/>
-			<local:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Row="1" Placement="Bottom"/>
-			<local:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Row="2" Placement="Bottom"/>
+			<Path Name="PART_TicksPath" Grid.Row="0" Stroke="White"/>
+			<axes:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Row="1" Placement="Bottom"/>
+			<axes:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Row="2" Placement="Bottom"/>
 		</Grid>
 	</ControlTemplate>
 
@@ -32,8 +32,8 @@
 					<MatrixTransform Matrix="1,0,0,-1.1,0,0"/>
 				</Path.LayoutTransform>
 			</Path>
-			<local:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Row="1" Placement="Top"/>
-			<local:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Row="0" Placement="Top"/>
+			<axes:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Row="1" Placement="Top"/>
+			<axes:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Row="0" Placement="Top"/>
 		</Grid>
 	</ControlTemplate>
 
@@ -50,8 +50,8 @@
 					<MatrixTransform Matrix="-1,0,0,1,0,0"/>
 				</Path.LayoutTransform>
 			</Path>
-			<local:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Column="1" Placement="Left" Margin="1,0,1,0"/>
-			<local:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Column="0" Placement="Left" Margin="1,0,1,0"/>
+			<axes:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Column="1" Placement="Left" Margin="1,0,1,0"/>
+			<axes:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Column="0" Placement="Left" Margin="1,0,1,0"/>
 		</Grid>
 	</ControlTemplate>
 
@@ -63,8 +63,8 @@
 				<ColumnDefinition Width="Auto"/>
 			</Grid.ColumnDefinitions>
 			<Path Name="PART_TicksPath" Grid.Column="0" Stroke="Black"/>
-			<local:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Column="1" Placement="Right" Margin="1,0,0,0"/>
-			<local:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Column="2" Placement="Right"/>
+			<axes:StackCanvas Name="PART_CommonLabelsCanvas" Grid.Column="1" Placement="Right" Margin="1,0,0,0"/>
+			<axes:StackCanvas Name="PART_AdditionalLabelsCanvas" Grid.Column="2" Placement="Right"/>
 		</Grid>
 	</ControlTemplate>
 

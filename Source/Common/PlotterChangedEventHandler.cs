@@ -3,9 +3,9 @@ using System.Windows;
 
 namespace Crystal.Plot2D.Common;
 
-public class PlotterChangedEventArgs : RoutedEventArgs
+public sealed class PlotterChangedEventArgs : RoutedEventArgs
 {
-  public PlotterChangedEventArgs(PlotterBase prevPlotter, PlotterBase currPlotter, RoutedEvent routedEvent) : base(routedEvent: routedEvent)
+  internal PlotterChangedEventArgs(PlotterBase prevPlotter, PlotterBase currPlotter, RoutedEvent routedEvent) : base(routedEvent: routedEvent)
   {
     if (prevPlotter == null && currPlotter == null)
     {
@@ -15,6 +15,7 @@ public class PlotterChangedEventArgs : RoutedEventArgs
     PreviousPlotter = prevPlotter;
     CurrentPlotter = currPlotter;
   }
-  public PlotterBase PreviousPlotter { get; }
-  public PlotterBase CurrentPlotter { get; }
+
+  internal PlotterBase PreviousPlotter { get; }
+  internal PlotterBase CurrentPlotter { get; }
 }

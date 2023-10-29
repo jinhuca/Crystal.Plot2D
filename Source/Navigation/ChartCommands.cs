@@ -1,6 +1,6 @@
 ﻿using System.Windows.Input;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 // TODO: probably optimize memory usage by replacing implicit creation of 
 // all commands on first usage of this class - 

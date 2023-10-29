@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class SizeHelper
 {

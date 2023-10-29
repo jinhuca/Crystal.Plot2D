@@ -1,6 +1,8 @@
-﻿namespace Crystal.Plot2D.Charts;
+﻿using Crystal.Plot2D.Common;
 
-public class NumericAxisControl : AxisControl<double>
+namespace Crystal.Plot2D.Axes.Numeric;
+
+public sealed class NumericAxisControl : AxisControl<double>
 {
   public NumericAxisControl()
   {

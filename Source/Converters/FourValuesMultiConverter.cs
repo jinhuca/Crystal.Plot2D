@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Converters;
 
 public abstract class FourValuesMultiConverter<T1, T2, T3, T4> : IMultiValueConverter
 {
@@ -14,15 +14,16 @@ public abstract class FourValuesMultiConverter<T1, T2, T3, T4> : IMultiValueConv
     {
       if (values[0] is T1 && values[1] is T2 && values[2] is T3 && values[3] is T4)
       {
-        T1 param1 = (T1)values[0];
-        T2 param2 = (T2)values[1];
-        T3 param3 = (T3)values[2];
-        T4 param4 = (T4)values[3];
+        var param1_ = (T1)values[0];
+        var param2_ = (T2)values[1];
+        var param3_ = (T3)values[2];
+        var param4_ = (T4)values[3];
 
-        var result = ConvertCore(value1: param1, value2: param2, value3: param3, value4: param4, targetType: targetType, parameter: parameter, culture: culture);
-        return result;
+        var result_ = ConvertCore(value1: param1_, value2: param2_, value3: param3_, value4: param4_, targetType: targetType, parameter: parameter, culture: culture);
+        return result_;
       }
     }
+
     return DependencyProperty.UnsetValue;
   }
 

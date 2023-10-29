@@ -1,8 +1,8 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.MultiDimensional;
 
 /// <summary>
 ///   General interface for two-dimensional data source. Contains two-dimensional array of data items.

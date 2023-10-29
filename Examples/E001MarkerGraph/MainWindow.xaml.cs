@@ -5,6 +5,11 @@ using System;
 using System.Data;
 using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Navigation;
+using Crystal.Plot2D.PointMarkers;
 
 namespace E001MarkerGraph
 {

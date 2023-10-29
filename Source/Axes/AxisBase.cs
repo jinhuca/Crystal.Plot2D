@@ -4,8 +4,11 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Threading;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents a base class for all axes in Plotter.
@@ -177,7 +180,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
 
   private int GetInsertionIndexByPlacement(AxisPlacement placement, Panel panel)
   {
-    int index = panel.Children.Count;
+    var index = panel.Children.Count;
 
     switch (placement)
     {
@@ -192,9 +195,9 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     return index;
   }
 
-  ExtendedPropertyChangedEventArgs visibleChangedEventArgs;
-  int viewportPropertyChangedEnters;
-  DataRect prevDataRect = DataRect.Empty;
+  private ExtendedPropertyChangedEventArgs visibleChangedEventArgs;
+  private int viewportPropertyChangedEnters;
+  private DataRect prevDataRect = DataRect.Empty;
   private void OnViewportPropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     if (viewportPropertyChangedEnters > 4)
@@ -208,15 +211,15 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
 
     viewportPropertyChangedEnters++;
 
-    Viewport2D viewport = (Viewport2D)sender;
+    var viewport = (Viewport2D)sender;
 
-    DataRect visible = viewport.Visible;
+    var visible = viewport.Visible;
 
-    DataRect dataRect = visible.ViewportToData(transform: viewport.Transform);
-    bool forceUpdate = dataRect != prevDataRect;
+    var dataRect = visible.ViewportToData(transform: viewport.Transform);
+    var forceUpdate = dataRect != prevDataRect;
     prevDataRect = dataRect;
 
-    Range<T> range = CreateRangeFromRect(visible: dataRect);
+    var range = CreateRangeFromRect(visible: dataRect);
 
     using (_axisControl.OpenUpdateRegion(forceUpdate: false)) // todo was forceUpdate
     {
@@ -250,10 +253,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     get => _convertFromDouble;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: nameof(value));
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       if (_convertFromDouble != value)
       {
@@ -282,10 +282,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     get => _convertToDouble;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: nameof(value));
-      }
+      ArgumentNullException.ThrowIfNull(value);
       if (_convertToDouble == value) return;
       _convertToDouble = value;
       _axisControl.ConvertToDouble = value;
@@ -334,11 +331,11 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
   {
     if (min is IComparable)
     {
-      IComparable c1 = (IComparable)min;
+      var c1 = (IComparable)min;
       // if min > max
       if (c1.CompareTo(obj: max) > 0)
       {
-        TS temp = min;
+        var temp = min;
         min = max;
         max = temp;
       }
@@ -350,11 +347,11 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
     _axisControl.Placement = Placement;
     if (ParentPlotter != null)
     {
-      Panel panel = GetPanelByPlacement(placement: oldPlacement);
+      var panel = GetPanelByPlacement(placement: oldPlacement);
       panel.Children.Remove(element: this);
 
-      Panel newPanel = GetPanelByPlacement(placement: newPlacement);
-      int index = GetInsertionIndexByPlacement(placement: newPlacement, panel: newPanel);
+      var newPanel = GetPanelByPlacement(placement: newPlacement);
+      var index = GetInsertionIndexByPlacement(placement: newPlacement, panel: newPanel);
       newPanel.Children.Insert(index: index, element: this);
     }
   }
@@ -366,7 +363,7 @@ public abstract class AxisBase<T> : GeneralAxis, ITypedAxis<T>, IValueConversion
       return;
     }
 
-    Panel panel = GetPanelByPlacement(placement: Placement);
+    var panel = GetPanelByPlacement(placement: Placement);
     if (panel != null)
     {
       panel.Children.Remove(element: this);

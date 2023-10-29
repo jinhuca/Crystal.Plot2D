@@ -1,9 +1,8 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Threading;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class PlotterChildrenCollectionExtensions
 {
@@ -19,11 +18,11 @@ public static class PlotterChildrenCollectionExtensions
 
   public static void BeginAdd(this PlotterChildrenCollection children, IPlotterElement child)
   {
-    children.Plotter.Dispatcher.BeginInvoke(method: ((Action)(() => { children.Add(item: child); })), priority: DispatcherPriority.Send);
+    children.Plotter.Dispatcher.BeginInvoke(method: (Action)(() => { children.Add(item: child); }), priority: DispatcherPriority.Send);
   }
 
   public static void BeginRemove(this PlotterChildrenCollection children, IPlotterElement child)
   {
-    children.Plotter.Dispatcher.BeginInvoke(method: ((Action)(() => { children.Remove(item: child); })), priority: DispatcherPriority.Send);
+    children.Plotter.Dispatcher.BeginInvoke(method: (Action)(() => { children.Remove(item: child); }), priority: DispatcherPriority.Send);
   }
 }

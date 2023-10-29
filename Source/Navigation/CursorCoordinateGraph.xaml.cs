@@ -1,19 +1,23 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
 ///   Adds to Plotter two crossed lines, bound to mouse cursor position, 
 ///   and two labels near axes with mouse position in its text.
 /// </summary>
-public partial class CursorCoordinateGraph : ContentGraph
+public sealed partial class CursorCoordinateGraph : ContentGraph
 {
   /// <summary>
   ///   Initializes a new instance of the <see cref="CursorCoordinateGraph"/> class.
@@ -23,17 +27,17 @@ public partial class CursorCoordinateGraph : ContentGraph
     InitializeComponent();
   }
 
-  Vector blockShift = new(x: 3, y: 3);
+  private Vector blockShift = new(x: 3, y: 3);
 
   #region Plotter
 
   protected override void OnPlotterAttached()
   {
-    UIElement parent = (UIElement)Parent;
+    var parent_ = (UIElement)Parent;
 
-    parent.MouseMove += parent_MouseMove;
-    parent.MouseEnter += Parent_MouseEnter;
-    parent.MouseLeave += Parent_MouseLeave;
+    parent_.MouseMove += parent_MouseMove;
+    parent_.MouseEnter += Parent_MouseEnter;
+    parent_.MouseLeave += Parent_MouseLeave;
 
     UpdateVisibility();
     UpdateUIRepresentation();
@@ -41,11 +45,11 @@ public partial class CursorCoordinateGraph : ContentGraph
 
   protected override void OnPlotterDetaching()
   {
-    UIElement parent = (UIElement)Parent;
+    var parent_ = (UIElement)Parent;
 
-    parent.MouseMove -= parent_MouseMove;
-    parent.MouseEnter -= Parent_MouseEnter;
-    parent.MouseLeave -= Parent_MouseLeave;
+    parent_.MouseMove -= parent_MouseMove;
+    parent_.MouseEnter -= Parent_MouseEnter;
+    parent_.MouseLeave -= Parent_MouseLeave;
   }
 
   #endregion
@@ -235,8 +239,8 @@ public partial class CursorCoordinateGraph : ContentGraph
 
   private void UpdateUIRepresentation()
   {
-    Point position = followMouse ? Mouse.GetPosition(relativeTo: this) : Position;
-    UpdateUIRepresentation(mousePos: position);
+    var position_ = followMouse ? Mouse.GetPosition(relativeTo: this) : Position;
+    UpdateUIRepresentation(mousePos: position_);
   }
 
   private void UpdateUIRepresentation(Point mousePos)
@@ -246,11 +250,11 @@ public partial class CursorCoordinateGraph : ContentGraph
       return;
     }
 
-    var transform = Plotter2D.Viewport.Transform;
-    DataRect visible = Plotter2D.Viewport.Visible;
-    Rect output = Plotter2D.Viewport.Output;
+    var transform_ = Plotter2D.Viewport.Transform;
+    var visible_ = Plotter2D.Viewport.Visible;
+    var output_ = Plotter2D.Viewport.Output;
 
-    if (!output.Contains(point: mousePos))
+    if (!output_.Contains(point: mousePos))
     {
       if (AutoHide)
       {
@@ -261,89 +265,85 @@ public partial class CursorCoordinateGraph : ContentGraph
 
     if (!followMouse)
     {
-      mousePos = mousePos.DataToScreen(transform: transform);
+      mousePos = mousePos.DataToScreen(transform: transform_);
     }
 
-    horizLine.X1 = output.Left;
-    horizLine.X2 = output.Right;
+    horizLine.X1 = output_.Left;
+    horizLine.X2 = output_.Right;
     horizLine.Y1 = mousePos.Y;
     horizLine.Y2 = mousePos.Y;
 
     vertLine.X1 = mousePos.X;
     vertLine.X2 = mousePos.X;
-    vertLine.Y1 = output.Top;
-    vertLine.Y2 = output.Bottom;
+    vertLine.Y1 = output_.Top;
+    vertLine.Y2 = output_.Bottom;
 
     if (UseDashOffset)
     {
-      horizLine.StrokeDashOffset = (output.Right - mousePos.X) / 2;
-      vertLine.StrokeDashOffset = (output.Bottom - mousePos.Y) / 2;
+      horizLine.StrokeDashOffset = (output_.Right - mousePos.X) / 2;
+      vertLine.StrokeDashOffset = (output_.Bottom - mousePos.Y) / 2;
     }
 
-    Point mousePosInData = mousePos.ScreenToData(transform: transform);
+    var mousePosInData_ = mousePos.ScreenToData(transform: transform_);
 
-    string text = null;
+    string text_ = null;
 
     if (showVerticalLine)
     {
-      double xValue = mousePosInData.X;
+      var xValue_ = mousePosInData_.X;
       if (xTextMapping != null)
       {
-        text = xTextMapping(arg: xValue);
+        text_ = xTextMapping(arg: xValue_);
       }
 
-      // doesnot have xTextMapping or it returned null
-      if (text == null)
-      {
-        text = GetRoundedValue(min: visible.XMin, max: visible.XMax, value: xValue);
-      }
+      // does not have xTextMapping or it returned null
+      text_ ??= GetRoundedValue(min: visible_.XMin, max: visible_.XMax, value: xValue_);
 
       if (!string.IsNullOrEmpty(value: customXFormat))
       {
-        text = string.Format(format: customXFormat, arg0: text);
+        text_ = string.Format(format: customXFormat, arg0: text_);
       }
 
-      horizTextBlock.Text = text;
+      horizTextBlock.Text = text_;
     }
 
-    double width = horizGrid.ActualWidth;
-    double x = mousePos.X + blockShift.X;
-    if (x + width > output.Right)
+    var width_ = horizGrid.ActualWidth;
+    var x_ = mousePos.X + blockShift.X;
+    if (x_ + width_ > output_.Right)
     {
-      x = mousePos.X - blockShift.X - width;
+      x_ = mousePos.X - blockShift.X - width_;
     }
-    Canvas.SetLeft(element: horizGrid, length: x);
+
+    Canvas.SetLeft(element: horizGrid, length: x_);
 
     if (showHorizontalLine)
     {
-      double yValue = mousePosInData.Y;
-      text = null;
+      var yValue_ = mousePosInData_.Y;
+      text_ = null;
       if (yTextMapping != null)
       {
-        text = yTextMapping(arg: yValue);
+        text_ = yTextMapping(arg: yValue_);
       }
 
-      if (text == null)
-      {
-        text = GetRoundedValue(min: visible.YMin, max: visible.YMax, value: yValue);
-      }
+      text_ ??= GetRoundedValue(min: visible_.YMin, max: visible_.YMax, value: yValue_);
 
       if (!string.IsNullOrEmpty(value: customYFormat))
       {
-        text = string.Format(format: customYFormat, arg0: text);
+        text_ = string.Format(format: customYFormat, arg0: text_);
       }
 
-      vertTextBlock.Text = text;
+      vertTextBlock.Text = text_;
     }
 
-    // by default vertGrid is positioned on the top of line.
-    double height = vertGrid.ActualHeight;
-    double y = mousePos.Y - blockShift.Y - height;
-    if (y < output.Top)
+    // by default verticalGrid is positioned on the top of line.
+    var height_ = vertGrid.ActualHeight;
+    var y_ = mousePos.Y - blockShift.Y - height_;
+    if (y_ < output_.Top)
     {
-      y = mousePos.Y + blockShift.Y;
+      y_ = mousePos.Y + blockShift.Y;
     }
-    Canvas.SetTop(element: vertGrid, length: y);
+
+    Canvas.SetTop(element: vertGrid, length: y_);
 
     if (followMouse)
     {
@@ -372,26 +372,26 @@ public partial class CursorCoordinateGraph : ContentGraph
 
   private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    CursorCoordinateGraph graph = (CursorCoordinateGraph)d;
-    graph.UpdateUIRepresentation(mousePos: (Point)e.NewValue);
+    var graph_ = (CursorCoordinateGraph)d;
+    graph_.UpdateUIRepresentation(mousePos: (Point)e.NewValue);
   }
 
   private string GetRoundedValue(double min, double max, double value)
   {
-    double roundedValue = value;
-    var log = RoundingHelper.GetDifferenceLog(min: min, max: max);
-    string format = "G3";
-    double diff = Math.Abs(value: max - min);
-    if (1E3 < diff && diff < 1E6)
+    var roundedValue_ = value;
+    var log_ = RoundingHelper.GetDifferenceLog(min: min, max: max);
+    var format_ = "G3";
+    var diff_ = Math.Abs(value: max - min);
+    if (1E3 < diff_ && diff_ < 1E6)
     {
-      format = "F0";
+      format_ = "F0";
     }
-    if (log < 0)
+    if (log_ < 0)
     {
-      format = "G" + (-log + 2).ToString();
+      format_ = "G" + (-log_ + 2).ToString();
     }
 
-    return roundedValue.ToString(format: format);
+    return roundedValue_.ToString(format: format_);
   }
 
   #region UseDashOffset property
@@ -410,15 +410,15 @@ public partial class CursorCoordinateGraph : ContentGraph
 
   private static void UpdateUIRepresentation(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    CursorCoordinateGraph graph = (CursorCoordinateGraph)d;
+    var graph_ = (CursorCoordinateGraph)d;
     if ((bool)e.NewValue)
     {
-      graph.UpdateUIRepresentation();
+      graph_.UpdateUIRepresentation();
     }
     else
     {
-      graph.vertLine.ClearValue(dp: Shape.StrokeDashOffsetProperty);
-      graph.horizLine.ClearValue(dp: Shape.StrokeDashOffsetProperty);
+      graph_.vertLine.ClearValue(dp: Shape.StrokeDashOffsetProperty);
+      graph_.horizLine.ClearValue(dp: Shape.StrokeDashOffsetProperty);
     }
   }
 

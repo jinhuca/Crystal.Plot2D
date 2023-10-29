@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
 /// Adds Circle element at every point of graph.
@@ -28,7 +28,7 @@ public class CircleElementPointMarker : ShapeElementPointMarker
 
   public override void SetMarkerProperties(UIElement marker)
   {
-    Ellipse ellipse = (Ellipse)marker;
+    var ellipse = (Ellipse)marker;
 
     ellipse.Width = Size;
     ellipse.Height = Size;

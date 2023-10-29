@@ -5,24 +5,28 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:S004Layout"
         xmlns:d3="http://schemas.crystal.com/Plot2D"
+        xmlns:numeric="clr-namespace:Crystal.Plot2D.Axes.Numeric;assembly=Crystal.Plot2D"
+        xmlns:legendItems="clr-namespace:Crystal.Plot2D.LegendItems;assembly=Crystal.Plot2D"
+        xmlns:navigation="clr-namespace:Crystal.Plot2D.Navigation;assembly=Crystal.Plot2D"
+        xmlns:shapes="clr-namespace:Crystal.Plot2D.Shapes;assembly=Crystal.Plot2D"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Loaded="Window_Loaded">
   <Grid>
     <d3:Plotter x:Name="plotter">
       <d3:Header Height="20" Content="Header Panel"/>
-      <d3:HorizontalAxis Placement="Top"  Background="LightCyan"/>
-      <d3:VerticalAxis Placement="Right" Foreground="Red"/>
+      <numeric:HorizontalAxis Placement="Top"  Background="LightCyan"/>
+      <numeric:VerticalAxis Placement="Right" Foreground="Red"/>
       <d3:HorizontalAxisTitle Placement="Bottom" Foreground="Red" Content="BottomPanel - HorizontalAxisTitle"/>
       <d3:HorizontalAxisTitle Placement="Top" Content="TopPanel - HorizontalAxisTitle"/>
       <d3:VerticalAxisTitle Placement="Left" Content="LeftPanel - VerticalAxisTitle"/>
       <d3:VerticalAxisTitle Placement="Right" Content="RightPanel - VerticalAxisTitle"/>
       <d3:Footer Height="40" Content="FooterPanel - Footer"/>
-      <d3:Legend />
-      <d3:VerticalAxis Placement="Right"></d3:VerticalAxis>
-      <d3:VerticalAxis></d3:VerticalAxis>
+      <legendItems:Legend />
+      <numeric:VerticalAxis Placement="Right"></numeric:VerticalAxis>
+      <numeric:VerticalAxis></numeric:VerticalAxis>
       <!--<d3:CursorCoordinateGraph ></d3:CursorCoordinateGraph>-->
-      <d3:AxisNavigation Placement="Bottom" ></d3:AxisNavigation>
-      <d3:VerticalRange StartValue="0.1" EndValue="0.16" Fill="LightBlue"/>
+      <navigation:AxisNavigation Placement="Bottom" ></navigation:AxisNavigation>
+      <shapes:VerticalRange StartValue="0.1" EndValue="0.16" Fill="LightBlue"/>
     </d3:Plotter>
   </Grid>
 </Window>

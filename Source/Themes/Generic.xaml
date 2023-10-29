@@ -2,7 +2,10 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:charts="clr-namespace:Crystal.Plot2D.Charts"
                     xmlns:shapes="clr-namespace:Crystal.Plot2D.Charts"
-                    xmlns:markup="clr-namespace:Crystal.Plot2D">
+                    xmlns:markup="clr-namespace:Crystal.Plot2D"
+                    xmlns:shapes1="clr-namespace:Crystal.Plot2D.Shapes"
+                    xmlns:liveTooltips="clr-namespace:Crystal.Plot2D.LiveTooltips"
+                    xmlns:markupExtensions="clr-namespace:Crystal.Plot2D.Common.Auxiliary.MarkupExtensions">
 
   <ResourceDictionary.MergedDictionaries>
     <ResourceDictionary Source="/Crystal.Plot2D;component/LegendItems/LegendResources.xaml"/>
@@ -10,7 +13,7 @@
   </ResourceDictionary.MergedDictionaries>
 
   <!--Draggable Point-->
-  <Style TargetType="{x:Type shapes:DraggablePoint}">
+  <Style TargetType="{x:Type shapes1:DraggablePoint}">
     <Style.Resources>
       <Storyboard x:Key="story">
         <DoubleAnimation Storyboard.TargetProperty="Opacity" 
@@ -43,16 +46,16 @@
   <DropShadowEffect Direction="315" Opacity="0.4" ShadowDepth="4" x:Key="liveTooltipDefaultEffect"/>
 
   <!--LiveTooltip-->
-  <Style TargetType="{x:Type charts:LiveToolTip}">
+  <Style TargetType="{x:Type liveTooltips:LiveToolTip}">
     <Setter Property="Template">
       <Setter.Value>
-        <ControlTemplate TargetType="{x:Type charts:LiveToolTip}">
+        <ControlTemplate TargetType="{x:Type liveTooltips:LiveToolTip}">
           <Grid>
             <Rectangle Fill="{TemplateBinding Background}"
                        Stroke="{TemplateBinding BorderBrush}"
                        StrokeThickness="{TemplateBinding BorderThickness}"
                        RadiusX="1" RadiusY="1" Opacity="{TemplateBinding Opacity}"
-                       Effect="{markup:XbapConditionalExpression liveTooltipDefaultEffect}">
+                       Effect="{markupExtensions:XbapConditionalExpression liveTooltipDefaultEffect}">
               <!--<Rectangle.Effect>
 								<DropShadowEffect Direction="315" Opacity="0.4" ShadowDepth="4"/>
 							</Rectangle.Effect>-->

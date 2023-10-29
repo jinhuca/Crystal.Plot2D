@@ -1,22 +1,21 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents a label provider for <see cref="System.DateTime"/> ticks.
 /// </summary>
-public class DateTimeLabelProvider : DateTimeLabelProviderBase
+public sealed class DateTimeLabelProvider : DateTimeLabelProviderBase
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="DateTimeLabelProvider"/> class.
   /// </summary>
   public DateTimeLabelProvider() { }
 
-  public override UIElement[] CreateLabels(ITicksInfo<DateTime> ticksInfo)
+  public override UIElement[] CreateLabels(ITicksInfo<System.DateTime> ticksInfo)
   {
-    object info = ticksInfo.Info;
+    var info = ticksInfo.Info;
     var ticks = ticksInfo.Ticks;
 
     if (info is DifferenceIn diff)
@@ -24,14 +23,14 @@ public class DateTimeLabelProvider : DateTimeLabelProviderBase
       DateFormat = GetDateFormat(diff: diff);
     }
 
-    LabelTickInfo<DateTime> tickInfo = new() { Info = info };
+    LabelTickInfo<System.DateTime> tickInfo = new() { Info = info };
 
-    UIElement[] res = new UIElement[ticks.Length];
-    for (int i = 0; i < ticks.Length; i++)
+    var res = new UIElement[ticks.Length];
+    for (var i = 0; i < ticks.Length; i++)
     {
       tickInfo.Tick = ticks[i];
 
-      string tickText = GetString(tickInfo: tickInfo);
+      var tickText = GetString(tickInfo: tickInfo);
       UIElement label = new TextBlock { Text = tickText, ToolTip = ticks[i] };
       ApplyCustomView(info: tickInfo, label: label);
       res[i] = label;

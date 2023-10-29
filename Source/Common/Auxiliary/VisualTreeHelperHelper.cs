@@ -1,13 +1,13 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class VisualTreeHelperHelper
 {
   public static DependencyObject GetParent(DependencyObject target, int depth)
   {
-    DependencyObject parent = target;
+    var parent = target;
     do
     {
       parent = VisualTreeHelper.GetParent(reference: parent);

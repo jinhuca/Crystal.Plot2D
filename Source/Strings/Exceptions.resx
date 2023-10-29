@@ -181,7 +181,7 @@
     <value>Invalid value of child's parent plotter_ - it should be equal to plotter_ that child is being removed from.</value>
   </data>
   <data name="IsolinesDataIsUndetailized" xml:space="preserve">
-    <value>Input data must be more detailized to build isolines.</value>
+    <value>Input data must be more detailed to build isolines.</value>
   </data>
   <data name="IsolinesDataSourceShouldBeSet" xml:space="preserve">
     <value>Data source should be set before building isolines.</value>

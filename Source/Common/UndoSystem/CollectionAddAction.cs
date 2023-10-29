@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.UndoSystem;
 
 public sealed class CollectionAddAction<T> : UndoAction
 {
@@ -12,7 +12,7 @@ public sealed class CollectionAddAction<T> : UndoAction
       throw new ArgumentNullException(paramName: "addedItem");
     }
 
-    Collection = collection ?? throw new ArgumentNullException(paramName: "collection");
+    Collection = collection ?? throw new ArgumentNullException(paramName: nameof(collection));
     Item = item;
   }
 

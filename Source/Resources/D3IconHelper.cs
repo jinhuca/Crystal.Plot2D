@@ -1,36 +1,39 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Windows.Media.Imaging;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Resources;
 
 public static class D3IconHelper
 {
-  private static BitmapFrame icon;
+  private static BitmapFrame _icon;
   public static BitmapFrame TheIcon
   {
     get
     {
-      if (icon == null)
+      if (_icon == null)
       {
-        Assembly currentAssembly = typeof(D3IconHelper).Assembly;
-        icon = BitmapFrame.Create(bitmapStream: currentAssembly.GetManifestResourceStream(name: "Crystal.Plot2D.Resources.D3-icon.ico"));
+        var currentAssembly_ = typeof(D3IconHelper).Assembly;
+        _icon = BitmapFrame.Create(bitmapStream: currentAssembly_.GetManifestResourceStream(name: "Crystal.Plot2D.Resources.D3-icon.ico"));
       }
-      return icon;
+
+      return _icon;
     }
   }
 
-  private static BitmapFrame whiteIcon;
+  private static BitmapFrame _whiteIcon;
   public static BitmapFrame WhiteIcon
   {
     get
     {
-      if (whiteIcon == null)
+      if (_whiteIcon == null)
       {
-        Assembly currentAssembly = typeof(D3IconHelper).Assembly;
-        whiteIcon = BitmapFrame.Create(bitmapStream: currentAssembly.GetManifestResourceStream(name: "Crystal.Plot2D.Resources.D3-icon-white.ico"));
+        var currentAssembly_ = typeof(D3IconHelper).Assembly;
+        _whiteIcon = BitmapFrame.Create(bitmapStream: currentAssembly_.GetManifestResourceStream(name: "Crystal.Plot2D.Resources.D3-icon-white.ico") 
+                                                     ?? throw new InvalidOperationException());
       }
 
-      return whiteIcon;
+      return _whiteIcon;
     }
   }
 }

@@ -4,27 +4,28 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Represents rectangle with corners bound to viewport coordinates.
 /// </summary>
 [TemplatePart(Name = "PART_LinesPath", Type = typeof(Path))]
 [TemplatePart(Name = "PART_RectPath", Type = typeof(Path))]
-public abstract class RangeHighlight : Control, IPlotterElement
+public abstract class RangeHighlight : ContentControl, IPlotterElement
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="RangeHighlight"/> class.
   /// </summary>
   protected RangeHighlight()
   {
-    Resources = new ResourceDictionary { Source = new Uri(uriString: Constants.ShapeResourceUri, uriKind: UriKind.Relative) };
+    Resources = new ResourceDictionary { Source = new Uri(uriString: Constants.Constants.ShapeResourceUri, uriKind: UriKind.Relative) };
     Style = (Style)FindResource(resourceKey: typeof(RangeHighlight));
     ApplyTemplate();
   }
 
-  bool partsLoaded;
+  private bool partsLoaded;
   protected bool PartsLoaded => partsLoaded;
 
   public override void OnApplyTemplate()
@@ -189,7 +190,7 @@ public abstract class RangeHighlight : Control, IPlotterElement
 
   private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    RangeHighlight r = (RangeHighlight)d;
+    var r = (RangeHighlight)d;
     r.OnValueChanged(e: e);
   }
 
@@ -236,11 +237,12 @@ public abstract class RangeHighlight : Control, IPlotterElement
   #region IPlotterElement Members
 
   private PlotterBase plotter;
+
   void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
   {
     plotter.CentralGrid.Children.Add(element: this);
 
-    PlotterBase plotter2d = (PlotterBase)plotter;
+    var plotter2d = (PlotterBase)plotter;
     this.plotter = plotter2d;
     plotter2d.Viewport.PropertyChanged += Viewport_PropertyChanged;
 
@@ -259,16 +261,19 @@ public abstract class RangeHighlight : Control, IPlotterElement
       UpdateUIRepresentationCore();
     }
   }
-  protected virtual void UpdateUIRepresentationCore() { }
 
-  void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
+  protected virtual void UpdateUIRepresentationCore()
+  {
+  }
+
+  private void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     UpdateUIRepresentation();
   }
 
   void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
   {
-    PlotterBase plotter2d = (PlotterBase)plotter;
+    var plotter2d = (PlotterBase)plotter;
     plotter2d.Viewport.PropertyChanged -= Viewport_PropertyChanged;
     plotter.CentralGrid.Children.Remove(element: this);
 

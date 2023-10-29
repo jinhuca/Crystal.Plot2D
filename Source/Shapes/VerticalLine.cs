@@ -1,6 +1,7 @@
 ﻿using System.Windows;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Represents an infinite vertical line with x viewport coordinate.
@@ -25,8 +26,8 @@ public sealed class VerticalLine : SimpleLine
   {
     var transform = Plotter.Viewport.Transform;
 
-    Point p1 = new Point(x: Value, y: Plotter.Viewport.Visible.YMin).DataToScreen(transform: transform);
-    Point p2 = new Point(x: Value, y: Plotter.Viewport.Visible.YMax).DataToScreen(transform: transform);
+    var p1 = new Point(x: Value, y: Plotter.Viewport.Visible.YMin).DataToScreen(transform: transform);
+    var p2 = new Point(x: Value, y: Plotter.Viewport.Visible.YMax).DataToScreen(transform: transform);
 
     LineGeometry.StartPoint = p1;
     LineGeometry.EndPoint = p2;

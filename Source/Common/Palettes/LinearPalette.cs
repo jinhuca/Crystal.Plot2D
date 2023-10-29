@@ -2,22 +2,23 @@
 using System.ComponentModel;
 using System.Windows.Markup;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 /// <summary>
 /// Represents a palette with start and stop colors and intermediate colors with their custom offsets.
 /// </summary>
 [ContentProperty(name: "Steps")]
-public class LinearPalette : PaletteBase, ISupportInitialize
+public sealed class LinearPalette : PaletteBase, ISupportInitialize
 {
   public ObservableCollection<LinearPaletteColorStep> Steps { get; } = new();
 
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
-  public Color StartColor { get; set; } = Colors.White;
+  public Color StartColor { get; } = Colors.White;
 
   [DesignerSerializationVisibility(visibility: DesignerSerializationVisibility.Content)]
-  public Color EndColor { get; set; } = Colors.Black;
+  public Color EndColor { get; } = Colors.Black;
 
   /// <summary>
   /// Initializes a new instance of the <see cref="LinearPalette"/> class.
@@ -60,7 +61,7 @@ public class LinearPalette : PaletteBase, ISupportInitialize
       return Steps[index: Steps.Count - 1].Color;
     }
 
-    int i = 0;
+    var i = 0;
     double x = 0;
     while (x <= t)
     {
@@ -68,10 +69,10 @@ public class LinearPalette : PaletteBase, ISupportInitialize
       i++;
     }
 
-    double ratio = (t - Steps[index: i - 1].Offset) / (Steps[index: i].Offset - Steps[index: i - 1].Offset);
+    var ratio = (t - Steps[index: i - 1].Offset) / (Steps[index: i].Offset - Steps[index: i - 1].Offset);
 
-    Color c0 = Steps[index: i - 1].Color;
-    Color c1 = Steps[index: i].Color;
+    var c0 = Steps[index: i - 1].Color;
+    var c1 = Steps[index: i].Color;
 
     return Color.FromRgb(
       r: (byte)((1 - ratio) * c0.R + ratio * c1.R),

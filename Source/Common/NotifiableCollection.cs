@@ -32,14 +32,14 @@ public abstract class NotifiableCollection<T> : ObservableCollection<T>
 
   protected override void RemoveItem(int index)
   {
-    T item = Items[index: index];
+    var item = Items[index: index];
     OnItemRemoving(item: item);
     base.RemoveItem(index: index);
   }
 
   protected override void SetItem(int index, T item)
   {
-    T oldItem = Items[index: index];
+    var oldItem = Items[index: index];
     OnItemRemoving(item: oldItem);
     OnItemAdding(item: item);
     base.SetItem(index: index, item: item);
@@ -81,8 +81,8 @@ public abstract class NotifiableCollection<T> : ObservableCollection<T>
   /// </param>
   protected virtual void OnItemRemoving(T item) { }
 
-  int attemptsToRaiseEvent;
-  bool raiseCollectionChangedEvent = true;
+  private int attemptsToRaiseEvent;
+  private bool raiseCollectionChangedEvent = true;
 
   #region Public
 

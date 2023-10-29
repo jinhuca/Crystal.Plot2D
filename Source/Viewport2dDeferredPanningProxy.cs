@@ -1,4 +1,5 @@
 ﻿using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D;
 
@@ -12,7 +13,7 @@ internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
     this.viewport = viewport;
   }
 
-  DataRect prevVisible;
+  private DataRect prevVisible;
 
   private void viewport_PanningStateChanged(object sender, ValueChangedEventArgs<Viewport2DPanningState> e)
   {

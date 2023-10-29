@@ -1,10 +1,12 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 public abstract class IsolineRenderer : IsolineGraphBase
 {
@@ -26,16 +28,16 @@ public abstract class IsolineRenderer : IsolineGraphBase
   {
     var dataSource = DataSource;
     var visibleMinMax = dataSource.GetMinMax(area: Plotter2D.Visible);
-    double totalDelta = collection.Max - collection.Min;
-    double visibleMinMaxRatio = totalDelta / visibleMinMax.GetLength();
-    double defaultDelta = totalDelta / 12;
+    var totalDelta = collection.Max - collection.Min;
+    var visibleMinMaxRatio = totalDelta / visibleMinMax.GetLength();
+    var defaultDelta = totalDelta / 12;
 
     if (true)
     {
-      double number = Math.Ceiling(a: visibleMinMaxRatio * 4);
+      var number = Math.Ceiling(a: visibleMinMaxRatio * 4);
       number = Math.Pow(x: 2, y: Math.Ceiling(a: Math.Log(d: number) / Math.Log(d: 2)));
-      double delta = totalDelta / number;
-      double x = collection.Min + Math.Ceiling(a: (visibleMinMax.Min - collection.Min) / delta) * delta;
+      var delta = totalDelta / number;
+      var x = collection.Min + Math.Ceiling(a: (visibleMinMax.Min - collection.Min) / delta) * delta;
 
       List<double> result = new();
       while (x < visibleMinMax.Max)
@@ -50,7 +52,7 @@ public abstract class IsolineRenderer : IsolineGraphBase
 
   protected void RenderIsolineCollection(DrawingContext dc, double strokeThickness, IsolineCollection collection, CoordinateTransform transform)
   {
-    foreach (LevelLine line in collection)
+    foreach (var line in collection)
     {
       StreamGeometry lineGeometry = new();
       using (var context = lineGeometry.Open())

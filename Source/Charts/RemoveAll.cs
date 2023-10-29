@@ -1,4 +1,6 @@
 ﻿using System;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Charts;
 
@@ -11,10 +13,7 @@ public sealed class RemoveAll : IPlotterElement
     get => type;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: nameof(value));
-      }
+      ArgumentNullException.ThrowIfNull(value);
       type = value;
     }
   }

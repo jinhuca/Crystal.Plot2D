@@ -11,7 +11,7 @@ namespace Crystal.Plot2D.Common;
 /// </summary>
 internal sealed class UIChildrenCollection : UIElementCollection
 {
-	  readonly IndividualArrangePanel hostPanel;
+  private readonly IndividualArrangePanel hostPanel;
 
   /// <summary>
   /// Initializes a new instance of the <see cref="UIChildrenCollection"/> class.
@@ -28,10 +28,7 @@ internal sealed class UIChildrenCollection : UIElementCollection
 
   public override int Add(UIElement element)
   {
-    if (element == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(element));
-    }
+    ArgumentNullException.ThrowIfNull(element);
 
     SetLogicalParent(element: element);
 
@@ -53,15 +50,15 @@ internal sealed class UIChildrenCollection : UIElementCollection
   {
     if (visualChildren.Count > 0)
     {
-      Visual[] visualArray = new Visual[visualChildren.Count];
-      for (int i = 0; i < visualChildren.Count; i++)
+      var visualArray = new Visual[visualChildren.Count];
+      for (var i = 0; i < visualChildren.Count; i++)
       {
         visualArray[i] = visualChildren[index: i];
       }
 
       visualChildren.Clear();
 
-      for (int i = 0; i < visualArray.Length; i++)
+      for (var i = 0; i < visualArray.Length; i++)
       {
         if (visualArray[i] is UIElement element)
         {
@@ -83,10 +80,7 @@ internal sealed class UIChildrenCollection : UIElementCollection
 
   public override void Insert(int index, UIElement element)
   {
-    if (element == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(element));
-    }
+    ArgumentNullException.ThrowIfNull(element);
 
     hostPanel.OnChildAdded(child: (FrameworkElement)element);
     SetLogicalParent(element: element);
@@ -110,17 +104,17 @@ internal sealed class UIChildrenCollection : UIElementCollection
 
   public override void RemoveRange(int index, int count)
   {
-    int actualCount = visualChildren.Count;
-    if (count > (actualCount - index))
+    var actualCount = visualChildren.Count;
+    if (count > actualCount - index)
     {
       count = actualCount - index;
     }
 
     if (count > 0)
     {
-      Visual[] visualArray = new Visual[count];
-      int copyIndex = index;
-      for (int i = 0; i < count; i++)
+      var visualArray = new Visual[count];
+      var copyIndex = index;
+      for (var i = 0; i < count; i++)
       {
         visualArray[i] = visualChildren[index: copyIndex];
         copyIndex++;
@@ -128,7 +122,7 @@ internal sealed class UIChildrenCollection : UIElementCollection
 
       visualChildren.RemoveRange(index: index, count: count);
 
-      for (int i = 0; i < count; i++)
+      for (var i = 0; i < count; i++)
       {
         if (visualArray[i] is UIElement element)
         {
@@ -143,10 +137,7 @@ internal sealed class UIChildrenCollection : UIElementCollection
     get => visualChildren[index: index] as UIElement;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: nameof(value));
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       if (visualChildren[index: index] != value)
       {

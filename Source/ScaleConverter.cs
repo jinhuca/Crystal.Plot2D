@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Globalization;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Converters;
 
 namespace Crystal.Plot2D;
 
@@ -24,11 +26,11 @@ public sealed class ScaleConverter : GenericValueConverter<DataRect>
 
   public override object ConvertCore(DataRect value, Type targetType, object parameter, CultureInfo culture)
   {
-    DataRect parentVisible = value;
-    double xmin = parentVisible.XMin * xScale + xShift;
-    double xmax = parentVisible.XMax * xScale + xShift;
-    double ymin = parentVisible.YMin * yScale + yShift;
-    double ymax = parentVisible.YMax * yScale + yShift;
+    var parentVisible = value;
+    var xmin = parentVisible.XMin * xScale + xShift;
+    var xmax = parentVisible.XMax * xScale + xShift;
+    var ymin = parentVisible.YMin * yScale + yShift;
+    var ymax = parentVisible.YMax * yScale + yShift;
 
     return DataRect.Create(xMin: xmin, yMin: ymin, xMax: xmax, yMax: ymax);
   }
@@ -37,11 +39,11 @@ public sealed class ScaleConverter : GenericValueConverter<DataRect>
   {
     if (targetType == typeof(DataRect))
     {
-      DataRect childVisible = (DataRect)value;
-      double xmin = (childVisible.XMin - xShift) / xScale;
-      double xmax = (childVisible.XMax - xShift) / xScale;
-      double ymin = (childVisible.YMin - yShift) / yScale;
-      double ymax = (childVisible.YMax - yShift) / yScale;
+      var childVisible = (DataRect)value;
+      var xmin = (childVisible.XMin - xShift) / xScale;
+      var xmax = (childVisible.XMax - xShift) / xScale;
+      var ymin = (childVisible.YMin - yShift) / yScale;
+      var ymax = (childVisible.YMax - yShift) / yScale;
 
       return DataRect.Create(xMin: xmin, yMin: ymin, xMax: xmax, yMax: ymax);
     }

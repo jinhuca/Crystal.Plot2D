@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D.DataSources;
+﻿namespace Crystal.Plot2D.DataSources.MultiDimensional;
 
 public interface INonUniformDataSource2D<T> : IDataSource2D<T> where T : struct
 {

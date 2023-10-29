@@ -5,7 +5,7 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 // todo I don't think that we should create data source which supports 
 // suspending its DataChanged event - it is better to create
@@ -26,11 +26,8 @@ public class ObservableDataSource<T> : IPointDataSource
 
   public ObservableDataSource(IEnumerable<T> data) : this()
   {
-    if (data == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(data));
-    }
-    foreach (T item in data)
+    ArgumentNullException.ThrowIfNull(data);
+    foreach (var item in data)
     {
       Collection.Add(item: item);
     }
@@ -71,10 +68,7 @@ public class ObservableDataSource<T> : IPointDataSource
 
   public void AppendMany(IEnumerable<T> data)
   {
-    if (data == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(data));
-    }
+    ArgumentNullException.ThrowIfNull(data);
     UpdatesEnabled = false;
     foreach (var p in data)
     {
@@ -100,7 +94,7 @@ public class ObservableDataSource<T> : IPointDataSource
 
   #region IChartDataSource Members
 
-  private class ObservableIterator : IPointEnumerator
+  private sealed class ObservableIterator : IPointEnumerator
   {
 	    private ObservableDataSource<T> DataSource { get; }
 
@@ -123,7 +117,7 @@ public class ObservableDataSource<T> : IPointDataSource
     public void Dispose()
     {
       Enumerator.Dispose();
-      GC.SuppressFinalize(obj: this);
+      GC.SuppressFinalize(this);
     }
 
     #endregion

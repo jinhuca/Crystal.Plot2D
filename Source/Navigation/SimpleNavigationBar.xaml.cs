@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
 /// Interaction logic for SimpleNavigationBar.xaml

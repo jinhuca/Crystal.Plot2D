@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Represents a closed filled figure with points in Viewport coordinates.
@@ -11,7 +12,7 @@ public sealed class ViewportPolygon : ViewportPolylineBase
 {
   static ViewportPolygon()
   {
-    Type type = typeof(ViewportPolygon);
+    var type = typeof(ViewportPolygon);
     FillProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: Brushes.Coral));
   }
 
@@ -24,9 +25,9 @@ public sealed class ViewportPolygon : ViewportPolylineBase
   {
     var transform = Plotter.Viewport.Transform;
 
-    PathGeometry geometry = PathGeometry;
+    var geometry = PathGeometry;
 
-    PointCollection points = Points;
+    var points = Points;
     geometry.Clear();
 
     if (points == null) { }
@@ -38,8 +39,8 @@ public sealed class ViewportPolygon : ViewportPolylineBase
         figure.StartPoint = points[index: 0].DataToScreen(transform: transform);
         if (points.Count > 1)
         {
-          Point[] pointArray = new Point[points.Count - 1];
-          for (int i = 1; i < points.Count; i++)
+          var pointArray = new Point[points.Count - 1];
+          for (var i = 1; i < points.Count; i++)
           {
             pointArray[i - 1] = points[index: i].DataToScreen(transform: transform);
           }

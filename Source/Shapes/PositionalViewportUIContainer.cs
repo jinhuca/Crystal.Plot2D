@@ -1,13 +1,15 @@
 ﻿#define old
 
-using Crystal.Plot2D.Common;
 using System;
 using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 public sealed class PositionChangedEventArgs : EventArgs
 {
@@ -21,7 +23,7 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
 {
   static PositionalViewportUIContainer()
   {
-    Type type = typeof(PositionalViewportUIContainer);
+    var type = typeof(PositionalViewportUIContainer);
 
     // todo subscribe for properties changes
     HorizontalContentAlignmentProperty.AddOwner(ownerType: type, typeMetadata: new FrameworkPropertyMetadata(defaultValue: HorizontalAlignment.Center));
@@ -63,10 +65,10 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
 
   private static object CoercePosition(DependencyObject d, object value)
   {
-    PositionalViewportUIContainer owner = (PositionalViewportUIContainer)d;
+    var owner = (PositionalViewportUIContainer)d;
     if (owner.positionCoerceCallbacks.Count > 0)
     {
-      Point position = (Point)value;
+      var position = (Point)value;
       foreach (var callback in owner.positionCoerceCallbacks)
       {
         position = callback(container: owner, position: position);
@@ -85,7 +87,7 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
 
   private static void OnPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    PositionalViewportUIContainer container = (PositionalViewportUIContainer)d;
+    var container = (PositionalViewportUIContainer)d;
     container.OnPositionChanged(e: e);
   }
 
@@ -139,13 +141,13 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
 #else
 #endif
 
-    PlotterBase plotter2d = (PlotterBase)plotter;
+    var plotter2d = (PlotterBase)plotter;
     this.plotter = plotter2d;
   }
 
   public void OnPlotterDetaching(PlotterBase plotter)
   {
-    PlotterBase plotter2d = (PlotterBase)plotter;
+    var plotter2d = (PlotterBase)plotter;
 
 #if !old
 			Canvas hostCanvas = (Canvas)hostPanel.FindName(canvasName);

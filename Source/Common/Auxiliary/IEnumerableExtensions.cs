@@ -3,13 +3,13 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class IEnumerableExtensions
 {
   public static bool CountGreaterOrEqual<T>(this IEnumerable<T> enumerable, int count)
   {
-    int counter = 0;
+    var counter = 0;
     using (var enumerator = enumerable.GetEnumerator())
     {
       while (counter < count && enumerator.MoveNext())

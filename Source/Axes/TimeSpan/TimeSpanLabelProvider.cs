@@ -1,25 +1,24 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.TimeSpan;
 
-public class TimeSpanLabelProvider : LabelProviderBase<TimeSpan>
+public sealed class TimeSpanLabelProvider : LabelProviderBase<System.TimeSpan>
 {
-  public override UIElement[] CreateLabels(ITicksInfo<TimeSpan> ticksInfo)
+  public override UIElement[] CreateLabels(ITicksInfo<System.TimeSpan> ticksInfo)
   {
-    object info = ticksInfo.Info;
+    var info = ticksInfo.Info;
     var ticks = ticksInfo.Ticks;
 
-    LabelTickInfo<TimeSpan> tickInfo = new();
+    LabelTickInfo<System.TimeSpan> tickInfo = new();
 
-    UIElement[] res = new UIElement[ticks.Length];
-    for (int i = 0; i < ticks.Length; i++)
+    var res = new UIElement[ticks.Length];
+    for (var i = 0; i < ticks.Length; i++)
     {
       tickInfo.Tick = ticks[i];
       tickInfo.Info = info;
 
-      string tickText = GetString(tickInfo: tickInfo);
+      var tickText = GetString(tickInfo: tickInfo);
       UIElement label = new TextBlock { Text = tickText, ToolTip = ticks[i] };
       res[i] = label;
     }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.NotifyingPanels;
 
 internal sealed class NotifyingCanvas : Canvas, INotifyingPanel
 {

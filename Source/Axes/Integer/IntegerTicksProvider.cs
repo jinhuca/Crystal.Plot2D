@@ -1,14 +1,15 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Integer;
 
 /// <summary>
-/// Represents a ticks provider for intefer values.
+/// Represents a ticks provider for integer values.
 /// </summary>
-public class IntegerTicksProvider : ITicksProvider<int>
+public sealed class IntegerTicksProvider : ITicksProvider<int>
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="IntegerTicksProvider"/> class.
@@ -16,6 +17,7 @@ public class IntegerTicksProvider : ITicksProvider<int>
   public IntegerTicksProvider() { }
 
   private int minStep;
+  
   /// <summary>
   /// Gets or sets the minimal step between ticks.
   /// </summary>
@@ -25,7 +27,7 @@ public class IntegerTicksProvider : ITicksProvider<int>
     get => minStep;
     set
     {
-      Verify.IsTrue(condition: value >= 0, paramName: "value");
+      Verify.IsTrue(condition: value >= 0, paramName: nameof(value));
       if (minStep != value)
       {
         minStep = value;
@@ -48,7 +50,7 @@ public class IntegerTicksProvider : ITicksProvider<int>
       {
         if (value < 0)
         {
-          throw new ArgumentOutOfRangeException(paramName: "value", message: Strings.Exceptions.ParameterShouldBePositive);
+          throw new ArgumentOutOfRangeException(paramName: nameof(value), message: Strings.Exceptions.ParameterShouldBePositive);
         }
 
         maxStep = value;
@@ -70,12 +72,12 @@ public class IntegerTicksProvider : ITicksProvider<int>
     double start = range.Min;
     double finish = range.Max;
 
-    double delta = finish - start;
+    var delta = finish - start;
 
-    int log = (int)Math.Round(a: Math.Log10(d: delta));
+    var log = (int)Math.Round(a: Math.Log10(d: delta));
 
-    double newStart = RoundingHelper.Round(number: start, rem: log);
-    double newFinish = RoundingHelper.Round(number: finish, rem: log);
+    var newStart = RoundingHelper.Round(number: start, rem: log);
+    var newFinish = RoundingHelper.Round(number: finish, rem: log);
     if (newStart == newFinish)
     {
       log--;
@@ -84,10 +86,10 @@ public class IntegerTicksProvider : ITicksProvider<int>
     }
 
     // calculating step between ticks
-    double unroundedStep = (newFinish - newStart) / ticksCount;
-    int stepLog = log;
+    var unroundedStep = (newFinish - newStart) / ticksCount;
+    var stepLog = log;
     // trying to round step
-    int step = (int)RoundingHelper.Round(number: unroundedStep, rem: stepLog);
+    var step = (int)RoundingHelper.Round(number: unroundedStep, rem: stepLog);
     if (step == 0)
     {
       stepLog--;
@@ -114,7 +116,7 @@ public class IntegerTicksProvider : ITicksProvider<int>
       step = 1;
     }
 
-    int[] ticks = CreateTicks(start: start, finish: finish, step: step);
+    var ticks = CreateTicks(start: start, finish: finish, step: step);
 
     TicksInfo<int> res = new() { Info = log, Ticks = ticks };
 
@@ -125,12 +127,12 @@ public class IntegerTicksProvider : ITicksProvider<int>
   {
     DebugVerify.Is(condition: step != 0);
 
-    int x = (int)(step * Math.Floor(d: start / (double)step));
+    var x = (int)(step * Math.Floor(d: start / (double)step));
     List<int> res = new();
 
     checked
     {
-      double increasedFinish = finish + step * 1.05;
+      var increasedFinish = finish + step * 1.05;
       while (x <= increasedFinish)
       {
         res.Add(item: x);
@@ -140,7 +142,7 @@ public class IntegerTicksProvider : ITicksProvider<int>
     return res.ToArray();
   }
 
-  private static readonly int[] tickCounts = new int[] { 20, 10, 5, 4, 2, 1 };
+  private static readonly int[] tickCounts = { 20, 10, 5, 4, 2, 1 };
 
   /// <summary>
   /// Decreases the tick count.
@@ -161,7 +163,7 @@ public class IntegerTicksProvider : ITicksProvider<int>
   /// <returns>Increased ticks count.</returns>
   public int IncreaseTickCount(int ticksCount)
   {
-    int newTickCount = tickCounts.Reverse().FirstOrDefault(predicate: tick => tick > ticksCount);
+    var newTickCount = tickCounts.Reverse().FirstOrDefault(predicate: tick => tick > ticksCount);
     if (newTickCount == 0)
     {
       newTickCount = tickCounts[0];
@@ -182,7 +184,7 @@ public class IntegerTicksProvider : ITicksProvider<int>
   /// <value>The major provider.</value>
   public ITicksProvider<int> MajorProvider => null;
 
-  protected void RaiseChangedEvent()
+  private void RaiseChangedEvent()
   {
     Changed.Raise(sender: this);
   }

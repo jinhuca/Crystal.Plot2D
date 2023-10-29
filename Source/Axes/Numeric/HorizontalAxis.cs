@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Numeric;
 
 /// <summary>
 /// Represents a horizontal axis with values of <see cref="double"/> type.
 /// Can be placed only from bottom or top side of plotter.
 /// By default is placed from the bottom side.
 /// </summary>
-public class HorizontalAxis : NumericAxis
+public sealed class HorizontalAxis : NumericAxis
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="HorizontalAxis"/> class.

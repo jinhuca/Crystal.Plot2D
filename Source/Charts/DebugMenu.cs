@@ -1,13 +1,14 @@
 ﻿using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Common;
 
 namespace Crystal.Plot2D.Charts;
 
 /// <summary>
 ///   Represents a menu that appears in Debug version of Crystal.Plot2D.
 /// </summary>
-public class DebugMenu : IPlotterElement
+public sealed class DebugMenu : IPlotterElement
 {
   /// <summary>
   ///   Initializes a new instance of the <see cref="DebugMenu"/> class.

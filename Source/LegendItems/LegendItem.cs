@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.LegendItems;
 
-public class LegendItem : Control
+public sealed class LegendItem : Control
 {
   static LegendItem()
   {

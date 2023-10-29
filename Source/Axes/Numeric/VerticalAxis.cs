@@ -1,13 +1,13 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Numeric;
 
 /// <summary>
 /// Represents a vertical axis with values of System.Double type.
 /// Can be placed only from left or right side of plotter.
 /// By default is placed from the left side.
 /// </summary>
-public class VerticalAxis : NumericAxis
+public sealed class VerticalAxis : NumericAxis
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="VerticalAxis"/> class.

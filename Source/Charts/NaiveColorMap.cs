@@ -3,51 +3,60 @@ using System;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Common.Palettes;
 
 namespace Crystal.Plot2D.Charts;
 
 public class NaiveColorMap
 {
-  public double[,] Data { get; set; }
+  public NaiveColorMap(double[,] data, IPalette palette)
+  {
+    Data = data;
+    Palette = palette;
+  }
 
-  public IPalette Palette { get; set; }
+  public double[,] Data { get; }
+
+  public IPalette Palette { get; }
 
   public BitmapSource BuildImage()
   {
     if (Data == null)
     {
-      throw new ArgumentNullException(paramName: "Data");
+      throw new ArgumentNullException(paramName: nameof(Data));
     }
+
     if (Palette == null)
     {
-      throw new ArgumentNullException(paramName: "Palette");
+      throw new ArgumentNullException(paramName: nameof(Palette));
     }
 
-    int width = Data.GetLength(dimension: 0);
-    int height = Data.GetLength(dimension: 1);
+    var width_ = Data.GetLength(dimension: 0);
+    var height_ = Data.GetLength(dimension: 1);
 
-    int[] pixels = new int[width * height];
-    var minMax = Data.GetMinMax();
-    var min = minMax.Min;
-    var rangeDelta = minMax.GetLength();
+    var pixels_ = new int[width_ * height_];
+    var minMax_ = Data.GetMinMax();
+    var min_ = minMax_.Min;
+    var rangeDelta_ = minMax_.GetLength();
 
-    int pointer = 0;
-    for (int iy = 0; iy < height; iy++)
+    var pointer_ = 0;
+    for (var iy_ = 0; iy_ < height_; iy_++)
     {
-      for (int ix = 0; ix < width; ix++)
+      for (var ix_ = 0; ix_ < width_; ix_++)
       {
-        double value = Data[ix, height - 1 - iy];
-        double ratio = (value - min) / rangeDelta;
-        Color color = Palette.GetColor(t: ratio);
-        int argb = color.ToArgb();
-        pixels[pointer++] = argb;
+        var value_ = Data[ix_, height_ - 1 - iy_];
+        var ratio_ = (value_ - min_) / rangeDelta_;
+        var color_ = Palette.GetColor(t: ratio_);
+        var argb_ = color_.ToArgb();
+        pixels_[pointer_++] = argb_;
       }
     }
 
-    WriteableBitmap bitmap = new(pixelWidth: width, pixelHeight: height, dpiX: 96, dpiY: 96, pixelFormat: PixelFormats.Pbgra32, palette: null);
-    int bpp = (bitmap.Format.BitsPerPixel + 7) / 8;
-    int stride = bitmap.PixelWidth * bpp;
-    bitmap.WritePixels(sourceRect: new Int32Rect(x: 0, y: 0, width: width, height: height), pixels: pixels, stride: stride, offset: 0);
-    return bitmap;
+    WriteableBitmap bitmap_ = new(pixelWidth: width_, pixelHeight: height_, dpiX: 96, dpiY: 96, pixelFormat: PixelFormats.Pbgra32, palette: null);
+    var bpp_ = (bitmap_.Format.BitsPerPixel + 7) / 8;
+    var stride_ = bitmap_.PixelWidth * bpp_;
+    bitmap_.WritePixels(sourceRect: new Int32Rect(x: 0, y: 0, width: width_, height: height_), pixels: pixels_, stride: stride_, offset: 0);
+    return bitmap_;
   }
 }

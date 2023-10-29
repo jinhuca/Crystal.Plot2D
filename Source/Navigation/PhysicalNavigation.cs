@@ -2,8 +2,9 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 public class PhysicalNavigation : IPlotterElement
 {
@@ -15,10 +16,10 @@ public class PhysicalNavigation : IPlotterElement
     timer.Tick += timer_Tick;
   }
 
-  DateTime startTime;
+  private DateTime startTime;
   private void timer_Tick(object sender, EventArgs e)
   {
-    TimeSpan time = DateTime.Now - startTime;
+    var time = DateTime.Now - startTime;
     animation.UseMouse = isMouseDown;
     if (!isMouseDown)
     {

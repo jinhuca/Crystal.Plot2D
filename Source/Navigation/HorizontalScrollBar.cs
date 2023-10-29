@@ -1,10 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
-/// Represents a horizontal scroll bar on the borrom of <see cref="PlotterBase"/>.
+/// Represents a horizontal scroll bar on the bottom of <see cref="PlotterBase"/>.
 /// Uses Plotter.Plotter.Viewport.DataDomain property as a source of data about current position and position limits.
 /// </summary>
 public sealed class HorizontalScrollBar : PlotterScrollBar
@@ -23,7 +24,7 @@ public sealed class HorizontalScrollBar : PlotterScrollBar
     {
       var visibleRange = new Range<double>(min: viewport.Visible.XMin, max: viewport.Visible.XMax);
 
-      double size = visibleRange.Max - visibleRange.Min;
+      var size = visibleRange.Max - visibleRange.Min;
       ScrollBar.ViewportSize = size;
 
       var domainRange = new Range<double>(min: viewport.Domain.XMin, max: viewport.Domain.XMax);

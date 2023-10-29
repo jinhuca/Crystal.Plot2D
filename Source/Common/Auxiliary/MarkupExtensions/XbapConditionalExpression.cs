@@ -3,10 +3,10 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Markup;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary.MarkupExtensions;
 
 [EditorBrowsable(state: EditorBrowsableState.Never)]
-public class XbapConditionalExpression : MarkupExtension
+public sealed class XbapConditionalExpression : MarkupExtension
 {
   public XbapConditionalExpression() { }
 
@@ -16,14 +16,14 @@ public class XbapConditionalExpression : MarkupExtension
   }
 
   [ConstructorArgument(argumentName: "value")]
-  public object Value { get; set; }
+  public object Value { get; }
 
   public override object ProvideValue(IServiceProvider serviceProvider)
   {
 #if RELEASEXBAP
 			return null;
 #else
-    return ((ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.ThemeUri, uriKind: UriKind.Relative)))[key: Value];
+    return ((ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.Constants.ThemeUri, uriKind: UriKind.Relative)))[key: Value];
 #endif
   }
 }

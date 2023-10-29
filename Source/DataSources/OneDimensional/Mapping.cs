@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 /// <summary>
 /// Mapping class holds information about mapping of TSource type to some DependencyProperty.

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Transforms;
 
 /// <summary>
 /// A central class in 2d coordinate transformation in Plotter2D.
@@ -29,15 +30,15 @@ public sealed class CoordinateTransform
 
   #region Coeffs
 
-  readonly double rxToScreen;
-  readonly double ryToScreen;
-  readonly double cxToScreen;
-  readonly double cyToScreen;
+  private readonly double rxToScreen;
+  private readonly double ryToScreen;
+  private readonly double cxToScreen;
+  private readonly double cyToScreen;
 
-  readonly double rxToData;
-  readonly double ryToData;
-  readonly double cxToData;
-  readonly double cyToData;
+  private readonly double rxToData;
+  private readonly double ryToData;
+  private readonly double cxToData;
+  private readonly double cyToData;
   #endregion
 
   #region Creation methods
@@ -64,13 +65,13 @@ public sealed class CoordinateTransform
   {
     return new CoordinateTransform(visibleRect: VisibleRect, screenRect: ScreenRect1)
     {
-      dataTransform = dataTransform ?? throw new ArgumentNullException(paramName: "dataTransform")
+      dataTransform = dataTransform ?? throw new ArgumentNullException(paramName: nameof(dataTransform))
     };
   }
 
   internal CoordinateTransform WithScreenOffset(double x, double y)
   {
-    Rect screenCopy = ScreenRect1;
+    var screenCopy = ScreenRect1;
     screenCopy.Offset(offsetX: x, offsetY: y);
     CoordinateTransform copy = new(visibleRect: VisibleRect, screenRect: screenCopy);
     return copy;
@@ -89,7 +90,7 @@ public sealed class CoordinateTransform
   /// <returns></returns>
   public Point DataToScreen(Point dataPoint)
   {
-    Point viewportPoint = dataTransform.DataToViewport(pt: dataPoint);
+    var viewportPoint = dataTransform.DataToViewport(pt: dataPoint);
 
     Point screenPoint = new(x: viewportPoint.X * rxToScreen - cxToScreen,
         y: cyToScreen - viewportPoint.Y * ryToScreen);
@@ -107,7 +108,7 @@ public sealed class CoordinateTransform
     Point viewportPoint = new(x: screenPoint.X * rxToData - cxToData,
         y: cyToData - screenPoint.Y * ryToData);
 
-    Point dataPoint = dataTransform.ViewportToData(pt: viewportPoint);
+    var dataPoint = dataTransform.ViewportToData(pt: viewportPoint);
 
     return dataPoint;
   }

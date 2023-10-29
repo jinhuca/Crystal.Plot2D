@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 public sealed class DelegatePalette : PaletteBase
 {

@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Represents a segment with start and end points bound to viewport coordinates.
@@ -45,7 +46,7 @@ public class Segment : ViewportShape
 
   protected static void OnPointChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    Segment segment = (Segment)d;
+    var segment = (Segment)d;
     segment.UpdateUIRepresentation();
   }
 
@@ -79,14 +80,14 @@ public class Segment : ViewportShape
 
     var transform = Plotter.Viewport.Transform;
 
-    Point p1 = StartPoint.DataToScreen(transform: transform);
-    Point p2 = EndPoint.DataToScreen(transform: transform);
+    var p1 = StartPoint.DataToScreen(transform: transform);
+    var p2 = EndPoint.DataToScreen(transform: transform);
 
     lineGeometry.StartPoint = p1;
     lineGeometry.EndPoint = p2;
   }
 
-  readonly LineGeometry lineGeometry = new();
+  private readonly LineGeometry lineGeometry = new();
   protected LineGeometry LineGeometry => lineGeometry;
 
   protected override Geometry DefiningGeometry => lineGeometry;

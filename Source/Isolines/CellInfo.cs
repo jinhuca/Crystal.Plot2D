@@ -1,8 +1,8 @@
-﻿using Crystal.Plot2D.Common;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 /// <summary>
 /// Isoline's grid cell
@@ -60,7 +60,7 @@ internal sealed class IrregularCell : ICell
 
   #endregion
 
-  public Point Center => ((LeftSide + RightSide) / 2).ToPoint();
+  public Point Center => MathHelper.ToPoint((LeftSide + RightSide) / 2);
 
   public IrregularCell GetSubRect(SubCell sub)
   {
@@ -87,17 +87,17 @@ internal enum SubCell
   RightTop = 3
 }
 
-internal class ValuesInCell
+internal sealed class ValuesInCell
 {
-	  readonly double min = double.MaxValue;
-	  readonly double max = double.MinValue;
+  private readonly double min = double.MaxValue;
+  private readonly double max = double.MinValue;
 
   /// <summary>Initializes values in four corners of cell</summary>
   /// <param name="leftBottom"></param>
   /// <param name="rightBottom"></param>
   /// <param name="rightTop"></param>
   /// <param name="leftTop"></param>
-  /// <remarks>Some or all values can be NaN. That means that value is not specified (misssing)</remarks>
+  /// <remarks>Some or all values can be NaN. That means that value is not specified (missing)</remarks>
   public ValuesInCell(double leftBottom, double rightBottom, double rightTop, double leftTop)
   {
     this.leftTop = leftTop;
@@ -288,7 +288,7 @@ internal class ValuesInCell
 
   internal bool ValueBelongTo(double value)
   {
-    return (min <= value && value <= max);
+    return min <= value && value <= max;
   }
 
   #region Edges
@@ -373,7 +373,7 @@ internal class ValuesInCell
   /// <returns>Bitmask</returns>
   public CellBitmask GetCellValue(double value)
   {
-    CellBitmask n = CellBitmask.None;
+    var n = CellBitmask.None;
     if (!double.IsNaN(d: leftTop) && leftTop > value)
     {
       n |= CellBitmask.LeftTop;

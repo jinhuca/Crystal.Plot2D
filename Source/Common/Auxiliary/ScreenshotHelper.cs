@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using System.Windows.Threading;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class ScreenshotHelper
 {
@@ -34,7 +34,7 @@ internal static class ScreenshotHelper
       case "wmp":
         return new WmpBitmapEncoder();
       default:
-        throw new ArgumentException(message: Strings.Exceptions.CannotDetermineImageTypeByExtension, paramName: "extension");
+        throw new ArgumentException(message: Strings.Exceptions.CannotDetermineImageTypeByExtension, paramName: nameof(extension));
     }
   }
 
@@ -44,17 +44,17 @@ internal static class ScreenshotHelper
   /// <returns></returns>
   internal static BitmapSource CreateScreenshot(UIElement uiElement, Int32Rect screenshotSource)
   {
-    Window window = Window.GetWindow(dependencyObject: uiElement);
+    var window = Window.GetWindow(dependencyObject: uiElement);
     if(window == null)
     {
       return CreateElementScreenshot(uiElement: uiElement);
     }
-    Size size = window.RenderSize;
+    var size = window.RenderSize;
 
     //double dpiCoeff = 32 / SystemParameters.CursorWidth;
     //int dpi = (int)(dpiCoeff * 96);
     double dpiCoeff = 1;
-    int dpi = 96;
+    var dpi = 96;
 
     RenderTargetBitmap bmp = new(pixelWidth: (int)(size.Width * dpiCoeff), pixelHeight: (int)(size.Height * dpiCoeff), dpiX: dpi, dpiY: dpi, pixelFormat: PixelFormats.Default);
 
@@ -72,7 +72,7 @@ internal static class ScreenshotHelper
 
   private static BitmapSource CreateElementScreenshot(UIElement uiElement)
   {
-    bool measureValid = uiElement.IsMeasureValid;
+    var measureValid = uiElement.IsMeasureValid;
 
     if(!measureValid)
     {
@@ -104,9 +104,9 @@ internal static class ScreenshotHelper
       pixelFormat: PixelFormats.Default);
 
     // this is waiting for dispatcher to perform measure, arrange and render passes
-    uiElement.Dispatcher.Invoke(callback: ((Action)(() => { })), priority: DispatcherPriority.Background);
+    uiElement.Dispatcher.Invoke(callback: (Action)(() => { }), priority: DispatcherPriority.Background);
 
-    Size elementSize = uiElement.DesiredSize;
+    var elementSize = uiElement.DesiredSize;
     // white background
     Rectangle whiteRect = new() { Width = elementSize.Width, Height = elementSize.Height, Fill = Brushes.White };
     whiteRect.Measure(availableSize: elementSize);
@@ -120,19 +120,13 @@ internal static class ScreenshotHelper
 
   internal static void SaveBitmapToStream(BitmapSource bitmap, Stream stream, string fileExtension)
   {
-    if(bitmap == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(bitmap));
-    }
-    if(stream == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(stream));
-    }
+    ArgumentNullException.ThrowIfNull(bitmap);
+    ArgumentNullException.ThrowIfNull(stream);
     if(string.IsNullOrEmpty(value: fileExtension))
     {
       throw new ArgumentException(message: Strings.Exceptions.ExtensionCannotBeNullOrEmpty, paramName: fileExtension);
     }
-    BitmapEncoder encoder_ = GetEncoderByExtension(extension: fileExtension);
+    var encoder_ = GetEncoderByExtension(extension: fileExtension);
     encoder_.Frames.Add(item: BitmapFrame.Create(
       source: bitmap, 
       thumbnail: null, 
@@ -155,17 +149,17 @@ internal static class ScreenshotHelper
       return;
     }
 
-    string dirPath = System.IO.Path.GetDirectoryName(path: filePath);
+    var dirPath = System.IO.Path.GetDirectoryName(path: filePath);
     if(!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
     {
       Directory.CreateDirectory(path: dirPath);
     }
 
-    bool fileExistedBefore_ = File.Exists(path: filePath);
+    var fileExistedBefore_ = File.Exists(path: filePath);
     try
     {
       using FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write);
-      string extension_ = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
+      var extension_ = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
       SaveBitmapToStream(bitmap: bitmap, stream: fs, fileExtension: extension_);
     }
     catch(ArgumentException)
@@ -187,7 +181,7 @@ internal static class ScreenshotHelper
 
   public static void SaveStreamToFile(Stream stream, string filePath)
   {
-    string dirPath = System.IO.Path.GetDirectoryName(path: filePath);
+    var dirPath = System.IO.Path.GetDirectoryName(path: filePath);
     if(!string.IsNullOrEmpty(value: dirPath) && !Directory.Exists(path: dirPath))
     {
       Directory.CreateDirectory(path: dirPath);
@@ -195,7 +189,7 @@ internal static class ScreenshotHelper
 
     using(FileStream fs = new(path: filePath, mode: FileMode.Create, access: FileAccess.Write))
     {
-      string extension = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
+      var extension = System.IO.Path.GetExtension(path: filePath).TrimStart(trimChar: '.');
       if(stream.CanSeek)
       {
         stream.Seek(offset: 0, origin: SeekOrigin.Begin);
@@ -208,9 +202,9 @@ internal static class ScreenshotHelper
 
   private static void OnBitmapDownloadCompleted(object sender, EventArgs e)
   {
-    BitmapSource bmp = (BitmapSource)sender;
+    var bmp = (BitmapSource)sender;
     bmp.DownloadCompleted -= OnBitmapDownloadCompleted;
-    string filePath = pendingBitmaps[key: bmp];
+    var filePath = pendingBitmaps[key: bmp];
     pendingBitmaps.Remove(key: bmp);
     SaveBitmapToFile(bitmap: bmp, filePath: filePath);
   }

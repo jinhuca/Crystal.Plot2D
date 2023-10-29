@@ -6,6 +6,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Descriptions;
 
 namespace E002UpdateDataSources
 {

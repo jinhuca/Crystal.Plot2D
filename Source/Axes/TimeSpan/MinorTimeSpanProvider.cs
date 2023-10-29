@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.TimeSpan;
 
-internal sealed class MinorTimeSpanTicksProvider : MinorTimeProviderBase<TimeSpan>
+internal sealed class MinorTimeSpanTicksProvider : MinorTimeProviderBase<System.TimeSpan>
 {
-  public MinorTimeSpanTicksProvider(ITicksProvider<TimeSpan> owner) : base(provider: owner) { }
+  public MinorTimeSpanTicksProvider(ITicksProvider<System.TimeSpan> owner) : base(provider: owner) { }
 
-  protected override bool IsInside(TimeSpan value, Range<TimeSpan> range)
+  protected override bool IsInside(System.TimeSpan value, Range<System.TimeSpan> range)
   {
     return range.Min < value && value < range.Max;
   }

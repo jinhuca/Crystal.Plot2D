@@ -4,8 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows.Markup;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 [ContentProperty(name: "Steps")]
 public class DiscretePalette : IPalette
@@ -28,7 +29,7 @@ public class DiscretePalette : IPalette
       return Steps.Last().Color;
     }
 
-    int i = 0;
+    var i = 0;
     double x = 0;
     while (x < t && i < Steps.Count)
     {
@@ -36,7 +37,7 @@ public class DiscretePalette : IPalette
       i++;
     }
 
-    Color result = Steps[index: i - 1].Color;
+    var result = Steps[index: i - 1].Color;
     return result;
   }
 

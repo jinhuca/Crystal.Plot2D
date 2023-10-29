@@ -4,12 +4,13 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.LiveTooltips;
 
-public class LiveToolTipAdorner : Adorner
+internal sealed class LiveToolTipAdorner : Adorner
 {
   private readonly Canvas canvas = new() { IsHitTestVisible = false };
   private readonly VisualCollection visualChildren;
+
   public LiveToolTipAdorner(UIElement adornedElement, LiveToolTip tooltip)
     : base(adornedElement: adornedElement)
   {
@@ -40,22 +41,22 @@ public class LiveToolTipAdorner : Adorner
   //    InvalidateMeasure();
   //}
 
-  void LiveTooltipAdorner_Unloaded(object sender, RoutedEventArgs e)
+  private void LiveTooltipAdorner_Unloaded(object sender, RoutedEventArgs e)
   {
     canvas.Children.Remove(element: liveTooltip);
   }
 
-  void adornedElement_MouseLeave(object sender, MouseEventArgs e)
+  private void adornedElement_MouseLeave(object sender, MouseEventArgs e)
   {
     liveTooltip.Visibility = Visibility.Hidden;
   }
 
-  void adornedElement_MouseEnter(object sender, MouseEventArgs e)
+  private void adornedElement_MouseEnter(object sender, MouseEventArgs e)
   {
     liveTooltip.Visibility = Visibility.Visible;
   }
 
-  Point mousePosition;
+  private Point mousePosition;
   private void adornedElement_MouseMove(object sender, MouseEventArgs e)
   {
     liveTooltip.Visibility = Visibility.Visible;
@@ -65,15 +66,15 @@ public class LiveToolTipAdorner : Adorner
 
   private void ArrangeTooltip()
   {
-    Size tooltipSize = liveTooltip.DesiredSize;
+    var tooltipSize = liveTooltip.DesiredSize;
 
-    Point location = mousePosition;
+    var location = mousePosition;
     location.Offset(offsetX: -tooltipSize.Width / 2, offsetY: -tooltipSize.Height - 1);
 
     liveTooltip.Arrange(finalRect: new Rect(location: location, size: tooltipSize));
   }
 
-  readonly LiveToolTip liveTooltip;
+  private readonly LiveToolTip liveTooltip;
   public LiveToolTip LiveTooltip => liveTooltip;
 
   #region Overrides

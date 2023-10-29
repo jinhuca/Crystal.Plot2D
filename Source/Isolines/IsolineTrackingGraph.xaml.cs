@@ -6,8 +6,11 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 /// <summary>
 /// Draws one isoline line through mouse position.
@@ -40,11 +43,11 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
     }
   }
 
-  Point prevMousePos;
+  private Point prevMousePos;
 
   protected override void OnPlotterAttached()
   {
-    UIElement parent = (UIElement)Parent;
+    var parent = (UIElement)Parent;
     parent.MouseMove += parent_MouseMove;
 
     UpdateUIRepresentation();
@@ -52,13 +55,13 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
 
   protected override void OnPlotterDetaching()
   {
-    UIElement parent = (UIElement)Parent;
+    var parent = (UIElement)Parent;
     parent.MouseMove -= parent_MouseMove;
   }
 
   private void parent_MouseMove(object sender, MouseEventArgs e)
   {
-    Point mousePos = e.GetPosition(relativeTo: this);
+    var mousePos = e.GetPosition(relativeTo: this);
     if (mousePos != prevMousePos)
     {
       prevMousePos = mousePos;
@@ -100,24 +103,24 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
       return;
     }
 
-    Rect output = Plotter2D.Viewport.Output;
+    var output = Plotter2D.Viewport.Output;
 
-    Point mousePos = Mouse.GetPosition(relativeTo: this);
+    var mousePos = Mouse.GetPosition(relativeTo: this);
     if (!output.Contains(point: mousePos))
     {
       return;
     }
 
     var transform = Plotter2D.Viewport.Transform;
-    Point visiblePoint = mousePos.ScreenToData(transform: transform);
-    DataRect visible = Plotter2D.Viewport.Visible;
+    var visiblePoint = mousePos.ScreenToData(transform: transform);
+    var visible = Plotter2D.Viewport.Visible;
 
     double isolineLevel;
     if (Search(pt: visiblePoint, foundVal: out isolineLevel))
     {
       var collection = IsolineBuilder.BuildIsoline(level: isolineLevel);
 
-      string format = "G3";
+      var format = "G3";
       if (Math.Abs(value: isolineLevel) < 1000)
       {
         format = "F";
@@ -125,13 +128,13 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
 
       textBlock.Text = isolineLevel.ToString(format: format);
 
-      double x = mousePos.X + labelShift.X;
+      var x = mousePos.X + labelShift.X;
       if (x + labelGrid.ActualWidth > output.Right)
       {
         x = mousePos.X - labelShift.X - labelGrid.ActualWidth;
       }
 
-      double y = mousePos.Y - labelShift.Y - labelGrid.ActualHeight;
+      var y = mousePos.Y - labelShift.Y - labelGrid.ActualHeight;
       if (y < output.Top)
       {
         y = mousePos.Y + labelShift.Y;
@@ -140,12 +143,12 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
       Canvas.SetLeft(element: labelGrid, length: x);
       Canvas.SetTop(element: labelGrid, length: y);
 
-      foreach (LevelLine segment in collection.Lines)
+      foreach (var segment in collection.Lines)
       {
         StreamGeometry streamGeom = new();
-        using (StreamGeometryContext context = streamGeom.Open())
+        using (var context = streamGeom.Open())
         {
-          Point startPoint = segment.StartPoint.DataToScreen(transform: transform);
+          var startPoint = segment.StartPoint.DataToScreen(transform: transform);
           var otherPoints = segment.OtherPoints.DataToScreenAsList(transform: transform);
           context.BeginFigure(startPoint: startPoint, isFilled: false, isClosed: false);
           context.PolyLineTo(points: otherPoints, isStroked: true, isSmoothJoin: true);
@@ -172,18 +175,18 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
     }
   }
 
-  int foundI;
-  int foundJ;
-  Quad foundQuad;
+  private int foundI;
+  private int foundJ;
+  private Quad foundQuad;
   private bool Search(Point pt, out double foundVal)
   {
     var grid = DataSource.Grid;
 
     foundVal = 0;
 
-    int width = DataSource.Width;
-    int height = DataSource.Height;
-    bool found = false;
+    var width = DataSource.Width;
+    var height = DataSource.Height;
+    var found = false;
     int i = 0, j = 0;
     for (i = 0; i < width - 1; i++)
     {
@@ -217,36 +220,26 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
 
     var data = DataSource.Data;
 
-    double x = pt.X;
-    double y = pt.Y;
-    Vector A = grid[i, j + 1].ToVector();         // @TODO: in common case add a sorting of points:
-    Vector B = grid[i + 1, j + 1].ToVector();       //   maxA ___K___ B
-    Vector C = grid[i + 1, j].ToVector();         //      |         |
-    Vector D = grid[i, j].ToVector();           //      M    P    N
-    double a = data[i, j + 1];            //		|         |
-    double b = data[i + 1, j + 1];          //		В ___L____Сmin
-    double c = data[i + 1, j];
-    double d = data[i, j];
+    var x = pt.X;
+    var y = pt.Y;
+    var A = grid[i, j + 1].ToVector();         // @TODO: in common case add a sorting of points:
+    var B = grid[i + 1, j + 1].ToVector();       //   maxA ___K___ B
+    var C = grid[i + 1, j].ToVector();         //      |         |
+    var D = grid[i, j].ToVector();           //      M    P    N
+    var a = data[i, j + 1];            //		|         |
+    var b = data[i + 1, j + 1];          //		В ___L____С min
+    var c = data[i + 1, j];
+    var d = data[i, j];
 
     Vector K, L;
     double k, l;
-    if (x >= A.X)
-    {
-      k = Interpolate(v0: A, v1: B, u0: a, u1: b, a: K = new Vector(x: x, y: GetY(v0: A, v1: B, x: x)));
-    }
-    else
-    {
-      k = Interpolate(v0: D, v1: A, u0: d, u1: a, a: K = new Vector(x: x, y: GetY(v0: D, v1: A, x: x)));
-    }
+    k = x >= A.X 
+      ? Interpolate(v0: A, v1: B, u0: a, u1: b, a: K = new Vector(x: x, y: GetY(v0: A, v1: B, x: x)))
+      : Interpolate(v0: D, v1: A, u0: d, u1: a, a: K = new Vector(x: x, y: GetY(v0: D, v1: A, x: x)));
 
-    if (x >= C.X)
-    {
-      l = Interpolate(v0: C, v1: B, u0: c, u1: b, a: L = new Vector(x: x, y: GetY(v0: C, v1: B, x: x)));
-    }
-    else
-    {
-      l = Interpolate(v0: D, v1: C, u0: d, u1: c, a: L = new Vector(x: x, y: GetY(v0: D, v1: C, x: x)));
-    }
+    l = x >= C.X 
+      ? Interpolate(v0: C, v1: B, u0: c, u1: b, a: L = new Vector(x: x, y: GetY(v0: C, v1: B, x: x))) 
+      : Interpolate(v0: D, v1: C, u0: d, u1: c, a: L = new Vector(x: x, y: GetY(v0: D, v1: C, x: x)));
 
     foundVal = Interpolate(v0: L, v1: K, u0: l, u1: k, a: new Vector(x: x, y: y));
     return !double.IsNaN(d: foundVal);
@@ -254,16 +247,16 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
 
   private double Interpolate(Vector v0, Vector v1, double u0, double u1, Vector a)
   {
-    Vector l1 = a - v0;
-    Vector l = v1 - v0;
+    var l1 = a - v0;
+    var l = v1 - v0;
 
-    double res = (u1 - u0) / l.Length * l1.Length + u0;
+    var res = (u1 - u0) / l.Length * l1.Length + u0;
     return res;
   }
 
   private double GetY(Vector v0, Vector v1, double x)
   {
-    double res = v0.Y + (v1.Y - v0.Y) / (v1.X - v0.X) * (x - v0.X);
+    var res = v0.Y + (v1.Y - v0.Y) / (v1.X - v0.X) * (x - v0.X);
     return res;
   }
 }

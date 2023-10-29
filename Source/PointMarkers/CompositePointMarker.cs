@@ -5,7 +5,7 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
 ///   Composite point markers renders a specified set of markers at every point of graph.
@@ -16,12 +16,9 @@ public sealed class CompositePointMarker : PointMarker
 
   public CompositePointMarker(params PointMarker[] markers)
   {
-    if (markers == null)
-    {
-      throw new ArgumentNullException(paramName: "markers");
-    }
+    ArgumentNullException.ThrowIfNull(markers);
 
-    foreach (PointMarker m in markers)
+    foreach (var m in markers)
     {
       Markers.Add(item: m);
     }
@@ -29,12 +26,9 @@ public sealed class CompositePointMarker : PointMarker
 
   public CompositePointMarker(IEnumerable<PointMarker> markers)
   {
-    if (markers == null)
-    {
-      throw new ArgumentNullException(paramName: "markers");
-    }
+    ArgumentNullException.ThrowIfNull(markers);
 
-    foreach (PointMarker m in markers)
+    foreach (var m in markers)
     {
       Markers.Add(item: m);
     }
@@ -44,7 +38,7 @@ public sealed class CompositePointMarker : PointMarker
 
   public override void Render(DrawingContext dc, Point screenPoint)
   {
-    LocalValueEnumerator enumerator = GetLocalValueEnumerator();
+    var enumerator = GetLocalValueEnumerator();
     foreach (var marker in Markers)
     {
       enumerator.Reset();

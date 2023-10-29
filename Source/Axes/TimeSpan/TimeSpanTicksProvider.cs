@@ -1,8 +1,6 @@
-﻿using System;
+﻿namespace Crystal.Plot2D.Axes.TimeSpan;
 
-namespace Crystal.Plot2D.Charts;
-
-public class TimeSpanTicksProvider : TimeTicksProviderBase<TimeSpan>
+public sealed class TimeSpanTicksProvider : TimeTicksProviderBase<System.TimeSpan>
 {
   static TimeSpanTicksProvider()
   {
@@ -23,7 +21,7 @@ public class TimeSpanTicksProvider : TimeTicksProviderBase<TimeSpan>
     MinorProviders.Add(key: DifferenceIn.Millisecond, value: new MinorTimeSpanTicksProvider(owner: new MillisecondTimeSpanProvider()));
   }
 
-  protected override TimeSpan GetDifference(TimeSpan start, TimeSpan end)
+  protected override System.TimeSpan GetDifference(System.TimeSpan start, System.TimeSpan end)
   {
     return end - start;
   }

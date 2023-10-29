@@ -1,12 +1,13 @@
 ﻿using System;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents an axis with ticks of <see cref="System.DateTime"/> type, which can be placed only from bottom or top of <see cref="PlotterBase"/>.
 /// By default is placed from bottom.
 /// </summary>
-public class HorizontalDateTimeAxis : DateTimeAxis
+public sealed class HorizontalDateTimeAxis : DateTimeAxis
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="HorizontalDateTimeAxis"/> class.

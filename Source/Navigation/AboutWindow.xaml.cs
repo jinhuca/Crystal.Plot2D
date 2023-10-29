@@ -3,12 +3,12 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
 /// Interaction logic for AboutWindow.xaml
 /// </summary>
-internal partial class AboutWindow : Window
+internal sealed partial class AboutWindow : Window
 {
   public AboutWindow()
   {
@@ -17,7 +17,7 @@ internal partial class AboutWindow : Window
 
   private void Hyperlink_Click(object sender, RoutedEventArgs e)
   {
-    Hyperlink source = (Hyperlink)sender;
+    var source = (Hyperlink)sender;
     Process.Start(fileName: source.NavigateUri.ToString());
   }
 
@@ -32,7 +32,7 @@ internal partial class AboutWindow : Window
 
   private void Hyperlink_Click_1(object sender, RoutedEventArgs e)
   {
-    Hyperlink source = (Hyperlink)sender;
+    var source = (Hyperlink)sender;
     Process.Start(fileName: source.NavigateUri.ToString());
   }
 }

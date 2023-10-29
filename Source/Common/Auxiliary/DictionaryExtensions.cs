@@ -1,7 +1,7 @@
-﻿using Crystal.Plot2D.Charts;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Crystal.Plot2D.Isolines;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class DictionaryExtensions
 {

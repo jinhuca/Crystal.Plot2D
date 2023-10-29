@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Transforms;
 
 /// <summary>
-/// Represents a DataTransform that simply swaps points' coefficitiens from x to y and vice verca.
+/// Represents a DataTransform that simply swaps points' coefficients from x to y and vice versa.
 /// </summary>
 public sealed class SwapTransform : DataTransform
 {

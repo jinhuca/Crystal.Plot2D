@@ -1,9 +1,11 @@
-﻿namespace Crystal.Plot2D;
+﻿using Crystal.Plot2D.Common;
+
+namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 /// Represents a constraint which returns data rectangle, intersected with specified data domain.
 /// </summary>
-public class DomainConstraint : ViewportConstraint
+public sealed class DomainConstraint : ViewportConstraint
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="DomainConstraint"/> class.
@@ -51,7 +53,7 @@ public class DomainConstraint : ViewportConstraint
   /// <returns></returns>
   public override DataRect Apply(DataRect oldDataRect, DataRect newDataRect, Viewport2D viewport)
   {
-    DataRect res = domain;
+    var res = domain;
     if (domain.IsEmpty)
     {
       res = newDataRect;

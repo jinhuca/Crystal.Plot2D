@@ -1,6 +1,7 @@
 ﻿using System;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 public sealed class DateTimeHorizontalAxisConstraint : ViewportConstraint
 {

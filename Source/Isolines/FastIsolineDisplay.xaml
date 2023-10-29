@@ -1,18 +1,19 @@
-﻿<isolines:IsolineGraphBase x:Class="Crystal.Plot2D.Charts.FastIsolineDisplay"
+﻿<isolines1:IsolineGraphBase x:Class="Crystal.Plot2D.Isolines.FastIsolineDisplay"
                            xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"						   
                            xmlns:isolines="clr-namespace:Crystal.Plot2D.Charts"
                            xmlns:local="clr-namespace:Crystal.Plot2D.Charts"
                            xmlns:common="clr-namespace:Crystal.Plot2D"
+                           xmlns:isolines1="clr-namespace:Crystal.Plot2D.Isolines"
                            IsHitTestVisible="False">
-	<isolines:IsolineGraphBase.Template>
-		<ControlTemplate TargetType="{x:Type isolines:IsolineGraphBase}">
+	<isolines1:IsolineGraphBase.Template>
+		<ControlTemplate TargetType="{x:Type isolines1:IsolineGraphBase}">
 			<Canvas IsHitTestVisible="False">
 				<local:ViewportHostPanel Name="PART_ViewportPanel">
-					<isolines:FastIsolineRenderer Name="PART_IsolineRenderer"/>
+					<isolines1:FastIsolineRenderer Name="PART_IsolineRenderer"/>
 					<!--<isolines:AdditionalLinesRenderer Name="PART_AdditionalLinesRenderer"/>-->
 				</local:ViewportHostPanel>
 			</Canvas>
 		</ControlTemplate>
-	</isolines:IsolineGraphBase.Template>
-</isolines:IsolineGraphBase>
+	</isolines1:IsolineGraphBase.Template>
+</isolines1:IsolineGraphBase>

@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -11,13 +10,15 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
 ///   Is responsible for displaying and populating default context menu of Plotter
 /// </summary>
-public class DefaultContextMenu : IPlotterElement
+public sealed class DefaultContextMenu : IPlotterElement
 {
   private static readonly BitmapImage helpIcon;
   private static readonly BitmapImage copyScreenshotIcon;
@@ -37,7 +38,7 @@ public class DefaultContextMenu : IPlotterElement
 
   private static BitmapImage LoadIcon(string name)
   {
-    Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
+    var currentAssembly = typeof(DefaultContextMenu).Assembly;
 
     BitmapImage icon = new();
     icon.BeginInit();
@@ -50,7 +51,7 @@ public class DefaultContextMenu : IPlotterElement
 
   private static StreamGeometry LoadIconGeometry(string geometryKey)
   {
-    Assembly currentAssembly = typeof(DefaultContextMenu).Assembly;
+    var currentAssembly = typeof(DefaultContextMenu).Assembly;
     StreamGeometry iconGeometry = new();
 
     return iconGeometry;
@@ -61,7 +62,7 @@ public class DefaultContextMenu : IPlotterElement
   /// </summary>
   public DefaultContextMenu() { }
 
-  protected ContextMenu PopulateContextMenu(PlotterBase target)
+  private ContextMenu PopulateContextMenu(PlotterBase target)
   {
     ContextMenu menu = new();
     //menu.Background = Brushes.Beige;
@@ -151,7 +152,7 @@ public class DefaultContextMenu : IPlotterElement
   {
     this.plotter = (PlotterBase)plotter;
 
-    ContextMenu menu = PopulateContextMenu(target: plotter);
+    var menu = PopulateContextMenu(target: plotter);
     plotter.ContextMenu = menu;
 
     plotter.PreviewMouseRightButtonDown += plotter_PreviewMouseRightButtonDown;
@@ -163,7 +164,7 @@ public class DefaultContextMenu : IPlotterElement
 
   private void plotter_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
   {
-    // this will prevent other tools like PointSelector from wrong actuations
+    // this will prevent other tools like PointSelector from wrong actuation
     if (contextMenuOpen)
     {
       plotter.Focus();
@@ -208,7 +209,7 @@ public class DefaultContextMenu : IPlotterElement
   private readonly ObservableCollection<object> dynamicMenuItems = new();
   private void plotter_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
   {
-    Point position = e.GetPosition(relativeTo: plotter);
+    var position = e.GetPosition(relativeTo: plotter);
     if (mousePos == position)
     {
       hitResults.Clear();
@@ -219,7 +220,7 @@ public class DefaultContextMenu : IPlotterElement
         staticMenuItems.Remove(item: item);
       }
       dynamicMenuItems.Clear();
-      var dynamicItems = (hitResults.Where(predicate: r =>
+      var dynamicItems = hitResults.Where(predicate: r =>
       {
         if (r is IPlotterContextMenuSource menuSource)
         {
@@ -240,7 +241,7 @@ public class DefaultContextMenu : IPlotterElement
           }
         }
         return menuItems;
-      })).ToList();
+      }).ToList();
 
       foreach (var item in dynamicItems)
       {

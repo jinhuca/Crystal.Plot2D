@@ -1,6 +1,7 @@
 ﻿using System;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 public sealed class DateTimeVerticalAxisConstraint : ViewportConstraint
 {
@@ -9,7 +10,7 @@ public sealed class DateTimeVerticalAxisConstraint : ViewportConstraint
 
   public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
   {
-    DataRect borderRect = DataRect.Create(xMin: proposedDataRect.XMin, yMin: minSeconds, xMax: proposedDataRect.XMax, yMax: maxSeconds);
+    var borderRect = DataRect.Create(xMin: proposedDataRect.XMin, yMin: minSeconds, xMax: proposedDataRect.XMax, yMax: maxSeconds);
     if (proposedDataRect.IntersectsWith(rect: borderRect))
     {
       return DataRect.Intersect(rect1: proposedDataRect, rect2: borderRect);

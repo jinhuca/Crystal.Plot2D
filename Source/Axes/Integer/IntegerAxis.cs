@@ -1,12 +1,11 @@
-﻿namespace Crystal.Plot2D.Charts;
+﻿namespace Crystal.Plot2D.Axes.Integer;
 
 public class IntegerAxis : AxisBase<int>
 {
-  public IntegerAxis()
+  protected IntegerAxis()
     : base(axisControl: new IntegerAxisControl(),
       convertFromDouble: d => (int)d,
       convertToDouble: i => (double)i)
   {
-
   }
 }

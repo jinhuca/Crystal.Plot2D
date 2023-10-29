@@ -2,8 +2,11 @@
 using System.Linq;
 using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 public class ViewportPolyBezierCurve : ViewportPolylineBase
 {
@@ -31,7 +34,7 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
     set => buildBezierPoints = value;
   }
 
-  bool updating;
+  private bool updating;
   protected override void UpdateUIRepresentationCore()
   {
     if (updating)
@@ -43,9 +46,9 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
 
     var transform = Plotter.Viewport.Transform;
 
-    PathGeometry geometry = PathGeometry;
+    var geometry = PathGeometry;
 
-    PointCollection points = Points;
+    var points = Points;
 
     geometry.Clear();
 
@@ -70,7 +73,7 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
         figure.StartPoint = points[index: 0].DataToScreen(transform: transform);
         if (points.Count > 1)
         {
-          Point[] screenPoints = points.DataToScreen(transform: transform).ToArray();
+          var screenPoints = points.DataToScreen(transform: transform).ToArray();
 
           bezierPoints = BezierBuilder.GetBezierPoints(points: screenPoints).Skip(count: 1).ToArray();
 

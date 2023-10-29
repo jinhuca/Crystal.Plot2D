@@ -1,9 +1,9 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Windows;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.MultiDimensional;
 
 /// <summary>
 ///   Defines warped two-dimensional data source.
@@ -20,14 +20,8 @@ public sealed class WarpedDataSource2D<T> : IDataSource2D<T> where T : struct
   /// <param name="grid">Grid.</param>
   public WarpedDataSource2D(T[,] data, Point[,] grid)
   {
-    if (data == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(data));
-    }
-    if (grid == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(grid));
-    }
+    ArgumentNullException.ThrowIfNull(data);
+    ArgumentNullException.ThrowIfNull(grid);
 
     Verify.IsTrue(condition: data.GetLength(dimension: 0) == grid.GetLength(dimension: 0));
     Verify.IsTrue(condition: data.GetLength(dimension: 1) == grid.GetLength(dimension: 1));

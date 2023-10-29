@@ -3,6 +3,8 @@ using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Charts;
 
@@ -27,23 +29,24 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
 
   private static void OnPlotterChanged(object sender, PlotterChangedEventArgs e)
   {
-    ViewportHostPanel owner = (ViewportHostPanel)sender;
+    var owner_ = (ViewportHostPanel)sender;
 
-    if (owner.plotter != null && e.PreviousPlotter != null)
+    if (owner_.plotter != null && e.PreviousPlotter != null)
     {
-      owner.viewport.PropertyChanged -= owner.Viewport_PropertyChanged;
-      owner.viewport = null;
-      owner.plotter = null;
+      owner_.viewport.PropertyChanged -= owner_.Viewport_PropertyChanged;
+      owner_.viewport = null;
+      owner_.plotter = null;
     }
-    if (owner.plotter == null && e.CurrentPlotter != null)
+
+    if (owner_.plotter == null && e.CurrentPlotter != null)
     {
-      owner.plotter = (PlotterBase)e.CurrentPlotter;
-      owner.viewport = owner.plotter.Viewport;
-      owner.viewport.PropertyChanged += owner.Viewport_PropertyChanged;
+      owner_.plotter = (PlotterBase)e.CurrentPlotter;
+      owner_.viewport = owner_.plotter.Viewport;
+      owner_.viewport.PropertyChanged += owner_.Viewport_PropertyChanged;
     }
   }
 
-  readonly TranslateTransform translateTransform = new();
+  private readonly TranslateTransform translateTransform = new();
 
   private readonly Canvas hostingCanvas = new();
   internal Canvas HostingCanvas => hostingCanvas;
@@ -53,7 +56,7 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
   private PlotterBase plotter;
   protected PlotterBase Plotter => plotter;
 
-  Viewport2D viewport;
+  private Viewport2D viewport;
   public virtual void OnPlotterAttached(PlotterBase plotter)
   {
     this.plotter = (PlotterBase)plotter;
@@ -69,15 +72,15 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
     this.plotter.Viewport.PropertyChanged += Viewport_PropertyChanged;
   }
 
-  public virtual void OnPlotterDetaching(PlotterBase _plotter)
+  public virtual void OnPlotterDetaching(PlotterBase plotter)
   {
-    plotter.Viewport.PropertyChanged -= Viewport_PropertyChanged;
+    this.plotter.Viewport.PropertyChanged -= Viewport_PropertyChanged;
     if (!IsMarkersHost)
     {
-      _plotter.CentralGrid.Children.Remove(element: hostingCanvas);
+      plotter.CentralGrid.Children.Remove(element: hostingCanvas);
     }
     hostingCanvas.Children.Remove(element: this);
-    plotter = null;
+    this.plotter = null;
   }
 
   PlotterBase IPlotterElement.Plotter => plotter;
@@ -87,29 +90,29 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
     InvalidatePosition(child: (FrameworkElement)child);
   }
 
-  Vector prevVisualOffset;
-  bool sizeChanged = true;
-  DataRect visibleWhileCreation;
+  private Vector prevVisualOffset;
+  private bool sizeChanged = true;
+  private DataRect visibleWhileCreation;
   protected virtual void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     if (e.PropertyName == "Visible")
     {
-      DataRect visible = (DataRect)e.NewValue;
-      DataRect prevVisible = (DataRect)e.OldValue;
+      var visible_ = (DataRect)e.NewValue;
+      var prevVisible_ = (DataRect)e.OldValue;
 
-      if (prevVisible.Size.EqualsApproximately(size2: visible.Size) && !sizeChanged)
+      if (prevVisible_.Size.EqualsApproximately(size2: visible_.Size) && !sizeChanged)
       {
-        var transform = viewport.Transform;
-        Point prevLocation = prevVisible.Location.ViewportToScreen(transform: transform);
-        Point location = visible.Location.ViewportToScreen(transform: transform);
+        var transform_ = viewport.Transform;
+        var prevLocation_ = prevVisible_.Location.ViewportToScreen(transform: transform_);
+        var location_ = visible_.Location.ViewportToScreen(transform: transform_);
 
-        Vector offset = prevLocation - location;
-        translateTransform.X += offset.X;
-        translateTransform.Y += offset.Y;
+        var offset_ = prevLocation_ - location_;
+        translateTransform.X += offset_.X;
+        translateTransform.Y += offset_.Y;
       }
       else
       {
-        visibleWhileCreation = visible;
+        visibleWhileCreation = visible_;
         translateTransform.X = 0;
         translateTransform.Y = 0;
         InvalidateMeasure();
@@ -169,20 +172,20 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       return;
     }
 
-    var transform = viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
-    Size elementSize = GetElementSize(child: child, availableSize: AvailableSize, transform: transform);
-    child.Measure(availableSize: elementSize);
+    var transform_ = viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
+    var elementSize_ = GetElementSize(child: child, availableSize: AvailableSize, transform: transform_);
+    child.Measure(availableSize: elementSize_);
 
-    Rect bounds = GetElementScreenBounds(transform: transform, child: child);
-    child.Arrange(finalRect: bounds);
+    var bounds_ = GetElementScreenBounds(transform: transform_, child: child);
+    child.Arrange(finalRect: bounds_);
 
-    var viewportBounds = Viewport2D.GetContentBounds(obj: this);
-    if (!viewportBounds.IsEmpty)
+    var viewportBounds_ = Viewport2D.GetContentBounds(obj: this);
+    if (!viewportBounds_.IsEmpty)
     {
-      overallViewportBounds = viewportBounds;
+      overallViewportBounds = viewportBounds_;
     }
 
-    UniteWithBounds(transform: transform, bounds: bounds);
+    UniteWithBounds(transform: transform_, bounds: bounds_);
 
     if (!InBatchAdd)
     {
@@ -193,18 +196,18 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
 
   private void UniteWithBounds(CoordinateTransform transform, Rect bounds)
   {
-    var childViewportBounds = bounds.ScreenToViewport(transform: transform);
+    var childViewportBounds_ = bounds.ScreenToViewport(transform: transform);
     if (boundsUnionMode == BoundsUnionMode.Bounds)
     {
-      overallViewportBounds.Union(rect: childViewportBounds);
+      overallViewportBounds.Union(rect: childViewportBounds_);
     }
     else
     {
-      overallViewportBounds.Union(point: childViewportBounds.GetCenter());
+      overallViewportBounds.Union(point: childViewportBounds_.GetCenter());
     }
   }
 
-  int invalidatePositionCalls;
+  private int invalidatePositionCalls;
   internal override void BeginBatchAdd()
   {
     base.BeginBatchAdd();
@@ -231,19 +234,19 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
   {
     if (recalculate)
     {
-      var transform = plotter.Viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
+      var transform_ = plotter.Viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
       overallViewportBounds = DataRect.Empty;
-      foreach (FrameworkElement child in Children)
+      foreach (FrameworkElement child_ in Children)
       {
-        if (child != null)
+        if (child_ != null)
         {
-          if (child.Visibility != Visibility.Visible)
+          if (child_.Visibility != Visibility.Visible)
           {
             continue;
           }
 
-          Rect bounds = GetElementScreenBounds(transform: transform, child: child);
-          UniteWithBounds(transform: transform, bounds: bounds);
+          var bounds_ = GetElementScreenBounds(transform: transform_, child: child_);
+          UniteWithBounds(transform: transform_, bounds: bounds_);
         }
       }
     }
@@ -259,21 +262,21 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       return finalSize;
     }
 
-    var transform = plotter.Viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
+    var transform_ = plotter.Viewport.Transform.WithScreenOffset(x: -translateTransform.X, y: -translateTransform.Y);
 
     overallViewportBounds = DataRect.Empty;
-    foreach (UIElement child in InternalChildren)
+    foreach (UIElement child_ in InternalChildren)
     {
-      if (child != null)
+      if (child_ != null)
       {
-        if (child.Visibility != Visibility.Visible)
+        if (child_.Visibility != Visibility.Visible)
         {
           continue;
         }
 
-        Rect bounds = GetElementScreenBounds(transform: transform, child: child);
-        child.Arrange(finalRect: bounds);
-        UniteWithBounds(transform: transform, bounds: bounds);
+        var bounds_ = GetElementScreenBounds(transform: transform_, child: child_);
+        child_.Arrange(finalRect: bounds_);
+        UniteWithBounds(transform: transform_, bounds: bounds_);
       }
     }
 
@@ -301,14 +304,14 @@ public class ViewportHostPanel : ViewportPanel, IPlotterElement
       return availableSize;
     }
 
-    var transform = plotter.Viewport.Transform;
+    var transform_ = plotter.Viewport.Transform;
 
-    foreach (FrameworkElement child in InternalChildren)
+    foreach (FrameworkElement child_ in InternalChildren)
     {
-      if (child != null)
+      if (child_ != null)
       {
-        Size elementSize = GetElementSize(child: child, availableSize: availableSize, transform: transform);
-        child.Measure(availableSize: elementSize);
+        var elementSize_ = GetElementSize(child: child_, availableSize: availableSize, transform: transform_);
+        child_.Measure(availableSize: elementSize_);
       }
     }
 

@@ -2,7 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 /// <summary>
 ///   Empty data source - for testing purposes, represents data source with 0 points inside.

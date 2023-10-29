@@ -1,12 +1,14 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 /// <summary>
 /// Draws isolines on given two-dimensional scalar data.
@@ -63,7 +65,7 @@ public sealed class IsolineGraph : IsolineRenderer
 
     if (Collection != null)
     {
-      DataRect bounds = DataRect.Empty;
+      var bounds = DataRect.Empty;
 
       foreach (var line in Collection.Lines)
       {
@@ -88,9 +90,9 @@ public sealed class IsolineGraph : IsolineRenderer
       if (DrawLabels)
       {
         var transform = Plotter2D.Viewport.Transform;
-        double wayBeforeText = new Rect(size: new Size(width: 2000, height: 2000)).ScreenToData(transform: transform).Width;
-        Annotater.WayBeforeText = wayBeforeText;
-        var textLabels = Annotater.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
+        var wayBeforeText = new Rect(size: new Size(width: 2000, height: 2000)).ScreenToData(transform: transform).Width;
+        Annotator.WayBeforeText = wayBeforeText;
+        var textLabels = Annotator.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
 
         foreach (var textLabel in textLabels)
         {
@@ -105,9 +107,9 @@ public sealed class IsolineGraph : IsolineRenderer
   private FrameworkElement CreateTextLabel(IsolineTextLabel textLabel)
   {
     var transform = Plotter2D.Viewport.Transform;
-    Point screenPos = textLabel.Position.DataToScreen(transform: transform);
+    var screenPos = textLabel.Position.DataToScreen(transform: transform);
 
-    double angle = textLabel.Rotation;
+    var angle = textLabel.Rotation;
     if (angle < 0)
     {
       angle += 360;
@@ -118,7 +120,7 @@ public sealed class IsolineGraph : IsolineRenderer
       angle -= 180;
     }
 
-    string tooltip = textLabel.Value.ToString(format: "F"); //String.Format("{0} at ({1}, {2})", textLabel.Text, textLabel.Position.X, textLabel.Position.Y);
+    var tooltip = textLabel.Value.ToString(format: "F"); //String.Format("{0} at ({1}, {2})", textLabel.Text, textLabel.Position.X, textLabel.Position.Y);
     Grid grid = new()
     {
       RenderTransform = new RotateTransform(angle: angle),
@@ -148,7 +150,7 @@ public sealed class IsolineGraph : IsolineRenderer
 
     grid.Measure(availableSize: SizeHelper.CreateInfiniteSize());
 
-    Size textSize = grid.DesiredSize;
+    var textSize = grid.DesiredSize;
     Point position = new(x: screenPos.X - textSize.Width / 2, y: screenPos.Y - textSize.Height / 2);
 
     Canvas.SetLeft(element: grid, length: position.X);
@@ -175,14 +177,14 @@ public sealed class IsolineGraph : IsolineRenderer
   {
     if (e.PropertyName == "Visible" || e.PropertyName == "Output")
     {
-      bool isVisibleChanged = e.PropertyName == "Visible";
-      DataRect prevRect = isVisibleChanged ? (DataRect)e.OldValue : new DataRect(rect: (Rect)e.OldValue);
-      DataRect currRect = isVisibleChanged ? (DataRect)e.NewValue : new DataRect(rect: (Rect)e.NewValue);
+      var isVisibleChanged = e.PropertyName == "Visible";
+      var prevRect = isVisibleChanged ? (DataRect)e.OldValue : new DataRect(rect: (Rect)e.OldValue);
+      var currRect = isVisibleChanged ? (DataRect)e.NewValue : new DataRect(rect: (Rect)e.NewValue);
 
       // completely rebuild text only if width and height have changed many
       const double smallChangePercent = 0.05;
-      bool widthChangedLittle = Math.Abs(value: currRect.Width - prevRect.Width) / currRect.Width < smallChangePercent;
-      bool heightChangedLittle = Math.Abs(value: currRect.Height - prevRect.Height) / currRect.Height < smallChangePercent;
+      var widthChangedLittle = Math.Abs(value: currRect.Width - prevRect.Width) / currRect.Width < smallChangePercent;
+      var heightChangedLittle = Math.Abs(value: currRect.Height - prevRect.Height) / currRect.Height < smallChangePercent;
 
       rebuildText = !(widthChangedLittle && heightChangedLittle);
     }
@@ -198,13 +200,13 @@ public sealed class IsolineGraph : IsolineRenderer
 
     foreach (var path in linePaths)
     {
-      LevelLine line = (LevelLine)path.Tag;
+      var line = (LevelLine)path.Tag;
       path.Data = CreateGeometry(lineData: line);
     }
 
     var transform = Plotter2D.Viewport.Transform;
-    Rect output = Plotter2D.Viewport.Output;
-    DataRect visible = Plotter2D.Viewport.Visible;
+    var output = Plotter2D.Viewport.Output;
+    var visible = Plotter2D.Viewport.Visible;
 
     if (rebuildText && DrawLabels)
     {
@@ -218,9 +220,9 @@ public sealed class IsolineGraph : IsolineRenderer
       }
       textBlocks.Clear();
 
-      double wayBeforeText = new Rect(size: new Size(width: 100, height: 100)).ScreenToData(transform: transform).Width;
-      Annotater.WayBeforeText = wayBeforeText;
-      var textLabels = Annotater.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
+      var wayBeforeText = new Rect(size: new Size(width: 100, height: 100)).ScreenToData(transform: transform).Width;
+      Annotator.WayBeforeText = wayBeforeText;
+      var textLabels = Annotator.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
       foreach (var textLabel in textLabels)
       {
         var text = CreateTextLabel(textLabel: textLabel);
@@ -239,9 +241,9 @@ public sealed class IsolineGraph : IsolineRenderer
     {
       foreach (var text in textBlocks)
       {
-        IsolineTextLabel label = (IsolineTextLabel)text.Tag;
-        Point screenPos = label.Position.DataToScreen(transform: transform);
-        Size textSize = text.DesiredSize;
+        var label = (IsolineTextLabel)text.Tag;
+        var screenPos = label.Position.DataToScreen(transform: transform);
+        var textSize = text.DesiredSize;
 
         Point position = new(x: screenPos.X - textSize.Width / 2, y: screenPos.Y - textSize.Height / 2);
 

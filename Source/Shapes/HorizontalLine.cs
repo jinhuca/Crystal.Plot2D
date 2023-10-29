@@ -1,7 +1,7 @@
-﻿using Crystal.Plot2D.Charts;
-using System.Windows;
+﻿using System.Windows;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 ///   Represents an infinite horizontal line with y-coordinate.

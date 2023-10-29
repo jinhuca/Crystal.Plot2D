@@ -1,12 +1,16 @@
-﻿using Crystal.Plot2D.DataSources;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.DataSources;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.PointMarkers;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Graphs;
 
-public class ElementMarkerPointsGraph : PointsGraphBase
+public sealed class ElementMarkerPointsGraph : PointsGraphBase
 {
   /// <summary>
   ///   List with created but unused markers.
@@ -32,8 +36,8 @@ public class ElementMarkerPointsGraph : PointsGraphBase
     DataSource = dataSource;
   }
 
-  Grid _grid;
-  Canvas _canvas;
+  private Grid _grid;
+  private Canvas _canvas;
 
   protected override void OnPlotterAttached(PlotterBase plotter)
   {
@@ -60,7 +64,7 @@ public class ElementMarkerPointsGraph : PointsGraphBase
     //                    unused.Add(child);
     //				canvas.Children.Clear();
     //			}
-    // todo почему так?
+    // todo What is that?
     base.OnDataChanged();
   }
 
@@ -96,11 +100,11 @@ public class ElementMarkerPointsGraph : PointsGraphBase
     }
     else // There is some data
     {
-      int index = 0;
+      var index = 0;
       var transform = GetTransform();
-      using IPointEnumerator enumerator = DataSource.GetEnumerator(context: GetContext());
+      using var enumerator = DataSource.GetEnumerator(context: GetContext());
       Point point = new();
-      DataRect bounds = DataRect.Empty;
+      var bounds = DataRect.Empty;
 
       while (enumerator.MoveNext())
       {
@@ -124,7 +128,7 @@ public class ElementMarkerPointsGraph : PointsGraphBase
 
         Marker.SetMarkerProperties(marker: _canvas.Children[index: index]);
         bounds.Union(point: point);
-        Point screenPoint = point.DataToScreen(transform: transform);
+        var screenPoint = point.DataToScreen(transform: transform);
         Marker.SetPosition(marker: _canvas.Children[index: index], screenPoint: screenPoint);
         index++;
       }

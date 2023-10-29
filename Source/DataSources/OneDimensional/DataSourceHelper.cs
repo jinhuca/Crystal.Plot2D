@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 public static class DataSourceHelper
 {
@@ -11,23 +11,15 @@ public static class DataSourceHelper
 
   public static IEnumerable<Point> GetPoints(IPointDataSource dataSource, DependencyObject context)
   {
-    if (dataSource == null)
+    ArgumentNullException.ThrowIfNull(dataSource);
+    context ??= new DataSource2dContext();
+    using var enumerator_ = dataSource.GetEnumerator(context: context);
+    Point p_ = new();
+    while (enumerator_.MoveNext())
     {
-      throw new ArgumentNullException(paramName: nameof(dataSource));
-    }
-
-    if (context == null)
-    {
-      context = new DataSource2dContext();
-    }
-
-    using IPointEnumerator enumerator = dataSource.GetEnumerator(context: context);
-    Point p = new();
-    while (enumerator.MoveNext())
-    {
-      enumerator.GetCurrent(p: ref p);
-      yield return p;
-      p = new Point();
+      enumerator_.GetCurrent(p: ref p_);
+      yield return p_;
+      p_ = new Point();
     }
   }
 }

@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D.Charts;
+﻿namespace Crystal.Plot2D.Axes.Numeric;
 
 /// <summary>
 /// Represents a numeric axis with values of <see cref="System.Double"/> type.

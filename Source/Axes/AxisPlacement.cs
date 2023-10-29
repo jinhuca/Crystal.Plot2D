@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D.Charts;
+﻿namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Defines the position of axis inside Plotter.

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Descriptions;
 
 public class StandardDescription : Description
 {
@@ -15,7 +15,7 @@ public class StandardDescription : Description
   {
     if (DescriptionString == null)
     {
-      string str = element.GetType().Name;
+      var str = element.GetType().Name;
       DescriptionString = str;
     }
   }

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.NotifyingPanels;
 
 internal sealed class NotifyingStackPanel : StackPanel, INotifyingPanel
 {
@@ -16,5 +17,5 @@ internal sealed class NotifyingStackPanel : StackPanel, INotifyingPanel
   }
 
   public event EventHandler ChildrenCreated;
-  public override string ToString() => typeof(NotifyingStackPanel).Name + " Name: " + Name;
+  public override string ToString() => nameof(NotifyingStackPanel) + " Name: " + Name;
 }

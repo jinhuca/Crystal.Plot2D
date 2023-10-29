@@ -2,13 +2,14 @@
 using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Converters;
 
 public sealed class BrushHSBConverter : IValueConverter
 {
-  public double LightnessDelta { get; set; } = 1.0;
-  public double SaturationDelta { get; set; } = 1.0;
+  public double LightnessDelta { get; } = 1.0;
+  public double SaturationDelta { get; } = 1.0;
 
   #region IValueConverter Members
 
@@ -16,7 +17,7 @@ public sealed class BrushHSBConverter : IValueConverter
   {
     if (value is SolidColorBrush brush)
     {
-      SolidColorBrush result = brush.ChangeLightness(lightnessFactor: LightnessDelta).ChangeSaturation(saturationFactor: SaturationDelta);
+      var result = brush.ChangeLightness(lightnessFactor: LightnessDelta).ChangeSaturation(saturationFactor: SaturationDelta);
       return result;
     }
     else { return value; }

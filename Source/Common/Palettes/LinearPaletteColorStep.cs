@@ -1,13 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 /// <summary>
 /// Represents a color step with its offset in limits [0..1].
 /// </summary>
 [DebuggerDisplay(value: "Color={Color}, Offset={Offset}")]
-public class LinearPaletteColorStep
+public sealed class LinearPaletteColorStep
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="LinearPaletteColorStep"/> class.

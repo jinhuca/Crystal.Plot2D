@@ -3,8 +3,12 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
 /// Represents a navigation methods upon one axis - mouse panning and zooming.
@@ -120,9 +124,9 @@ public class OldAxisNavigation : ContentGraph
   {
     if (lmbPressed)
     {
-      Point mousePos = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Transform);
+      var mousePos = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Transform);
 
-      DataRect visible = Plotter2D.Viewport.Visible;
+      var visible = Plotter2D.Viewport.Visible;
       double delta;
       if (orientation == Orientation.Horizontal)
       {
@@ -147,10 +151,10 @@ public class OldAxisNavigation : ContentGraph
   private const double wheelZoomSpeed = 1.2;
   protected override void OnMouseWheel(MouseWheelEventArgs e)
   {
-    Point mousePos = e.GetPosition(relativeTo: this);
-    int delta = -e.Delta;
+    var mousePos = e.GetPosition(relativeTo: this);
+    var delta = -e.Delta;
 
-    Point zoomTo = mousePos.ScreenToViewport(transform: Transform);
+    var zoomTo = mousePos.ScreenToViewport(transform: Transform);
 
     double zoomSpeed = Math.Abs(value: delta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed *= wheelZoomSpeed;
@@ -159,8 +163,8 @@ public class OldAxisNavigation : ContentGraph
       zoomSpeed = 1 / zoomSpeed;
     }
 
-    DataRect visible = Plotter2D.Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
-    DataRect oldVisible = Plotter2D.Viewport.Visible;
+    var visible = Plotter2D.Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
+    var oldVisible = Plotter2D.Viewport.Visible;
     if (orientation == Orientation.Horizontal)
     {
       visible.YMin = oldVisible.YMin;

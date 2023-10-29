@@ -1,10 +1,11 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
-/// Represents a simple draggable point with position bound to point in viewport coordinates, which allows to drag iself by mouse.
+/// Represents a simple draggable point with position bound to point in viewport coordinates, which allows to drag itself by mouse.
 /// </summary>
 public partial class DraggablePoint : PositionalViewportUIContainer
 {
@@ -22,9 +23,10 @@ public partial class DraggablePoint : PositionalViewportUIContainer
   /// <param name="position">The position of DraggablePoint.</param>
   public DraggablePoint(Point position) : this() { Position = position; }
 
-  bool dragging;
-  Point dragStart;
-  Vector shift;
+  private bool dragging;
+  private Point dragStart;
+  private Vector shift;
+  
   protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
   {
     if (Plotter == null)
@@ -60,7 +62,7 @@ public partial class DraggablePoint : PositionalViewportUIContainer
       CaptureMouse();
     }
 
-    Point mouseInData = e.GetPosition(relativeTo: Plotter.ViewportPanel).ScreenToData(transform: Plotter.Viewport.Transform);
+    var mouseInData = e.GetPosition(relativeTo: Plotter.ViewportPanel).ScreenToData(transform: Plotter.Viewport.Transform);
 
     if (mouseInData != dragStart)
     {

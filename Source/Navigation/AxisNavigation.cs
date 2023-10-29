@@ -1,14 +1,17 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
-public class AxisNavigation : DependencyObject, IPlotterElement
+public sealed class AxisNavigation : DependencyObject, IPlotterElement
 {
   public AxisPlacement Placement
   {
@@ -24,12 +27,12 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
   private static void OnPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    AxisNavigation navigation = (AxisNavigation)d;
+    var navigation = (AxisNavigation)d;
     navigation.OnPlacementChanged();
   }
 
   private Panel listeningPanel;
-  protected Panel ListeningPanel => listeningPanel;
+  private Panel ListeningPanel => listeningPanel;
 
   private void OnPlacementChanged()
   {
@@ -43,7 +46,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
       return;
     }
 
-    AxisPlacement placement = Placement;
+    var placement = Placement;
     switch (placement)
     {
       case AxisPlacement.Left:
@@ -102,13 +105,13 @@ public class AxisNavigation : DependencyObject, IPlotterElement
 
   #region Right button down
 
-  DataRect rmbDragStartRect;
+  private DataRect rmbDragStartRect;
   private void OnMouseRightButtonDown(object sender, MouseButtonEventArgs e)
   {
     OnMouseRightButtonDown(e: e);
   }
 
-  protected virtual void OnMouseRightButtonDown(MouseButtonEventArgs e)
+  private void OnMouseRightButtonDown(MouseButtonEventArgs e)
   {
     rmbInitialPosition = e.GetPosition(relativeTo: listeningPanel);
 
@@ -135,7 +138,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
     OnMouseRightButtonUp(e: e);
   }
 
-  protected virtual void OnMouseRightButtonUp(MouseButtonEventArgs e)
+  private void OnMouseRightButtonUp(MouseButtonEventArgs e)
   {
     if (rmbPressed)
     {
@@ -158,7 +161,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
   private const double wheelZoomSpeed = 1.2;
   private void OnMouseWheel(object sender, MouseWheelEventArgs e)
   {
-    Point mousePos = e.GetPosition(relativeTo: listeningPanel);
+    var mousePos = e.GetPosition(relativeTo: listeningPanel);
 
     Rect listeningPanelBounds = new(size: listeningPanel.RenderSize);
     if (!listeningPanelBounds.Contains(point: mousePos))
@@ -172,9 +175,9 @@ public class AxisNavigation : DependencyObject, IPlotterElement
       return;
     }
 
-    int delta = -e.Delta;
+    var delta = -e.Delta;
 
-    Point zoomTo = mousePos.ScreenToViewport(transform: activePlotter.Transform);
+    var zoomTo = mousePos.ScreenToViewport(transform: activePlotter.Transform);
 
     double zoomSpeed = Math.Abs(value: delta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed *= wheelZoomSpeed;
@@ -183,8 +186,8 @@ public class AxisNavigation : DependencyObject, IPlotterElement
       zoomSpeed = 1 / zoomSpeed;
     }
 
-    DataRect visible = activePlotter.Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
-    DataRect oldVisible = activePlotter.Viewport.Visible;
+    var visible = activePlotter.Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
+    var oldVisible = activePlotter.Viewport.Visible;
     if (Placement.IsBottomOrTop())
     {
       visible.YMin = oldVisible.YMin;
@@ -213,9 +216,9 @@ public class AxisNavigation : DependencyObject, IPlotterElement
         return;
       }
 
-      Point screenMousePos = e.GetPosition(relativeTo: listeningPanel);
-      Point dataMousePos = screenMousePos.ScreenToViewport(transform: activePlotter.Transform);
-      DataRect visible = activePlotter.Viewport.Visible;
+      var screenMousePos = e.GetPosition(relativeTo: listeningPanel);
+      var dataMousePos = screenMousePos.ScreenToViewport(transform: activePlotter.Transform);
+      var visible = activePlotter.Viewport.Visible;
       double delta;
       if (Placement.IsBottomOrTop())
       {
@@ -247,19 +250,12 @@ public class AxisNavigation : DependencyObject, IPlotterElement
         return;
       }
 
-      Point screenMousePos = e.GetPosition(relativeTo: listeningPanel);
-      DataRect visible = activePlotter.Viewport.Visible;
+      var screenMousePos = e.GetPosition(relativeTo: listeningPanel);
+      var visible = activePlotter.Viewport.Visible;
       double delta;
 
-      bool isHorizontal = Placement.IsBottomOrTop();
-      if (isHorizontal)
-      {
-        delta = (screenMousePos - rmbInitialPosition).X;
-      }
-      else
-      {
-        delta = (screenMousePos - rmbInitialPosition).Y;
-      }
+      var isHorizontal = Placement.IsBottomOrTop();
+      delta = isHorizontal ? (screenMousePos - rmbInitialPosition).X : (screenMousePos - rmbInitialPosition).Y;
 
       if (delta < 0)
       {
@@ -270,16 +266,9 @@ public class AxisNavigation : DependencyObject, IPlotterElement
         delta = Math.Exp(d: delta / RmbZoomScale);
       }
 
-      Point center = dragStartInViewport;
+      var center = dragStartInViewport;
 
-      if (isHorizontal)
-      {
-        visible = rmbDragStartRect.ZoomX(to: center, ratio: delta);
-      }
-      else
-      {
-        visible = rmbDragStartRect.ZoomY(to: center, ratio: delta);
-      }
+      visible = isHorizontal ? rmbDragStartRect.ZoomX(to: center, ratio: delta) : rmbDragStartRect.ZoomY(to: center, ratio: delta);
 
       if (screenMousePos != lmbInitialPosition)
       {
@@ -294,7 +283,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
   }
 
   private Point lmbInitialPosition;
-  protected Point LmbInitialPosition => lmbInitialPosition;
+  private Point LmbInitialPosition => lmbInitialPosition;
 
   private Point rmbInitialPosition;
   private readonly SolidColorBrush fillBrush = new SolidColorBrush(color: Color.FromRgb(r: 255, g: 228, b: 209)).MakeTransparent(opacity: 0.2);
@@ -310,7 +299,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
     OnMouseLeftButtonDown(e: e);
   }
 
-  protected virtual void OnMouseLeftButtonDown(MouseButtonEventArgs e)
+  private void OnMouseLeftButtonDown(MouseButtonEventArgs e)
   {
     lmbInitialPosition = e.GetPosition(relativeTo: listeningPanel);
 
@@ -355,7 +344,7 @@ public class AxisNavigation : DependencyObject, IPlotterElement
     OnMouseLeftButtonUp(e: e);
   }
 
-  protected virtual void OnMouseLeftButtonUp(MouseButtonEventArgs e)
+  private void OnMouseLeftButtonUp(MouseButtonEventArgs e)
   {
     if (lmbPressed)
     {

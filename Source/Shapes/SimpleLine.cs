@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Represents simple line bound to viewport coordinates.
@@ -36,7 +36,7 @@ public abstract class SimpleLine : ViewportShape
 
   private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    SimpleLine line = (SimpleLine)d;
+    var line = (SimpleLine)d;
     line.OnValueChanged();
   }
 

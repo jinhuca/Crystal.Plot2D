@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>Helper class to parse Windows messages</summary>
 internal static class MessagesHelper

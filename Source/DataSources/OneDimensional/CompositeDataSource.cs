@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 /// <summary>
 /// Data source that is a composer from several other data sources.
 /// </summary>
-public class CompositeDataSource : IPointDataSource
+public sealed class CompositeDataSource : IPointDataSource
 {
   #region Constructors
 
@@ -25,10 +25,7 @@ public class CompositeDataSource : IPointDataSource
   /// </param>
   public CompositeDataSource(params IPointDataSource[] dataSources)
   {
-    if (dataSources == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(dataSources));
-    }
+    ArgumentNullException.ThrowIfNull(dataSources);
 
     foreach (var dataSource in dataSources)
     {
@@ -52,10 +49,7 @@ public class CompositeDataSource : IPointDataSource
   /// </param>
   public void AddDataPart(IPointDataSource dataPart)
   {
-    if (dataPart == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(dataPart));
-    }
+    ArgumentNullException.ThrowIfNull(dataPart);
 
     dataParts.Add(item: dataPart);
     dataPart.DataChanged += OnPartDataChanged;
@@ -68,7 +62,7 @@ public class CompositeDataSource : IPointDataSource
   #region IPointSource Members
 
   public event EventHandler DataChanged;
-  protected void RaiseDataChanged() => DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
+  private void RaiseDataChanged() => DataChanged?.Invoke(sender: this, e: EventArgs.Empty);
   public IPointEnumerator GetEnumerator(DependencyObject context) => new CompositeEnumerator(dataSource: this, context: context);
 
   #endregion
@@ -86,7 +80,7 @@ public class CompositeDataSource : IPointDataSource
 
     public bool MoveNext()
     {
-      bool res = false;
+      var res = false;
       foreach (var enumerator in enumerators)
       {
         res |= enumerator.MoveNext();

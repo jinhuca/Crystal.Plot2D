@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
-public class RectanglePointMarker : ShapePointMarker
+public sealed class RectanglePointMarker : ShapePointMarker
 {
   public override void Render(DrawingContext dc, Point screenPoint)
   {

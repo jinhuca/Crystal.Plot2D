@@ -16,10 +16,13 @@ public readonly struct GenericRect<THorizontal, TVertical> : IEquatable<GenericR
 {
   [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly THorizontal _xMin;
+
   [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly TVertical _yMin;
+  
   [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly THorizontal _xMax;
+  
   [DebuggerBrowsable(state: DebuggerBrowsableState.Never)]
   private readonly TVertical _yMax;
 
@@ -83,7 +86,7 @@ public readonly struct GenericRect<THorizontal, TVertical> : IEquatable<GenericR
       return false;
     }
 
-    GenericRect<THorizontal, TVertical> other = (GenericRect<THorizontal, TVertical>)obj;
+    var other = (GenericRect<THorizontal, TVertical>)obj;
 
     return Equals(other: other);
   }

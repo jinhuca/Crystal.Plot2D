@@ -3,13 +3,15 @@ using Crystal.Plot2D.Common;
 using System;
 using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// Represents a title of horizontal axis. Can be placed from top or bottom of Plotter.
 /// </summary>
-public class HorizontalAxisTitle : ContentControl, IPlotterElement
+public sealed class HorizontalAxisTitle : ContentControl, IPlotterElement
 {
   public HorizontalAxisTitle()
   {

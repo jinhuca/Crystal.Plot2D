@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 public interface IValueConversion<T>
 {

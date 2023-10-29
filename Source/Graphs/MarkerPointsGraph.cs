@@ -1,13 +1,17 @@
-﻿using Crystal.Plot2D.DataSources;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.DataSources;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.PointMarkers;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Graphs;
 
 /// <summary>
 /// Class represents a series of markers.
 /// </summary>
-public class MarkerPointsGraph : PointsGraphBase
+public sealed class MarkerPointsGraph : PointsGraphBase
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="MarkerPointsGraph"/> class.
@@ -54,8 +58,8 @@ public class MarkerPointsGraph : PointsGraphBase
     }
 
     var transform = Plotter.Viewport.Transform;
-    DataRect bounds = DataRect.Empty;
-    using IPointEnumerator enumerator = DataSource.GetEnumerator(context: GetContext());
+    var bounds = DataRect.Empty;
+    using var enumerator = DataSource.GetEnumerator(context: GetContext());
     Point point = new();
     while (enumerator.MoveNext())
     {
@@ -63,7 +67,7 @@ public class MarkerPointsGraph : PointsGraphBase
       enumerator.ApplyMappings(target: Marker);
 
       //Point screenPoint = point.Transform(state.Visible, state.Output);
-      Point screenPoint = point.DataToScreen(transform: transform);
+      var screenPoint = point.DataToScreen(transform: transform);
 
       bounds = DataRect.Union(rect: bounds, point: point);
       Marker.Render(dc: dc, screenPoint: screenPoint);

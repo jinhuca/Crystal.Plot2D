@@ -7,6 +7,10 @@ using System.Windows.Input;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Common.Auxiliary.DataSearch;
+using Crystal.Plot2D.Graphs;
+using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Charts;
 
@@ -25,7 +29,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
     Marker = CreateDefaultMarker();
     SetX(obj: marker, value: 0);
     SetY(obj: marker, value: 0);
-    Children.Add(element: marker);
+    throw new InvalidOperationException();
   }
 
   private static Ellipse CreateDefaultMarker()
@@ -77,22 +81,22 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 
   private static void OnMarkerTemplateChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    DataFollowChart chart = (DataFollowChart)d;
-    DataTemplate template = (DataTemplate)e.NewValue;
+    var chart_ = (DataFollowChart)d;
+    var template_ = (DataTemplate)e.NewValue;
 
-    FrameworkElement marker;
-    if (template != null)
+    FrameworkElement marker_;
+    if (template_ != null)
     {
-      marker = (FrameworkElement)template.LoadContent();
+      marker_ = (FrameworkElement)template_.LoadContent();
     }
     else
     {
-      marker = CreateDefaultMarker();
+      marker_ = CreateDefaultMarker();
     }
 
-    chart.Children.Remove(element: chart.marker);
-    chart.Marker = marker;
-    chart.Children.Add(element: marker);
+    chart_.Children.Remove(element: chart_.marker);
+    chart_.Marker = marker_;
+    chart_.Children.Add(element: marker_);
   }
 
   #endregion
@@ -122,23 +126,23 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 
   private static void OnPointSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    DataFollowChart chart = (DataFollowChart)d;
-    if (e.OldValue is PointsGraphBase previous)
+    var chart_ = (DataFollowChart)d;
+    if (e.OldValue is PointsGraphBase previous_)
     {
-      previous.VisiblePointsChanged -= chart.Source_VisiblePointsChanged;
+      previous_.VisiblePointsChanged -= chart_.Source_VisiblePointsChanged;
     }
 
-    if (e.NewValue is PointsGraphBase current)
+    if (e.NewValue is PointsGraphBase current_)
     {
-      current.ProvideVisiblePoints = true;
-      current.VisiblePointsChanged += chart.Source_VisiblePointsChanged;
-      if (current.VisiblePoints != null)
+      current_.ProvideVisiblePoints = true;
+      current_.VisiblePointsChanged += chart_.Source_VisiblePointsChanged;
+      if (current_.VisiblePoints != null)
       {
-        chart.searcher = new SortedXSearcher1d(_collection: current.VisiblePoints);
+        chart_.searcher = new SortedXSearcher1d(_collection: current_.VisiblePoints);
       }
     }
 
-    chart.UpdateUIRepresentation();
+    chart_.UpdateUIRepresentation();
   }
 
   private SearchResult1d searchResult = SearchResult1d.Empty;
@@ -167,41 +171,41 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
       return;
     }
 
-    PointsGraphBase source = PointSource;
-    if (source == null || (source != null && source.VisiblePoints == null))
+    var source_ = PointSource;
+    if (source_ == null || (source_ != null && source_.VisiblePoints == null))
     {
-      SetValue(key: MarkerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
+      SetValue(key: markerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
       marker.Visibility = Visibility.Hidden;
       return;
     }
     else
     {
-      Point mousePos = Mouse.GetPosition(relativeTo: Plotter.CentralGrid);
-      var transform = Plotter.Transform;
-      Point viewportPos = mousePos.ScreenToViewport(transform: transform);
-      double x = viewportPos.X;
-      searchResult = searcher.SearchXBetween(_x: x, _result: searchResult);
-      SetValue(key: ClosestPointIndexPropertyKey, value: searchResult.Index);
+      var mousePos_ = Mouse.GetPosition(relativeTo: Plotter.CentralGrid);
+      var transform_ = Plotter.Transform;
+      var viewportPos_ = mousePos_.ScreenToViewport(transform: transform_);
+      var x_ = viewportPos_.X;
+      searchResult = searcher.SearchXBetween(_x: x_, _result: searchResult);
+      SetValue(key: closestPointIndexPropertyKey, value: searchResult.Index);
       if (!searchResult.IsEmpty)
       {
         marker.Visibility = Visibility.Visible;
-        IList<Point> points = source.VisiblePoints;
-        Point ptBefore = points[index: searchResult.Index];
-        Point ptAfter = points[index: searchResult.Index + 1];
+        IList<Point> points_ = source_.VisiblePoints;
+        var ptBefore_ = points_[index: searchResult.Index];
+        var ptAfter_ = points_[index: searchResult.Index + 1];
 
-        double ratio = (x - ptBefore.X) / (ptAfter.X - ptBefore.X);
-        double y = ptBefore.Y + (ptAfter.Y - ptBefore.Y) * ratio;
-        Point temp = new(x: x, y: y);
-        SetX(obj: marker, value: temp.X);
-        SetY(obj: marker, value: temp.Y);
+        var ratio_ = (x_ - ptBefore_.X) / (ptAfter_.X - ptBefore_.X);
+        var y_ = ptBefore_.Y + (ptAfter_.Y - ptBefore_.Y) * ratio_;
+        Point temp_ = new(x: x_, y: y_);
+        SetX(obj: marker, value: temp_.X);
+        SetY(obj: marker, value: temp_.Y);
 
-        Point markerPosition = temp;
-        followDataContext.Position = markerPosition;
-        SetValue(key: MarkerPositionPropertyKey, value: markerPosition);
+        var markerPosition_ = temp_;
+        followDataContext.Position = markerPosition_;
+        SetValue(key: markerPositionPropertyKey, value: markerPosition_);
       }
       else
       {
-        SetValue(key: MarkerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
+        SetValue(key: markerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
         marker.Visibility = Visibility.Hidden;
       }
     }
@@ -209,13 +213,13 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 
   #region ClosestPointIndex property
 
-  private static readonly DependencyPropertyKey ClosestPointIndexPropertyKey = DependencyProperty.RegisterReadOnly(
+  private static readonly DependencyPropertyKey closestPointIndexPropertyKey = DependencyProperty.RegisterReadOnly(
     name: "ClosestPointIndex",
     propertyType: typeof(int),
     ownerType: typeof(DataFollowChart),
     typeMetadata: new PropertyMetadata(defaultValue: -1));
 
-  public static readonly DependencyProperty ClosestPointIndexProperty = ClosestPointIndexPropertyKey.DependencyProperty;
+  public static readonly DependencyProperty ClosestPointIndexProperty = closestPointIndexPropertyKey.DependencyProperty;
 
   public int ClosestPointIndex => (int)GetValue(dp: ClosestPointIndexProperty);
 
@@ -223,7 +227,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 
   #region MarkerPositionProperty
 
-  private static readonly DependencyPropertyKey MarkerPositionPropertyKey = DependencyProperty.RegisterReadOnly(
+  private static readonly DependencyPropertyKey markerPositionPropertyKey = DependencyProperty.RegisterReadOnly(
     name: "MarkerPosition",
     propertyType: typeof(Point),
     ownerType: typeof(DataFollowChart),
@@ -231,14 +235,14 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 
   private static void OnMarkerPositionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    DataFollowChart chart = (DataFollowChart)d;
-    chart.MarkerPositionChanged.Raise(sender: chart);
+    var chart_ = (DataFollowChart)d;
+    chart_.MarkerPositionChanged.Raise(sender: chart_);
   }
 
   /// <summary>
   ///   Identifies the <see cref="MarkerPosition"/> dependency property.
   /// </summary>
-  public static readonly DependencyProperty MarkerPositionProperty = MarkerPositionPropertyKey.DependencyProperty;
+  public static readonly DependencyProperty MarkerPositionProperty = markerPositionPropertyKey.DependencyProperty;
 
   /// <summary>
   ///   Gets the marker position.
@@ -269,7 +273,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
   public override void OnPlotterDetaching(PlotterBase plotter)
   {
     plotter.MainGrid.MouseMove -= MainGrid_MouseMove;
-    base.OnPlotterDetaching(_plotter: plotter);
+    base.OnPlotterDetaching(plotter: plotter);
   }
 
   protected override void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
@@ -280,10 +284,10 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 
   private void Source_VisiblePointsChanged(object sender, EventArgs e)
   {
-    PointsGraphBase source = (PointsGraphBase)sender;
-    if (source.VisiblePoints != null)
+    var source_ = (PointsGraphBase)sender;
+    if (source_.VisiblePoints != null)
     {
-      searcher = new SortedXSearcher1d(_collection: source.VisiblePoints);
+      searcher = new SortedXSearcher1d(_collection: source_.VisiblePoints);
     }
     UpdateUIRepresentation();
   }
@@ -304,7 +308,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
 ///   Represents a special data context, which encapsulates marker's position and custom data.
 ///   Used in <see cref="DataFollowChart"/>.
 /// </summary>
-public class FollowDataContext : INotifyPropertyChanged
+public sealed class FollowDataContext : INotifyPropertyChanged
 {
   private Point position;
 

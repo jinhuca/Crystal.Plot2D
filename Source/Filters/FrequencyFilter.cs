@@ -1,9 +1,10 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Filters;
 
 public sealed class FrequencyFilter : PointsFilterBase
 {
@@ -28,113 +29,119 @@ public sealed class FrequencyFilter : PointsFilterBase
       return points;
     }
 
-    List<Point> resultPoints = points;
-    List<Point> currentChain = new();
+    var resultPoints_ = points;
+    List<Point> currentChain_ = new();
 
     if (points.Count > 2 * screenRect.Width)
     {
-      resultPoints = new List<Point>();
+      resultPoints_ = new List<Point>();
 
-      double currentX = Math.Floor(d: points[index: 0].X);
-      foreach (Point p in points)
+      var currentX_ = Math.Floor(d: points[index: 0].X);
+      foreach (var p_ in points)
       {
-        if (Math.Floor(d: p.X) == currentX)
+        if (Math.Floor(d: p_.X) == currentX_)
         {
-          currentChain.Add(item: p);
+          currentChain_.Add(item: p_);
         }
         else
         {
-          // Analyse current chain
-          if (currentChain.Count <= 2)
+          // Analyze current chain
+          if (currentChain_.Count <= 2)
           {
-            resultPoints.AddRange(collection: currentChain);
+            resultPoints_.AddRange(collection: currentChain_);
           }
           else
           {
-            Point first = MinByX(points: currentChain);
-            Point last = MaxByX(points: currentChain);
-            Point min = MinByY(points: currentChain);
-            Point max = MaxByY(points: currentChain);
-            resultPoints.Add(item: first);
+            var first_ = MinByX(points: currentChain_);
+            var last_ = MaxByX(points: currentChain_);
+            var min_ = MinByY(points: currentChain_);
+            var max_ = MaxByY(points: currentChain_);
+            resultPoints_.Add(item: first_);
 
-            Point smaller = min.X < max.X ? min : max;
-            Point greater = min.X > max.X ? min : max;
-            if (smaller != resultPoints.GetLast())
+            var smaller_ = min_.X < max_.X ? min_ : max_;
+            var greater_ = min_.X > max_.X ? min_ : max_;
+            if (smaller_ != resultPoints_.GetLast())
             {
-              resultPoints.Add(item: smaller);
+              resultPoints_.Add(item: smaller_);
             }
-            if (greater != resultPoints.GetLast())
+
+            if (greater_ != resultPoints_.GetLast())
             {
-              resultPoints.Add(item: greater);
+              resultPoints_.Add(item: greater_);
             }
-            if (last != resultPoints.GetLast())
+
+            if (last_ != resultPoints_.GetLast())
             {
-              resultPoints.Add(item: last);
+              resultPoints_.Add(item: last_);
             }
           }
-          currentChain.Clear();
-          currentChain.Add(item: p);
-          currentX = Math.Floor(d: p.X);
+          
+          currentChain_.Clear();
+          currentChain_.Add(item: p_);
+          currentX_ = Math.Floor(d: p_.X);
         }
       }
     }
 
-    resultPoints.AddRange(collection: currentChain);
+    resultPoints_.AddRange(collection: currentChain_);
 
-    return resultPoints;
+    return resultPoints_;
   }
 
   #endregion
 
   private static Point MinByX(IList<Point> points)
   {
-    Point minPoint = points[index: 0];
-    foreach (Point p in points)
+    var minPoint_ = points[index: 0];
+    foreach (var p_ in points)
     {
-      if (p.X < minPoint.X)
+      if (p_.X < minPoint_.X)
       {
-        minPoint = p;
+        minPoint_ = p_;
       }
     }
-    return minPoint;
+    
+    return minPoint_;
   }
 
   private static Point MaxByX(IList<Point> points)
   {
-    Point maxPoint = points[index: 0];
-    foreach (Point p in points)
+    var maxPoint_ = points[index: 0];
+    foreach (var p_ in points)
     {
-      if (p.X > maxPoint.X)
+      if (p_.X > maxPoint_.X)
       {
-        maxPoint = p;
+        maxPoint_ = p_;
       }
     }
-    return maxPoint;
+
+    return maxPoint_;
   }
 
   private static Point MinByY(IList<Point> points)
   {
-    Point minPoint = points[index: 0];
-    foreach (Point p in points)
+    var minPoint_ = points[index: 0];
+    foreach (var p_ in points)
     {
-      if (p.Y < minPoint.Y)
+      if (p_.Y < minPoint_.Y)
       {
-        minPoint = p;
+        minPoint_ = p_;
       }
     }
-    return minPoint;
+   
+    return minPoint_;
   }
 
   private static Point MaxByY(IList<Point> points)
   {
-    Point maxPoint = points[index: 0];
-    foreach (Point p in points)
+    var maxPoint_ = points[index: 0];
+    foreach (var p_ in points)
     {
-      if (p.Y > maxPoint.Y)
+      if (p_.Y > maxPoint_.Y)
       {
-        maxPoint = p;
+        maxPoint_ = p_;
       }
     }
-    return maxPoint;
+    return maxPoint_;
   }
 }

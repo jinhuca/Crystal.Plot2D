@@ -1,10 +1,10 @@
-﻿using System;
+﻿using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 internal sealed class DateTimeToDoubleConversion
 {
-  public DateTimeToDoubleConversion(double min, DateTime minDate, double max, DateTime maxDate)
+  public DateTimeToDoubleConversion(double min, System.DateTime minDate, double max, System.DateTime maxDate)
   {
     this.min = min;
     length = max - min;
@@ -17,19 +17,19 @@ internal sealed class DateTimeToDoubleConversion
   private readonly long ticksMin;
   private readonly long ticksLength;
 
-  internal DateTime FromDouble(double d)
+  internal System.DateTime FromDouble(double d)
   {
-    double ratio = (d - min) / length;
-    long tick = (long)(ticksMin + ticksLength * ratio);
+    var ratio = (d - min) / length;
+    var tick = (long)(ticksMin + ticksLength * ratio);
 
-    tick = MathHelper.Clamp(value: tick, min: DateTime.MinValue.Ticks, max: DateTime.MaxValue.Ticks);
+    tick = MathHelper.Clamp(value: tick, min: System.DateTime.MinValue.Ticks, max: System.DateTime.MaxValue.Ticks);
 
-    return new DateTime(ticks: tick);
+    return new System.DateTime(ticks: tick);
   }
 
-  internal double ToDouble(DateTime dt)
+  internal double ToDouble(System.DateTime dt)
   {
-    double ratio = (dt.Ticks - ticksMin) / (double)ticksLength;
+    var ratio = (dt.Ticks - ticksMin) / (double)ticksLength;
     return min + ratio * length;
   }
 }

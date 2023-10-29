@@ -3,6 +3,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Windows;
+using Crystal.Plot2D.Filters;
+using Crystal.Plot2D.Graphs;
 
 namespace Crystal.Plot2D.Charts;
 
@@ -13,10 +15,7 @@ public sealed class FilterCollection : NotifiableCollection<IPointsFilter>
 {
   protected override void OnItemAdding(IPointsFilter item)
   {
-    if (item == null)
-    {
-      throw new ArgumentNullException(paramName: "item");
-    }
+    ArgumentNullException.ThrowIfNull(item);
   }
 
   protected override void OnItemAdded(IPointsFilter item)
@@ -36,10 +35,10 @@ public sealed class FilterCollection : NotifiableCollection<IPointsFilter>
 
   internal List<Point> Filter(List<Point> points, Rect screenRect)
   {
-    foreach (var filter in Items)
+    foreach (var filter_ in Items)
     {
-      filter.SetScreenRect(screenRect: screenRect);
-      points = filter.Filter(points: points);
+      filter_.SetScreenRect(screenRect: screenRect);
+      points = filter_.Filter(points: points);
     }
 
     return points;

@@ -2,8 +2,9 @@
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.NotifyingPanels;
 
 internal sealed class NotifyingUIElementCollection : UIElementCollection, INotifyCollectionChanged
 {
@@ -52,10 +53,11 @@ internal sealed class NotifyingUIElementCollection : UIElementCollection, INotif
 
   public override void RemoveRange(int index, int count)
   {
-    for (int i = index; i < index + count; i++)
+    for (var i = index; i < index + count; i++)
     {
       Collection.RemoveAt(index: i);
     }
+
     base.RemoveRange(index: index, count: count);
   }
 
@@ -86,9 +88,6 @@ internal sealed class D3UIElementCollection : NotifiableCollection<UIElement>
 {
   protected override void OnItemAdding(UIElement item)
   {
-    if (item == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(item));
-    }
+    ArgumentNullException.ThrowIfNull(item);
   }
 }

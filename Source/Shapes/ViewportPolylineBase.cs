@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 public abstract class ViewportPolylineBase : ViewportShape
 {
@@ -32,9 +32,9 @@ public abstract class ViewportPolylineBase : ViewportShape
 
   protected static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    ViewportPolylineBase polyline = (ViewportPolylineBase)d;
+    var polyline = (ViewportPolylineBase)d;
 
-    PointCollection currentPoints = (PointCollection)e.NewValue;
+    var currentPoints = (PointCollection)e.NewValue;
 
     polyline.UpdateUIRepresentation();
   }

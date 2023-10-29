@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 /// <summary>
 ///   Edge identifier - indicates which side of cell isoline crosses.
@@ -9,18 +9,22 @@ internal enum Edge
 {
   // todo check if everything is ok with None.
   None = 0,
+
   /// <summary>
   /// Isoline crosses left boundary of cell (bit 0)
   /// </summary>
   Left = 1,
+
   /// <summary>
   /// Isoline crosses top boundary of cell (bit 1)
   /// </summary>
   Top = 2,
+
   /// <summary>
   /// Isoline crosses right boundary of cell (bit 2)
   /// </summary>
   Right = 4,
+
   /// <summary>
   /// Isoline crosses bottom boundary of cell (bit 3)
   /// </summary>
@@ -41,23 +45,18 @@ internal static class IsolineExtensions
 {
   internal static bool IsDiagonal(this CellBitmask bitmask)
   {
-    return bitmask == (CellBitmask.RightBottom | CellBitmask.LeftTop) ||
-      bitmask == (CellBitmask.LeftBottom | CellBitmask.RightTop);
+    return bitmask is (CellBitmask.RightBottom | CellBitmask.LeftTop) or (CellBitmask.LeftBottom | CellBitmask.RightTop);
   }
 
   internal static bool IsAppropriate(this SubCell sub, Edge edge)
   {
-    switch (sub)
+    return sub switch
     {
-      case SubCell.LeftBottom:
-        return edge == Edge.Left || edge == Edge.Bottom;
-      case SubCell.LeftTop:
-        return edge == Edge.Left || edge == Edge.Top;
-      case SubCell.RightBottom:
-        return edge == Edge.Right || edge == Edge.Bottom;
-      case SubCell.RightTop:
-      default:
-        return edge == Edge.Right || edge == Edge.Top;
-    }
+      SubCell.LeftBottom => edge is Edge.Left or Edge.Bottom,
+      SubCell.LeftTop => edge is Edge.Left or Edge.Top,
+      SubCell.RightBottom => edge is Edge.Right or Edge.Bottom,
+      SubCell.RightTop => edge is Edge.Right or Edge.Top,
+      _ => edge is Edge.Right or Edge.Top
+    };
   }
 }

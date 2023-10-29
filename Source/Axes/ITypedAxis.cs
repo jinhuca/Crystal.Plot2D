@@ -1,6 +1,7 @@
 ﻿using System;
+using Crystal.Plot2D.Charts;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Describes axis as having ticks type.
@@ -14,6 +15,7 @@ public interface ITypedAxis<T>
   /// </summary>
   /// <value>The ticks provider.</value>
   ITicksProvider<T> TicksProvider { get; }
+  
   /// <summary>
   /// Gets the label provider.
   /// </summary>
@@ -21,13 +23,14 @@ public interface ITypedAxis<T>
   LabelProviderBase<T> LabelProvider { get; }
 
   /// <summary>
-  /// Gets or sets the convertion of tick from double.
+  /// Gets or sets the conversation of tick from double.
   /// Should not be null.
   /// </summary>
   /// <value>The convert from double.</value>
   Func<double, T> ConvertFromDouble { get; set; }
+  
   /// <summary>
-  /// Gets or sets the convertion of tick to double.
+  /// Gets or sets the conversation of tick to double.
   /// Should not be null.
   /// </summary>
   /// <value>The convert to double.</value>

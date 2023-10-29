@@ -3,6 +3,14 @@ using Crystal.Plot2D.DataSources;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Descriptions;
+using Crystal.Plot2D.Filters;
+using Crystal.Plot2D.Graphs;
+using Crystal.Plot2D.LegendItems;
+using Crystal.Plot2D.Navigation;
+using Crystal.Plot2D.PointMarkers;
 
 namespace Crystal.Plot2D;
 
@@ -45,10 +53,7 @@ public static class PlotterBaseExtensions
     Pen linePen, 
     PenDescription descriptionForPen)
   {
-    if (pointSource == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(pointSource));
-    }
+    ArgumentNullException.ThrowIfNull(pointSource);
     linePen ??= new Pen { Brush = new SolidColorBrush(color: Colors.Black), Thickness = 1 };
     descriptionForPen ??= new PenDescription(description: nameof(pointSource));
     var lineGraph_ = new LineGraph
@@ -81,10 +86,7 @@ public static class PlotterBaseExtensions
     PointMarker marker = default, 
     Description description = default)
   {
-    if (pointSource == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(pointSource));
-    }
+    ArgumentNullException.ThrowIfNull(pointSource);
     marker ??= new CirclePointMarker();
     var markerPointGraph_ = new MarkerPointsGraph
     {
@@ -136,10 +138,7 @@ public static class PlotterBaseExtensions
     PointMarker marker,
     Description description)
   {
-    if (pointSource == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(pointSource));
-    }
+    ArgumentNullException.ThrowIfNull(pointSource);
 
     var res = new LineAndMarker<MarkerPointsGraph>();
 
@@ -199,14 +198,8 @@ public static class PlotterBaseExtensions
     ElementPointMarker marker,
     Description description)
   {
-    if (pointSource == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(pointSource));
-    }
-    if (marker == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(marker));
-    }
+    ArgumentNullException.ThrowIfNull(pointSource);
+    ArgumentNullException.ThrowIfNull(marker);
 
     //if (penForDrawingLine != null) // We are requested to draw line graphs
     //{

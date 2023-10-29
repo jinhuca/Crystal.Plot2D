@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 public delegate void MarkerRenderHandler(DrawingContext dc, Point screenPoint);
 

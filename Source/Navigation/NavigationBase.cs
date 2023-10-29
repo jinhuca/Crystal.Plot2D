@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 ///<summary>
 /// Base class for all navigation providers.

@@ -2,7 +2,7 @@
 using System.Diagnostics;
 using System.Windows;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class DebugVerify
 {
@@ -43,7 +43,7 @@ internal static class DebugVerify
   [DebuggerStepThrough]
   public static void IsFinite(double d)
   {
-    Is(condition: !double.IsInfinity(d: d) && !(double.IsNaN(d: d)));
+    Is(condition: !double.IsInfinity(d: d) && !double.IsNaN(d: d));
   }
 
   [Conditional(conditionString: "DEBUG")]

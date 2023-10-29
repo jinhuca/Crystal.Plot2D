@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.LegendItems;
 
 public static class LegendStyles
 {
   private static Style defaultStyle;
+
   public static Style Default
   {
     get
@@ -37,7 +38,7 @@ public static class LegendStyles
 
   private static ResourceDictionary GetLegendStyles()
   {
-    var legendStyles = (ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.LegendResourceUri, uriKind: UriKind.Relative));
+    var legendStyles = (ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.Constants.LegendResourceUri, uriKind: UriKind.Relative));
     return legendStyles;
   }
 }

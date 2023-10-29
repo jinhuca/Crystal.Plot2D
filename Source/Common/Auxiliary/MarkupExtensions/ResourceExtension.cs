@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Windows.Markup;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary.MarkupExtensions;
 
 /// <summary>
 ///   Represents a markup extension, which allows to get an access to application resource files.
 /// </summary>
 [MarkupExtensionReturnType(returnType: typeof(string))]
-public class ResourceExtension : MarkupExtension
+public sealed class ResourceExtension : MarkupExtension
 {
   /// <summary>
   ///   Initializes a new instance of the <see cref="ResourceExtension"/> class.

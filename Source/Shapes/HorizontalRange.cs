@@ -1,6 +1,8 @@
 ﻿using System.Windows;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 /// Paints horizontal filled and outlined range in viewport coordinates.
@@ -10,12 +12,12 @@ public sealed class HorizontalRange : RangeHighlight
   protected override void UpdateUIRepresentationCore()
   {
     var transform = Plotter.Viewport.Transform;
-    DataRect visible = Plotter.Viewport.Visible;
+    var visible = Plotter.Viewport.Visible;
 
-    Point p1_left = new Point(x: visible.XMin, y: StartValue).DataToScreen(transform: transform);
-    Point p1_right = new Point(x: visible.XMax, y: StartValue).DataToScreen(transform: transform);
-    Point p2_left = new Point(x: visible.XMin, y: EndValue).DataToScreen(transform: transform);
-    Point p2_right = new Point(x: visible.XMax, y: EndValue).DataToScreen(transform: transform);
+    var p1_left = new Point(x: visible.XMin, y: StartValue).DataToScreen(transform: transform);
+    var p1_right = new Point(x: visible.XMax, y: StartValue).DataToScreen(transform: transform);
+    var p2_left = new Point(x: visible.XMin, y: EndValue).DataToScreen(transform: transform);
+    var p2_right = new Point(x: visible.XMax, y: EndValue).DataToScreen(transform: transform);
 
     LineGeometry1.StartPoint = p1_left;
     LineGeometry1.EndPoint = p1_right;
@@ -24,5 +26,6 @@ public sealed class HorizontalRange : RangeHighlight
     LineGeometry2.EndPoint = p2_right;
 
     RectGeometry.Rect = new Rect(point1: p1_left, point2: p2_right);
+    
   }
 }

@@ -1,7 +1,4 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using Crystal.Plot2D.DataSources;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -12,8 +9,14 @@ using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
 using System.Windows.Threading;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Graphs;
+using Crystal.Plot2D.LegendItems;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Charts;
 
 /// <summary>
 ///   Represents a series of points connected by one polyline.
@@ -22,20 +25,20 @@ public class NewLineGraph : Canvas, IPlotterElement
 {
   static NewLineGraph()
   {
-    Type thisType = typeof(NewLineGraph);
-    Legend.DescriptionProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: "LineGraph"));
-    Legend.LegendItemsBuilderProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: new LegendItemsBuilder(DefaultLegendItemsBuilder)));
+    var thisType_ = typeof(NewLineGraph);
+    Legend.DescriptionProperty.OverrideMetadata(forType: thisType_, typeMetadata: new FrameworkPropertyMetadata(defaultValue: "LineGraph"));
+    Legend.LegendItemsBuilderProperty.OverrideMetadata(forType: thisType_, typeMetadata: new FrameworkPropertyMetadata(defaultValue: new LegendItemsBuilder(DefaultLegendItemsBuilder)));
   }
 
   private static IEnumerable<FrameworkElement> DefaultLegendItemsBuilder(IPlotterElement plotterElement)
   {
-    NewLineGraph lineGraph = (NewLineGraph)plotterElement;
-    Line line = new() { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph };
-    line.SetBinding(dp: Shape.StrokeProperty, path: "Stroke");
-    line.SetBinding(dp: Shape.StrokeThicknessProperty, path: "StrokeThickness");
-    Legend.SetVisualContent(obj: lineGraph, value: line);
-    var legendItem = LegendItemsHelper.BuildDefaultLegendItem(chart: lineGraph);
-    yield return legendItem;
+    var lineGraph_ = (NewLineGraph)plotterElement;
+    Line line_ = new() { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph_ };
+    line_.SetBinding(dp: Shape.StrokeProperty, path: "Stroke");
+    line_.SetBinding(dp: Shape.StrokeThicknessProperty, path: "StrokeThickness");
+    Legend.SetVisualContent(obj: lineGraph_, value: line_);
+    var legendItem_ = LegendItemsHelper.BuildDefaultLegendItem(chart: lineGraph_);
+    yield return legendItem_;
   }
 
   private readonly FilterCollection filters = new();
@@ -90,8 +93,8 @@ public class NewLineGraph : Canvas, IPlotterElement
 
   private static void OnDataSourceReplaced(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    NewLineGraph owner = (NewLineGraph)d;
-    owner.OnDataSourceReplaced(prevDataSource: (IPointDataSource)e.OldValue, currDataSource: (IPointDataSource)e.NewValue);
+    var owner_ = (NewLineGraph)d;
+    owner_.OnDataSourceReplaced(prevDataSource: (IPointDataSource)e.OldValue, currDataSource: (IPointDataSource)e.NewValue);
   }
 
   private void OnDataSourceReplaced(IPointDataSource prevDataSource, IPointDataSource currDataSource)
@@ -108,7 +111,7 @@ public class NewLineGraph : Canvas, IPlotterElement
     Update();
   }
 
-  void OnDataChanged(object sender, EventArgs e)
+  private void OnDataChanged(object sender, EventArgs e)
   {
     Update();
   }
@@ -162,19 +165,19 @@ public class NewLineGraph : Canvas, IPlotterElement
 
   private List<Point> FilterPoints(List<Point> points)
   {
-    var filteredPoints = filters.Filter(points: points, screenRect: plotter.Viewport.Output);
+    var filteredPoints_ = filters.Filter(points: points, screenRect: plotter.Viewport.Output);
 
-    return filteredPoints;
+    return filteredPoints_;
   }
 
-  void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
+  private void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     if (e.PropertyName == "Visible")
     {
-      DataRect prevVisible = (DataRect)e.OldValue;
-      DataRect currVisible = (DataRect)e.NewValue;
+      var prevVisible_ = (DataRect)e.OldValue;
+      var currVisible_ = (DataRect)e.NewValue;
 
-      if (currVisible.Size != prevVisible.Size)
+      if (currVisible_.Size != prevVisible_.Size)
       {
         Update();
       }
@@ -189,24 +192,24 @@ public class NewLineGraph : Canvas, IPlotterElement
     }
   }
 
-  readonly TranslateTransform layoutTransform = new();
+  private readonly TranslateTransform layoutTransform = new();
   private void UpdateTransform()
   {
-    var currentTransform = plotter.Transform;
+    var currentTransform_ = plotter.Transform;
 
-    var shift = transformWhenCreated.ViewportRect.Location.ViewportToScreen(transform: currentTransform)
-      - currentTransform.ViewportRect.Location.ViewportToScreen(transform: currentTransform);
+    var shift_ = transformWhenCreated.ViewportRect.Location.ViewportToScreen(transform: currentTransform_)
+      - currentTransform_.ViewportRect.Location.ViewportToScreen(transform: currentTransform_);
 
-    layoutTransform.X = shift.X;
-    layoutTransform.Y = shift.Y;
+    layoutTransform.X = shift_.X;
+    layoutTransform.Y = shift_.Y;
 
-    Debug.WriteLine(message: "X=" + shift.X);
-    Debug.WriteLine(message: "Y=" + shift.Y);
+    Debug.WriteLine(message: "X=" + shift_.X);
+    Debug.WriteLine(message: "Y=" + shift_.Y);
   }
 
-  CoordinateTransform transformWhenCreated;
-  readonly ResourcePool<Polyline> polylinePool = new();
-  private const int pointCount = 500;
+  private CoordinateTransform transformWhenCreated;
+  private readonly ResourcePool<Polyline> polylinePool = new();
+  private const int PointCount = 500;
 
   private void Update()
   {
@@ -223,38 +226,38 @@ public class NewLineGraph : Canvas, IPlotterElement
     layoutTransform.X = 0;
     layoutTransform.Y = 0;
 
-    var dataSource = DataSource;
-    var dataPoints = dataSource.GetPoints();
+    var dataSource_ = DataSource;
+    var dataPoints_ = dataSource_.GetPoints();
 
     transformWhenCreated = plotter.Transform;
 
-    var contentBounds = dataPoints.GetBounds();
-    Viewport2D.SetContentBounds(obj: this, value: contentBounds);
+    var contentBounds_ = dataPoints_.GetBounds();
+    Viewport2D.SetContentBounds(obj: this, value: contentBounds_);
 
-    foreach (Polyline polyline in Children)
+    foreach (Polyline polyline_ in Children)
     {
-      polylinePool.Put(item: polyline);
+      polylinePool.Put(item: polyline_);
     }
 
     Children.Clear();
 
-    PointCollection pointCollection = new();
-    foreach (var screenPoint in dataPoints.DataToScreen(transform: plotter.Transform))
+    PointCollection pointCollection_ = new();
+    foreach (var screenPoint_ in dataPoints_.DataToScreen(transform: plotter.Transform))
     {
-      if (pointCollection.Count < pointCount)
+      if (pointCollection_.Count < PointCount)
       {
-        pointCollection.Add(value: screenPoint);
+        pointCollection_.Add(value: screenPoint_);
       }
       else
       {
-        var polyline = polylinePool.GetOrCreate();
-        polyline.Points = pointCollection;
+        var polyline_ = polylinePool.GetOrCreate();
+        polyline_.Points = pointCollection_;
 
-        SetPolylineBindings(polyline: polyline);
+        SetPolylineBindings(polyline: polyline_);
 
-        Children.Add(element: polyline);
+        Children.Add(element: polyline_);
         Dispatcher.Invoke(callback: () => { }, priority: DispatcherPriority.ApplicationIdle);
-        pointCollection = new PointCollection();
+        pointCollection_ = new PointCollection();
       }
     }
   }

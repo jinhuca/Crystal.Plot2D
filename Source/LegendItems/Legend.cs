@@ -8,16 +8,17 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media.Effects;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.LegendItems;
 
 public delegate IEnumerable<FrameworkElement> LegendItemsBuilder(IPlotterElement element);
 
-public class Legend : ItemsControl, IPlotterElement
+public sealed class Legend : ItemsControl, IPlotterElement
 {
   static Legend()
   {
-    Type thisType = typeof(Legend);
+    var thisType = typeof(Legend);
     DefaultStyleKeyProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: thisType));
     PlotterBase.PlotterProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: OnPlotterChanged));
   }
@@ -30,7 +31,7 @@ public class Legend : ItemsControl, IPlotterElement
 
   private static void OnPlotterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    Legend legend = (Legend)d;
+    var legend = (Legend)d;
     if (e.OldValue != null)
     {
       legend.DetachFromPlotter(plotter: (PlotterBase)e.OldValue);
@@ -227,7 +228,7 @@ public class Legend : ItemsControl, IPlotterElement
 
   private static void OnShowInLegendChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    Legend legend = (Legend)d;
+    var legend = (Legend)d;
     legend.PopulateLegend();
   }
 
@@ -282,7 +283,7 @@ public class Legend : ItemsControl, IPlotterElement
 
   private static void OnLegendVisibleChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    Legend owner = (Legend)d;
+    var owner = (Legend)d;
     var visible = (bool)e.NewValue;
     owner.OnLegendVisibleChanged(visible: visible);
   }

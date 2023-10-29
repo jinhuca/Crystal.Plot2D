@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.TimeSpan;
 
 /// <summary>
 /// Represents a horizontal axis with values of <see cref="TimeSpan"/> type.

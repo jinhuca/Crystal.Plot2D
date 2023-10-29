@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -12,9 +11,14 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
-using static Crystal.Plot2D.Constants;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Common.NotifyingPanels;
+using Crystal.Plot2D.Common.UndoSystem;
+using Crystal.Plot2D.Navigation;
+using Crystal.Plot2D.Transforms;
+using static Crystal.Plot2D.Constants.Constants;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
 [ContentProperty(name: "Children")]
 [TemplatePart(Name = "PART_HeaderPanel", Type = typeof(StackPanel))]
@@ -125,7 +129,7 @@ public abstract class PlotterBase : ContentControl
 
   protected virtual void OnLoaded() => Focus();
 
-  void Plotter_Unloaded(object sender, RoutedEventArgs e) => OnUnloaded();
+  private void Plotter_Unloaded(object sender, RoutedEventArgs e) => OnUnloaded();
 
   protected virtual void OnUnloaded() { }
 
@@ -256,7 +260,7 @@ public abstract class PlotterBase : ContentControl
   {
     if(previousParent != null && currentParent != null)
     {
-      UIElement[] children = new UIElement[previousParent.Children.Count];
+      var children = new UIElement[previousParent.Children.Count];
       previousParent.Children.CopyTo(array: children, index: 0);
       previousParent.Children.Clear();
 
@@ -276,7 +280,7 @@ public abstract class PlotterBase : ContentControl
 
   private void NotifyingItem_ChildrenCreated(object sender, EventArgs e)
   {
-    INotifyingPanel panel_ = (INotifyingPanel)sender;
+    var panel_ = (INotifyingPanel)sender;
     SubscribePanelEvents(panel: panel_);
   }
 
@@ -423,8 +427,8 @@ public abstract class PlotterBase : ContentControl
   {
     return (T)Template.FindName(name: name, templatedParent: this);
   }
-  
-  bool _executedWaitingChildrenAdding;
+
+  private bool _executedWaitingChildrenAdding;
   private void OnChildrenCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
   {
     if(IsLoadedInternal && !_executedWaitingChildrenAdding)
@@ -469,7 +473,7 @@ public abstract class PlotterBase : ContentControl
     }
   }
   
-  internal bool PerformChildChecks { get; set; } = true;
+  internal bool PerformChildChecks { get; } = true;
   
   private UIElement CreateVisualProxy(IPlotterElement child)
   {
@@ -492,7 +496,7 @@ public abstract class PlotterBase : ContentControl
 
     try
     {
-      UIElement visualProxy = CreateVisualProxy(child: child);
+      var visualProxy = CreateVisualProxy(child: child);
       VisualBindings.Cache.Add(key: child, value: visualProxy);
 
       if(PerformChildChecks && child.Plotter != null)
@@ -502,10 +506,10 @@ public abstract class PlotterBase : ContentControl
 
       if(child is FrameworkElement styleableElement)
       {
-        Type key = styleableElement.GetType();
+        var key = styleableElement.GetType();
         if(GenericResources.Contains(key: key))
         {
-          Style elementStyle = (Style)GenericResources[key: key];
+          var elementStyle = (Style)GenericResources[key: key];
           styleableElement.Style = elementStyle;
         }
       }
@@ -646,7 +650,7 @@ public abstract class PlotterBase : ContentControl
   /// leaving only default graphs</summary>
   protected static void RemoveUserElements(IList<IPlotterElement> elements)
   {
-    int index = 0;
+    var index = 0;
 
     while(index < elements.Count)
     {
@@ -723,7 +727,7 @@ public abstract class PlotterBase : ContentControl
   {
     get
     {
-      bool useDeferredPanning = false;
+      var useDeferredPanning = false;
       if(CurrentChild is DependencyObject dependencyChild)
       {
         useDeferredPanning = Viewport2D.GetUseDeferredPanning(obj: dependencyChild);

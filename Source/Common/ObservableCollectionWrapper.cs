@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Common;
 

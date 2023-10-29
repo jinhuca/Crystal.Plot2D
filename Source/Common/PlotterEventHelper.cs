@@ -14,15 +14,9 @@ public sealed class PlotterEventHelper
 
   public void Subscribe(DependencyObject target, EventHandler<PlotterChangedEventArgs> handler)
   {
-    if (target == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(target));
-    }
+    ArgumentNullException.ThrowIfNull(target);
 
-    if (handler == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(handler));
-    }
+    ArgumentNullException.ThrowIfNull(handler);
 
     handlers.Add(key: target, value: handler);
   }

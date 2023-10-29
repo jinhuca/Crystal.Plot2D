@@ -2,22 +2,22 @@
 using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
-///   Invokes specified delegate for rendering custon marker at every point of graph.
+///   Invokes specified delegate for rendering custom marker at every point of graph.
 /// </summary>
 public sealed class DelegatePointMarker : PointMarker
 {
-  public MarkerRenderHandler RenderCallback { get; set; }
+  public MarkerRenderHandler RenderCallback { get; }
 
-  public DelegatePointMarker() { }
+  public DelegatePointMarker()
+  {
+  }
+  
   public DelegatePointMarker(MarkerRenderHandler renderCallback)
   {
-    if (renderCallback == null)
-    {
-      throw new ArgumentNullException(paramName: "renderCallback");
-    }
+    ArgumentNullException.ThrowIfNull(renderCallback);
     RenderCallback = renderCallback;
   }
 

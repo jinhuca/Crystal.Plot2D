@@ -1,6 +1,8 @@
-﻿namespace Crystal.Plot2D.Charts;
+﻿using Crystal.Plot2D.Common;
 
-public class IntegerAxisControl : AxisControl<int>
+namespace Crystal.Plot2D.Axes.Integer;
+
+public sealed class IntegerAxisControl : AxisControl<int>
 {
   public IntegerAxisControl()
   {

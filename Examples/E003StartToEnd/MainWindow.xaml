@@ -5,13 +5,14 @@
         xmlns:p2="http://schemas.crystal.com/Plot2D"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:E003StartToEnd"
+        xmlns:shapes="clr-namespace:Crystal.Plot2D.Shapes;assembly=Crystal.Plot2D"
         mc:Ignorable="d" Background="DarkGray"
-        Title="MainWindow" Height="500" Width="1200">
+        Title="MainWindow" Height="700" Width="1250">
   <Window.Resources>
     <LinearGradientBrush x:Key="BackgroundBrush" StartPoint="0,0" EndPoint="0,1">
-      <GradientStop Color="#FF393939" Offset="0.0"/>
-      <GradientStop Color="#FF292929" Offset="0.5"/>
-      <GradientStop Color="#FF393939" Offset="1.0"/>
+      <GradientStop Color="#FF292929" Offset="0.0"/>
+      <GradientStop Color="#FF191919" Offset="0.5"/>
+      <GradientStop Color="#FF292929" Offset="1.0"/>
     </LinearGradientBrush>
   </Window.Resources>
   <Grid>
@@ -24,9 +25,13 @@
                               FontFamily="Impact" FontSize="20"/>
       <p2:VerticalAxisTitle Content="Temperature (C)" Margin="10,0" Background="DarkGreen"
                             FontFamily="Impact" FontSize="20"/>
-      <p2:VerticalRange StartValue="0" EndValue="2" Fill="LightBlue"/>
+      <shapes:VerticalRange StartValue="0" EndValue="12" Fill="LightBlue">
+        <TextBlock Text="Transition" Foreground="Red" FontSize="20"/>
+      </shapes:VerticalRange>
       <!--<p2:VerticalRange StartValue="2" EndValue="4" Fill="LightCoral"/>-->
-      <p2:VerticalRange StartValue="5" EndValue="8" Fill="Aquamarine"/>
+      <shapes:VerticalRange StartValue="13" EndValue="38" Fill="Aquamarine">
+        <TextBlock Text="Ablation" Foreground="Blue" FontSize="20"/>
+      </shapes:VerticalRange>
     </p2:Plotter>
   </Grid>
 </Window>

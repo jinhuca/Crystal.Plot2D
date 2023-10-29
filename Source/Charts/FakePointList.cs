@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Charts;
 
 [DebuggerDisplay(value: "Count = {Count}")]
 public sealed class FakePointList : IList<Point>
@@ -126,9 +126,9 @@ public sealed class FakePointList : IList<Point>
 
   public IEnumerator<Point> GetEnumerator()
   {
-    for (int i = first + 1; i <= last; i++)
+    for (var i_ = first + 1; i_ <= last; i_++)
     {
-      yield return points[index: i];
+      yield return points[index: i_];
     }
   }
 

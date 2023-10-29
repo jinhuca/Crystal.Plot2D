@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.OneDimensional;
 
 /// <summary>
 /// Data source that returns sequence of 2D points.

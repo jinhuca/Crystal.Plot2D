@@ -1,8 +1,9 @@
 ﻿using System.Threading;
 using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
 /// Renders specified text near the point
@@ -32,16 +33,16 @@ public class CenteredTextMarker : PointMarker
       typeface: new Typeface(typefaceName: TypefaceName), emSize: 12, foreground: Brushes.Black);
 #pragma warning restore CS0618 // 'FormattedText.FormattedText(string, CultureInfo, FlowDirection, Typeface, double, Brush)' is obsolete: 'Use the PixelsPerDip override'
 
-    double width = textToDraw.Width;
-    double height = textToDraw.Height;
+    var width = textToDraw.Width;
+    var height = textToDraw.Height;
 
     const double verticalShift = -20; // px
 
-    Rect bounds = RectExtensions.FromCenterSize(
+    var bounds = RectExtensions.FromCenterSize(
       center: new Point(x: screenPoint.X, y: screenPoint.Y + verticalShift - height / 2),
       size: new Size(width: width, height: height));
 
-    Point loc = bounds.Location;
+    var loc = bounds.Location;
     bounds = CoordinateUtilities.RectZoom(rect: bounds, horizontalRatio: 1.05, verticalRatio: 1.15);
 
     dc.DrawLine(pen: new Pen(brush: Brushes.Black, thickness: 1), point0: Point.Add(point: screenPoint, vector: new Vector(x: 0, y: verticalShift)), point1: screenPoint);

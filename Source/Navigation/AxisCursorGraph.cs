@@ -4,8 +4,9 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 /// <summary>
 /// Adds to Plotter two lines upon axes, showing current cursor position.
@@ -45,7 +46,7 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
 
   private static void OnShowLinePropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    AxisCursorGraph graph = (AxisCursorGraph)d;
+    var graph = (AxisCursorGraph)d;
     graph.UpdateUIRepresentation();
   }
 
@@ -119,7 +120,7 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
       }));
   }
 
-  void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
+  private void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     UpdateUIRepresentation();
   }
@@ -132,14 +133,14 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
     }
 
     var transform = plotter.Viewport.Transform;
-    DataRect visible = plotter.Viewport.Visible;
-    Rect output = plotter.Viewport.Output;
+    var visible = plotter.Viewport.Visible;
+    var output = plotter.Viewport.Output;
 
-    Point mousePos = Mouse.GetPosition(relativeTo: plotter.CentralGrid);
+    var mousePos = Mouse.GetPosition(relativeTo: plotter.CentralGrid);
 
     if (ShowVerticalLine)
     {
-      double y = mousePos.Y;
+      var y = mousePos.Y;
       if (output.Top <= y && y <= output.Bottom)
       {
         leftLine.Visibility = Visibility.Visible;
@@ -160,7 +161,7 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
 
     if (ShowHorizontalLine)
     {
-      double x = mousePos.X;
+      var x = mousePos.X;
       if (output.Left <= x && x <= output.Right)
       {
         bottomLine.Visibility = Visibility.Visible;
@@ -180,17 +181,17 @@ public class AxisCursorGraph : DependencyObject, IPlotterElement
     }
   }
 
-  void parent_MouseLeave(object sender, MouseEventArgs e)
+  private void parent_MouseLeave(object sender, MouseEventArgs e)
   {
     UpdateUIRepresentation();
   }
 
-  void parent_MouseEnter(object sender, MouseEventArgs e)
+  private void parent_MouseEnter(object sender, MouseEventArgs e)
   {
     UpdateUIRepresentation();
   }
 
-  void parent_MouseMove(object sender, MouseEventArgs e)
+  private void parent_MouseMove(object sender, MouseEventArgs e)
   {
     UpdateUIRepresentation();
   }

@@ -1,7 +1,8 @@
-﻿using System;
-using System.Windows;
+﻿using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using System;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 public sealed class ProportionsConstraint : ViewportConstraint
 {
@@ -11,24 +12,22 @@ public sealed class ProportionsConstraint : ViewportConstraint
     get => widthToHeightRatio;
     set
     {
-      if (widthToHeightRatio != value)
-      {
-        widthToHeightRatio = value;
-        RaiseChanged();
-      }
+      if (!(Math.Abs(widthToHeightRatio - value) > Constants.Constants.FloatComparisonTolerance)) return;
+      widthToHeightRatio = value;
+      RaiseChanged();
     }
   }
 
   public override DataRect Apply(DataRect oldDataRect, DataRect newDataRect, Viewport2D viewport)
   {
-    double ratio = newDataRect.Width / newDataRect.Height;
-    double coeff = Math.Sqrt(d: ratio);
+    var ratio_ = newDataRect.Width / newDataRect.Height;
+    var coeff_ = Math.Sqrt(d: ratio_);
 
-    double newWidth = newDataRect.Width / coeff;
-    double newHeight = newDataRect.Height * coeff;
+    var newWidth_ = newDataRect.Width / coeff_;
+    var newHeight_ = newDataRect.Height * coeff_;
 
-    Point center = newDataRect.GetCenter();
-    DataRect res = DataRect.FromCenterSize(center: center, width: newWidth, height: newHeight);
-    return res;
+    var center_ = newDataRect.GetCenter();
+    var res_ = DataRect.FromCenterSize(center: center_, width: newWidth_, height: newHeight_);
+    return res_;
   }
 }

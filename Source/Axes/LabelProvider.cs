@@ -1,7 +1,8 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Charts;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 public abstract class LabelProvider<T> : LabelProviderBase<T>
 {
@@ -9,21 +10,17 @@ public abstract class LabelProvider<T> : LabelProviderBase<T>
   {
     var ticks = ticksInfo.Ticks;
 
-    UIElement[] res = new UIElement[ticks.Length];
+    var res = new UIElement[ticks.Length];
     LabelTickInfo<T> labelInfo = new() { Info = ticksInfo.Info };
 
-    for (int i = 0; i < res.Length; i++)
+    for (var i = 0; i < res.Length; i++)
     {
       labelInfo.Tick = ticks[i];
       labelInfo.Index = i;
 
-      string labelText = GetString(tickInfo: labelInfo);
+      var labelText = GetString(tickInfo: labelInfo);
 
-      TextBlock label = (TextBlock)GetResourceFromPool();
-      if (label == null)
-      {
-        label = new TextBlock();
-      }
+      var label = (TextBlock)GetResourceFromPool() ?? new TextBlock();
 
       label.Text = labelText;
       label.ToolTip = ticks[i].ToString();

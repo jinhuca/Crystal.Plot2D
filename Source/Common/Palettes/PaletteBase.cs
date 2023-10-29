@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 /// <summary>
-/// Represents a simple base class for a palette. Contains an abstract merhod for creation of color and method to raise changed event.
+/// Represents a simple base class for a palette.
+/// Contains an abstract method for creation of color and method to raise changed event.
 /// </summary>
 public abstract class PaletteBase : IPalette
 {

@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Markup;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Numeric;
 
 [ContentProperty(name: "TicksProvider")]
 public class CustomBaseNumericTicksProvider : ITicksProvider<double>
@@ -44,10 +46,7 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
 
   private CustomBaseNumericTicksProvider(double customBase, ITicksProvider<double> ticksProvider)
   {
-    if (ticksProvider == null)
-    {
-      throw new ArgumentNullException(paramName: "ticksProvider");
-    }
+    ArgumentNullException.ThrowIfNull(ticksProvider);
 
     CustomBase = customBase;
 
@@ -65,10 +64,7 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
     get => ticksProvider;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: "value");
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       if (ticksProvider != null)
       {
@@ -90,15 +86,15 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
     }
   }
 
-  void minorTicksProvider_Changed(object sender, EventArgs e)
+  private void minorTicksProvider_Changed(object sender, EventArgs e)
   {
     Changed.Raise(sender: this);
   }
 
   private Range<double> TransformRange(Range<double> range)
   {
-    double min = range.Min / customBase;
-    double max = range.Max / customBase;
+    var min = range.Min / customBase;
+    var max = range.Max / customBase;
 
     return new Range<double>(min: min, max: max);
   }
@@ -119,7 +115,7 @@ public class CustomBaseNumericTicksProvider : ITicksProvider<double>
 
   private void TransformTicks(ITicksInfo<double> ticks)
   {
-    for (int i = 0; i < ticks.Ticks.Length; i++)
+    for (var i = 0; i < ticks.Ticks.Length; i++)
     {
       ticks.Ticks[i] *= customBase;
     }

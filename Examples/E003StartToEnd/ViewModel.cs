@@ -8,7 +8,9 @@ namespace E003StartToEnd
 {
   internal class ViewModel
   {
-    public ViewModel() { }
+    public ViewModel()
+    {
 
+    }
   }
 }

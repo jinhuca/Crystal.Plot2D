@@ -1,9 +1,9 @@
 ﻿using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common;
 
-public class Header : ContentControl, IPlotterElement
+public sealed class Header : ContentControl, IPlotterElement
 {
   public Header()
   {

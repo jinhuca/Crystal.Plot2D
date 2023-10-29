@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Contains default axis value conversions.
@@ -21,9 +21,9 @@ public static class DefaultAxisConversions
 
   private static readonly long minDateTimeTicks = DateTime.MinValue.Ticks;
   private static readonly long maxDateTimeTicks = DateTime.MaxValue.Ticks;
-  private static readonly Func<double, DateTime> dateTimeFromDouble = d =>
+  private static readonly Func<double, System.DateTime> dateTimeFromDouble = d =>
   {
-    long ticks = (long)(d * 10000000000L);
+    var ticks = (long)(d * 10000000000L);
 
     // todo should we throw an exception if number of ticks is too big or small?
     if (ticks < minDateTimeTicks)
@@ -35,23 +35,23 @@ public static class DefaultAxisConversions
       ticks = maxDateTimeTicks;
     }
 
-    return new DateTime(ticks: ticks);
+    return new System.DateTime(ticks: ticks);
   };
-  public static Func<double, DateTime> DateTimeFromDouble => dateTimeFromDouble;
+  public static Func<double, System.DateTime> DateTimeFromDouble => dateTimeFromDouble;
 
-  private static readonly Func<DateTime, double> dateTimeToDouble = dt => dt.Ticks / 10000000000.0;
-  public static Func<DateTime, double> DateTimeToDouble => dateTimeToDouble;
+  private static readonly Func<System.DateTime, double> dateTimeToDouble = dt => dt.Ticks / 10000000000.0;
+  public static Func<System.DateTime, double> DateTimeToDouble => dateTimeToDouble;
 
   #endregion
 
   #region TimeSpan
 
-  private static readonly long minTimeSpanTicks = TimeSpan.MinValue.Ticks;
-  private static readonly long maxTimeSpanTicks = TimeSpan.MaxValue.Ticks;
+  private static readonly long minTimeSpanTicks = System.TimeSpan.MinValue.Ticks;
+  private static readonly long maxTimeSpanTicks = System.TimeSpan.MaxValue.Ticks;
 
-  private static readonly Func<double, TimeSpan> timeSpanFromDouble = d =>
+  private static readonly Func<double, System.TimeSpan> timeSpanFromDouble = d =>
   {
-    long ticks = (long)(d * 10000000000L);
+    var ticks = (long)(d * 10000000000L);
 
     // todo should we throw an exception if number of ticks is too big or small?
     if (ticks < minTimeSpanTicks)
@@ -63,17 +63,17 @@ public static class DefaultAxisConversions
       ticks = maxTimeSpanTicks;
     }
 
-    return new TimeSpan(ticks: ticks);
+    return new System.TimeSpan(ticks: ticks);
   };
 
-  public static Func<double, TimeSpan> TimeSpanFromDouble => timeSpanFromDouble;
+  public static Func<double, System.TimeSpan> TimeSpanFromDouble => timeSpanFromDouble;
 
-  private static readonly Func<TimeSpan, double> timeSpanToDouble = timeSpan =>
+  private static readonly Func<System.TimeSpan, double> timeSpanToDouble = timeSpan =>
   {
     return timeSpan.Ticks / 10000000000.0;
   };
 
-  public static Func<TimeSpan, double> TimeSpanToDouble => timeSpanToDouble;
+  public static Func<System.TimeSpan, double> TimeSpanToDouble => timeSpanToDouble;
 
   #endregion
 

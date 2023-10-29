@@ -1,8 +1,7 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class ArrayExtensions
 {
@@ -13,7 +12,7 @@ internal static class ArrayExtensions
 
   internal static T[] CreateArray<T>(int length, T defaultValue)
   {
-    T[] res = new T[length];
+    var res = new T[length];
     for (var i = 0; i < res.Length; i++)
     {
       res[i] = defaultValue;
@@ -23,10 +22,7 @@ internal static class ArrayExtensions
 
   internal static IEnumerable<Range<T>> GetPairs<T>(this IList<T> array)
   {
-    if (array == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(array));
-    }
+    ArgumentNullException.ThrowIfNull(array);
 
     for (var i = 0; i < array.Count - 1; i++)
     {

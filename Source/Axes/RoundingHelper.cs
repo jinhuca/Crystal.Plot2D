@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Diagnostics;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 internal static class RoundingHelper
 {
@@ -19,32 +21,32 @@ internal static class RoundingHelper
     }
     else
     {
-      double pow = Math.Pow(x: 10, y: rem - 1);
-      double val = pow * Math.Round(a: number / Math.Pow(x: 10, y: rem - 1));
+      var pow = Math.Pow(x: 10, y: rem - 1);
+      var val = pow * Math.Round(a: number / Math.Pow(x: 10, y: rem - 1));
       return val;
     }
   }
 
   internal static double Round(double value, Range<double> range)
   {
-    int log = GetDifferenceLog(min: range.Min, max: range.Max);
+    var log = GetDifferenceLog(min: range.Min, max: range.Max);
 
     return Round(number: value, rem: log);
   }
 
   internal static RoundingInfo CreateRoundedRange(double min, double max)
   {
-    double delta = max - min;
+    var delta = max - min;
 
     if (delta == 0)
     {
       return new RoundingInfo { Min = min, Max = max, Log = 0 };
     }
 
-    int log = (int)Math.Round(a: Math.Log10(d: Math.Abs(value: delta))) + 1;
+    var log = (int)Math.Round(a: Math.Log10(d: Math.Abs(value: delta))) + 1;
 
-    double newMin = Round(number: min, rem: log);
-    double newMax = Round(number: max, rem: log);
+    var newMin = Round(number: min, rem: log);
+    var newMax = Round(number: max, rem: log);
     if (newMin == newMax)
     {
       log--;

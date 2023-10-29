@@ -31,7 +31,7 @@ namespace Crystal.Plot2D.Common.Auxiliary
 		}
 
 		/// <summary>
-		/// Rethrows exceptions thrown during task execution in thespecified dispatcher thread.
+		/// Rethrows exceptions thrown during task execution in the specified dispatcher thread.
 		/// </summary>
 		/// <param name="task">The task.</param>
 		/// <param name="dispatcher">The dispatcher.</param>

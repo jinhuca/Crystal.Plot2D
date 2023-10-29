@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace Crystal.Plot2D.Charts;
+﻿namespace Crystal.Plot2D.Axes;
 
 public class DefaultDateTimeTicksStrategy : IDateTimeTicksStrategy
 {
-  public virtual DifferenceIn GetDifference(TimeSpan span)
+  public virtual DifferenceIn GetDifference(System.TimeSpan span)
   {
     span = span.Duration();
 
@@ -45,8 +43,8 @@ public class DefaultDateTimeTicksStrategy : IDateTimeTicksStrategy
   {
     lowerDiff = diff;
 
-    int code = (int)diff;
-    bool res = code > (int)DifferenceIn.Smallest;
+    var code = (int)diff;
+    var res = code > (int)DifferenceIn.Smallest;
     if (res)
     {
       lowerDiff = (DifferenceIn)(code - 1);
@@ -58,8 +56,8 @@ public class DefaultDateTimeTicksStrategy : IDateTimeTicksStrategy
   {
     biggerDiff = diff;
 
-    int code = (int)diff;
-    bool res = code < (int)DifferenceIn.Biggest;
+    var code = (int)diff;
+    var res = code < (int)DifferenceIn.Biggest;
     if (res)
     {
       biggerDiff = (DifferenceIn)(code + 1);

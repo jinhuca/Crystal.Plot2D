@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class CoordinateUtilities
 {
@@ -44,7 +44,7 @@ public static class CoordinateUtilities
 
   public static DataRect RectZoomX(DataRect rect, Point zoomCenter, double ratio)
   {
-    DataRect res = rect;
+    var res = rect;
     res.XMin = zoomCenter.X - (zoomCenter.X - rect.XMin) * ratio;
     res.Width = rect.Width * ratio;
     return res;
@@ -52,7 +52,7 @@ public static class CoordinateUtilities
 
   public static DataRect RectZoomY(DataRect rect, Point zoomCenter, double ratio)
   {
-    DataRect res = rect;
+    var res = rect;
     res.YMin = zoomCenter.Y - (zoomCenter.Y - rect.YMin) * ratio;
     res.Height = rect.Height * ratio;
     return res;

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// AxisControl for DateTime axes.
 /// </summary>
-public class DateTimeAxisControl : AxisControl<DateTime>
+public sealed class DateTimeAxisControl : AxisControl<System.DateTime>
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="DateTimeAxisControl"/> class.
@@ -18,6 +18,6 @@ public class DateTimeAxisControl : AxisControl<DateTime>
 
     ConvertToDouble = dt => dt.Ticks;
 
-    Range = new Range<DateTime>(min: DateTime.Now, max: DateTime.Now.AddYears(value: 1));
+    Range = new Range<System.DateTime>(min: System.DateTime.Now, max: System.DateTime.Now.AddYears(value: 1));
   }
 }

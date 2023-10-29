@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Numeric;
 
 public class CustomBaseNumericLabelProvider : LabelProvider<double>
 {
@@ -74,9 +74,9 @@ public class CustomBaseNumericLabelProvider : LabelProvider<double>
 
   protected override string GetStringCore(LabelTickInfo<double> tickInfo)
   {
-    double value = tickInfo.Tick / customBase;
+    var value = tickInfo.Tick / customBase;
 
-    string customBaseStr = customBaseString ?? customBase.ToString(provider: CultureInfo.InvariantCulture);
+    var customBaseStr = customBaseString ?? customBase.ToString(provider: CultureInfo.InvariantCulture);
     string result;
     if (value == 1)
     {

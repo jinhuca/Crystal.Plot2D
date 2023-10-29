@@ -5,18 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:c="http://schemas.crystal.com/Plot2D"
         xmlns:local="clr-namespace:S005LineSample"
+        xmlns:shapes="clr-namespace:Crystal.Plot2D.Shapes;assembly=Crystal.Plot2D"
         mc:Ignorable="d" Title="MainWindow" Height="450" Width="800">
   <c:Plotter>
-    <c:RectangleHighlight Bounds="0.1, 0.6, 0.15, 0.2" StrokeThickness="1" Fill="MidnightBlue" ToolTip="Sample region"/>
+    <shapes:RectangleHighlight Bounds="0.1, 0.6, 0.15, 0.2" StrokeThickness="1" Fill="MidnightBlue" ToolTip="Sample region"/>
 
-    <c:HorizontalRange StartValue="0.12" EndValue="0.21" Fill="Blue"/>
-    <c:VerticalRange StartValue="0.1" EndValue="0.16" Fill="Red" Stroke="Black" StrokeThickness="3" StrokeStartLineCap="Square"
+    <shapes:HorizontalRange StartValue="0.12" EndValue="0.21" Fill="Blue"/>
+    <shapes:VerticalRange StartValue="0.1" EndValue="0.16" Fill="Red" Stroke="Black" StrokeThickness="3" StrokeStartLineCap="Square"
                        StrokeDashCap="Triangle" StrokeDashArray="3"/>
 
-    <c:HorizontalLine Value="0.5" Stroke="Red" StrokeThickness="3" StrokeDashArray="1"/>
-    <c:VerticalLine Value="0.25" Stroke="Green" StrokeThickness="3"/>
+    <shapes:HorizontalLine Value="0.5" Stroke="Red" StrokeThickness="3" StrokeDashArray="1"/>
+    <shapes:VerticalLine Value="0.25" Stroke="Green" StrokeThickness="3"/>
 
-    <c:Segment StartPoint="0.3, 0.45" EndPoint="0.5, 0.5"
+    <shapes:Segment StartPoint="0.3, 0.45" EndPoint="0.5, 0.5"
                  Stroke="Orange" StrokeThickness="14"/>
 
 

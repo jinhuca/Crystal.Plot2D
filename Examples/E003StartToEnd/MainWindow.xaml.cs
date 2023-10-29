@@ -7,6 +7,9 @@ using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Threading;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Descriptions;
 
 namespace E003StartToEnd
 {
@@ -69,6 +72,38 @@ namespace E003StartToEnd
         new Point(2.9, 11.3),
         new Point(3.0, 10.4),
         new Point(3.1, 9.5),
+
+
+        new Point(3.2, 9.2),
+        new Point(3.3, 8.3),
+        new Point(3.4, 7.4),
+        new Point(3.5, 6.5),
+
+        new Point(3.6, 6.0),
+        new Point(3.7, 5.6),
+        new Point(3.8, 5.0),
+        new Point(3.9, 4.5),
+
+        new Point(4.0, 4.1),
+        new Point(4.1, 3.5),
+        new Point(4.2, 3.0),
+        new Point(4.3, 2.5),
+
+        new Point(4.4, 2.0),
+        new Point(4.5, 1.6),
+        new Point(4.6, 0.8),
+        new Point(4.7, 0.2),
+
+        new Point(4.8, -1.2),
+        new Point(4.9, -2.0),
+        new Point(5.0, -2.8),
+        new Point(5.1, -3.5),
+
+        new Point(5.2, -4.2),
+        new Point(5.3, -5.1),
+        new Point(5.4, -5.8),
+        new Point(5.5, -6.3),
+
       };
     }
 
@@ -87,14 +122,13 @@ namespace E003StartToEnd
       var pen_ = new Pen { Brush = new SolidColorBrush(Colors.OrangeRed), Thickness = 5 };
       var lineGraph_ = _plotter.AddLineGraph(_points.AsDataSource(), pen_, new PenDescription("Ablation"));
 
-      var rec_ = new Rect(new Point(0, 0), new Size(12, 60));
+      var rec_ = new Rect(new Point(0, -75), new Size(245, 125));
       _plotter.Visible = new DataRect(rec_); // new DataRect(xMin: 0, yMin: 0, width: 400, height: 15);
 
       //_plotter.FitToView();
       Viewport2D.SetUsesApproximateContentBoundsComparison(lineGraph_, false);
       _dispatcherTimer.Tick += _dispatcherTimer_Tick;
       _dispatcherTimer.Start();
-
     }
 
     private void _dispatcherTimer_Tick(object? sender, EventArgs e)

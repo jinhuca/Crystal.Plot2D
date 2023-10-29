@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Transforms;
 
 public static class CoordinateTransformExtensions
 {
@@ -58,7 +59,7 @@ public static class CoordinateTransformExtensions
   /// <param name="viewportPoint">Point in viewport coordinates</param>
   /// <param name="transform">CoordinateTransform used to perform transformation</param>
   /// <returns>Point in data coordinates</returns>
-  public static Point ViewportToData(this Point viewportPoint, CoordinateTransform transform)
+  private static Point ViewportToData(this Point viewportPoint, CoordinateTransform transform)
   {
     return transform.DataTransform.ViewportToData(pt: viewportPoint);
   }
@@ -80,7 +81,7 @@ public static class CoordinateTransformExtensions
   /// <param name="dataPoint">Point in data coordinates</param>
   /// <param name="transform">CoordinateTransform used to perform transformation</param>
   /// <returns>Point in viewport coordinates</returns>
-  public static Point DataToViewport(this Point dataPoint, DataTransform transform)
+  private static Point DataToViewport(this Point dataPoint, DataTransform transform)
   {
     return transform.DataToViewport(pt: dataPoint);
   }
@@ -97,10 +98,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in data coordinates</returns>
   public static Rect ScreenToData(this Rect screenRect, CoordinateTransform transform)
   {
-    Point p1 = screenRect.BottomLeft.ScreenToData(transform);
-    Point p2 = screenRect.TopRight.ScreenToData(transform);
+    var p1_ = screenRect.BottomLeft.ScreenToData(transform);
+    var p2_ = screenRect.TopRight.ScreenToData(transform);
 
-    return new Rect(point1: p1, point2: p2);
+    return new Rect(point1: p1_, point2: p2_);
   }
 
   /// <summary>
@@ -111,10 +112,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in screen coordinates</returns>
   public static Rect DataToScreen(this DataRect dataRect, CoordinateTransform transform)
   {
-    Point p1 = dataRect.XMaxYMax.DataToScreen(transform: transform);
-    Point p2 = dataRect.XMinYMin.DataToScreen(transform: transform);
+    var p1_ = dataRect.XMaxYMax.DataToScreen(transform: transform);
+    var p2_ = dataRect.XMinYMin.DataToScreen(transform: transform);
 
-    return new Rect(point1: p1, point2: p2);
+    return new Rect(point1: p1_, point2: p2_);
   }
 
   /// <summary>
@@ -125,10 +126,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in viewport coordinates</returns>
   public static DataRect ScreenToViewport(this Rect screenRect, CoordinateTransform transform)
   {
-    Point p1 = screenRect.BottomLeft.ScreenToViewport(transform);
-    Point p2 = screenRect.TopRight.ScreenToViewport(transform);
+    var p1_ = screenRect.BottomLeft.ScreenToViewport(transform);
+    var p2_ = screenRect.TopRight.ScreenToViewport(transform);
 
-    return new DataRect(point1: p1, point2: p2);
+    return new DataRect(point1: p1_, point2: p2_);
   }
 
   /// <summary>
@@ -139,10 +140,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in screen coordinates</returns>
   public static Rect ViewportToScreen(this DataRect viewportRect, CoordinateTransform transform)
   {
-    Point p1 = viewportRect.XMaxYMax.ViewportToScreen(transform);
-    Point p2 = viewportRect.XMinYMin.ViewportToScreen(transform);
+    var p1_ = viewportRect.XMaxYMax.ViewportToScreen(transform);
+    var p2_ = viewportRect.XMinYMin.ViewportToScreen(transform);
 
-    return new Rect(point1: p1, point2: p2);
+    return new Rect(point1: p1_, point2: p2_);
   }
 
   /// <summary>
@@ -153,10 +154,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in data coordinates</returns>
   public static DataRect ViewportToData(this DataRect viewportRect, CoordinateTransform transform)
   {
-    Point p1 = viewportRect.XMaxYMax.ViewportToData(transform);
-    Point p2 = viewportRect.XMinYMin.ViewportToData(transform);
+    var p1_ = viewportRect.XMaxYMax.ViewportToData(transform);
+    var p2_ = viewportRect.XMinYMin.ViewportToData(transform);
 
-    return new DataRect(point1: p1, point2: p2);
+    return new DataRect(point1: p1_, point2: p2_);
   }
 
   /// <summary>
@@ -178,10 +179,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in data coordinates</returns>
   public static DataRect ViewportToData(this DataRect viewportRect, DataTransform transform)
   {
-    Point p1 = transform.ViewportToData(pt: viewportRect.XMaxYMax);
-    Point p2 = transform.ViewportToData(pt: viewportRect.XMinYMin);
+    var p1_ = transform.ViewportToData(pt: viewportRect.XMaxYMax);
+    var p2_ = transform.ViewportToData(pt: viewportRect.XMinYMin);
 
-    return new DataRect(point1: p1, point2: p2);
+    return new DataRect(point1: p1_, point2: p2_);
   }
 
   /// <summary>
@@ -192,10 +193,10 @@ public static class CoordinateTransformExtensions
   /// <returns>Rectangle in viewport coordinates</returns>
   public static DataRect DataToViewport(this DataRect dataRect, DataTransform transform)
   {
-    Point p1 = transform.DataToViewport(pt: dataRect.XMinYMin);
-    Point p2 = transform.DataToViewport(pt: dataRect.XMaxYMax);
+    var p1_ = transform.DataToViewport(pt: dataRect.XMinYMin);
+    var p2_ = transform.DataToViewport(pt: dataRect.XMaxYMax);
 
-    return new DataRect(point1: p1, point2: p2);
+    return new DataRect(point1: p1_, point2: p2_);
   }
 
   #endregion
@@ -204,17 +205,17 @@ public static class CoordinateTransformExtensions
 
   public static IEnumerable<Point> ViewportToScreen(this IEnumerable<Point> viewportPoints, CoordinateTransform transform)
   {
-    foreach (var point in viewportPoints)
+    foreach (var point_ in viewportPoints)
     {
-      yield return point.ViewportToScreen(transform);
+      yield return point_.ViewportToScreen(transform);
     }
   }
 
   public static IEnumerable<Point> DataToScreen(this IEnumerable<Point> dataPoints, CoordinateTransform transform)
   {
-    foreach (var point in dataPoints)
+    foreach (var point_ in dataPoints)
     {
-      yield return point.DataToScreen(transform: transform);
+      yield return point_.DataToScreen(transform: transform);
     }
   }
 
@@ -226,23 +227,23 @@ public static class CoordinateTransformExtensions
   /// <returns>Points in screen coordinates</returns>
   public static List<Point> DataToScreenAsList(this IEnumerable<Point> dataPoints, CoordinateTransform transform)
   {
-    List<Point> res;
+    List<Point> res_;
 
-    if (dataPoints is ICollection<Point> iCollection)
+    if (dataPoints is ICollection<Point> iCollection_)
     {
-      res = new List<Point>(capacity: iCollection.Count);
+      res_ = new List<Point>(capacity: iCollection_.Count);
     }
     else
     {
-      res = new List<Point>();
+      res_ = new List<Point>();
     }
 
-    foreach (var point in dataPoints)
+    foreach (var point_ in dataPoints)
     {
-      res.Add(item: transform.DataToScreen(dataPoint: point));
+      res_.Add(item: transform.DataToScreen(dataPoint: point_));
     }
 
-    return res;
+    return res_;
   }
 
   /// <summary>
@@ -265,9 +266,9 @@ public static class CoordinateTransformExtensions
   /// <returns>List of points in viewport coordinates</returns>
   public static IEnumerable<Point> DataToViewport(this IEnumerable<Point> dataPoints, DataTransform transform)
   {
-    foreach (Point pt in dataPoints)
+    foreach (var pt_ in dataPoints)
     {
-      yield return pt.DataToViewport(transform);
+      yield return pt_.DataToViewport(transform);
     }
   }
 
@@ -278,17 +279,17 @@ public static class CoordinateTransformExtensions
 
   public static IEnumerable<Point> ScreenToViewport(this IEnumerable<Point> screenPoints, CoordinateTransform transform)
   {
-    foreach (Point pt in screenPoints)
+    foreach (var pt_ in screenPoints)
     {
-      yield return pt.ScreenToViewport(transform);
+      yield return pt_.ScreenToViewport(transform);
     }
   }
 
   public static IEnumerable<Point> ScreenToData(this IEnumerable<Point> screenPoints, CoordinateTransform transform)
   {
-    foreach (Point pt in screenPoints)
+    foreach (var pt_ in screenPoints)
     {
-      yield return pt.ScreenToData(transform);
+      yield return pt_.ScreenToData(transform);
     }
   }
 

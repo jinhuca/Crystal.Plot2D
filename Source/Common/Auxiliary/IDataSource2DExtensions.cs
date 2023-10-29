@@ -1,9 +1,8 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.DataSources;
-using System;
+﻿using System;
 using System.Windows;
+using Crystal.Plot2D.DataSources.MultiDimensional;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class IDataSource2DExtensions
 {
@@ -11,16 +10,16 @@ public static class IDataSource2DExtensions
   {
     data.VerifyNotNull(paramName: "data");
 
-    int width = data.GetLength(dimension: 0);
-    int height = data.GetLength(dimension: 1);
+    var width = data.GetLength(dimension: 0);
+    var height = data.GetLength(dimension: 1);
     Verify.IsTrueWithMessage(condition: width > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
     Verify.IsTrueWithMessage(condition: height > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
 
-    double min = data[0, 0];
-    double max = data[0, 0];
-    for (int x = 0; x < width; x++)
+    var min = data[0, 0];
+    var max = data[0, 0];
+    for (var x = 0; x < width; x++)
     {
-      for (int y = 0; y < height; y++)
+      for (var y = 0; y < height; y++)
       {
         if (data[x, y] < min)
         {
@@ -41,16 +40,16 @@ public static class IDataSource2DExtensions
   {
     data.VerifyNotNull(paramName: "data");
 
-    int width = data.GetLength(dimension: 0);
-    int height = data.GetLength(dimension: 1);
+    var width = data.GetLength(dimension: 0);
+    var height = data.GetLength(dimension: 1);
     Verify.IsTrueWithMessage(condition: width > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
     Verify.IsTrueWithMessage(condition: height > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
 
-    double min = double.MaxValue;
-    double max = double.MinValue;
-    for (int x = 0; x < width; x++)
+    var min = double.MaxValue;
+    var max = double.MinValue;
+    for (var x = 0; x < width; x++)
     {
-      for (int y = 0; y < height; y++)
+      for (var y = 0; y < height; y++)
       {
         if (data[x, y] != missingValue && data[x, y] < min)
         {
@@ -81,20 +80,17 @@ public static class IDataSource2DExtensions
 
   public static Range<double> GetMinMax(this IDataSource2D<double> dataSource, DataRect area)
   {
-    if (dataSource == null)
-    {
-      throw new ArgumentNullException(paramName: "dataSource");
-    }
+    ArgumentNullException.ThrowIfNull(dataSource);
 
-    double min = double.PositiveInfinity;
-    double max = double.NegativeInfinity;
-    int width = dataSource.Width;
-    int height = dataSource.Height;
+    var min = double.PositiveInfinity;
+    var max = double.NegativeInfinity;
+    var width = dataSource.Width;
+    var height = dataSource.Height;
     var grid = dataSource.Grid;
     var data = dataSource.Data;
-    for (int ix = 0; ix < width; ix++)
+    for (var ix = 0; ix < width; ix++)
     {
-      for (int iy = 0; iy < height; iy++)
+      for (var iy = 0; iy < height; iy++)
       {
         if (area.Contains(point: grid[ix, iy]))
         {
@@ -117,20 +113,20 @@ public static class IDataSource2DExtensions
 
   public static DataRect GetGridBounds(this Point[,] grid)
   {
-    double minX = grid[0, 0].X;
-    double maxX = minX;
-    double minY = grid[0, 0].Y;
-    double maxY = minY;
+    var minX = grid[0, 0].X;
+    var maxX = minX;
+    var minY = grid[0, 0].Y;
+    var maxY = minY;
 
-    int width = grid.GetLength(dimension: 0);
-    int height = grid.GetLength(dimension: 1);
-    for (int ix = 0; ix < width; ix++)
+    var width = grid.GetLength(dimension: 0);
+    var height = grid.GetLength(dimension: 1);
+    for (var ix = 0; ix < width; ix++)
     {
-      for (int iy = 0; iy < height; iy++)
+      for (var iy = 0; iy < height; iy++)
       {
-        Point pt = grid[ix, iy];
-        double x = pt.X;
-        double y = pt.Y;
+        var pt = grid[ix, iy];
+        var x = pt.X;
+        var y = pt.Y;
         if (x < minX)
         {
           minX = x;

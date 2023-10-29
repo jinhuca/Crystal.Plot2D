@@ -5,8 +5,9 @@ using System.Windows;
 using System.Windows.Data;
 using System.Windows.Markup;
 using System.Windows.Threading;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 /// <summary>
 ///   Represents an editor of points' position of ViewportPolyline or ViewportPolygon.
@@ -49,7 +50,7 @@ public class PolylineEditor : IPlotterElement
     }
   }
 
-  bool pointsAdded;
+  private bool pointsAdded;
   private void OnPointsReplaced(object sender, EventArgs e)
   {
     if (plotter == null)
@@ -62,7 +63,7 @@ public class PolylineEditor : IPlotterElement
       return;
     }
 
-    ViewportPolylineBase line = (ViewportPolylineBase)sender;
+    var line = (ViewportPolylineBase)sender;
 
     pointsAdded = true;
     List<IPlotterElement> draggablePoints = new();
@@ -85,7 +86,7 @@ public class PolylineEditor : IPlotterElement
     }
     else
     {
-      plotter.Dispatcher.BeginInvoke(method: ((Action)(() => { AddLineToPlotter(asyncVar: false); })), priority: DispatcherPriority.Send);
+      plotter.Dispatcher.BeginInvoke(method: (Action)(() => { AddLineToPlotter(asyncVar: false); }), priority: DispatcherPriority.Send);
     }
   }
 
@@ -101,7 +102,7 @@ public class PolylineEditor : IPlotterElement
 
   private void GetDraggablePoints(List<IPlotterElement> collection)
   {
-    for (int i = 0; i < polyline.Points.Count; i++)
+    for (var i = 0; i < polyline.Points.Count; i++)
     {
       DraggablePoint point = new();
       point.SetBinding(dp: PositionalViewportUIContainer.PositionProperty, binding: new Binding

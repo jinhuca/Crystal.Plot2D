@@ -1,21 +1,24 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Input;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 internal sealed class PhysicalRectAnimation
 {
-  Vector position;
-  Vector velocity;
+  private Vector position;
+  private Vector velocity;
   public Vector Velocity
   {
     get => velocity;
     set => velocity = value;
   }
 
-  Vector acceleration;
-  private double mass = 1; // kilogramms
+  private Vector acceleration;
+  private double mass = 1; // kilograms
   public double Mass
   {
     get => mass;
@@ -29,40 +32,40 @@ internal sealed class PhysicalRectAnimation
     set => frictionCalmCoeff = value;
   }
 
-  double frictionMovementCoeff = 0.1;
+  private double frictionMovementCoeff = 0.1;
   public double FrictionMovementCoeff
   {
     get => frictionMovementCoeff;
     set => frictionMovementCoeff = value;
   }
 
-  double springCoeff = 50;
+  private double springCoeff = 50;
   public double SpringCoeff
   {
     get => springCoeff;
     set => springCoeff = value;
   }
 
-  double liquidFrictionCoeff = 1;
+  private double liquidFrictionCoeff = 1;
   public double LiquidFrictionCoeff
   {
     get => liquidFrictionCoeff;
     set => liquidFrictionCoeff = value;
   }
 
-  double liquidFrictionQuadraticCoeff = 10;
+  private double liquidFrictionQuadraticCoeff = 10;
   public double LiquidFrictionQuadraticCoeff
   {
     get => liquidFrictionQuadraticCoeff;
     set => liquidFrictionQuadraticCoeff = value;
   }
 
-  const double G = 9.81;
+  private const double G = 9.81;
 
-  DataRect from;
-  readonly Viewport2D viewport;
-  readonly Point initialMousePos;
-  readonly CoordinateTransform initialTransform;
+  private DataRect from;
+  private readonly Viewport2D viewport;
+  private readonly Point initialMousePos;
+  private readonly CoordinateTransform initialTransform;
 
   public PhysicalRectAnimation(Viewport2D viewport, Point initialMousePos)
   {
@@ -75,7 +78,7 @@ internal sealed class PhysicalRectAnimation
     position = from.Location.ToVector();
   }
 
-  double prevTime;
+  private double prevTime;
 
   private bool isFinished;
   public bool IsFinished => isFinished;
@@ -89,16 +92,16 @@ internal sealed class PhysicalRectAnimation
 
   public DataRect GetValue(TimeSpan timeSpan)
   {
-    double time = timeSpan.TotalSeconds;
+    var time = timeSpan.TotalSeconds;
 
-    double dtime = time - prevTime;
+    var dtime = time - prevTime;
 
     acceleration = GetForces() / mass;
 
     velocity += acceleration * dtime;
     var shift = velocity * dtime;
 
-    double viewportSize = Math.Sqrt(d: from.Width * from.Width + from.Height * from.Height);
+    var viewportSize = Math.Sqrt(d: from.Width * from.Width + from.Height * from.Height);
     if (!(shift.Length < viewportSize * 0.002 && time > 0.5))
     {
       position += shift;
@@ -121,29 +124,29 @@ internal sealed class PhysicalRectAnimation
     Vector springForce = new();
     if (useMouse)
     {
-      Point mousePos = GetMousePosition();
+      var mousePos = GetMousePosition();
       if (!mousePos.IsFinite()) { }
 
-      Point p1 = initialMousePos.ScreenToData(transform: initialTransform);
-      Point p2 = mousePos.ScreenToData(transform: viewport.Transform);
+      var p1 = initialMousePos.ScreenToData(transform: initialTransform);
+      var p2 = mousePos.ScreenToData(transform: viewport.Transform);
 
       var transform = viewport.Transform;
 
-      Vector diff = p2 - p1;
+      var diff = p2 - p1;
       springForce = -diff * springCoeff;
     }
 
-    Vector frictionForce = GetFrictionForce(springForce: springForce);
+    var frictionForce = GetFrictionForce(springForce: springForce);
 
-    Vector liquidFriction = -liquidFrictionCoeff * velocity - liquidFrictionQuadraticCoeff * velocity * velocity.Length;
+    var liquidFriction = -liquidFrictionCoeff * velocity - liquidFrictionQuadraticCoeff * velocity * velocity.Length;
 
-    Vector result = springForce + frictionForce + liquidFriction;
+    var result = springForce + frictionForce + liquidFriction;
     return result;
   }
 
   private Vector GetFrictionForce(Vector springForce)
   {
-    double maxCalmFriction = frictionCalmCoeff * mass * G;
+    var maxCalmFriction = frictionCalmCoeff * mass * G;
     if (maxCalmFriction >= springForce.Length)
     {
       return -springForce;

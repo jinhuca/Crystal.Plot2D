@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Crystal.Plot2D.Axes.TimeSpan;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents a ticks provider for ticks of <see cref="T:System.DateTime"/> type.
 /// </summary>
-public class DateTimeTicksProvider : TimeTicksProviderBase<DateTime>
+public sealed class DateTimeTicksProvider : TimeTicksProviderBase<System.DateTime>
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="DateTimeTicksProvider"/> class.
@@ -31,7 +32,7 @@ public class DateTimeTicksProvider : TimeTicksProviderBase<DateTime>
     MinorProviders.Add(key: DifferenceIn.Millisecond, value: new MinorDateTimeProvider(owner: new MillisecondDateTimeProvider()));
   }
 
-  protected sealed override TimeSpan GetDifference(DateTime start, DateTime end)
+  protected sealed override System.TimeSpan GetDifference(System.DateTime start, System.DateTime end)
   {
     return end - start;
   }
@@ -39,9 +40,9 @@ public class DateTimeTicksProvider : TimeTicksProviderBase<DateTime>
 
 internal static class DateTimeArrayExtensions
 {
-  internal static int GetIndex(this DateTime[] array, DateTime value)
+  internal static int GetIndex(this System.DateTime[] array, System.DateTime value)
   {
-    for (int i = 0; i < array.Length - 1; i++)
+    for (var i = 0; i < array.Length - 1; i++)
     {
       if (array[i] <= value && value < array[i + 1])
       {
@@ -53,11 +54,11 @@ internal static class DateTimeArrayExtensions
   }
 }
 
-internal sealed class MinorDateTimeProvider : MinorTimeProviderBase<DateTime>
+internal sealed class MinorDateTimeProvider : MinorTimeProviderBase<System.DateTime>
 {
-  public MinorDateTimeProvider(ITicksProvider<DateTime> owner) : base(provider: owner) { }
+  public MinorDateTimeProvider(ITicksProvider<System.DateTime> owner) : base(provider: owner) { }
 
-  protected override bool IsInside(DateTime value, Range<DateTime> range)
+  protected override bool IsInside(System.DateTime value, Range<System.DateTime> range)
   {
     return range.Min < value && value < range.Max;
   }
@@ -75,33 +76,33 @@ internal sealed class YearDateTimeProvider : DatePeriodTicksProvider
     return new[] { 20, 10, 5, 4, 2, 1 };
   }
 
-  protected override int GetSpecificValue(DateTime start, DateTime dt)
+  protected override int GetSpecificValue(System.DateTime start, System.DateTime dt)
   {
     return dt.Year;
   }
 
-  protected override DateTime GetStart(DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
   {
-    int year = start.Year;
-    int newYear = (year / step) * step;
+    var year = start.Year;
+    var newYear = year / step * step;
     if (newYear == 0)
     {
       newYear = 1;
     }
 
-    return new DateTime(year: newYear, month: 1, day: 1);
+    return new System.DateTime(year: newYear, month: 1, day: 1);
   }
 
-  protected override bool IsMinDate(DateTime dt)
+  protected override bool IsMinDate(System.DateTime dt)
   {
-    return dt.Year == DateTime.MinValue.Year;
+    return dt.Year == System.DateTime.MinValue.Year;
   }
 
-  protected override DateTime AddStep(DateTime dt, int step)
+  protected override System.DateTime AddStep(System.DateTime dt, int step)
   {
-    if (dt.Year + step > DateTime.MaxValue.Year)
+    if (dt.Year + step > System.DateTime.MaxValue.Year)
     {
-      return DateTime.MaxValue;
+      return System.DateTime.MaxValue;
     }
 
     return dt.AddYears(value: step);
@@ -120,22 +121,22 @@ internal sealed class MonthDateTimeProvider : DatePeriodTicksProvider
     return new[] { 12, 6, 4, 3, 2, 1 };
   }
 
-  protected override int GetSpecificValue(DateTime start, DateTime dt)
+  protected override int GetSpecificValue(System.DateTime start, System.DateTime dt)
   {
     return dt.Month + (dt.Year - start.Year) * 12;
   }
 
-  protected override DateTime GetStart(DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
   {
-    return new DateTime(year: start.Year, month: 1, day: 1);
+    return new System.DateTime(year: start.Year, month: 1, day: 1);
   }
 
-  protected override bool IsMinDate(DateTime dt)
+  protected override bool IsMinDate(System.DateTime dt)
   {
-    return dt.Month == DateTime.MinValue.Month;
+    return dt.Month == System.DateTime.MinValue.Month;
   }
 
-  protected override DateTime AddStep(DateTime dt, int step)
+  protected override System.DateTime AddStep(System.DateTime dt, int step)
   {
     return dt.AddMonths(months: step);
   }
@@ -153,22 +154,22 @@ internal sealed class DayDateTimeProvider : DatePeriodTicksProvider
     return new[] { 30, 15, 10, 5, 2, 1 };
   }
 
-  protected override int GetSpecificValue(DateTime start, DateTime dt)
+  protected override int GetSpecificValue(System.DateTime start, System.DateTime dt)
   {
     return (dt - start).Days;
   }
 
-  protected override DateTime GetStart(DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
   {
     return start.Date;
   }
 
-  protected override bool IsMinDate(DateTime dt)
+  protected override bool IsMinDate(System.DateTime dt)
   {
     return dt.Day == 1;
   }
 
-  protected override DateTime AddStep(DateTime dt, int step)
+  protected override System.DateTime AddStep(System.DateTime dt, int step)
   {
     return dt.AddDays(value: step);
   }
@@ -186,22 +187,22 @@ internal sealed class HourDateTimeProvider : DatePeriodTicksProvider
     return new[] { 24, 12, 6, 4, 3, 2, 1 };
   }
 
-  protected override int GetSpecificValue(DateTime start, DateTime dt)
+  protected override int GetSpecificValue(System.DateTime start, System.DateTime dt)
   {
     return (int)(dt - start).TotalHours;
   }
 
-  protected override DateTime GetStart(DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
   {
     return start.Date;
   }
 
-  protected override bool IsMinDate(DateTime dt)
+  protected override bool IsMinDate(System.DateTime dt)
   {
     return false;
   }
 
-  protected override DateTime AddStep(DateTime dt, int step)
+  protected override System.DateTime AddStep(System.DateTime dt, int step)
   {
     return dt.AddHours(value: step);
   }
@@ -219,22 +220,22 @@ internal sealed class MinuteDateTimeProvider : DatePeriodTicksProvider
     return new[] { 60, 30, 20, 15, 10, 5, 4, 3, 2 };
   }
 
-  protected override int GetSpecificValue(DateTime start, DateTime dt)
+  protected override int GetSpecificValue(System.DateTime start, System.DateTime dt)
   {
     return (int)(dt - start).TotalMinutes;
   }
 
-  protected override DateTime GetStart(DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
   {
     return start.Date.AddHours(value: start.Hour);
   }
 
-  protected override bool IsMinDate(DateTime dt)
+  protected override bool IsMinDate(System.DateTime dt)
   {
     return false;
   }
 
-  protected override DateTime AddStep(DateTime dt, int step)
+  protected override System.DateTime AddStep(System.DateTime dt, int step)
   {
     return dt.AddMinutes(value: step);
   }
@@ -252,22 +253,22 @@ internal sealed class SecondDateTimeProvider : DatePeriodTicksProvider
     return new[] { 60, 30, 20, 15, 10, 5, 4, 3, 2 };
   }
 
-  protected override int GetSpecificValue(DateTime start, DateTime dt)
+  protected override int GetSpecificValue(System.DateTime start, System.DateTime dt)
   {
     return (int)(dt - start).TotalSeconds;
   }
 
-  protected override DateTime GetStart(DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
   {
     return start.Date.AddHours(value: start.Hour).AddMinutes(value: start.Minute);
   }
 
-  protected override bool IsMinDate(DateTime dt)
+  protected override bool IsMinDate(System.DateTime dt)
   {
     return false;
   }
 
-  protected override DateTime AddStep(DateTime dt, int step)
+  protected override System.DateTime AddStep(System.DateTime dt, int step)
   {
     return dt.AddSeconds(value: step);
   }
@@ -285,22 +286,22 @@ internal sealed class MillisecondDateTimeProvider : DatePeriodTicksProvider
     return new[] { 100, 50, 40, 25, 20, 10, 5, 4, 2 };
   }
 
-  protected override int GetSpecificValue(DateTime start, DateTime dt)
+  protected override int GetSpecificValue(System.DateTime start, System.DateTime dt)
   {
     return (int)(dt - start).TotalMilliseconds;
   }
 
-  protected override DateTime GetStart(DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
   {
     return start.Date.AddHours(value: start.Hour).AddMinutes(value: start.Minute).AddSeconds(value: start.Second);
   }
 
-  protected override bool IsMinDate(DateTime dt)
+  protected override bool IsMinDate(System.DateTime dt)
   {
     return false;
   }
 
-  protected override DateTime AddStep(DateTime dt, int step)
+  protected override System.DateTime AddStep(System.DateTime dt, int step)
   {
     return dt.AddMilliseconds(value: step);
   }

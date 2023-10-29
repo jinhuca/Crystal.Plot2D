@@ -1,48 +1,48 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.TimeSpan;
 
-internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<TimeSpan>
+internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<System.TimeSpan>
 {
-  protected sealed override bool Continue(TimeSpan current, TimeSpan end)
+  protected sealed override bool Continue(System.TimeSpan current, System.TimeSpan end)
   {
     return current < end;
   }
 
-  protected sealed override TimeSpan RoundDown(TimeSpan start, TimeSpan end)
+  protected sealed override System.TimeSpan RoundDown(System.TimeSpan start, System.TimeSpan end)
   {
     return RoundDown(timeSpan: start, diff: Difference);
   }
 
-  protected sealed override TimeSpan RoundUp(TimeSpan start, TimeSpan end)
+  protected sealed override System.TimeSpan RoundUp(System.TimeSpan start, System.TimeSpan end)
   {
     return RoundUp(dateTime: end, diff: Difference);
   }
 
-  protected static TimeSpan Shift(TimeSpan span, DifferenceIn diff)
+  protected static System.TimeSpan Shift(System.TimeSpan span, DifferenceIn diff)
   {
-    TimeSpan res = span;
+    var res = span;
 
-    TimeSpan shift = new();
+    System.TimeSpan shift = new();
     switch (diff)
     {
       case DifferenceIn.Year:
       case DifferenceIn.Month:
       case DifferenceIn.Day:
-        shift = TimeSpan.FromDays(value: 1);
+        shift = System.TimeSpan.FromDays(value: 1);
         break;
       case DifferenceIn.Hour:
-        shift = TimeSpan.FromHours(value: 1);
+        shift = System.TimeSpan.FromHours(value: 1);
         break;
       case DifferenceIn.Minute:
-        shift = TimeSpan.FromMinutes(value: 1);
+        shift = System.TimeSpan.FromMinutes(value: 1);
         break;
       case DifferenceIn.Second:
-        shift = TimeSpan.FromSeconds(value: 1);
+        shift = System.TimeSpan.FromSeconds(value: 1);
         break;
       case DifferenceIn.Millisecond:
-        shift = TimeSpan.FromMilliseconds(value: 1);
+        shift = System.TimeSpan.FromMilliseconds(value: 1);
         break;
     }
 
@@ -50,9 +50,9 @@ internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<Time
     return res;
   }
 
-  protected sealed override TimeSpan RoundDown(TimeSpan timeSpan, DifferenceIn diff)
+  protected sealed override System.TimeSpan RoundDown(System.TimeSpan timeSpan, DifferenceIn diff)
   {
-    TimeSpan res = timeSpan;
+    var res = timeSpan;
 
     if (timeSpan.Ticks < 0)
     {
@@ -65,22 +65,22 @@ internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<Time
         case DifferenceIn.Year:
         case DifferenceIn.Month:
         case DifferenceIn.Day:
-          res = TimeSpan.FromDays(value: timeSpan.Days);
+          res = System.TimeSpan.FromDays(value: timeSpan.Days);
           break;
         case DifferenceIn.Hour:
-          res = TimeSpan.FromDays(value: timeSpan.Days).
-            Add(ts: TimeSpan.FromHours(value: timeSpan.Hours));
+          res = System.TimeSpan.FromDays(value: timeSpan.Days).
+            Add(ts: System.TimeSpan.FromHours(value: timeSpan.Hours));
           break;
         case DifferenceIn.Minute:
-          res = TimeSpan.FromDays(value: timeSpan.Days).
-            Add(ts: TimeSpan.FromHours(value: timeSpan.Hours)).
-            Add(ts: TimeSpan.FromMinutes(value: timeSpan.Minutes));
+          res = System.TimeSpan.FromDays(value: timeSpan.Days).
+            Add(ts: System.TimeSpan.FromHours(value: timeSpan.Hours)).
+            Add(ts: System.TimeSpan.FromMinutes(value: timeSpan.Minutes));
           break;
         case DifferenceIn.Second:
-          res = TimeSpan.FromDays(value: timeSpan.Days).
-            Add(ts: TimeSpan.FromHours(value: timeSpan.Hours)).
-            Add(ts: TimeSpan.FromMinutes(value: timeSpan.Minutes)).
-            Add(ts: TimeSpan.FromSeconds(value: timeSpan.Seconds));
+          res = System.TimeSpan.FromDays(value: timeSpan.Days).
+            Add(ts: System.TimeSpan.FromHours(value: timeSpan.Hours)).
+            Add(ts: System.TimeSpan.FromMinutes(value: timeSpan.Minutes)).
+            Add(ts: System.TimeSpan.FromSeconds(value: timeSpan.Seconds));
           break;
         case DifferenceIn.Millisecond:
           res = timeSpan;
@@ -91,18 +91,18 @@ internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<Time
     return res;
   }
 
-  protected sealed override TimeSpan RoundUp(TimeSpan dateTime, DifferenceIn diff)
+  protected sealed override System.TimeSpan RoundUp(System.TimeSpan dateTime, DifferenceIn diff)
   {
-    TimeSpan res = RoundDown(timeSpan: dateTime, diff: diff);
+    var res = RoundDown(timeSpan: dateTime, diff: diff);
     res = Shift(span: res, diff: diff);
 
     return res;
   }
 
-  protected override List<TimeSpan> Trim(List<TimeSpan> ticks, Range<TimeSpan> range)
+  protected override List<System.TimeSpan> Trim(List<System.TimeSpan> ticks, Range<System.TimeSpan> range)
   {
-    int startIndex = 0;
-    for (int i = 0; i < ticks.Count - 1; i++)
+    var startIndex = 0;
+    for (var i = 0; i < ticks.Count - 1; i++)
     {
       if (ticks[index: i] <= range.Min && range.Min <= ticks[index: i + 1])
       {
@@ -111,8 +111,8 @@ internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<Time
       }
     }
 
-    int endIndex = ticks.Count - 1;
-    for (int i = ticks.Count - 1; i >= 1; i--)
+    var endIndex = ticks.Count - 1;
+    for (var i = ticks.Count - 1; i >= 1; i--)
     {
       if (ticks[index: i] >= range.Max && range.Max > ticks[index: i - 1])
       {
@@ -121,8 +121,8 @@ internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<Time
       }
     }
 
-    List<TimeSpan> res = new(capacity: endIndex - startIndex + 1);
-    for (int i = startIndex; i <= endIndex; i++)
+    List<System.TimeSpan> res = new(capacity: endIndex - startIndex + 1);
+    for (var i = startIndex; i <= endIndex; i++)
     {
       res.Add(item: ticks[index: i]);
     }
@@ -130,7 +130,7 @@ internal abstract class TimeSpanTicksProviderBase : TimePeriodTicksProvider<Time
     return res;
   }
 
-  protected sealed override bool IsMinDate(TimeSpan dt)
+  protected sealed override bool IsMinDate(System.TimeSpan dt)
   {
     return false;
   }
@@ -148,26 +148,26 @@ internal sealed class DayTimeSpanProvider : TimeSpanTicksProviderBase
     return new int[] { 20, 10, 5, 2, 1 };
   }
 
-  protected override int GetSpecificValue(TimeSpan start, TimeSpan dt)
+  protected override int GetSpecificValue(System.TimeSpan start, System.TimeSpan dt)
   {
     return (dt - start).Days;
   }
 
-  protected override TimeSpan GetStart(TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
   {
-    double days = start.TotalDays;
-    double newDays = ((int)(days / step)) * step;
+    var days = start.TotalDays;
+    double newDays = (int)(days / step) * step;
     if (newDays > days)
     {
       newDays -= step;
     }
-    return TimeSpan.FromDays(value: newDays);
+    return System.TimeSpan.FromDays(value: newDays);
     //return TimeSpan.FromDays(start.Days);
   }
 
-  protected override TimeSpan AddStep(TimeSpan dt, int step)
+  protected override System.TimeSpan AddStep(System.TimeSpan dt, int step)
   {
-    return dt.Add(ts: TimeSpan.FromDays(value: step));
+    return dt.Add(ts: System.TimeSpan.FromDays(value: step));
   }
 }
 
@@ -183,26 +183,26 @@ internal sealed class HourTimeSpanProvider : TimeSpanTicksProviderBase
     return new int[] { 24, 12, 6, 4, 3, 2, 1 };
   }
 
-  protected override int GetSpecificValue(TimeSpan start, TimeSpan dt)
+  protected override int GetSpecificValue(System.TimeSpan start, System.TimeSpan dt)
   {
     return (int)(dt - start).TotalHours;
   }
 
-  protected override TimeSpan GetStart(TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
   {
-    double hours = start.TotalHours;
-    double newHours = ((int)(hours / step)) * step;
+    var hours = start.TotalHours;
+    double newHours = (int)(hours / step) * step;
     if (newHours > hours)
     {
       newHours -= step;
     }
-    return TimeSpan.FromHours(value: newHours);
+    return System.TimeSpan.FromHours(value: newHours);
     //return TimeSpan.FromDays(start.Days);
   }
 
-  protected override TimeSpan AddStep(TimeSpan dt, int step)
+  protected override System.TimeSpan AddStep(System.TimeSpan dt, int step)
   {
-    return dt.Add(ts: TimeSpan.FromHours(value: step));
+    return dt.Add(ts: System.TimeSpan.FromHours(value: step));
   }
 }
 
@@ -218,26 +218,26 @@ internal sealed class MinuteTimeSpanProvider : TimeSpanTicksProviderBase
     return new int[] { 60, 30, 20, 15, 10, 5, 4, 3, 2 };
   }
 
-  protected override int GetSpecificValue(TimeSpan start, TimeSpan dt)
+  protected override int GetSpecificValue(System.TimeSpan start, System.TimeSpan dt)
   {
     return (int)(dt - start).TotalMinutes;
   }
 
-  protected override TimeSpan GetStart(TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
   {
-    double minutes = start.TotalMinutes;
-    double newMinutes = ((int)(minutes / step)) * step;
+    var minutes = start.TotalMinutes;
+    double newMinutes = (int)(minutes / step) * step;
     if (newMinutes > minutes)
     {
       newMinutes -= step;
     }
 
-    return TimeSpan.FromMinutes(value: newMinutes);
+    return System.TimeSpan.FromMinutes(value: newMinutes);
   }
 
-  protected override TimeSpan AddStep(TimeSpan dt, int step)
+  protected override System.TimeSpan AddStep(System.TimeSpan dt, int step)
   {
-    return dt.Add(ts: TimeSpan.FromMinutes(value: step));
+    return dt.Add(ts: System.TimeSpan.FromMinutes(value: step));
   }
 }
 
@@ -253,27 +253,27 @@ internal sealed class SecondTimeSpanProvider : TimeSpanTicksProviderBase
     return new int[] { 60, 30, 20, 15, 10, 5, 4, 3, 2 };
   }
 
-  protected override int GetSpecificValue(TimeSpan start, TimeSpan dt)
+  protected override int GetSpecificValue(System.TimeSpan start, System.TimeSpan dt)
   {
     return (int)(dt - start).TotalSeconds;
   }
 
-  protected override TimeSpan GetStart(TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
   {
-    double seconds = start.TotalSeconds;
-    double newSeconds = ((int)(seconds / step)) * step;
+    var seconds = start.TotalSeconds;
+    double newSeconds = (int)(seconds / step) * step;
     if (newSeconds > seconds)
     {
       newSeconds -= step;
     }
 
-    return TimeSpan.FromSeconds(value: newSeconds);
+    return System.TimeSpan.FromSeconds(value: newSeconds);
     //return new TimeSpan(start.Days, start.Hours, start.Minutes, 0);
   }
 
-  protected override TimeSpan AddStep(TimeSpan dt, int step)
+  protected override System.TimeSpan AddStep(System.TimeSpan dt, int step)
   {
-    return dt.Add(ts: TimeSpan.FromSeconds(value: step));
+    return dt.Add(ts: System.TimeSpan.FromSeconds(value: step));
   }
 }
 
@@ -289,26 +289,26 @@ internal sealed class MillisecondTimeSpanProvider : TimeSpanTicksProviderBase
     return new int[] { 100, 50, 40, 25, 20, 10, 5, 4, 2 };
   }
 
-  protected override int GetSpecificValue(TimeSpan start, TimeSpan dt)
+  protected override int GetSpecificValue(System.TimeSpan start, System.TimeSpan dt)
   {
     return (int)(dt - start).TotalMilliseconds;
   }
 
-  protected override TimeSpan GetStart(TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
   {
-    double millis = start.TotalMilliseconds;
-    double newMillis = ((int)(millis / step)) * step;
+    var millis = start.TotalMilliseconds;
+    double newMillis = (int)(millis / step) * step;
     if (newMillis > millis)
     {
       newMillis -= step;
     }
 
-    return TimeSpan.FromMilliseconds(value: newMillis);
+    return System.TimeSpan.FromMilliseconds(value: newMillis);
     //return start;
   }
 
-  protected override TimeSpan AddStep(TimeSpan dt, int step)
+  protected override System.TimeSpan AddStep(System.TimeSpan dt, int step)
   {
-    return dt.Add(ts: TimeSpan.FromMilliseconds(value: step));
+    return dt.Add(ts: System.TimeSpan.FromMilliseconds(value: step));
   }
 }

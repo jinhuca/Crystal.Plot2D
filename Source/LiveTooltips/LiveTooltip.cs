@@ -2,11 +2,12 @@
 using System.Windows.Controls;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.LiveTooltips;
 
-public class LiveToolTip : ContentControl
+public sealed class LiveToolTip : ContentControl
 {
-  static int nameCounter;
+  private static int _nameCounter;
+
   static LiveToolTip()
   {
     var thisType = typeof(LiveToolTip);
@@ -22,8 +23,8 @@ public class LiveToolTip : ContentControl
 
   public LiveToolTip()
   {
-    Name = "Plotter2D_LiveToolTip_" + nameCounter;
-    nameCounter++;
+    Name = "Plotter2D_LiveToolTip_" + _nameCounter;
+    _nameCounter++;
   }
 
   #region Properties

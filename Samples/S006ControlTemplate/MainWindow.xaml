@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:d3="http://schemas.crystal.com/Plot2D"
         xmlns:local="clr-namespace:S005ControlTemplate"
+        xmlns:numeric="clr-namespace:Crystal.Plot2D.Axes.Numeric;assembly=Crystal.Plot2D"
         mc:Ignorable="d"
         Title="MainWindow" Height="650" Width="900">
   <Grid>
@@ -75,8 +76,8 @@
       <d3:Footer Content="Footer Panel, derived from ContentControl"
                  FontSize="20" FontFamily="Impact" Foreground="DarkBlue"/>
 
-      <d3:HorizontalAxis Placement="Top" Foreground="Blue" Background="LightGreen" FontSize="16" FontFamily="Impact"/>
-      <d3:VerticalAxis Placement="Right" Foreground="Red" Background="LightSteelBlue"/>
+      <numeric:HorizontalAxis Placement="Top" Foreground="Blue" Background="LightGreen" FontSize="16" FontFamily="Impact"/>
+      <numeric:VerticalAxis Placement="Right" Foreground="Red" Background="LightSteelBlue"/>
 
       <d3:HorizontalAxisTitle Placement="Top" Content="Horizontal Axis Title - Top Panel"/>
       <d3:HorizontalAxisTitle Placement="Bottom" Content="Horizontal Axis Title - Bottom Panel"/>

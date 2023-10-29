@@ -1,9 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Contains data for custom generation of tick's label.
@@ -36,7 +37,7 @@ public sealed class LabelTickInfo<T>
 /// </summary>
 /// <typeparam name="T">Type of ticks, which labels are generated for</typeparam>
 /// <remarks>
-/// Order of apllication of custom label string properties:
+/// Order of application of custom label string properties:
 /// If CustomFormatter is not null, it is called first.
 /// Then, if it was null or if it returned null string,
 /// virtual GetStringCore method is called. It can be overloaded in subclasses. GetStringCore should not return null.

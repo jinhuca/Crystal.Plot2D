@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// Represents a kind of 'spring' that makes width of one plotter's LeftPanel equal to other plotter's LeftPanel.
@@ -36,7 +36,7 @@ public class WidthSpring : FrameworkElement, IPlotterElement
 
   private static void OnSourcePanelReplaced(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    WidthSpring owner = (WidthSpring)d;
+    var owner = (WidthSpring)d;
     owner.OnSourcePanelReplaced(prevPanel: (Panel)e.OldValue, currPanel: (Panel)e.NewValue);
   }
 
@@ -53,7 +53,7 @@ public class WidthSpring : FrameworkElement, IPlotterElement
     UpdateWidth();
   }
 
-  void OnPanel_SizeChanged(object sender, SizeChangedEventArgs e)
+  private void OnPanel_SizeChanged(object sender, SizeChangedEventArgs e)
   {
     UpdateWidth();
   }

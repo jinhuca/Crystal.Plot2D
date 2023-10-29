@@ -1,9 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 public sealed class AdditionalLinesDisplay : IsolineGraphBase
 {
@@ -21,7 +22,7 @@ public sealed class AdditionalLinesDisplay : IsolineGraphBase
     base.OnPlotterDetaching();
   }
 
-  void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
+  private void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     InvalidateVisual();
   }
@@ -52,26 +53,26 @@ public sealed class AdditionalLinesDisplay : IsolineGraphBase
     var dataSource = DataSource;
     var localMinMax = dataSource.GetMinMax();
     var globalMinMax = dataSource.Range.Value;
-    double lengthsRatio = globalMinMax.GetLength() / localMinMax.GetLength();
+    var lengthsRatio = globalMinMax.GetLength() / localMinMax.GetLength();
 
     if (lengthsRatio > 16)
     {
-      double log = Math.Round(a: Math.Log(a: lengthsRatio, newBase: 2));
-      double number = 2 * Math.Pow(x: 2, y: log);
-      double delta = globalMinMax.GetLength() / number;
+      var log = Math.Round(a: Math.Log(a: lengthsRatio, newBase: 2));
+      var number = 2 * Math.Pow(x: 2, y: log);
+      var delta = globalMinMax.GetLength() / number;
 
-      double start = Math.Floor(d: (localMinMax.Min - globalMinMax.Min) / delta) * delta + globalMinMax.Min;
-      double end = localMinMax.Max;
+      var start = Math.Floor(d: (localMinMax.Min - globalMinMax.Min) / delta) * delta + globalMinMax.Min;
+      var end = localMinMax.Max;
 
       var transform = Plotter2D.Transform;
       var strokeThickness = StrokeThickness;
 
-      double x = start;
+      var x = start;
       while (x < end)
       {
         var collection = IsolineBuilder.BuildIsoline(level: x);
 
-        foreach (LevelLine line in collection)
+        foreach (var line in collection)
         {
           StreamGeometry lineGeometry = new();
           using (var context = lineGeometry.Open())

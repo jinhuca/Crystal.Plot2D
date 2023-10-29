@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.DataSources;
+namespace Crystal.Plot2D.DataSources.MultiDimensional;
 
 public class NonUniformDataSource2D<T> : INonUniformDataSource2D<T> where T : struct
 {
-  public NonUniformDataSource2D(double[] xcoordinates, double[] ycoordinates, T[,] data)
+  public NonUniformDataSource2D(double[] xCoordinates, double[] yCoordinates, T[,] data)
   {
-    XCoordinates = xcoordinates ?? throw new ArgumentNullException(paramName: nameof(xcoordinates));
-    YCoordinates = ycoordinates ?? throw new ArgumentNullException(paramName: nameof(ycoordinates));
+    XCoordinates = xCoordinates ?? throw new ArgumentNullException(paramName: nameof(xCoordinates));
+    YCoordinates = yCoordinates ?? throw new ArgumentNullException(paramName: nameof(yCoordinates));
     BuildGrid();
     Data = data ?? throw new ArgumentNullException(paramName: nameof(data));
   }
@@ -16,9 +17,9 @@ public class NonUniformDataSource2D<T> : INonUniformDataSource2D<T> where T : st
   private void BuildGrid()
   {
     Grid = new Point[Width, Height];
-    for (int iy = 0; iy < Height; iy++)
+    for (var iy = 0; iy < Height; iy++)
     {
-      for (int ix = 0; ix < Width; ix++)
+      for (var ix = 0; ix < Width; ix++)
       {
         Grid[ix, iy] = new Point(x: XCoordinates[ix], y: YCoordinates[iy]);
       }
@@ -39,7 +40,7 @@ public class NonUniformDataSource2D<T> : INonUniformDataSource2D<T> where T : st
 
   #region IDataSource2D<T> Members
 
-  public Charts.Range<T>? Range => throw new NotImplementedException();
+  public Range<T>? Range => throw new NotImplementedException();
   public T? MissingValue => throw new NotImplementedException();
 
   #endregion

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 /// Represents a restriction in which actual visible rect's proportions depends on 
@@ -48,14 +49,14 @@ public sealed class PhysicalProportionsConstraint : ViewportConstraint
   /// <returns>New changed visible rectangle.</returns>
   public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
   {
-    Rect output = viewport.Output;
+    var output = viewport.Output;
     if (output.Height == 0 || output.Width == 0)
     {
       return proposedDataRect;
     }
 
-    double newRatio = proposedDataRect.Width * output.Height /
-        (proposedDataRect.Height * output.Width);
+    var newRatio = proposedDataRect.Width * output.Height /
+                   (proposedDataRect.Height * output.Width);
 
     // Don't modify rect if new ratio differs only slightly 
     if (Math.Abs(value: newRatio - proportionRatio) < 1e-3)
@@ -65,7 +66,7 @@ public sealed class PhysicalProportionsConstraint : ViewportConstraint
 
     // Try to keep visible rect's square constant
     double width = proposedDataRect.Width, height = proposedDataRect.Height;
-    double square = proposedDataRect.Width * proposedDataRect.Height;
+    var square = proposedDataRect.Width * proposedDataRect.Height;
     if (square > 0)
     {
       width = Math.Sqrt(d: proportionRatio * output.Width * square / output.Height);
@@ -73,13 +74,13 @@ public sealed class PhysicalProportionsConstraint : ViewportConstraint
     }
 
     // Finally ensure we have correct aspect ratio
-    double delta = (proportionRatio * height * output.Width - width * output.Height) /
-        (output.Height + proportionRatio * output.Width);
+    var delta = (proportionRatio * height * output.Width - width * output.Height) /
+                (output.Height + proportionRatio * output.Width);
     width += delta;
     height -= delta;
 
-    double x0 = (proposedDataRect.XMax + proposedDataRect.XMin) / 2;
-    double y0 = (proposedDataRect.YMax + proposedDataRect.YMin) / 2;
+    var x0 = (proposedDataRect.XMax + proposedDataRect.XMin) / 2;
+    var y0 = (proposedDataRect.YMax + proposedDataRect.YMin) / 2;
 
     return new DataRect
     {

@@ -1,12 +1,12 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
 /// Class that Renders circle around each point of graph.
 /// </summary>
-public class CirclePointMarker : ShapePointMarker
+public sealed class CirclePointMarker : ShapePointMarker
 {
   public override void Render(DrawingContext dc, Point screenPoint)
   {

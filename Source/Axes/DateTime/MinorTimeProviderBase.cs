@@ -1,9 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
 {
@@ -23,13 +24,14 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
     this.provider = provider;
   }
 
-  private T[] majorTicks = new T[] { };
+  private T[] majorTicks = { };
   internal void SetTicks(T[] ticks)
   {
     majorTicks = ticks;
   }
 
-  private readonly double ticksSize = 0.5;
+  private const double ticksSize = 0.5;
+
   public ITicksInfo<T> GetTicks(Range<T> range, int ticksCount)
   {
     if (majorTicks.Length == 0)
@@ -59,9 +61,9 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
     var newTicks = new List<T>(capacity: ticks.Ticks.Length);
     var newSizes = new List<double>(capacity: ticks.TickSizes.Length);
 
-    for (int i = 0; i < ticks.Ticks.Length; i++)
+    for (var i = 0; i < ticks.Ticks.Length; i++)
     {
-      T tick = ticks.Ticks[i];
+      var tick = ticks.Ticks[i];
       if (IsInside(value: tick, range: range))
       {
         newTicks.Add(item: tick);
@@ -86,7 +88,7 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
       ticksCount /= majorTicks.Length;
     }
 
-    int minorTicksCount = provider.DecreaseTickCount(ticksCount: ticksCount);
+    var minorTicksCount = provider.DecreaseTickCount(ticksCount: ticksCount);
 
     if (majorTicks.Length > 0)
     {
@@ -103,7 +105,7 @@ internal abstract class MinorTimeProviderBase<T> : ITicksProvider<T>
       ticksCount /= majorTicks.Length;
     }
 
-    int minorTicksCount = provider.IncreaseTickCount(ticksCount: ticksCount);
+    var minorTicksCount = provider.IncreaseTickCount(ticksCount: ticksCount);
 
     if (majorTicks.Length > 0)
     {

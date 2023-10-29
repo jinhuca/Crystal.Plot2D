@@ -1,6 +1,8 @@
 ﻿using System;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 /// Represents a base class for all constraints that are being applied to viewport's visible rect.

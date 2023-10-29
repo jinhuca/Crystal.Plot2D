@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D.Charts;
+﻿namespace Crystal.Plot2D.Axes;
 
 public enum DifferenceIn
 {

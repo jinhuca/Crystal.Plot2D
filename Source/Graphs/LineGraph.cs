@@ -1,30 +1,36 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.DataSources;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.DataSources;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Descriptions;
+using Crystal.Plot2D.LegendItems;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Graphs;
 
 /// <summary>
 /// Class represents a series of points connected by one polyline.
 /// </summary>
-public class LineGraph : PointsGraphBase
+public sealed class LineGraph : PointsGraphBase
 {
   static LineGraph()
   {
-    Type thisType = typeof(LineGraph);
+    var thisType = typeof(LineGraph);
     Legend.DescriptionProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: "LineGraph"));
     Legend.LegendItemsBuilderProperty.OverrideMetadata(forType: thisType, typeMetadata: new FrameworkPropertyMetadata(defaultValue: new LegendItemsBuilder(DefaultLegendItemsBuilder)));
   }
 
   private static IEnumerable<FrameworkElement> DefaultLegendItemsBuilder(IPlotterElement plotterElement)
   {
-    LineGraph lineGraph = (LineGraph)plotterElement;
+    var lineGraph = (LineGraph)plotterElement;
     Line line = new() { X1 = 0, Y1 = 10, X2 = 20, Y2 = 0, Stretch = Stretch.Fill, DataContext = lineGraph };
     line.SetBinding(dp: Shape.StrokeProperty, path: "LinePen.Brush");
     line.SetBinding(dp: Shape.StrokeThicknessProperty, path: "LinePen.Thickness");
@@ -120,7 +126,7 @@ public class LineGraph : PointsGraphBase
           LinePen = pen;
         }
 
-        RaisePropertyChanged(propertyNamme: nameof(StrokeThickness));
+        RaisePropertyChanged(propertyName: nameof(StrokeThickness));
       }
     }
   }
@@ -176,7 +182,7 @@ public class LineGraph : PointsGraphBase
     base.OnVisibleChanged(newRect: newRect, oldRect: oldRect);
   }
 
-  protected FakePointList FilteredPoints { get; set; }
+  private FakePointList FilteredPoints { get; set; }
 
   protected override void UpdateCore()
   {
@@ -184,19 +190,19 @@ public class LineGraph : PointsGraphBase
     {
       return;
     }
-    Rect output = Viewport.Output;
+    var output = Viewport.Output;
     var transform = GetTransform();
 
     if (FilteredPoints == null || !(transform.DataTransform is IdentityTransform))
     {
-      IEnumerable<Point> points = GetPoints();
+      var points = GetPoints();
 
       var bounds = BoundsHelper.GetViewportBounds(dataPoints: points, transform: transform.DataTransform);
       Viewport2D.SetContentBounds(obj: this, value: bounds);
 
       // getting new value of transform as it could change after calculating and setting content bounds.
       transform = GetTransform();
-      List<Point> transformedPoints = transform.DataToScreenAsList(dataPoints: points);
+      var transformedPoints = transform.DataToScreenAsList(dataPoints: points);
 
       // Analysis and filtering of unnecessary points
       FilteredPoints = new FakePointList(points: FilterPoints(points: transformedPoints), left: output.Left, right: output.Right);
@@ -221,9 +227,9 @@ public class LineGraph : PointsGraphBase
     }
     else
     {
-      double left = output.Left;
-      double right = output.Right;
-      double shift = Offset.X;
+      var left = output.Left;
+      var right = output.Right;
+      var shift = Offset.X;
       left -= shift;
       right -= shift;
       FilteredPoints.SetXBorders(left: left, right: right);
@@ -239,16 +245,16 @@ public class LineGraph : PointsGraphBase
     }
     if (FilteredPoints.HasPoints)
     {
-      using (StreamGeometryContext context = _streamGeometry.Open())
+      using (var context = _streamGeometry.Open())
       {
         context.BeginFigure(startPoint: FilteredPoints.StartPoint, isFilled: false, isClosed: false);
         context.PolyLineTo(points: FilteredPoints, isStroked: true, isSmoothJoin: _smoothLinesJoin);
       }
 
       Brush brush = null;
-      Pen pen = LinePen;
+      var pen = LinePen;
 
-      bool isTranslated = IsTranslated;
+      var isTranslated = IsTranslated;
       if (isTranslated)
       {
         dc.PushTransform(transform: new TranslateTransform(offsetX: Offset.X, offsetY: Offset.Y));

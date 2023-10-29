@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Integer;
 
 public class CollectionLabelProvider<T> : LabelProviderBase<int>
 {
@@ -17,10 +17,7 @@ public class CollectionLabelProvider<T> : LabelProviderBase<int>
     get => collection;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: "value");
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       if (collection != value)
       {
@@ -80,18 +77,18 @@ public class CollectionLabelProvider<T> : LabelProviderBase<int>
   {
     var ticks = ticksInfo.Ticks;
 
-    UIElement[] res = new UIElement[ticks.Length];
+    var res = new UIElement[ticks.Length];
 
     var tickInfo = new LabelTickInfo<int> { Info = ticksInfo.Info };
 
-    for (int i = 0; i < res.Length; i++)
+    for (var i = 0; i < res.Length; i++)
     {
-      int tick = ticks[i];
+      var tick = ticks[i];
       tickInfo.Tick = tick;
 
       if (0 <= tick && tick < collection.Count)
       {
-        string text = collection[index: tick].ToString();
+        var text = collection[index: tick].ToString();
         res[i] = new TextBlock
         {
           Text = text,

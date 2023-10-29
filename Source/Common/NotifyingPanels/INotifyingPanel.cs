@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.NotifyingPanels;
 
 internal interface INotifyingPanel
 {

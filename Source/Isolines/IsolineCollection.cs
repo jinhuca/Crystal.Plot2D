@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using System.Windows;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 /// <summary>
 ///   LevelLine contains all data for one isoline line - its start point, other points and value in field.
@@ -16,6 +17,7 @@ public sealed class LevelLine
   ///   The value01.
   /// </value>
   public double Value01 { get; set; }
+
   /// <summary>
   /// Gets or sets the real value of line - without scaling to [0..1] segment.
   /// </summary>
@@ -44,7 +46,7 @@ public sealed class LevelLine
     get
     {
       yield return StartPoint;
-      for (int i = 0; i < otherPoints.Count; i++)
+      for (var i = 0; i < otherPoints.Count; i++)
       {
         yield return otherPoints[index: i];
       }
@@ -63,7 +65,7 @@ public sealed class LevelLine
     }
 
     yield return new Range<Point>(min: StartPoint, max: otherPoints[index: 0]);
-    for (int i = 1; i < otherPoints.Count; i++)
+    for (var i = 1; i < otherPoints.Count; i++)
     {
       yield return new Range<Point>(min: otherPoints[index: i - 1], max: otherPoints[index: i]);
     }
@@ -80,11 +82,13 @@ public sealed class IsolineTextLabel
   /// </summary>
   /// <value>The rotation.</value>
   public double Rotation { get; internal set; }
+
   /// <summary>
   /// Gets or sets the text of isoline label.
   /// </summary>
   /// <value>The text.</value>
   public double Value { get; internal set; }
+
   /// <summary>
   /// Gets or sets the position of isoline text label.
   /// </summary>

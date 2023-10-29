@@ -1,8 +1,9 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Diagnostics;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Contains information about one minor tick - its value (relative size) and its tick.
@@ -53,7 +54,7 @@ public interface ITicksInfo<out T>
   object Info { get; }
 }
 
-internal class TicksInfo<T> : ITicksInfo<T>
+internal sealed class TicksInfo<T> : ITicksInfo<T>
 {
   private T[] ticks = { };
   /// <summary>
@@ -113,6 +114,7 @@ public interface ITicksProvider<T>
   /// <param name="ticksCount">The ticks count.</param>
   /// <returns></returns>
   ITicksInfo<T> GetTicks(Range<T> range, int ticksCount);
+
   /// <summary>
   /// Decreases the tick count.
   /// Returned value should be later passed as ticksCount parameter to GetTicks method.
@@ -120,6 +122,7 @@ public interface ITicksProvider<T>
   /// <param name="ticksCount">The ticks count.</param>
   /// <returns>Decreased ticks count.</returns>
   int DecreaseTickCount(int ticksCount);
+  
   /// <summary>
   /// Increases the tick count.
   /// Returned value should be later passed as ticksCount parameter to GetTicks method.
@@ -140,7 +143,7 @@ public interface ITicksProvider<T>
   ITicksProvider<T> MajorProvider { get; }
 
   /// <summary>
-  /// Occurs when properties of ticks provider changeds.
+  /// Occurs when properties of ticks provider changed.
   /// Notifies axis to rebuild its view.
   /// </summary>
   event EventHandler Changed;

@@ -1,10 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using Crystal.Plot2D.DataSources;
-using System;
+﻿using System;
 using System.Windows;
-using DataSource = Crystal.Plot2D.DataSources.IDataSource2D<double>;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common.Palettes;
+using DataSource = Crystal.Plot2D.DataSources.MultiDimensional.IDataSource2D<double>;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 public abstract class IsolineGraphBase : ContentGraph
 {
@@ -20,8 +20,8 @@ public abstract class IsolineGraphBase : ContentGraph
   private readonly IsolineBuilder isolineBuilder = new();
   protected IsolineBuilder IsolineBuilder => isolineBuilder;
 
-  private readonly IsolineTextAnnotater annotater = new();
-  protected IsolineTextAnnotater Annotater => annotater;
+  private readonly IsolineTextAnnotator annotator = new();
+  protected IsolineTextAnnotator Annotator => annotator;
 
   #region Properties
 
@@ -99,11 +99,11 @@ public abstract class IsolineGraphBase : ContentGraph
 
   private static void OnDataSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    IsolineGraphBase owner = (IsolineGraphBase)d;
+    var owner = (IsolineGraphBase)d;
     owner.OnDataSourceChanged(prevDataSource: (DataSource)e.OldValue, currDataSource: (DataSource)e.NewValue);
   }
 
-  protected virtual void OnDataSourceChanged(IDataSource2D<double> prevDataSource, IDataSource2D<double> currDataSource)
+  protected virtual void OnDataSourceChanged(DataSource prevDataSource, DataSource currDataSource)
   {
     if (prevDataSource != null)
     {
@@ -225,11 +225,11 @@ public abstract class IsolineGraphBase : ContentGraph
 
   private static void OnMissingValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    IsolineGraphBase owner = (IsolineGraphBase)d;
+    var owner = (IsolineGraphBase)d;
     owner.UpdateDataSource();
   }
 
-  #endregion // end of MissineValue property
+  #endregion // end of MissingValue property
 
   public void SetDataSource(DataSource dataSource, double missingValue)
   {
@@ -279,7 +279,7 @@ public abstract class IsolineGraphBase : ContentGraph
 
   private static void OnLineThicknessChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    IsolineGraphBase graph = (IsolineGraphBase)d;
+    var graph = (IsolineGraphBase)d;
     graph.OnLineThicknessChanged();
   }
 

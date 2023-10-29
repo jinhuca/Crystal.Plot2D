@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary.DataSearch;
 
 internal sealed class GenericSearcher1d<TCollection, TMember> where TMember : IComparable<TMember>
 {
@@ -26,7 +26,7 @@ internal sealed class GenericSearcher1d<TCollection, TMember> where TMember : IC
       return SearchResult1d.Empty;
     }
 
-    int lastIndex = Collection.Count - 1;
+    var lastIndex = Collection.Count - 1;
 
     if (_x.CompareTo(other: Selector(arg: Collection[index: 0])) < 0)
     {
@@ -37,12 +37,12 @@ internal sealed class GenericSearcher1d<TCollection, TMember> where TMember : IC
       return SearchResult1d.Empty;
     }
 
-    int startIndex = !_result.IsEmpty ? Math.Min(val1: _result.Index, val2: lastIndex) : 0;
+    var startIndex = !_result.IsEmpty ? Math.Min(val1: _result.Index, val2: lastIndex) : 0;
 
     // searching ascending
     if (Selector(arg: Collection[index: startIndex]).CompareTo(other: _x) < 0)
     {
-      for (int i = startIndex + 1; i <= lastIndex; i++)
+      for (var i = startIndex + 1; i <= lastIndex; i++)
       {
         if (Selector(arg: Collection[index: i]).CompareTo(other: _x) >= 0)
         {
@@ -52,7 +52,7 @@ internal sealed class GenericSearcher1d<TCollection, TMember> where TMember : IC
     }
     else // searching descending
     {
-      for (int i = startIndex - 1; i >= 0; i--)
+      for (var i = startIndex - 1; i >= 0; i--)
       {
         if (Selector(arg: Collection[index: i]).CompareTo(other: _x) <= 0)
         {
@@ -71,8 +71,8 @@ internal sealed class GenericSearcher1d<TCollection, TMember> where TMember : IC
       return SearchResult1d.Empty;
     }
 
-    SearchResult1d result = SearchResult1d.Empty;
-    for (int i = 0; i < Collection.Count; i++)
+    var result = SearchResult1d.Empty;
+    for (var i = 0; i < Collection.Count; i++)
     {
       if (Selector(arg: Collection[index: i]).CompareTo(other: x) >= 0)
       {
@@ -91,8 +91,8 @@ internal sealed class GenericSearcher1d<TCollection, TMember> where TMember : IC
       return SearchResult1d.Empty;
     }
 
-    SearchResult1d result = SearchResult1d.Empty;
-    for (int i = Collection.Count - 1; i >= 0; i--)
+    var result = SearchResult1d.Empty;
+    for (var i = Collection.Count - 1; i >= 0; i--)
     {
       if (Selector(arg: Collection[index: i]).CompareTo(other: x) <= 0)
       {

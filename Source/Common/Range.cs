@@ -1,10 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
+using Crystal.Plot2D.Common.Auxiliary;
 using static System.Math;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Common;
 
 /// <summary>
 /// An ordered pair of values, representing a segment.
@@ -28,8 +28,8 @@ public struct Range<T> : IEquatable<Range<T>>
 #if DEBUG
     if (min is IComparable)
     {
-      IComparable c1 = (IComparable)min;
-      IComparable c2 = (IComparable)max;
+      var c1 = (IComparable)min;
+      var c2 = (IComparable)max;
 
       DebugVerify.Is(condition: c1.CompareTo(obj: c2) <= 0);
     }
@@ -47,18 +47,18 @@ public struct Range<T> : IEquatable<Range<T>>
   public T Max { get; }
 
 #pragma warning disable CS0414 // The field 'Range<T>.floatEps' is assigned but its value is never used
-  static float floatEps = (float)1e-10;
+  private static float floatEps = (float)1e-10;
 #pragma warning restore CS0414 // The field 'Range<T>.floatEps' is assigned but its value is never used
 #pragma warning disable CS0414 // The field 'Range<T>.doubleEps' is assigned but its value is never used
-  static double doubleEps = 1e-10;
+  private static double doubleEps = 1e-10;
 #pragma warning restore CS0414 // The field 'Range<T>.doubleEps' is assigned but its value is never used
 
 
-  public static bool operator ==(Range<T> first, Range<T> second) => (first.Min.Equals(obj: second.Min) && first.Max.Equals(obj: second.Max) || first.IsEmpty && second.IsEmpty);
+  public static bool operator ==(Range<T> first, Range<T> second) => first.Min.Equals(obj: second.Min) && first.Max.Equals(obj: second.Max) || first.IsEmpty && second.IsEmpty;
   public static bool operator !=(Range<T> first, Range<T> second) => !(first == second);
   public static bool EqualEps(Range<double> first, Range<double> second, double eps)
   {
-    double delta = Math.Min(val1: first.GetLength(), val2: second.GetLength());
+    var delta = Math.Min(val1: first.GetLength(), val2: second.GetLength());
     return Abs(value: first.Min - second.Min) < eps * delta && Abs(value: first.Max - second.Max) < eps * delta;
   }
 
@@ -73,8 +73,8 @@ public struct Range<T> : IEquatable<Range<T>>
   {
     if (obj is Range<T>)
     {
-      Range<T> other = (Range<T>)obj;
-      return (Min.Equals(obj: other.Min) && Max.Equals(obj: other.Max) || IsEmpty && other.IsEmpty);
+      var other = (Range<T>)obj;
+      return Min.Equals(obj: other.Min) && Max.Equals(obj: other.Max) || IsEmpty && other.IsEmpty;
     }
     else
     {

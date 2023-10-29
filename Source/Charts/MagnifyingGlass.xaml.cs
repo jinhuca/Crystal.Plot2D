@@ -2,8 +2,9 @@
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Charts;
 
 public partial class MagnifyingGlass : Grid, IPlotterElement
 {
@@ -18,7 +19,7 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
 
   private void MagnifyingGlass_Loaded(object sender, RoutedEventArgs e)
   {
-    UpdateViewbox();
+    UpdateViewBox();
   }
 
   protected override void OnPreviewMouseWheel(MouseWheelEventArgs e)
@@ -29,22 +30,23 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
 
   private void plotter_PreviewMouseMove(object sender, MouseEventArgs e)
   {
-    VisualBrush b = (VisualBrush)magnifierEllipse.Fill;
-    Point pos = e.GetPosition(relativeTo: plotter.ParallelCanvas);
+    var b_ = (VisualBrush)magnifierEllipse.Fill;
+    var pos_ = e.GetPosition(relativeTo: plotter.ParallelCanvas);
 
-    Point plotterPos = e.GetPosition(relativeTo: plotter);
+    var plotterPos_ = e.GetPosition(relativeTo: plotter);
 
-    Rect viewBox = b.Viewbox;
-    double xoffset = viewBox.Width / 2.0;
-    double yoffset = viewBox.Height / 2.0;
-    viewBox.X = plotterPos.X - xoffset;
-    viewBox.Y = plotterPos.Y - yoffset;
-    b.Viewbox = viewBox;
-    Canvas.SetLeft(element: this, length: pos.X - Width / 2);
-    Canvas.SetTop(element: this, length: pos.Y - Height / 2);
+    var viewBox_ = b_.Viewbox;
+    var xOffset_ = viewBox_.Width / 2.0;
+    var yOffset_ = viewBox_.Height / 2.0;
+    viewBox_.X = plotterPos_.X - xOffset_;
+    viewBox_.Y = plotterPos_.Y - yOffset_;
+    b_.Viewbox = viewBox_;
+    Canvas.SetLeft(element: this, length: pos_.X - Width / 2);
+    Canvas.SetTop(element: this, length: pos_.Y - Height / 2);
   }
 
   private double magnification = 2.0;
+
   public double Magnification
   {
     get => magnification;
@@ -52,22 +54,22 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
     {
       magnification = value;
 
-      UpdateViewbox();
+      UpdateViewBox();
     }
   }
 
-  private void UpdateViewbox()
+  private void UpdateViewBox()
   {
     if (!IsLoaded)
     {
       return;
     }
 
-    VisualBrush b = (VisualBrush)magnifierEllipse.Fill;
-    Rect viewBox = b.Viewbox;
-    viewBox.Width = Width / magnification;
-    viewBox.Height = Height / magnification;
-    b.Viewbox = viewBox;
+    var b_ = (VisualBrush)magnifierEllipse.Fill;
+    var viewBox_ = b_.Viewbox;
+    viewBox_.Width = Width / magnification;
+    viewBox_.Height = Height / magnification;
+    b_.Viewbox = viewBox_;
   }
 
   protected override void OnPropertyChanged(DependencyPropertyChangedEventArgs e)
@@ -76,13 +78,13 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
 
     if (e.Property == WidthProperty || e.Property == HeightProperty)
     {
-      UpdateViewbox();
+      UpdateViewBox();
     }
   }
 
   #region IPlotterElement Members
 
-  PlotterBase plotter;
+  private PlotterBase plotter;
   public void OnPlotterAttached(PlotterBase plotter)
   {
     this.plotter = plotter;
@@ -91,17 +93,17 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
     plotter.MouseEnter += plotter_MouseEnter;
     plotter.MouseLeave += plotter_MouseLeave;
 
-    VisualBrush b = (VisualBrush)magnifierEllipse.Fill;
-    b.Visual = plotter.MainGrid;
+    var b_ = (VisualBrush)magnifierEllipse.Fill;
+    b_.Visual = plotter.MainGrid;
   }
 
-  void plotter_MouseLeave(object sender, MouseEventArgs e)
+  private void plotter_MouseLeave(object sender, MouseEventArgs e)
   {
     whiteEllipse.Visibility = Visibility.Collapsed;
     magnifierEllipse.Visibility = Visibility.Collapsed;
   }
 
-  void plotter_MouseEnter(object sender, MouseEventArgs e)
+  private void plotter_MouseEnter(object sender, MouseEventArgs e)
   {
     whiteEllipse.Visibility = Visibility.Visible;
     magnifierEllipse.Visibility = Visibility.Visible;
@@ -116,8 +118,8 @@ public partial class MagnifyingGlass : Grid, IPlotterElement
     plotter.ParallelCanvas.Children.Remove(element: this);
     this.plotter = null;
 
-    VisualBrush b = (VisualBrush)magnifierEllipse.Fill;
-    b.Visual = null;
+    var b_ = (VisualBrush)magnifierEllipse.Fill;
+    b_.Visual = null;
   }
 
   public PlotterBase Plotter => plotter;

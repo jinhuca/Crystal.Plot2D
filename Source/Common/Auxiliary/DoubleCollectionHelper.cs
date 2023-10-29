@@ -1,6 +1,6 @@
 ﻿using System.Windows.Media;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class DoubleCollectionHelper
 {

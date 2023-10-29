@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class ListExtensions
 {
@@ -13,31 +13,19 @@ internal static class ListExtensions
   /// <returns></returns>
   internal static T GetLast<T>(this List<T> list)
   {
-    if (list == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(list));
-    }
-    if (list.Count == 0)
-    {
-      throw new InvalidOperationException(message: Strings.Exceptions.CannotGetLastElement);
-    }
-    return list[index: list.Count - 1];
+    ArgumentNullException.ThrowIfNull(list);
+    return list.Count == 0
+      ? throw new InvalidOperationException(message: Strings.Exceptions.CannotGetLastElement)
+      : list[index: list.Count - 1];
   }
 
   internal static void ForEach<T>(this IEnumerable<T> source, Action<T> action)
   {
-    if (action == null)
+    ArgumentNullException.ThrowIfNull(action);
+    ArgumentNullException.ThrowIfNull(source);
+    foreach (var item_ in source)
     {
-      throw new ArgumentNullException(paramName: nameof(action));
-    }
-    if (source == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(source));
-    }
-
-    foreach (var item in source)
-    {
-      action(obj: item);
+      action(obj: item_);
     }
   }
 }

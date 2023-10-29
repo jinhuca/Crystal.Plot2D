@@ -1,6 +1,7 @@
 ﻿using System;
+using Crystal.Plot2D.ViewportConstraints;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 public class VerticalDateTimeAxis : DateTimeAxis
 {

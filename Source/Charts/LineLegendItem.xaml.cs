@@ -1,9 +1,11 @@
-﻿namespace Crystal.Plot2D;
+﻿using Crystal.Plot2D.Descriptions;
+
+namespace Crystal.Plot2D.Charts;
 
 /// <summary>
 /// Interaction logic for LineLegendItem.xaml
 /// </summary>
-public partial class LineLegendItem : LegendItem
+public sealed partial class LineLegendItem : LegendItem
 {
   public LineLegendItem()
   {

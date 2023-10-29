@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 /// Represents a viewport constraint which modifies x coordinates of result visible rect to be adjacent to the right border of initial rect and have a fixed given width.
@@ -55,7 +57,7 @@ public class FollowWidthConstraint : ViewportConstraint
       return proposedDataRect;
     }
 
-    double followWidth = proposedDataRect.Width;
+    var followWidth = proposedDataRect.Width;
     if (!viewport.UnitedContentBounds.IsEmpty)
     {
       followWidth = Math.Min(val1: width, val2: viewport.UnitedContentBounds.Width);

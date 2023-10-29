@@ -1,8 +1,10 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Common.Auxiliary.DataSearch;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.GenericLocational;
 
 public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider<TAxis> where TAxis : IComparable<TAxis>
 {
@@ -12,10 +14,7 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
     get => collection;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: "value");
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       Changed.Raise(sender: this);
       collection = value;
@@ -28,10 +27,7 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
     get => axisMapping;
     set
     {
-      if (value == null)
-      {
-        throw new ArgumentNullException(paramName: "value");
-      }
+      ArgumentNullException.ThrowIfNull(value);
 
       Changed.Raise(sender: this);
       axisMapping = value;
@@ -60,9 +56,9 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
 
   #region ITicksProvider<T> Members
 
-  SearchResult1d minResult = SearchResult1d.Empty;
-  SearchResult1d maxResult = SearchResult1d.Empty;
-  GenericSearcher1d<TCollection, TAxis> searcher;
+  private SearchResult1d minResult = SearchResult1d.Empty;
+  private SearchResult1d maxResult = SearchResult1d.Empty;
+  private GenericSearcher1d<TCollection, TAxis> searcher;
   /// <summary>
   /// Generates ticks for given range and preferred ticks count.
   /// </summary>
@@ -81,13 +77,13 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
 
     if (!(minResult.IsEmpty && maxResult.IsEmpty))
     {
-      int startIndex = !minResult.IsEmpty ? minResult.Index : 0;
-      int endIndex = !maxResult.IsEmpty ? maxResult.Index : collection.Count - 1;
+      var startIndex = !minResult.IsEmpty ? minResult.Index : 0;
+      var endIndex = !maxResult.IsEmpty ? maxResult.Index : collection.Count - 1;
 
-      int count = endIndex - startIndex + 1;
+      var count = endIndex - startIndex + 1;
 
-      TAxis[] ticks = new TAxis[count];
-      for (int i = startIndex; i <= endIndex; i++)
+      var ticks = new TAxis[count];
+      for (var i = startIndex; i <= endIndex; i++)
       {
         ticks[i - startIndex] = axisMapping(arg: collection[index: i]);
       }

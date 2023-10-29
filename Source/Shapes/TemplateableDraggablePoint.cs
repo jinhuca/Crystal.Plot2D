@@ -2,11 +2,12 @@
 using System.Windows.Controls;
 using System.Windows.Data;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Shapes;
 
 public class TemplateableDraggablePoint : DraggablePoint
 {
   private readonly Control marker = new() { Focusable = false };
+
   public TemplateableDraggablePoint()
   {
     marker.SetBinding(dp: TemplateProperty, binding: new Binding { Source = this, Path = new PropertyPath(path: "MarkerTemplate") });

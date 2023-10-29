@@ -1,18 +1,18 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
 /// Class that renders triangular marker at every point of graph.
 /// </summary>
-public class TrianglePointMarker : ShapePointMarker
+public sealed class TrianglePointMarker : ShapePointMarker
 {
   public override void Render(DrawingContext dc, Point screenPoint)
   {
-    Point pt0 = Point.Add(point: screenPoint, vector: new Vector(x: -Diameter / 2, y: -Diameter / 2));
-    Point pt1 = Point.Add(point: screenPoint, vector: new Vector(x: 0, y: Diameter / 2));
-    Point pt2 = Point.Add(point: screenPoint, vector: new Vector(x: Diameter / 2, y: -Diameter / 2));
+    var pt0 = Point.Add(point: screenPoint, vector: new Vector(x: -Diameter / 2, y: -Diameter / 2));
+    var pt1 = Point.Add(point: screenPoint, vector: new Vector(x: 0, y: Diameter / 2));
+    var pt2 = Point.Add(point: screenPoint, vector: new Vector(x: Diameter / 2, y: -Diameter / 2));
 
     var streamGeom = new StreamGeometry();
     using var context = streamGeom.Open();

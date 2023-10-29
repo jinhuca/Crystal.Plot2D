@@ -2,17 +2,17 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Converters;
 
 public class GenericValueConverter<T> : IValueConverter
 {
   public GenericValueConverter() { }
 
-  public Func<T, object> Conversion { get; set; }
+  public Func<T, object> Conversion { get; }
 
   public GenericValueConverter(Func<T, object> conversion)
   {
-    Conversion = conversion ?? throw new ArgumentNullException(paramName: "conversion");
+    Conversion = conversion ?? throw new ArgumentNullException(paramName: nameof(conversion));
   }
 
   #region IValueConverter Members
@@ -21,8 +21,8 @@ public class GenericValueConverter<T> : IValueConverter
   {
     if (value is T)
     {
-      T genericValue = (T)value;
-      object result = ConvertCore(value: genericValue, targetType: targetType, parameter: parameter, culture: culture);
+      var genericValue = (T)value;
+      var result = ConvertCore(value: genericValue, targetType: targetType, parameter: parameter, culture: culture);
       return result;
     }
     return null;

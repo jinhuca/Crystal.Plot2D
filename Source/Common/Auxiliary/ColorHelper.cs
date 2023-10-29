@@ -1,36 +1,36 @@
 ﻿using System;
 using System.Windows.Media;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class ColorHelper
 {
   private static readonly Random random = new();
 
   /// <summary>
-  ///   Creates color from HSB color space with random hue and saturation and brighness equal to 1.
+  ///   Creates color from HSB color space with random hue and saturation and brightness equal to 1.
   /// </summary>
   /// <returns></returns>
   public static Color CreateColorWithRandomHue()
   {
-    double hue = random.NextDouble() * 360;
-    HsbColor hsbColor = new(hue: hue, saturation: 1, brightness: 1);
-    return hsbColor.ToArgbColor();
+    var hue_ = random.NextDouble() * 360;
+    HsbColor hsbColor_ = new(hue: hue_, saturation: 1, brightness: 1);
+    return hsbColor_.ToArgbColor();
   }
 
   public static Color[] CreateRandomColors(int colorNum)
   {
-    double startHue = random.NextDouble() * 360;
+    var startHue_ = random.NextDouble() * 360;
 
-    Color[] res = new Color[colorNum];
-    double hueStep = 360.0 / colorNum;
-    for (int i = 0; i < res.Length; i++)
+    var res_ = new Color[colorNum];
+    var hueStep_ = 360.0 / colorNum;
+    for (var i_ = 0; i_ < res_.Length; i_++)
     {
-      double hue = startHue + i * hueStep;
-      res[i] = new HsbColor(hue: hue, saturation: 1, brightness: 1).ToArgbColor();
+      var hue_ = startHue_ + i_ * hueStep_;
+      res_[i_] = new HsbColor(hue: hue_, saturation: 1, brightness: 1).ToArgbColor();
     }
 
-    return res;
+    return res_;
   }
 
   /// <summary>
@@ -39,10 +39,10 @@ public static class ColorHelper
   /// <returns></returns>
   public static Color CreateRandomHsbColor()
   {
-    double h = random.NextDouble() * 360;
-    double s = random.NextDouble() * 0.5 + 0.5;
-    double b = random.NextDouble() * 0.25 + 0.75;
-    return new HsbColor(hue: h, saturation: s, brightness: b).ToArgbColor();
+    var h_ = random.NextDouble() * 360;
+    var s_ = random.NextDouble() * 0.5 + 0.5;
+    var b_ = random.NextDouble() * 0.25 + 0.75;
+    return new HsbColor(hue: h_, saturation: s_, brightness: b_).ToArgbColor();
   }
 
   /// <summary>
@@ -57,8 +57,8 @@ public static class ColorHelper
   /// <returns></returns>
   public static Color CreateColorWithRandomHue(double saturation, double brightness)
   {
-    double h = random.NextDouble() * 360;
-    return new HsbColor(hue: h, saturation: saturation, brightness: brightness).ToArgbColor();
+    var h_ = random.NextDouble() * 360;
+    return new HsbColor(hue: h_, saturation: saturation, brightness: brightness).ToArgbColor();
   }
 
   /// <summary>
@@ -73,8 +73,8 @@ public static class ColorHelper
   /// <returns></returns>
   public static Brush CreateBrushWithRandomHue(double saturation, double brightness)
   {
-    Color color = CreateColorWithRandomHue(saturation: saturation, brightness: brightness);
-    return new SolidColorBrush(color: color);
+    var color_ = CreateColorWithRandomHue(saturation: saturation, brightness: brightness);
+    return new SolidColorBrush(color: color_);
   }
 
   /// <summary>

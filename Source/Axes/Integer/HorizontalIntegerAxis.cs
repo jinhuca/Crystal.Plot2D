@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Integer;
 
 public class HorizontalIntegerAxis : IntegerAxis
 {

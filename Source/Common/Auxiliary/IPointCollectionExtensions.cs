@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class IPointCollectionExtensions
 {
@@ -12,7 +12,7 @@ public static class IPointCollectionExtensions
 
   public static IEnumerable<Point> Skip(this IList<Point> points, int skipCount)
   {
-    for (int i = skipCount; i < points.Count; i++)
+    for (var i = skipCount; i < points.Count; i++)
     {
       yield return points[index: i];
     }

@@ -2,11 +2,12 @@
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Charts;
 
 [ContentProperty(name: "Content")]
-public class ViewportUIContainer : DependencyObject, IPlotterElement
+public sealed class ViewportUIContainer : DependencyObject, IPlotterElement
 {
   public ViewportUIContainer() { }
 
@@ -25,50 +26,50 @@ public class ViewportUIContainer : DependencyObject, IPlotterElement
 
   #region IPlotterElement Members
 
-  void IPlotterElement.OnPlotterAttached(PlotterBase _plotter)
+  void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
   {
-    plotter = _plotter;
+    this.plotter = plotter;
     if (Content == null)
     {
       return;
     }
 
-    var plotterPanel = GetPlotterPanel(obj: Content);
+    var plotterPanel_ = GetPlotterPanel(obj: Content);
     //Plotter.SetPlotter(Content, _plotter);
 
-    if (plotterPanel == PlotterPanel.MainCanvas)
+    if (plotterPanel_ == PlotterPanel.MainCanvas)
     {
       // if all four Canvas.{Left|Right|Top|Bottom} properties are not set,
       // and as we are adding by default content to MainCanvas, 
       // and since I like more when buttons are by default in right down corner - 
       // set bottom and right to 10.
-      var left = Canvas.GetLeft(element: content);
-      var top = Canvas.GetTop(element: content);
-      var bottom = Canvas.GetBottom(element: content);
-      var right = Canvas.GetRight(element: content);
+      var left_ = Canvas.GetLeft(element: content);
+      var top_ = Canvas.GetTop(element: content);
+      var bottom_ = Canvas.GetBottom(element: content);
+      var right_ = Canvas.GetRight(element: content);
 
-      if (left.IsNaN() && right.IsNaN() && bottom.IsNaN() && top.IsNaN())
+      if (left_.IsNaN() && right_.IsNaN() && bottom_.IsNaN() && top_.IsNaN())
       {
         Canvas.SetBottom(element: content, length: 10.0);
         Canvas.SetRight(element: content, length: 10.0);
       }
-      _plotter.MainCanvas.Children.Add(element: Content);
+      plotter.MainCanvas.Children.Add(element: Content);
     }
   }
 
-  void IPlotterElement.OnPlotterDetaching(PlotterBase _plotter)
+  void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
   {
     if (Content != null)
     {
-      var plotterPanel = GetPlotterPanel(obj: Content);
+      var plotterPanel_ = GetPlotterPanel(obj: Content);
       //Plotter.SetPlotter(Content, null);
-      if (plotterPanel == PlotterPanel.MainCanvas)
+      if (plotterPanel_ == PlotterPanel.MainCanvas)
       {
-        _plotter.MainCanvas.Children.Remove(element: Content);
+        plotter.MainCanvas.Children.Remove(element: Content);
       }
     }
 
-    plotter = null;
+    this.plotter = null;
   }
 
   private PlotterBase plotter;

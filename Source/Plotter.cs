@@ -4,6 +4,12 @@ using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Axes.Numeric;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.LegendItems;
+using Crystal.Plot2D.Navigation;
 
 namespace Crystal.Plot2D;
 
@@ -15,7 +21,7 @@ public class Plotter : PlotterBase
   private GeneralAxis _horizontalAxis = new HorizontalAxis();       // Default to axis of numeric??
   private GeneralAxis _verticalAxis = new VerticalAxis();
 
-  public Legend Legend { get; set; } = new();
+  public Legend Legend { get; } = new();
 
   public ItemsPanelTemplate LegendPanelTemplate
   {
@@ -79,6 +85,7 @@ public class Plotter : PlotterBase
   #region Default charts
 
   private readonly MouseNavigation _mouseNavigation;
+
   /// <summary>
   /// Gets the default mouse navigation of Plotter.
   /// </summary>
@@ -87,6 +94,7 @@ public class Plotter : PlotterBase
   public MouseNavigation MouseNavigation => _mouseNavigation;
 
   private readonly KeyboardNavigation _keyboardNavigation;
+
   /// <summary>
   /// Gets the default keyboard navigation of Plotter.
   /// </summary>
@@ -132,7 +140,7 @@ public class Plotter : PlotterBase
 
   private void OnHorizontalAxisTicksChanged(object sender, EventArgs e)
   {
-    GeneralAxis axis = (GeneralAxis)sender;
+    var axis = (GeneralAxis)sender;
     UpdateHorizontalTicks(axis: axis);
   }
 
@@ -156,7 +164,7 @@ public class Plotter : PlotterBase
 
   private void OnVerticalAxisTicksChanged(object sender, EventArgs e)
   {
-    GeneralAxis axis = (GeneralAxis)sender;
+    var axis = (GeneralAxis)sender;
     UpdateVerticalTicks(axis: axis);
   }
 
@@ -178,8 +186,8 @@ public class Plotter : PlotterBase
     AxisGrid.EndTicksUpdate();
   }
 
-  bool _keepOldAxis;
-  bool _updatingAxis;
+  private bool _keepOldAxis;
+  private bool _updatingAxis;
 
   /// <summary>
   /// Gets or sets the main vertical axis of Plotter.
@@ -369,29 +377,29 @@ public class Plotter : PlotterBase
   {
     if (d is GeneralAxis axis)
     {
-      var value = (bool)e.NewValue;
-      var oldKeepOldAxis = _keepOldAxis;
-      var horizontal = axis.Placement == AxisPlacement.Bottom || axis.Placement == AxisPlacement.Top;
+      var value_ = (bool)e.NewValue;
+      var oldKeepOldAxis_ = _keepOldAxis;
+      var horizontal_ = axis.Placement == AxisPlacement.Bottom || axis.Placement == AxisPlacement.Top;
       _keepOldAxis = true;
 
-      if (value && horizontal)
+      if (value_ && horizontal_)
       {
         MainHorizontalAxis = axis;
       }
-      else if (value && !horizontal)
+      else if (value_ && !horizontal_)
       {
         MainVerticalAxis = axis;
       }
-      else if (!value && horizontal)
+      else if (!value_ && horizontal_)
       {
         MainHorizontalAxis = null;
       }
-      else if (!value && !horizontal)
+      else if (!value_ && !horizontal_)
       {
         MainVerticalAxis = null;
       }
 
-      _keepOldAxis = oldKeepOldAxis;
+      _keepOldAxis = oldKeepOldAxis_;
     }
   }
 

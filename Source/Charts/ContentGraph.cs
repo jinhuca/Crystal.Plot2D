@@ -13,8 +13,8 @@ public abstract class ContentGraph : ContentControl, IPlotterElement
 
   private static void OnPlotterChanged(object sender, PlotterChangedEventArgs e)
   {
-    ContentGraph owner = (ContentGraph)sender;
-    owner.OnPlotterChanged(e: e);
+    var owner_ = (ContentGraph)sender;
+    owner_.OnPlotterChanged(e: e);
   }
 
   private void OnPlotterChanged(PlotterChangedEventArgs e)

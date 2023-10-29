@@ -1,7 +1,7 @@
-﻿using Crystal.Plot2D.Common;
-using System.Windows;
+﻿using System.Windows;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 /// <summary>
 ///   Represents quadrangle; its points are arranged by round in one direction.

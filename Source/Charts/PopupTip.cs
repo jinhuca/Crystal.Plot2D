@@ -2,9 +2,9 @@
 using System.Threading;
 using System.Windows.Controls.Primitives;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Charts;
 
-public class PopupTip : Popup
+public sealed class PopupTip : Popup
 {
   private readonly TimeSpan showDurationInterval = new(hours: 0, minutes: 0, seconds: 10);
   private Timer timer;
@@ -46,9 +46,9 @@ public class PopupTip : Popup
   {
     Dispatcher.BeginInvoke(method: new Action(() =>
     {
-      bool show = !IsOpen;
-      IsOpen = show;
-      if (show)
+      var show_ = !IsOpen;
+      IsOpen = show_;
+      if (show_)
       {
         HideDelayed(delay: showDurationInterval);
       }

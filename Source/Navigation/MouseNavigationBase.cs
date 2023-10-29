@@ -1,9 +1,10 @@
 ﻿using System.Windows.Input;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
-// todo проверить, как происходит работа когда мышь не над плоттером, а над его ребенком
-// todo если все ОК, то перевести все маус навигейшн контролы на этот класс как базовый
+// todo: check how work happens when the mouse is not over the plotter, but over its child
+// todo: if everything is OK, then transfer all mouse navigation controls to this class as a base one
 public abstract class MouseNavigationBase : NavigationBase
 {
   protected override void OnPlotterAttached(PlotterBase plotter)

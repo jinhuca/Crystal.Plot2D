@@ -1,9 +1,9 @@
-﻿using Crystal.Plot2D;
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using System.Security;
 using System.Windows;
 using System.Windows.Markup;
+using Crystal.Plot2D.Properties;
 
 // General Information about an assembly is controlled through the following set of attributes. 
 // Change these attribute values to modify the information associated with an assembly.
@@ -12,14 +12,23 @@ using System.Windows.Markup;
 [assembly: ThemeInfo(themeDictionaryLocation: ResourceDictionaryLocation.None, genericDictionaryLocation: ResourceDictionaryLocation.SourceAssembly)]
 [assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D")]
 [assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Charts")]
-[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.DataSources")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.DataSources.OneDimensional")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.DataSources.MultiDimensional")]
 [assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Common")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Axes")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Isolines")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Graphs")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Filters")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Descriptions")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Converters")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.LegendItems")]
+
 [assembly: XmlnsPrefix(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, prefix: "Plotter2D")]
 [assembly: AllowPartiallyTrustedCallers]
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Properties;
 
-public static class AssemblyConstants
+file static class AssemblyConstants
 {
-  public const string DefaultXmlNamespace = "http://schemas.crystal.com/Plot2D";
+  internal const string DefaultXmlNamespace = "http://schemas.crystal.com/Plot2D";
 }

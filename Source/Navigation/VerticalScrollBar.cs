@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Navigation;
 
 [Obsolete(message: "Working wrongly.", error: true)]
 public sealed class VerticalScrollBar : PlotterScrollBar
@@ -43,7 +44,7 @@ public sealed class VerticalScrollBar : PlotterScrollBar
       visibleRange = new Range<double>(min: viewport.Visible.YMin, max: viewport.Visible.YMax);
       domainRange = new Range<double>(min: viewport.Domain.YMin, max: viewport.Domain.YMax);
 
-      double size = visibleRange.Max - visibleRange.Min;
+      var size = visibleRange.Max - visibleRange.Min;
       ScrollBar.ViewportSize = size;
 
       ScrollBar.Minimum = domainRange.Min + size;

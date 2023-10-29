@@ -3,8 +3,9 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Crystal.Plot2D.Charts;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
 public class AdditionalLinesRenderer : IsolineRenderer
 {
@@ -17,7 +18,7 @@ public class AdditionalLinesRenderer : IsolineRenderer
   {
     base.OnPlotterAttached();
 
-    FrameworkElement parent = (FrameworkElement)Parent;
+    var parent = (FrameworkElement)Parent;
     var renderer = (FrameworkElement)parent.FindName(name: "PART_IsolineRenderer");
 
     Binding contentBoundsBinding = new() { Path = new PropertyPath(path: "(0)", pathParameters: Viewport2D.ContentBoundsProperty), Source = renderer };
@@ -28,7 +29,7 @@ public class AdditionalLinesRenderer : IsolineRenderer
     Plotter2D.Viewport.PropertyChanged += Viewport_PropertyChanged;
   }
 
-  void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
+  private void Viewport_PropertyChanged(object sender, ExtendedPropertyChangedEventArgs e)
   {
     if (e.PropertyName == "Visible")
     {

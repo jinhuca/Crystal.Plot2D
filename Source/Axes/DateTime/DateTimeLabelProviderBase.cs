@@ -1,17 +1,16 @@
-﻿using System;
+﻿namespace Crystal.Plot2D.Axes;
 
-namespace Crystal.Plot2D.Charts;
-
-public abstract class DateTimeLabelProviderBase : LabelProviderBase<DateTime>
+public abstract class DateTimeLabelProviderBase : LabelProviderBase<System.DateTime>
 {
   private string dateFormat;
+
   protected string DateFormat
   {
     get => dateFormat;
     set => dateFormat = value;
   }
 
-  protected override string GetStringCore(LabelTickInfo<DateTime> tickInfo)
+  protected override string GetStringCore(LabelTickInfo<System.DateTime> tickInfo)
   {
     return tickInfo.Tick.ToString(format: dateFormat);
   }

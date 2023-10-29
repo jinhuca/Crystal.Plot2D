@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D.Common;
+﻿namespace Crystal.Plot2D.Common.UndoSystem;
 
 public abstract class UndoAction
 {

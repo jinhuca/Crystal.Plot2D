@@ -1,7 +1,7 @@
-﻿using Crystal.Plot2D.DataSources;
-using System;
+﻿using System;
+using Crystal.Plot2D.DataSources.OneDimensional;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Charts;
 
 public interface IOneDimensionalChart
 {

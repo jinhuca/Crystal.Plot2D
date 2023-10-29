@@ -1,4 +1,4 @@
-﻿namespace Crystal.Plot2D;
+﻿namespace Crystal.Plot2D.ViewportConstraints;
 
 /// <summary>
 /// Represents a constraint which is capable to attach to or detach from <see cref="Viewport"/>, to which it is applied.

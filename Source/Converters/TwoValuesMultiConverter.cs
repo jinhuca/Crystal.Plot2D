@@ -2,7 +2,7 @@
 using System.Windows;
 using System.Windows.Data;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Converters;
 
 public abstract class TwoValuesMultiConverter<T1, T2> : IMultiValueConverter
 {
@@ -14,8 +14,8 @@ public abstract class TwoValuesMultiConverter<T1, T2> : IMultiValueConverter
     {
       if (values[0] is T1 && values[1] is T2)
       {
-        T1 param1 = (T1)values[0];
-        T2 param2 = (T2)values[1];
+        var param1 = (T1)values[0];
+        var param2 = (T2)values[1];
         return ConvertCore(value1: param1, value2: param2, targetType: targetType, parameter: parameter, culture: culture);
       }
     }

@@ -1,10 +1,11 @@
 ﻿using System;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 public class ExtendedDaysStrategy : IDateTimeTicksStrategy
 {
-  private static readonly DifferenceIn[] diffs = new DifferenceIn[] {
+  private static readonly DifferenceIn[] diffs =
+  {
     DifferenceIn.Year,
     DifferenceIn.Day,
     DifferenceIn.Hour,
@@ -13,7 +14,7 @@ public class ExtendedDaysStrategy : IDateTimeTicksStrategy
     DifferenceIn.Millisecond
   };
 
-  public DifferenceIn GetDifference(TimeSpan span)
+  public DifferenceIn GetDifference(System.TimeSpan span)
   {
     span = span.Duration();
 
@@ -50,7 +51,7 @@ public class ExtendedDaysStrategy : IDateTimeTicksStrategy
   {
     lowerDiff = diff;
 
-    int index = Array.IndexOf(array: diffs, value: diff);
+    var index = Array.IndexOf(array: diffs, value: diff);
     if (index == -1)
     {
       return false;
@@ -69,7 +70,7 @@ public class ExtendedDaysStrategy : IDateTimeTicksStrategy
   {
     biggerDiff = diff;
 
-    int index = Array.IndexOf(array: diffs, value: diff);
+    var index = Array.IndexOf(array: diffs, value: diff);
     if (index == -1 || index == 0)
     {
       return false;

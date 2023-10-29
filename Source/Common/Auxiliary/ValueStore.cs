@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
 {
@@ -34,9 +34,9 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
   private PropertyDescriptorCollection collection;
   public override PropertyDescriptorCollection GetProperties()
   {
-    PropertyDescriptor[] propertyDescriptors = new PropertyDescriptor[cache.Count];
+    var propertyDescriptors = new PropertyDescriptor[cache.Count];
     var keys = cache.Keys.ToArray();
-    for (int i = 0; i < keys.Length; i++)
+    for (var i = 0; i < keys.Length; i++)
     {
       propertyDescriptors[i] = new ValueStorePropertyDescriptor(name: keys[i]);
     }
@@ -64,7 +64,7 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
 
     public override object GetValue(object component)
     {
-      ValueStore store = (ValueStore)component;
+      var store = (ValueStore)component;
       return store[propertyName: name];
     }
 

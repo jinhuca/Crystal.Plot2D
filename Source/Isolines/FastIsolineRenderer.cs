@@ -1,15 +1,18 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Isolines;
 
-public class FastIsolineRenderer : IsolineRenderer
+public sealed class FastIsolineRenderer : IsolineRenderer
 {
   private List<IsolineCollection> additionalLines = new();
   private const int subDivisionNum = 10;
@@ -23,7 +26,7 @@ public class FastIsolineRenderer : IsolineRenderer
   {
     base.OnPlotterAttached();
 
-    FrameworkElement parent = (FrameworkElement)Parent;
+    var parent = (FrameworkElement)Parent;
     Binding collectionBinding = new(path: "IsolineCollection") { Source = this };
     parent.SetBinding(dp: IsolineCollectionProperty, binding: collectionBinding);
   }
@@ -60,9 +63,9 @@ public class FastIsolineRenderer : IsolineRenderer
 
     var bounds = DataRect.Empty;
     // determining content bounds
-    foreach (LevelLine line in collection)
+    foreach (var line in collection)
     {
-      foreach (Point point in line.AllPoints)
+      foreach (var point in line.AllPoints)
       {
         bounds.Union(point: point);
       }
@@ -159,11 +162,11 @@ public class FastIsolineRenderer : IsolineRenderer
     var biggerViewport = viewportBounds.ZoomOutFromCenter(ratio: 1.1);
 
     // getting and filtering annotations to draw only visible ones
-    Annotater.WayBeforeText = Math.Sqrt(d: visible.Width * visible.Width + visible.Height * visible.Height) / 8 * WayBeforeTextMultiplier;
-    var annotations = Annotater.Annotate(collection: collection, visible: visible)
+    Annotator.WayBeforeText = Math.Sqrt(d: visible.Width * visible.Width + visible.Height * visible.Height) / 8 * WayBeforeTextMultiplier;
+    var annotations = Annotator.Annotate(collection: collection, visible: visible)
     .Where(predicate: annotation =>
     {
-      Point viewportPosition = annotation.Position.DataToViewport(transform: transform);
+      var viewportPosition = annotation.Position.DataToViewport(transform: transform);
       return biggerViewport.Contains(point: viewportPosition);
     });
 
@@ -172,15 +175,15 @@ public class FastIsolineRenderer : IsolineRenderer
     // drawing annotations
     foreach (var annotation in annotations)
     {
-      FormattedText text = CreateFormattedText(text: annotation.Value.ToString(format: LabelStringFormat));
-      Point position = annotation.Position.DataToScreen(transform: transform);
+      var text = CreateFormattedText(text: annotation.Value.ToString(format: LabelStringFormat));
+      var position = annotation.Position.DataToScreen(transform: transform);
 
       var labelTransform = CreateTransform(isolineLabel: annotation, text: text, position: position);
 
-      // creating rectange stroke
-      double colorRatio = (annotation.Value - collection.Min) / (collection.Max - collection.Min);
+      // creating rectangle stroke
+      var colorRatio = (annotation.Value - collection.Min) / (collection.Max - collection.Min);
       colorRatio = MathHelper.Clamp(value: colorRatio);
-      Color rectangleStrokeColor = Palette.GetColor(t: colorRatio);
+      var rectangleStrokeColor = Palette.GetColor(t: colorRatio);
       SolidColorBrush rectangleStroke = new(color: rectangleStrokeColor);
       Pen labelRectangleStrokePen = new(brush: rectangleStroke, thickness: 2);
 
@@ -207,7 +210,7 @@ public class FastIsolineRenderer : IsolineRenderer
 
   private static Transform CreateTransform(IsolineTextLabel isolineLabel, FormattedText text, Point position)
   {
-    double angle = isolineLabel.Rotation;
+    var angle = isolineLabel.Rotation;
     if (angle < 0)
     {
       angle += 360;

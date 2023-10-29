@@ -1,14 +1,15 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Data;
 using System.Windows.Media;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.ViewportConstraints;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents an axis with ticks of <see cref="System.DateTime"/> type.
 /// </summary>
-public class DateTimeAxis : AxisBase<DateTime>
+public class DateTimeAxis : AxisBase<System.DateTime>
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="DateTimeAxis"/> class.
@@ -75,11 +76,11 @@ public class DateTimeAxis : AxisBase<DateTime>
     base.OnPlotterDetaching(thePlotter: thePlotter);
   }
 
-  private static readonly long minTicks = DateTime.MinValue.Ticks;
-  private static readonly long maxTicks = DateTime.MaxValue.Ticks;
-  private static DateTime DoubleToDate(double d)
+  private static readonly long minTicks = System.DateTime.MinValue.Ticks;
+  private static readonly long maxTicks = System.DateTime.MaxValue.Ticks;
+  private static System.DateTime DoubleToDate(double d)
   {
-    long ticks = (long)(d * 10000000000L);
+    var ticks = (long)(d * 10000000000L);
 
     // todo should we throw an exception if number of ticks is too big or small?
     if (ticks < minTicks)
@@ -91,7 +92,7 @@ public class DateTimeAxis : AxisBase<DateTime>
       ticks = maxTicks;
     }
 
-    return new DateTime(ticks: ticks);
+    return new System.DateTime(ticks: ticks);
   }
 
   /// <summary>
@@ -102,7 +103,7 @@ public class DateTimeAxis : AxisBase<DateTime>
   /// <param name="minValue">The value of axis type, corresponding to minimal viewport value.</param>
   /// <param name="max">The maximal viewport value.</param>
   /// <param name="maxValue">The value of axis type, corresponding to maximal viewport value.</param>
-  public override void SetConversion(double min, DateTime minValue, double max, DateTime maxValue)
+  public override void SetConversion(double min, System.DateTime minValue, double max, System.DateTime maxValue)
   {
     var conversion = new DateTimeToDoubleConversion(min: min, minDate: minValue, max: max, maxDate: maxValue);
 

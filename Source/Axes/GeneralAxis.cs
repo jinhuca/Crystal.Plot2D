@@ -1,8 +1,11 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Windows.Controls;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
 /// <summary>
 /// Represents a base class for all axes.
@@ -31,7 +34,7 @@ public abstract class GeneralAxis : ContentControl, IPlotterElement
       if (placement != value)
       {
         ValidatePlacement(newPlacement: value);
-        AxisPlacement oldPlacement = placement;
+        var oldPlacement = placement;
         placement = value;
         OnPlacementChanged(oldPlacement: oldPlacement, newPlacement: placement);
       }

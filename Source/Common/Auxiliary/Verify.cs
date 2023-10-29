@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Auxiliary;
 
 internal static class Verify
 {
@@ -59,6 +59,6 @@ internal static class Verify
   [DebuggerStepThrough]
   public static void AssertIsFinite(this double d)
   {
-    IsTrue(condition: !double.IsInfinity(d: d) && !(double.IsNaN(d: d)));
+    IsTrue(condition: !double.IsInfinity(d: d) && !double.IsNaN(d: d));
   }
 }

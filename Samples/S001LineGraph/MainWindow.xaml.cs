@@ -3,6 +3,8 @@ using Crystal.Plot2D.DataSources;
 using System;
 using System.Windows;
 using System.Windows.Media;
+using Crystal.Plot2D.DataSources.OneDimensional;
+using Crystal.Plot2D.Descriptions;
 
 namespace S001LineGraph;
 

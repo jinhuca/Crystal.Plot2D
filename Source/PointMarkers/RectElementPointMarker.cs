@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using System.Windows.Shapes;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.PointMarkers;
 
 /// <summary>
 ///   Adds Circle element at every point of graph.
@@ -28,7 +28,7 @@ public class RectElementPointMarker : ShapeElementPointMarker
 
   public override void SetMarkerProperties(UIElement marker)
   {
-    Rectangle rect = (Rectangle)marker;
+    var rect = (Rectangle)marker;
 
     rect.Width = Size;
     rect.Height = Size;

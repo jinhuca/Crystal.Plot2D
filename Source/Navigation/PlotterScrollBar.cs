@@ -1,9 +1,9 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using Crystal.Plot2D.Common;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 public abstract class PlotterScrollBar : IPlotterElement
 {
@@ -14,7 +14,7 @@ public abstract class PlotterScrollBar : IPlotterElement
 
   private void OnScroll(object sender, ScrollEventArgs e)
   {
-    DataRect visible = plotter.Viewport.Visible;
+    var visible = plotter.Viewport.Visible;
     visible = CreateVisibleRect(rect: visible, value: scrollBar.Value);
     plotter.Viewport.Visible = visible;
   }
@@ -39,7 +39,7 @@ public abstract class PlotterScrollBar : IPlotterElement
   {
     GetHostPanel(plotter: plotter).Children.Add(element: scrollBar);
 
-    PlotterBase plotter2d = (PlotterBase)plotter;
+    var plotter2d = (PlotterBase)plotter;
     this.plotter = plotter2d;
     var viewport = plotter2d.Viewport;
     viewport.PropertyChanged += OnViewportPropertyChanged;

@@ -1,9 +1,9 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using Crystal.Plot2D.Charts;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Filters;
 
 public class FrequencyFilter2 : PointsFilterBase
 {
@@ -19,19 +19,19 @@ public class FrequencyFilter2 : PointsFilterBase
 
     using (var enumerator = points.GetEnumerator())
     {
-      double currentX = double.NegativeInfinity;
+      var currentX = double.NegativeInfinity;
 
       double minX = 0, maxX = 0, minY = 0, maxY = 0;
 
       Point left = new(), right = new(), top = new(), bottom = new();
 
-      bool isFirstPoint = true;
+      var isFirstPoint = true;
       while (enumerator.MoveNext())
       {
-        Point currPoint = enumerator.Current;
-        double x = currPoint.X;
-        double y = currPoint.Y;
-        double xInt = Math.Floor(d: x);
+        var currPoint = enumerator.Current;
+        var x = currPoint.X;
+        var y = currPoint.Y;
+        var xInt = Math.Floor(d: x);
         if (xInt == currentX)
         {
           if (x > maxX)
@@ -57,8 +57,8 @@ public class FrequencyFilter2 : PointsFilterBase
           {
             result.Add(item: left);
 
-            Point leftY = top.X < bottom.X ? top : bottom;
-            Point rightY = top.X > bottom.X ? top : bottom;
+            var leftY = top.X < bottom.X ? top : bottom;
+            var rightY = top.X > bottom.X ? top : bottom;
 
             if (top != bottom)
             {

@@ -29,10 +29,7 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
   /// <param name="item">The adding item.</param>
   protected override void OnItemAdding(IPlotterElement item)
   {
-    if (item == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(item));
-    }
+    ArgumentNullException.ThrowIfNull(item);
   }
 
   /// <summary>
@@ -52,10 +49,7 @@ public sealed class PlotterChildrenCollection : NotifiableCollection<IPlotterEle
 
   public void Add(FrameworkElement content)
   {
-    if (content == null)
-    {
-      throw new ArgumentNullException(paramName: nameof(content));
-    }
+    ArgumentNullException.ThrowIfNull(content);
 
     if (content is IPlotterElement plotterElement)
     {

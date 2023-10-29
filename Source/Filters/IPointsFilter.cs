@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Windows;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Filters;
 
 /// <summary>
 ///   Provides algorithm for filtering point lists in screen coordinates.

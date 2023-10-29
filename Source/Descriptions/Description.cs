@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Windows;
+using Crystal.Plot2D.Charts;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Descriptions;
 
-public class ResolveLegendItemEventArgs : EventArgs
+public sealed class ResolveLegendItemEventArgs : EventArgs
 {
   public ResolveLegendItemEventArgs(LegendItem legendItem)
   {
     LegendItem = legendItem;
   }
 
-  public LegendItem LegendItem { get; set; }
+  public LegendItem LegendItem { get; }
 }
 
 public abstract class Description : FrameworkElement
@@ -20,7 +21,7 @@ public abstract class Description : FrameworkElement
 
   private LegendItem CreateLegendItem()
   {
-    LegendItem item_ = CreateLegendItemCore();
+    var item_ = CreateLegendItemCore();
     return RaiseResolveLegendItem(uncustomizedLegendItem: item_);
   }
 

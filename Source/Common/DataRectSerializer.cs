@@ -11,19 +11,14 @@ public sealed class DataRectSerializer : ValueSerializer
 
   public override object ConvertFromString(string value, IValueSerializerContext context)
   {
-    if (value != null)
-    {
-      return DataRect.Parse(source: value);
-    }
-    return base.ConvertFromString(value: value, context: context);
+    return DataRect.Parse(source: value);
   }
 
   public override string ConvertToString(object value, IValueSerializerContext context)
   {
-    if (value is DataRect)
+    if (value is DataRect rect_)
     {
-      DataRect rect = (DataRect)value;
-      return rect.ConvertToString(format: null, provider: CultureInfo.GetCultureInfo(name: "en-us"));
+      return rect_.ConvertToString(format: null, provider: CultureInfo.GetCultureInfo(name: "en-us"));
     }
     return base.ConvertToString(value: value, context: context);
   }

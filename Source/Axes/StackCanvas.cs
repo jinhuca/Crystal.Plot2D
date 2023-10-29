@@ -1,12 +1,14 @@
-﻿using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
+using Crystal.Plot2D.Charts;
+using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes;
 
-public class StackCanvas : Panel
+public sealed class StackCanvas : Panel
 {
   public StackCanvas()
   {
@@ -86,10 +88,10 @@ public class StackCanvas : Panel
 
   protected override Size MeasureOverride(Size constraint)
   {
-    Size availableSize = constraint;
+    var availableSize = constraint;
     Size size = new();
 
-    bool isHorizontal = IsHorizontal;
+    var isHorizontal = IsHorizontal;
 
     if (isHorizontal)
     {
@@ -102,14 +104,14 @@ public class StackCanvas : Panel
       size.Height = constraint.Height;
     }
 
-    // measuring all children and determinimg self width and height
+    // measuring all children and determining self width and height
     foreach (UIElement element in Children)
     {
       if (element != null)
       {
-        Size childSize = GetChildSize(element: element, availableSize: availableSize);
+        var childSize = GetChildSize(element: element, availableSize: availableSize);
         element.Measure(availableSize: childSize);
-        Size desiredSize = element.DesiredSize;
+        var desiredSize = element.DesiredSize;
 
         if (isHorizontal)
         {
@@ -157,7 +159,7 @@ public class StackCanvas : Panel
 
   protected override Size ArrangeOverride(Size finalSize)
   {
-    bool isHorizontal = IsHorizontal;
+    var isHorizontal = IsHorizontal;
 
     foreach (FrameworkElement element in Children)
     {
@@ -166,9 +168,9 @@ public class StackCanvas : Panel
         continue;
       }
 
-      Size elementSize = element.DesiredSize;
-      double x = 0.0;
-      double y = 0.0;
+      var elementSize = element.DesiredSize;
+      var x = 0.0;
+      var y = 0.0;
 
       switch (Placement)
       {
@@ -186,12 +188,12 @@ public class StackCanvas : Panel
           break;
       }
 
-      double coordinate = GetCoordinate(obj: element);
+      var coordinate = GetCoordinate(obj: element);
 
       if (!double.IsNaN(d: GetEndCoordinate(obj: element)))
       {
-        double endCoordinate = GetEndCoordinate(obj: element);
-        double size = endCoordinate - coordinate;
+        var endCoordinate = GetEndCoordinate(obj: element);
+        var size = endCoordinate - coordinate;
         if (size < 0)
         {
           size = -size;

@@ -2,8 +2,10 @@
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
 
-namespace Crystal.Plot2D;
+namespace Crystal.Plot2D.Navigation;
 
 ///<summary>
 /// This class allows convenient navigation around viewport using touchpad on some notebooks.
@@ -17,28 +19,30 @@ public sealed class TouchpadScroll : NavigationBase
 
   private void OnLoaded(object sender, RoutedEventArgs e)
   {
-    WindowInteropHelper helper = new(window: Window.GetWindow(dependencyObject: this));
-    HwndSource source = HwndSource.FromHwnd(hwnd: helper.Handle);
-    source.AddHook(hook: OnMessageAppeared);
+    WindowInteropHelper helper_ = new(window: Window.GetWindow(dependencyObject: this) ?? throw new InvalidOperationException());
+    var source_ = HwndSource.FromHwnd(hwnd: helper_.Handle);
+    source_.AddHook(hook: OnMessageAppeared);
   }
 
   private IntPtr OnMessageAppeared(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
   {
     if (msg == WindowsMessages.WM_MOUSEWHEEL)
     {
-      Point mousePos = MessagesHelper.GetMousePosFromLParam(lParam: lParam);
-      mousePos = TranslatePoint(point: mousePos, relativeTo: this);
+      var mousePos_ = MessagesHelper.GetMousePosFromLParam(lParam: lParam);
+      mousePos_ = TranslatePoint(point: mousePos_, relativeTo: this);
 
-      if (Viewport.Output.Contains(point: mousePos))
+      if (Viewport.Output.Contains(point: mousePos_))
       {
         MouseWheelZoom(mousePos: MessagesHelper.GetMousePosFromLParam(lParam: lParam), wheelRotationDelta: MessagesHelper.GetWheelDataFromWParam(wParam: wParam));
         handled = true;
       }
     }
+
     return IntPtr.Zero;
   }
 
-  double wheelZoomSpeed = 1.2;
+  private double wheelZoomSpeed = 1.2;
+
   public double WheelZoomSpeed
   {
     get => wheelZoomSpeed;
@@ -47,14 +51,15 @@ public sealed class TouchpadScroll : NavigationBase
 
   private void MouseWheelZoom(Point mousePos, int wheelRotationDelta)
   {
-    Point zoomTo = mousePos.ScreenToData(transform: Viewport.Transform);
+    var zoomTo_ = mousePos.ScreenToData(transform: Viewport.Transform);
 
-    double zoomSpeed = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
-    zoomSpeed *= wheelZoomSpeed;
+    double zoomSpeed_ = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
+    zoomSpeed_ *= wheelZoomSpeed;
     if (wheelRotationDelta < 0)
     {
-      zoomSpeed = 1 / zoomSpeed;
+      zoomSpeed_ = 1 / zoomSpeed_;
     }
-    Viewport.Visible = Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
+
+    Viewport.Visible = Viewport.Visible.Zoom(to: zoomTo_, ratio: zoomSpeed_);
   }
 }

@@ -9,7 +9,7 @@ namespace Crystal.Plot2D.Common;
 ///   Represents a custom Panel, which performs Arrange of its children independently, and does not remeasure or rearrange itself 
 ///   or all children when one child is added or removed.
 ///   
-///   Is intended to be a base class for special layout panels, in which each childr is arranged independently from each other child,
+///   Is intended to be a base class for special layout panels, in which each child is arranged independently from each other child,
 ///   e.g. panel with child's position viewport bound to a rectangle in viewport coordinates.
 /// </summary>
 public abstract class IndividualArrangePanel : Panel
@@ -84,5 +84,5 @@ public abstract class IndividualArrangePanel : Panel
     set => VisualOffset = value;
   }
 
-  internal UIChildrenCollection Children1 { get; set; }
+  internal UIChildrenCollection Children1 { get; }
 }

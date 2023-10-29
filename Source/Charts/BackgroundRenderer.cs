@@ -2,11 +2,11 @@
 
 namespace Crystal.Plot2D.Charts;
 
-public static class BackgroundRenderer
+internal static class BackgroundRenderer
 {
   #region RenderingFinished event
 
-  public static readonly RoutedEvent RenderingFinished = EventManager.RegisterRoutedEvent(
+  private static readonly RoutedEvent renderingFinished = EventManager.RegisterRoutedEvent(
     name: "RenderingFinished",
     routingStrategy: RoutingStrategy.Bubble,
     handlerType: typeof(RoutedEventHandler),
@@ -14,7 +14,7 @@ public static class BackgroundRenderer
 
   public static void RaiseRenderingFinished(FrameworkElement eventSource)
   {
-    eventSource.RaiseEvent(e: new RoutedEventArgs(routedEvent: RenderingFinished));
+    eventSource.RaiseEvent(e: new RoutedEventArgs(routedEvent: renderingFinished));
   }
 
   #endregion
@@ -75,7 +75,7 @@ public static class BackgroundRenderer
   #endregion // end of UsesBackgroundRendering
 }
 
-public enum RenderingState
+internal enum RenderingState
 {
   DuringRendering,
   RenderingFinished

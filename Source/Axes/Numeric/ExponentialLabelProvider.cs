@@ -3,7 +3,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 
-namespace Crystal.Plot2D.Charts;
+namespace Crystal.Plot2D.Axes.Numeric;
 
 /// <summary>
 /// Represents an axis label provider for double ticks, generating labels with numbers in exponential form when it is appropriate.
@@ -29,24 +29,24 @@ public sealed class ExponentialLabelProvider : NumericLabelProviderBase
 
     Init(ticks: ticks);
 
-    UIElement[] res = new UIElement[ticks.Length];
+    var res = new UIElement[ticks.Length];
 
     LabelTickInfo<double> tickInfo = new() { Info = ticksInfo.Info };
 
-    for (int i = 0; i < res.Length; i++)
+    for (var i = 0; i < res.Length; i++)
     {
       var tick = ticks[i];
       tickInfo.Tick = tick;
       tickInfo.Index = i;
 
-      string labelText = GetString(tickInfo: tickInfo);
+      var labelText = GetString(tickInfo: tickInfo);
 
       TextBlock label;
       if (labelText.Contains(value: 'E'))
       {
-        string[] substrs = labelText.Split(separator: 'E');
-        string mantissa = substrs[0];
-        string exponenta = substrs[1];
+        var substrs = labelText.Split(separator: 'E');
+        var mantissa = substrs[0];
+        var exponenta = substrs[1];
         exponenta = exponenta.TrimStart(trimChar: '+');
         Span span = new();
         span.Inlines.Add(text: string.Format(provider: CultureInfo.CurrentCulture, format: "{0}·10", arg0: mantissa));
@@ -60,14 +60,11 @@ public sealed class ExponentialLabelProvider : NumericLabelProviderBase
       }
       else
       {
-        label = (TextBlock)GetResourceFromPool();
-        if (label == null)
-        {
-          label = new TextBlock();
-        }
+        label = (TextBlock)GetResourceFromPool() ?? new TextBlock();
 
         label.Text = labelText;
       }
+
       res[i] = label;
       label.ToolTip = tick.ToString(provider: CultureInfo.CurrentCulture);
 
@@ -79,7 +76,7 @@ public sealed class ExponentialLabelProvider : NumericLabelProviderBase
 
   protected override bool ReleaseCore(UIElement label)
   {
-    bool isNotExponential = LabelProviderProperties.GetExponentialIsCommonLabel(obj: label);
+    var isNotExponential = LabelProviderProperties.GetExponentialIsCommonLabel(obj: label);
     return isNotExponential && CustomView == null;
   }
 }

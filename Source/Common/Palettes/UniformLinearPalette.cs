@@ -6,8 +6,9 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Windows.Markup;
 using System.Windows.Media;
+using Crystal.Plot2D.Common.Auxiliary;
 
-namespace Crystal.Plot2D.Common;
+namespace Crystal.Plot2D.Common.Palettes;
 
 [ContentProperty(name: "ColorSteps")]
 public sealed class UniformLinearPalette : IPalette, ISupportInitialize
@@ -26,10 +27,7 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
 
   public UniformLinearPalette(params Color[] colors)
   {
-    if (colors == null)
-    {
-      throw new ArgumentNullException(paramName: "colors");
-    }
+    ArgumentNullException.ThrowIfNull(colors);
 
     if (colors.Length < 2)
     {
@@ -43,7 +41,7 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
   private void FillPoints(int size)
   {
     Points = new double[size];
-    for (int i = 0; i < size; i++)
+    for (var i = 0; i < size; i++)
     {
       Points[i] = i / (double)(size - 1);
     }
@@ -69,19 +67,19 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
     }
     else
     {
-      int i = 0;
+      var i = 0;
       while (Points[i] < t)
       {
         i++;
       }
 
-      double ratio = (Points[i] - t) / (Points[i] - Points[i - 1]);
+      var ratio = (Points[i] - t) / (Points[i] - Points[i - 1]);
 
       Verify.IsTrue(condition: 0 <= ratio && ratio <= 1);
 
-      Color c0 = Colors[index: i - 1];
-      Color c1 = Colors[index: i];
-      Color res = Color.FromRgb(
+      var c0 = Colors[index: i - 1];
+      var c1 = Colors[index: i];
+      var res = Color.FromRgb(
         r: (byte)(c0.R * ratio + c1.R * (1 - ratio)),
         g: (byte)(c0.G * ratio + c1.G * (1 - ratio)),
         b: (byte)(c0.B * ratio + c1.B * (1 - ratio)));
@@ -89,7 +87,7 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
       // Increasing saturation and brightness
       if (IncreaseBrightness)
       {
-        HsbColor hsb = res.ToHsbColor();
+        var hsb = res.ToHsbColor();
         //hsb.Saturation = 0.5 * (1 + hsb.Saturation);
         hsb.Brightness = 0.5 * (1 + hsb.Brightness);
         return hsb.ToArgbColor();
