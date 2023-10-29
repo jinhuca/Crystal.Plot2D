@@ -11,6 +11,7 @@ internal sealed class PhysicalRectAnimation
 {
   private Vector position;
   private Vector velocity;
+  
   public Vector Velocity
   {
     get => velocity;
@@ -19,6 +20,7 @@ internal sealed class PhysicalRectAnimation
 
   private Vector acceleration;
   private double mass = 1; // kilograms
+
   public double Mass
   {
     get => mass;
@@ -26,6 +28,7 @@ internal sealed class PhysicalRectAnimation
   }
 
   private double frictionCalmCoeff;
+  
   public double FrictionCalmCoeff
   {
     get => frictionCalmCoeff;
@@ -33,6 +36,7 @@ internal sealed class PhysicalRectAnimation
   }
 
   private double frictionMovementCoeff = 0.1;
+  
   public double FrictionMovementCoeff
   {
     get => frictionMovementCoeff;
@@ -40,6 +44,7 @@ internal sealed class PhysicalRectAnimation
   }
 
   private double springCoeff = 50;
+  
   public double SpringCoeff
   {
     get => springCoeff;
@@ -47,6 +52,7 @@ internal sealed class PhysicalRectAnimation
   }
 
   private double liquidFrictionCoeff = 1;
+  
   public double LiquidFrictionCoeff
   {
     get => liquidFrictionCoeff;
@@ -54,6 +60,7 @@ internal sealed class PhysicalRectAnimation
   }
 
   private double liquidFrictionQuadraticCoeff = 10;
+  
   public double LiquidFrictionQuadraticCoeff
   {
     get => liquidFrictionQuadraticCoeff;
@@ -84,6 +91,7 @@ internal sealed class PhysicalRectAnimation
   public bool IsFinished => isFinished;
 
   private bool useMouse = true;
+  
   public bool UseMouse
   {
     get => useMouse;
@@ -92,62 +100,62 @@ internal sealed class PhysicalRectAnimation
 
   public DataRect GetValue(TimeSpan timeSpan)
   {
-    var time = timeSpan.TotalSeconds;
+    var time_ = timeSpan.TotalSeconds;
 
-    var dtime = time - prevTime;
+    var dTime_ = time_ - prevTime;
 
     acceleration = GetForces() / mass;
 
-    velocity += acceleration * dtime;
-    var shift = velocity * dtime;
+    velocity += acceleration * dTime_;
+    var shift_ = velocity * dTime_;
 
-    var viewportSize = Math.Sqrt(d: from.Width * from.Width + from.Height * from.Height);
-    if (!(shift.Length < viewportSize * 0.002 && time > 0.5))
+    var viewportSize_ = Math.Sqrt(d: from.Width * from.Width + from.Height * from.Height);
+    if (!(shift_.Length < viewportSize_ * 0.002 && time_ > 0.5))
     {
-      position += shift;
+      position += shift_;
     }
     else
     {
       isFinished = true;
     }
 
-    prevTime = time;
+    prevTime = time_;
 
-    Point pos = new(x: position.X, y: position.Y);
-    DataRect bounds = new(location: pos, size: from.Size);
+    Point pos_ = new(x: position.X, y: position.Y);
+    DataRect bounds_ = new(location: pos_, size: from.Size);
 
-    return bounds;
+    return bounds_;
   }
 
   private Vector GetForces()
   {
-    Vector springForce = new();
+    Vector springForce_ = new();
     if (useMouse)
     {
-      var mousePos = GetMousePosition();
-      if (!mousePos.IsFinite()) { }
+      var mousePos_ = GetMousePosition();
+      if (!mousePos_.IsFinite()) { }
 
-      var p1 = initialMousePos.ScreenToData(transform: initialTransform);
-      var p2 = mousePos.ScreenToData(transform: viewport.Transform);
+      var p1_ = initialMousePos.ScreenToData(transform: initialTransform);
+      var p2_ = mousePos_.ScreenToData(transform: viewport.Transform);
 
-      var transform = viewport.Transform;
+      var transform_ = viewport.Transform;
 
-      var diff = p2 - p1;
-      springForce = -diff * springCoeff;
+      var diff_ = p2_ - p1_;
+      springForce_ = -diff_ * springCoeff;
     }
 
-    var frictionForce = GetFrictionForce(springForce: springForce);
+    var frictionForce_ = GetFrictionForce(springForce: springForce_);
 
-    var liquidFriction = -liquidFrictionCoeff * velocity - liquidFrictionQuadraticCoeff * velocity * velocity.Length;
+    var liquidFriction_ = -liquidFrictionCoeff * velocity - liquidFrictionQuadraticCoeff * velocity * velocity.Length;
 
-    var result = springForce + frictionForce + liquidFriction;
-    return result;
+    var result_ = springForce_ + frictionForce_ + liquidFriction_;
+    return result_;
   }
 
   private Vector GetFrictionForce(Vector springForce)
   {
-    var maxCalmFriction = frictionCalmCoeff * mass * G;
-    if (maxCalmFriction >= springForce.Length)
+    var maxCalmFriction_ = frictionCalmCoeff * mass * G;
+    if (maxCalmFriction_ >= springForce.Length)
     {
       return -springForce;
     }

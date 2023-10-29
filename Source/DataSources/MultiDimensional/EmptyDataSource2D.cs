@@ -26,7 +26,7 @@ public sealed class EmptyDataSource2D<T> : IDataSource2D<T> where T : struct
 
   #region IDataSource2D<T> Members
 
-  public IDataSource2D<T> GetSubset(int x0, int y0, int countX, int countY, int stepX, int stepY)
+  public IDataSource2D<T> GetSubset(int countY, int stepX, int stepY)
     => throw new NotImplementedException();
 
   #endregion

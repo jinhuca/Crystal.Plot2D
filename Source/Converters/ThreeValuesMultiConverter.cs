@@ -19,6 +19,7 @@ public abstract class ThreeValuesMultiConverter<T1, T2, T3> : IMultiValueConvert
         return ConvertCore(value1: param1, value2: param2, value3: param3, targetType: targetType, parameter: parameter, culture: culture);
       }
     }
+
     return null;
   }
 

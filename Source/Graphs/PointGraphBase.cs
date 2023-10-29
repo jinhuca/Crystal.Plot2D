@@ -80,6 +80,7 @@ public abstract class PointsGraphBase : Viewport2DElement, IOneDimensionalChart
     {
       UpdateBounds(dataSource: newDataSource_);
     }
+  
     Update();
   }
 
@@ -96,6 +97,7 @@ public abstract class PointsGraphBase : Viewport2DElement, IOneDimensionalChart
   #region DataTransform
 
   private DataTransform _dataTransform;
+
   public DataTransform DataTransform
   {
     get => _dataTransform;
@@ -113,11 +115,13 @@ public abstract class PointsGraphBase : Viewport2DElement, IOneDimensionalChart
     {
       return null;
     }
+    
     var transform_ = Plotter.Viewport.Transform;
     if(_dataTransform != null)
     {
       transform_ = transform_.WithDataTransform(dataTransform: _dataTransform);
     }
+    
     return transform_;
   }
 
@@ -155,6 +159,7 @@ public abstract class PointsGraphBase : Viewport2DElement, IOneDimensionalChart
   protected void RaiseVisiblePointsChanged() => VisiblePointsChanged?.Raise(sender: this);
 
   private bool _provideVisiblePoints;
+  
   public bool ProvideVisiblePoints
   {
     get => _provideVisiblePoints;

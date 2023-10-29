@@ -7,6 +7,7 @@ namespace Crystal.Plot2D.Resources;
 public static class D3IconHelper
 {
   private static BitmapFrame _icon;
+
   public static BitmapFrame TheIcon
   {
     get
@@ -22,6 +23,7 @@ public static class D3IconHelper
   }
 
   private static BitmapFrame _whiteIcon;
+  
   public static BitmapFrame WhiteIcon
   {
     get

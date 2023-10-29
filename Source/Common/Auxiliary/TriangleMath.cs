@@ -26,18 +26,16 @@ public static class TriangleMath
                 AreClose(x: bc.X * bx.Y, y: bc.Y * bx.X) && !AreClose(x: bc.LengthSquared, y: 0);
       return res;
     }
-    else
-    {
-      var b1 = m.X - c.X;
-      var b2 = m.Y - c.Y;
 
-      // alpha, beta and gamma - are baricentric coordinates of v 
-      // in triangle with apexes a, b and c
-      var beta = (b2 / a2 * a0 - b1) / (a3 / a2 * a0 - a1);
-      var alpha = (b1 - a1 * beta) / a0;
-      var gamma = 1 - beta - alpha;
-      return alpha >= 0 && beta >= 0 && gamma >= 0;
-    }
+    var b1 = m.X - c.X;
+    var b2 = m.Y - c.Y;
+
+    // alpha, beta and gamma - are baricentric coordinates of v 
+    // in triangle with apexes a, b and c
+    var beta = (b2 / a2 * a0 - b1) / (a3 / a2 * a0 - a1);
+    var alpha = (b1 - a1 * beta) / a0;
+    var gamma = 1 - beta - alpha;
+    return alpha >= 0 && beta >= 0 && gamma >= 0;
   }
 
   private const double eps = 0.00001;

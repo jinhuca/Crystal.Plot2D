@@ -32,7 +32,8 @@ internal sealed class GenericSearcher1d<TCollection, TMember> where TMember : IC
     {
       return SearchResult1d.Empty;
     }
-    else if (Selector(arg: Collection[index: lastIndex]).CompareTo(other: _x) < 0)
+
+    if (Selector(arg: Collection[index: lastIndex]).CompareTo(other: _x) < 0)
     {
       return SearchResult1d.Empty;
     }

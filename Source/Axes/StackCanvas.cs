@@ -1,20 +1,13 @@
-﻿using System;
+﻿using Crystal.Plot2D.Common.Auxiliary;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Axes;
 
-public sealed class StackCanvas : Panel
+internal sealed class StackCanvas : Panel
 {
-  public StackCanvas()
-  {
-    //ClipToBounds = true;
-  }
-
   #region [-- EndCoordinate attached property --]
 
   [AttachedPropertyBrowsableForChildren]

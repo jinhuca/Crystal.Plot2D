@@ -76,10 +76,8 @@ public struct Range<T> : IEquatable<Range<T>>
       var other = (Range<T>)obj;
       return Min.Equals(obj: other.Min) && Max.Equals(obj: other.Max) || IsEmpty && other.IsEmpty;
     }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   /// <summary>

@@ -21,33 +21,31 @@ public sealed class RangeConverter : TypeConverter
   {
     if (value == null)
     {
-      throw GetConvertFromException(value: value);
+      throw GetConvertFromException(nameof(value));
     }
 
-    if (value is string source)
+    if (value is string source_)
     {
-      var parts = source.Split(separator: '-');
-      var minStr = parts[0];
-      var maxStr = parts[1];
+      var parts_ = source_.Split(separator: '-');
+      var minStr_ = parts_[0];
+      var maxStr_ = parts_[1];
 
-      var minInt32 = 0;
-      double minDouble = 0;
-      var minDateTime = DateTime.Now;
-      if (int.TryParse(s: minStr, style: NumberStyles.Integer, provider: culture, result: out minInt32))
+      if (int.TryParse(s: minStr_, style: NumberStyles.Integer, provider: culture, result: out var minInt32_))
       {
-        var maxInt32 = int.Parse(s: maxStr, style: NumberStyles.Integer, provider: culture);
+        var maxInt32_ = int.Parse(s: maxStr_, style: NumberStyles.Integer, provider: culture);
 
-        return new Range<int>(min: minInt32, max: maxInt32);
+        return new Range<int>(min: minInt32_, max: maxInt32_);
       }
-      else if (double.TryParse(s: minStr, style: NumberStyles.Float, provider: culture, result: out minDouble))
+
+      if (double.TryParse(s: minStr_, style: NumberStyles.Float, provider: culture, result: out var minDouble_))
       {
-        var maxDouble = double.Parse(s: maxStr, style: NumberStyles.Float, provider: culture);
-        return new Range<double>(min: minDouble, max: maxDouble);
+        var maxDouble_ = double.Parse(s: maxStr_, style: NumberStyles.Float, provider: culture);
+        return new Range<double>(min: minDouble_, max: maxDouble_);
       }
-      else if (DateTime.TryParse(s: minStr, provider: culture, styles: DateTimeStyles.None, result: out minDateTime))
+      if (DateTime.TryParse(s: minStr_, provider: culture, styles: DateTimeStyles.None, result: out var minDateTime_))
       {
-        var maxDateTime = DateTime.Parse(s: maxStr, provider: culture);
-        return new Range<DateTime>(min: minDateTime, max: maxDateTime);
+        var maxDateTime_ = DateTime.Parse(s: maxStr_, provider: culture);
+        return new Range<DateTime>(min: minDateTime_, max: maxDateTime_);
       }
     }
 
@@ -58,12 +56,13 @@ public sealed class RangeConverter : TypeConverter
   {
     if (destinationType != null && value is DataRect)
     {
-      var rect = (DataRect)value;
+      var rect_ = (DataRect)value;
       if (destinationType == typeof(string))
       {
-        return rect.ConvertToString(format: null, provider: culture);
+        return rect_.ConvertToString(format: null, provider: culture);
       }
     }
+
     return base.ConvertTo(context: context, culture: culture, value: value, destinationType: destinationType);
   }
 }

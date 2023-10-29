@@ -20,7 +20,8 @@ public sealed class BrushHSBConverter : IValueConverter
       var result = brush.ChangeLightness(lightnessFactor: LightnessDelta).ChangeSaturation(saturationFactor: SaturationDelta);
       return result;
     }
-    else { return value; }
+
+    return value;
   }
 
   public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

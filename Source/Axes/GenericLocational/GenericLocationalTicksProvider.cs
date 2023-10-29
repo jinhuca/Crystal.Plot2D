@@ -97,10 +97,8 @@ public class GenericLocationalTicksProvider<TCollection, TAxis> : ITicksProvider
 
       return result;
     }
-    else
-    {
-      return TicksInfo<TAxis>.Empty;
-    }
+
+    return TicksInfo<TAxis>.Empty;
   }
 
   private void EnsureSearcher()

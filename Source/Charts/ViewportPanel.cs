@@ -102,7 +102,7 @@ public partial class ViewportPanel : IndividualArrangePanel
 
   protected virtual Size GetElementSize(FrameworkElement child, Size availableSize, CoordinateTransform transform)
   {
-    var res_ = availableSize;
+    Size res_;
     var ownViewportBounds_ = GetViewportBounds(obj: child);
 
     if (!ownViewportBounds_.IsEmpty)

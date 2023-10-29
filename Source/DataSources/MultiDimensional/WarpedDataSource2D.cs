@@ -64,7 +64,7 @@ public sealed class WarpedDataSource2D<T> : IDataSource2D<T> where T : struct
   /// </value>
   public int Height { get; }
 
-  public IDataSource2D<T> GetSubset(int x0, int y0, int countX, int countY, int stepX, int stepY) => throw new NotImplementedException();
+  public IDataSource2D<T> GetSubset(int countY, int stepX, int stepY) => throw new NotImplementedException();
   private void RaiseChanged() => Changed?.Invoke(sender: this, e: EventArgs.Empty);
 
   /// <summary>

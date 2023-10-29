@@ -78,10 +78,7 @@ internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
         {
           base.RaisePropertyChanged(args: args);
         }
-        else
-        {
-          // do nothing
-        }
+        // do nothing
       }
     }
     else

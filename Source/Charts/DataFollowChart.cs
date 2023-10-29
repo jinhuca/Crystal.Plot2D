@@ -178,36 +178,34 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
       marker.Visibility = Visibility.Hidden;
       return;
     }
+
+    var mousePos_ = Mouse.GetPosition(relativeTo: Plotter.CentralGrid);
+    var transform_ = Plotter.Transform;
+    var viewportPos_ = mousePos_.ScreenToViewport(transform: transform_);
+    var x_ = viewportPos_.X;
+    searchResult = searcher.SearchXBetween(_x: x_, _result: searchResult);
+    SetValue(key: closestPointIndexPropertyKey, value: searchResult.Index);
+    if (!searchResult.IsEmpty)
+    {
+      marker.Visibility = Visibility.Visible;
+      IList<Point> points_ = source_.VisiblePoints;
+      var ptBefore_ = points_[index: searchResult.Index];
+      var ptAfter_ = points_[index: searchResult.Index + 1];
+
+      var ratio_ = (x_ - ptBefore_.X) / (ptAfter_.X - ptBefore_.X);
+      var y_ = ptBefore_.Y + (ptAfter_.Y - ptBefore_.Y) * ratio_;
+      Point temp_ = new(x: x_, y: y_);
+      SetX(obj: marker, value: temp_.X);
+      SetY(obj: marker, value: temp_.Y);
+
+      var markerPosition_ = temp_;
+      followDataContext.Position = markerPosition_;
+      SetValue(key: markerPositionPropertyKey, value: markerPosition_);
+    }
     else
     {
-      var mousePos_ = Mouse.GetPosition(relativeTo: Plotter.CentralGrid);
-      var transform_ = Plotter.Transform;
-      var viewportPos_ = mousePos_.ScreenToViewport(transform: transform_);
-      var x_ = viewportPos_.X;
-      searchResult = searcher.SearchXBetween(_x: x_, _result: searchResult);
-      SetValue(key: closestPointIndexPropertyKey, value: searchResult.Index);
-      if (!searchResult.IsEmpty)
-      {
-        marker.Visibility = Visibility.Visible;
-        IList<Point> points_ = source_.VisiblePoints;
-        var ptBefore_ = points_[index: searchResult.Index];
-        var ptAfter_ = points_[index: searchResult.Index + 1];
-
-        var ratio_ = (x_ - ptBefore_.X) / (ptAfter_.X - ptBefore_.X);
-        var y_ = ptBefore_.Y + (ptAfter_.Y - ptBefore_.Y) * ratio_;
-        Point temp_ = new(x: x_, y: y_);
-        SetX(obj: marker, value: temp_.X);
-        SetY(obj: marker, value: temp_.Y);
-
-        var markerPosition_ = temp_;
-        followDataContext.Position = markerPosition_;
-        SetValue(key: markerPositionPropertyKey, value: markerPosition_);
-      }
-      else
-      {
-        SetValue(key: markerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
-        marker.Visibility = Visibility.Hidden;
-      }
+      SetValue(key: markerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
+      marker.Visibility = Visibility.Hidden;
     }
   }
 

@@ -5,10 +5,6 @@ namespace Crystal.Plot2D.Shapes;
 
 public abstract class ViewportPolylineBase : ViewportShape
 {
-  protected ViewportPolylineBase()
-  {
-  }
-
   #region Properties
 
   /// <summary>

@@ -11,6 +11,7 @@ public class ObservableCollectionWrapper<T> : INotifyCollectionChanged, IList<T>
   public ObservableCollectionWrapper() : this(_collection: new ObservableCollection<T>()) { }
 
   private readonly ObservableCollection<T> collection;
+
   public ObservableCollectionWrapper(ObservableCollection<T> _collection)
   {
     if (_collection == null)

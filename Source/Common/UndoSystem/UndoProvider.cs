@@ -8,12 +8,13 @@ namespace Crystal.Plot2D.Common.UndoSystem;
 
 public sealed class UndoProvider : INotifyPropertyChanged
 {
-  public UndoProvider()
+  internal UndoProvider()
   {
     UndoStack.IsEmptyChanged += OnUndoStackIsEmptyChanged;
     RedoStack.IsEmptyChanged += OnRedoStackIsEmptyChanged;
   }
-  public bool IsEnabled { get; } = true;
+
+  private bool IsEnabled { get; } = true;
 
   private void OnUndoStackIsEmptyChanged(object sender, EventArgs e)
   {
@@ -25,7 +26,7 @@ public sealed class UndoProvider : INotifyPropertyChanged
     PropertyChanged.Raise(sender: this, propertyName: "CanRedo");
   }
 
-  public void AddAction(UndoAction action)
+  internal void AddAction(UndoAction action)
   {
     if (!IsEnabled)
     {
@@ -41,7 +42,7 @@ public sealed class UndoProvider : INotifyPropertyChanged
     RedoStack.Clear();
   }
 
-  public void Undo()
+  internal void Undo()
   {
     var action = UndoStack.Pop();
     RedoStack.Push(action: action);
@@ -57,7 +58,7 @@ public sealed class UndoProvider : INotifyPropertyChanged
     }
   }
 
-  public void Redo()
+  internal void Redo()
   {
     var action = RedoStack.Pop();
     UndoStack.Push(action: action);
@@ -73,11 +74,11 @@ public sealed class UndoProvider : INotifyPropertyChanged
     }
   }
 
-  public bool CanUndo => !UndoStack.IsEmpty;
-  public bool CanRedo => !RedoStack.IsEmpty;
-  public UndoState State { get; private set; } = UndoState.None;
-  public ActionStack UndoStack { get; } = new();
-  public ActionStack RedoStack { get; } = new();
+  internal bool CanUndo => !UndoStack.IsEmpty;
+  internal bool CanRedo => !RedoStack.IsEmpty;
+  private UndoState State { get; set; } = UndoState.None;
+  private ActionStack UndoStack { get; } = new();
+  private ActionStack RedoStack { get; } = new();
 
   private Dictionary<CaptureKeyHolder, object> CaptureHolders { get; } = new();
 
@@ -87,12 +88,12 @@ public sealed class UndoProvider : INotifyPropertyChanged
 
   #endregion
 
-  public void CaptureOldValue(DependencyObject target, DependencyProperty property, object oldValue)
+  internal void CaptureOldValue(DependencyObject target, DependencyProperty property, object oldValue)
   {
     CaptureHolders[key: new CaptureKeyHolder { Target = target, Property = property }] = oldValue;
   }
 
-  public void CaptureNewValue(DependencyObject target, DependencyProperty property, object newValue)
+  internal void CaptureNewValue(DependencyObject target, DependencyProperty property, object newValue)
   {
     var holder = new CaptureKeyHolder { Target = target, Property = property };
     if (CaptureHolders.ContainsKey(key: holder))
@@ -135,7 +136,7 @@ public sealed class UndoProvider : INotifyPropertyChanged
   }
 }
 
-public enum UndoState
+internal enum UndoState
 {
   None,
   Undoing,

@@ -135,8 +135,8 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
   {
     if (newRect.Size == oldRect.Size)
     {
-      var transform = Viewport.Transform;
-      Offset += oldRect.Location.DataToScreen(transform: transform) - newRect.Location.DataToScreen(transform: transform);
+      var transform_ = Viewport.Transform;
+      Offset += oldRect.Location.DataToScreen(transform: transform_) - newRect.Location.DataToScreen(transform: transform_);
       if (ManualTranslate)
       {
         Update();
@@ -248,6 +248,7 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
 
   private bool updateCalled;
   private bool beforeFirstUpdate = true;
+  
   protected void Update()
   {
     if (Viewport == null)
@@ -261,6 +262,7 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
       updateCalled = true;
       InvalidateVisual();
     }
+    
     beforeFirstUpdate = false;
   }
 
@@ -272,12 +274,14 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
     {
       shouldReRender = false;
     }
+
     InvalidateVisual();
   }
 
   #region Thumbnail
 
   private ImageSource thumbnail;
+  
   public ImageSource Thumbnail
   {
     get
@@ -286,11 +290,13 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
       {
         CreateThumbnail = true;
       }
+      
       return thumbnail;
     }
   }
 
   private bool createThumbnail;
+
   public bool CreateThumbnail
   {
     get => createThumbnail;
@@ -321,41 +327,41 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
       return;
     }
 
-    var output = Viewport.Output;
-    if (output.Width == 0 || output.Height == 0)
+    var output_ = Viewport.Output;
+    if (output_.Width == 0 || output_.Height == 0)
     {
       return;
     }
 
-    var visible = Viewport.Visible;
-    var transform = Viewport.Transform;
-    DrawingVisual visual = new();
-    using (var dc = visual.RenderOpen())
+    var visible_ = Viewport.Visible;
+    var transform_ = Viewport.Transform;
+    DrawingVisual visual_ = new();
+    using (var dc_ = visual_.RenderOpen())
     {
-      var outputStart = visible.Location.DataToScreen(transform: transform);
-      var x = -outputStart.X + Offset.X;
-      var y = -outputStart.Y + output.Bottom - output.Top + Offset.Y;
-      var translate = !manualTranslate && IsTranslated;
-      if (translate)
+      var outputStart_ = visible_.Location.DataToScreen(transform: transform_);
+      var x_ = -outputStart_.X + Offset.X;
+      var y_ = -outputStart_.Y + output_.Bottom - output_.Top + Offset.Y;
+      var translate_ = !manualTranslate && IsTranslated;
+      if (translate_)
       {
-        dc.PushTransform(transform: new TranslateTransform(offsetX: x, offsetY: y));
+        dc_.PushTransform(transform: new TranslateTransform(offsetX: x_, offsetY: y_));
       }
 
       const byte c = 240;
-      Brush brush = new SolidColorBrush(color: Color.FromArgb(a: 120, r: c, g: c, b: c));
-      Pen pen = new(brush: Brushes.Black, thickness: 1);
-      dc.DrawRectangle(brush: brush, pen: pen, rectangle: output);
-      dc.DrawDrawing(drawing: graphContents);
+      Brush brush_ = new SolidColorBrush(color: Color.FromArgb(a: 120, r: c, g: c, b: c));
+      Pen pen_ = new(brush: Brushes.Black, thickness: 1);
+      dc_.DrawRectangle(brush: brush_, pen: pen_, rectangle: output_);
+      dc_.DrawDrawing(drawing: graphContents);
 
-      if (translate)
+      if (translate_)
       {
-        dc.Pop();
+        dc_.Pop();
       }
     }
 
-    RenderTargetBitmap bmp = new(pixelWidth: (int)output.Width, pixelHeight: (int)output.Height, dpiX: 96, dpiY: 96, pixelFormat: PixelFormats.Pbgra32);
-    bmp.Render(visual: visual);
-    thumbnail = bmp;
+    RenderTargetBitmap bmp_ = new(pixelWidth: (int)output_.Width, pixelHeight: (int)output_.Height, dpiX: 96, dpiY: 96, pixelFormat: PixelFormats.Pbgra32);
+    bmp_.Render(visual: visual_);
+    thumbnail = bmp_;
     RaisePropertyChanged(propertyName: nameof(Thumbnail));
   }
 
@@ -370,12 +376,12 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
       return;
     }
 
-    var output = Viewport.Output;
-    if (output.Width == 0 || output.Height == 0)
+    var output_ = Viewport.Output;
+    if (output_.Width == 0 || output_.Height == 0)
     {
       return;
     }
-    if (output.IsEmpty)
+    if (output_.IsEmpty)
     {
       return;
     }
@@ -391,12 +397,12 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
         Update();
       }
 
-      using (var context = graphContents.Open())
+      using (var context_ = graphContents.Open())
       {
         if (renderTarget == RenderTo.Screen)
         {
-          var state = CreateRenderState(renderVisible: Viewport.Visible, renderingType: RenderTo.Screen);
-          OnRenderCore(dc: context, state: state);
+          var state_ = CreateRenderState(renderVisible: Viewport.Visible, renderingType: RenderTo.Screen);
+          OnRenderCore(dc: context_, state: state_);
         }
       }
       updateCalled = false;
@@ -412,17 +418,17 @@ public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INo
 
     if (!manualClip)
     {
-      drawingContext.PushClip(clipGeometry: new RectangleGeometry(rect: output));
+      drawingContext.PushClip(clipGeometry: new RectangleGeometry(rect: output_));
     }
-    var translate = !manualTranslate && IsTranslated;
-    if (translate)
+    var translate_ = !manualTranslate && IsTranslated;
+    if (translate_)
     {
       drawingContext.PushTransform(transform: new TranslateTransform(offsetX: Offset.X, offsetY: Offset.Y));
     }
 
     drawingContext.DrawDrawing(drawing: graphContents);
 
-    if (translate)
+    if (translate_)
     {
       drawingContext.Pop();
     }

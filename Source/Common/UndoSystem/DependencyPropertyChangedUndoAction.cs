@@ -4,10 +4,10 @@ namespace Crystal.Plot2D.Common.UndoSystem;
 
 public sealed class DependencyPropertyChangedUndoAction : UndoAction
 {
-  public DependencyProperty Property { get; }
-  public DependencyObject Target { get; }
-  public object OldValue { get; }
-  public object NewValue { get; }
+  private DependencyProperty Property { get; }
+  private DependencyObject Target { get; }
+  private object OldValue { get; }
+  private object NewValue { get; }
 
   public DependencyPropertyChangedUndoAction(DependencyObject target, DependencyProperty property, object oldValue, object newValue)
   {

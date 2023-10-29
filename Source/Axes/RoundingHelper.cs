@@ -19,42 +19,40 @@ internal static class RoundingHelper
       rem = MathHelper.Clamp(value: -rem, min: 0, max: 15);
       return Math.Round(value: number, digits: rem);
     }
-    else
-    {
-      var pow = Math.Pow(x: 10, y: rem - 1);
-      var val = pow * Math.Round(a: number / Math.Pow(x: 10, y: rem - 1));
-      return val;
-    }
+
+    var pow_ = Math.Pow(x: 10, y: rem - 1);
+    var val_ = pow_ * Math.Round(a: number / Math.Pow(x: 10, y: rem - 1));
+    return val_;
   }
 
   internal static double Round(double value, Range<double> range)
   {
-    var log = GetDifferenceLog(min: range.Min, max: range.Max);
+    var log_ = GetDifferenceLog(min: range.Min, max: range.Max);
 
-    return Round(number: value, rem: log);
+    return Round(number: value, rem: log_);
   }
 
   internal static RoundingInfo CreateRoundedRange(double min, double max)
   {
-    var delta = max - min;
+    var delta_ = max - min;
 
-    if (delta == 0)
+    if (delta_ == 0)
     {
       return new RoundingInfo { Min = min, Max = max, Log = 0 };
     }
 
-    var log = (int)Math.Round(a: Math.Log10(d: Math.Abs(value: delta))) + 1;
+    var log_ = (int)Math.Round(a: Math.Log10(d: Math.Abs(value: delta_))) + 1;
 
-    var newMin = Round(number: min, rem: log);
-    var newMax = Round(number: max, rem: log);
-    if (newMin == newMax)
+    var newMin_ = Round(number: min, rem: log_);
+    var newMax_ = Round(number: max, rem: log_);
+    if (newMin_ == newMax_)
     {
-      log--;
-      newMin = Round(number: min, rem: log);
-      newMax = Round(number: max, rem: log);
+      log_--;
+      newMin_ = Round(number: min, rem: log_);
+      newMax_ = Round(number: max, rem: log_);
     }
 
-    return new RoundingInfo { Min = newMin, Max = newMax, Log = log };
+    return new RoundingInfo { Min = newMin_, Max = newMax_, Log = log_ };
   }
 }
 

@@ -1,27 +1,18 @@
-﻿using System;
-using System.Windows;
-using Crystal.Plot2D.Charts;
+﻿using Crystal.Plot2D.Charts;
 using Crystal.Plot2D.Common.Palettes;
+using System;
+using System.Windows;
 using DataSource = Crystal.Plot2D.DataSources.MultiDimensional.IDataSource2D<double>;
 
 namespace Crystal.Plot2D.Isolines;
 
 public abstract class IsolineGraphBase : ContentGraph
 {
-  protected IsolineGraphBase() { }
+  protected IsolineCollection Collection { get; set; } = new();
 
-  private IsolineCollection collection = new();
-  protected IsolineCollection Collection
-  {
-    get => collection;
-    set => collection = value;
-  }
+  protected IsolineBuilder IsolineBuilder { get; } = new();
 
-  private readonly IsolineBuilder isolineBuilder = new();
-  protected IsolineBuilder IsolineBuilder => isolineBuilder;
-
-  private readonly IsolineTextAnnotator annotator = new();
-  protected IsolineTextAnnotator Annotator => annotator;
+  protected IsolineTextAnnotator Annotator { get; } = new();
 
   #region Properties
 
@@ -182,7 +173,6 @@ public abstract class IsolineGraphBase : ContentGraph
     propertyType: typeof(double),
     ownerType: typeof(IsolineGraphBase),
     typeMetadata: new FrameworkPropertyMetadata(defaultValue: 1.0, flags: FrameworkPropertyMetadataOptions.Inherits));
-
 
   #endregion // end of Properties
 

@@ -207,6 +207,7 @@ public sealed class DefaultContextMenu : IPlotterElement
 
   private bool contextMenuOpen;
   private readonly ObservableCollection<object> dynamicMenuItems = new();
+
   private void plotter_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
   {
     var position = e.GetPosition(relativeTo: plotter);
@@ -219,6 +220,7 @@ public sealed class DefaultContextMenu : IPlotterElement
       {
         staticMenuItems.Remove(item: item);
       }
+  
       dynamicMenuItems.Clear();
       var dynamicItems = hitResults.Where(predicate: r =>
       {

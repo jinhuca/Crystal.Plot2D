@@ -6,6 +6,7 @@ namespace Crystal.Plot2D.Axes.Numeric;
 public class CustomBaseNumericLabelProvider : LabelProvider<double>
 {
   private double customBase = 2;
+
   /// <summary>
   /// Gets or sets the custom base.
   /// </summary>
@@ -55,6 +56,7 @@ public class CustomBaseNumericLabelProvider : LabelProvider<double>
   }
 
   private string customBaseString;
+
   /// <summary>
   /// Gets or sets the custom base string.
   /// </summary>
@@ -74,23 +76,23 @@ public class CustomBaseNumericLabelProvider : LabelProvider<double>
 
   protected override string GetStringCore(LabelTickInfo<double> tickInfo)
   {
-    var value = tickInfo.Tick / customBase;
+    var value_ = tickInfo.Tick / customBase;
 
-    var customBaseStr = customBaseString ?? customBase.ToString(provider: CultureInfo.InvariantCulture);
-    string result;
-    if (value == 1)
+    var customBaseStr_ = customBaseString ?? customBase.ToString(provider: CultureInfo.InvariantCulture);
+    string result_;
+    if (Math.Abs(value_ - 1) < Constants.Constants.FloatComparisonTolerance)
     {
-      result = customBaseStr;
+      result_ = customBaseStr_;
     }
-    else if (value == -1)
+    else if (Math.Abs(value_ - -1) < Constants.Constants.FloatComparisonTolerance)
     {
-      result = "-" + customBaseStr;
+      result_ = "-" + customBaseStr_;
     }
     else
     {
-      result = value.ToString(provider: CultureInfo.InvariantCulture) + customBaseStr;
+      result_ = value_.ToString(provider: CultureInfo.InvariantCulture) + customBaseStr_;
     }
 
-    return result;
+    return result_;
   }
 }

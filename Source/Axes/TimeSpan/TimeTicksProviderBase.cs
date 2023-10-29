@@ -129,8 +129,7 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
   {
     get
     {
-      var smallerDiff_ = DifferenceIn.Smallest;
-      if (strategy.TryGetLowerDiff(diff: diff, lowerDiff: out smallerDiff_) && minorProviders.TryGetValue(smallerDiff_, out var provider_))
+      if (strategy.TryGetLowerDiff(diff: diff, lowerDiff: out var smallerDiff_) && minorProviders.TryGetValue(smallerDiff_, out var provider_))
       {
         var minorProvider_ = (MinorTimeProviderBase<T>)provider_;
         minorProvider_.SetTicks(ticks: result.Ticks);

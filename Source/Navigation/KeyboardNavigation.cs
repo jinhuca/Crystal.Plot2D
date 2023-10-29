@@ -46,111 +46,111 @@ public sealed class KeyboardNavigation : IPlotterElement
       return;
     }
 
-    var zoomOutToMouseCommandBinding = new CommandBinding(
+    var zoomOutToMouseCommandBinding_ = new CommandBinding(
       command: ChartCommands.ZoomOutToMouse,
       executed: ZoomOutToMouseExecute,
       canExecute: ZoomOutToMouseCanExecute);
-    AddBinding(binding: zoomOutToMouseCommandBinding);
+    AddBinding(binding: zoomOutToMouseCommandBinding_);
 
-    var zoomInToMouseCommandBinding = new CommandBinding(
+    var zoomInToMouseCommandBinding_ = new CommandBinding(
       command: ChartCommands.ZoomInToMouse,
       executed: ZoomInToMouseExecute,
       canExecute: ZoomInToMouseCanExecute);
-    AddBinding(binding: zoomInToMouseCommandBinding);
+    AddBinding(binding: zoomInToMouseCommandBinding_);
 
-    var zoomWithParamCommandBinding = new CommandBinding(
+    var zoomWithParamCommandBinding_ = new CommandBinding(
       command: ChartCommands.ZoomWithParameter,
       executed: ZoomWithParamExecute,
       canExecute: ZoomWithParamCanExecute);
-    AddBinding(binding: zoomWithParamCommandBinding);
+    AddBinding(binding: zoomWithParamCommandBinding_);
 
-    var zoomInCommandBinding = new CommandBinding(
+    var zoomInCommandBinding_ = new CommandBinding(
       command: ChartCommands.ZoomIn,
       executed: ZoomInExecute,
       canExecute: ZoomInCanExecute);
-    AddBinding(binding: zoomInCommandBinding);
+    AddBinding(binding: zoomInCommandBinding_);
 
-    var zoomOutCommandBinding = new CommandBinding(
+    var zoomOutCommandBinding_ = new CommandBinding(
       command: ChartCommands.ZoomOut,
       executed: ZoomOutExecute,
       canExecute: ZoomOutCanExecute);
-    AddBinding(binding: zoomOutCommandBinding);
+    AddBinding(binding: zoomOutCommandBinding_);
 
-    var fitToViewCommandBinding = new CommandBinding(
+    var fitToViewCommandBinding_ = new CommandBinding(
       command: ChartCommands.FitToView,
       executed: FitToViewExecute,
       canExecute: FitToViewCanExecute);
-    AddBinding(binding: fitToViewCommandBinding);
+    AddBinding(binding: fitToViewCommandBinding_);
 
-    var ScrollLeftCommandBinding = new CommandBinding(
+    var scrollLeftCommandBinding_ = new CommandBinding(
         command: ChartCommands.ScrollLeft,
         executed: ScrollLeftExecute,
         canExecute: ScrollLeftCanExecute);
-    AddBinding(binding: ScrollLeftCommandBinding);
+    AddBinding(binding: scrollLeftCommandBinding_);
 
-    var ScrollRightCommandBinding = new CommandBinding(
+    var scrollRightCommandBinding_ = new CommandBinding(
       command: ChartCommands.ScrollRight,
       executed: ScrollRightExecute,
       canExecute: ScrollRightCanExecute);
-    AddBinding(binding: ScrollRightCommandBinding);
+    AddBinding(binding: scrollRightCommandBinding_);
 
-    var ScrollUpCommandBinding = new CommandBinding(
+    var scrollUpCommandBinding_ = new CommandBinding(
       command: ChartCommands.ScrollUp,
       executed: ScrollUpExecute,
       canExecute: ScrollUpCanExecute);
-    AddBinding(binding: ScrollUpCommandBinding);
+    AddBinding(binding: scrollUpCommandBinding_);
 
-    var ScrollDownCommandBinding = new CommandBinding(
+    var scrollDownCommandBinding_ = new CommandBinding(
       command: ChartCommands.ScrollDown,
       executed: ScrollDownExecute,
       canExecute: ScrollDownCanExecute);
-    AddBinding(binding: ScrollDownCommandBinding);
+    AddBinding(binding: scrollDownCommandBinding_);
 
-    var SaveScreenshotCommandBinding = new CommandBinding(
+    var saveScreenshotCommandBinding_ = new CommandBinding(
       command: ChartCommands.SaveScreenshot,
       executed: SaveScreenshotExecute,
       canExecute: SaveScreenshotCanExecute);
-    AddBinding(binding: SaveScreenshotCommandBinding);
+    AddBinding(binding: saveScreenshotCommandBinding_);
 
-    var CopyScreenshotCommandBinding = new CommandBinding(
+    var copyScreenshotCommandBinding_ = new CommandBinding(
       command: ChartCommands.CopyScreenshot,
       executed: CopyScreenshotExecute,
       canExecute: CopyScreenshotCanExecute);
-    AddBinding(binding: CopyScreenshotCommandBinding);
+    AddBinding(binding: copyScreenshotCommandBinding_);
 
-    var ShowHelpCommandBinding = new CommandBinding(
+    var showHelpCommandBinding_ = new CommandBinding(
       command: ChartCommands.ShowHelp,
       executed: ShowHelpExecute,
       canExecute: ShowHelpCanExecute);
-    AddBinding(binding: ShowHelpCommandBinding);
+    AddBinding(binding: showHelpCommandBinding_);
 
-    var UndoCommandBinding = new CommandBinding(
+    var undoCommandBinding_ = new CommandBinding(
       command: ApplicationCommands.Undo,
       executed: UndoExecute,
       canExecute: UndoCanExecute);
-    AddBinding(binding: UndoCommandBinding);
+    AddBinding(binding: undoCommandBinding_);
 
-    var RedoCommandBinding = new CommandBinding(
+    var redoCommandBinding_ = new CommandBinding(
       command: ApplicationCommands.Redo,
       executed: RedoExecute,
       canExecute: RedoCanExecute);
-    AddBinding(binding: RedoCommandBinding);
+    AddBinding(binding: redoCommandBinding_);
   }
 
   #region Zoom Out To Mouse
 
   private void ZoomToPoint(double coeff)
   {
-    var pt = Mouse.GetPosition(relativeTo: plotter2D.CentralGrid);
-    var dataPoint = Viewport.Transform.ScreenToData(screenPoint: pt);
-    var visible = Viewport.Visible;
+    var pt_ = Mouse.GetPosition(relativeTo: plotter2D.CentralGrid);
+    var dataPoint_ = Viewport.Transform.ScreenToData(screenPoint: pt_);
+    var visible_ = Viewport.Visible;
 
-    Viewport.Visible = visible.Zoom(to: dataPoint, ratio: coeff);
+    Viewport.Visible = visible_.Zoom(to: dataPoint_, ratio: coeff);
   }
 
   private void ZoomOutToMouseExecute(object target, ExecutedRoutedEventArgs e)
   {
-    ZoomToPoint(coeff: zoomOutCoeff);
+    ZoomToPoint(coeff: ZoomOutCoeff);
     e.Handled = true;
   }
 
@@ -165,7 +165,7 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   private void ZoomInToMouseExecute(object target, ExecutedRoutedEventArgs e)
   {
-    ZoomToPoint(coeff: zoomInCoeff);
+    ZoomToPoint(coeff: ZoomInCoeff);
     e.Handled = true;
   }
 
@@ -180,8 +180,8 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   private void ZoomWithParamExecute(object target, ExecutedRoutedEventArgs e)
   {
-    var zoomParam = (double)e.Parameter;
-    plotter2D.Viewport.Zoom(factor: zoomParam);
+    var zoomParam_ = (double)e.Parameter;
+    plotter2D.Viewport.Zoom(factor: zoomParam_);
     e.Handled = true;
   }
 
@@ -194,10 +194,10 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   #region Zoom in
 
-  private const double zoomInCoeff = 0.9;
+  private const double ZoomInCoeff = 0.9;
   private void ZoomInExecute(object target, ExecutedRoutedEventArgs e)
   {
-    Viewport.Zoom(factor: zoomInCoeff);
+    Viewport.Zoom(factor: ZoomInCoeff);
     e.Handled = true;
   }
 
@@ -210,10 +210,11 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   #region Zoom out
 
-  private const double zoomOutCoeff = 1 / zoomInCoeff;
+  private const double ZoomOutCoeff = 1 / ZoomInCoeff;
+
   private void ZoomOutExecute(object target, ExecutedRoutedEventArgs e)
   {
-    Viewport.Zoom(factor: zoomOutCoeff);
+    Viewport.Zoom(factor: ZoomOutCoeff);
     e.Handled = true;
   }
 
@@ -243,26 +244,27 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   #region Scroll
 
-  private readonly double scrollCoeff = 0.05;
+  private const double ScrollCoeff = 0.05;
+
   private void ScrollVisibleProportionally(double xShiftCoeff, double yShiftCoeff)
   {
-    var visible = Viewport.Visible;
-    var oldVisible = visible;
-    var width = visible.Width;
-    var height = visible.Height;
+    var visible_ = Viewport.Visible;
+    var oldVisible_ = visible_;
+    var width_ = visible_.Width;
+    var height_ = visible_.Height;
 
-    double reverseCoeff = isReversed ? -1 : 1;
-    visible.Offset(offsetX: reverseCoeff * xShiftCoeff * width, offsetY: reverseCoeff * yShiftCoeff * height);
+    double reverseCoeff_ = isReversed ? -1 : 1;
+    visible_.Offset(offsetX: reverseCoeff_ * xShiftCoeff * width_, offsetY: reverseCoeff_ * yShiftCoeff * height_);
 
-    Viewport.Visible = visible;
-    plotter2D.UndoProvider.AddAction(action: new DependencyPropertyChangedUndoAction(target: Viewport, property: Viewport2D.VisibleProperty, oldValue: oldVisible, newValue: visible));
+    Viewport.Visible = visible_;
+    plotter2D.UndoProvider.AddAction(action: new DependencyPropertyChangedUndoAction(target: Viewport, property: Viewport2D.VisibleProperty, oldValue: oldVisible_, newValue: visible_));
   }
 
   #region ScrollLeft
 
   private void ScrollLeftExecute(object target, ExecutedRoutedEventArgs e)
   {
-    ScrollVisibleProportionally(xShiftCoeff: scrollCoeff, yShiftCoeff: 0);
+    ScrollVisibleProportionally(xShiftCoeff: ScrollCoeff, yShiftCoeff: 0);
     e.Handled = true;
   }
 
@@ -277,7 +279,7 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   private void ScrollRightExecute(object target, ExecutedRoutedEventArgs e)
   {
-    ScrollVisibleProportionally(xShiftCoeff: -scrollCoeff, yShiftCoeff: 0);
+    ScrollVisibleProportionally(xShiftCoeff: -ScrollCoeff, yShiftCoeff: 0);
     e.Handled = true;
   }
 
@@ -292,7 +294,7 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   private void ScrollUpExecute(object target, ExecutedRoutedEventArgs e)
   {
-    ScrollVisibleProportionally(xShiftCoeff: 0, yShiftCoeff: -scrollCoeff);
+    ScrollVisibleProportionally(xShiftCoeff: 0, yShiftCoeff: -ScrollCoeff);
     e.Handled = true;
   }
 
@@ -307,7 +309,7 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   private void ScrollDownExecute(object target, ExecutedRoutedEventArgs e)
   {
-    ScrollVisibleProportionally(xShiftCoeff: 0, yShiftCoeff: scrollCoeff);
+    ScrollVisibleProportionally(xShiftCoeff: 0, yShiftCoeff: ScrollCoeff);
     e.Handled = true;
   }
 
@@ -324,14 +326,14 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   private void SaveScreenshotExecute(object target, ExecutedRoutedEventArgs e)
   {
-    SaveFileDialog dlg = new();
-    dlg.Filter = "PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg|BMP (*.bmp)|*.bmp|GIF (*.gif)|*.gif";
-    dlg.FilterIndex = 1;
-    dlg.AddExtension = true;
-    if (dlg.ShowDialog().GetValueOrDefault(defaultValue: false))
+    SaveFileDialog dlg_ = new();
+    dlg_.Filter = "PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg|BMP (*.bmp)|*.bmp|GIF (*.gif)|*.gif";
+    dlg_.FilterIndex = 1;
+    dlg_.AddExtension = true;
+    if (dlg_.ShowDialog().GetValueOrDefault(defaultValue: false))
     {
-      var filePath = dlg.FileName;
-      plotter2D.SaveScreenShot(filePath: filePath);
+      var filePath_ = dlg_.FileName;
+      plotter2D.SaveScreenShot(filePath: filePath_);
       e.Handled = true;
     }
   }
@@ -365,14 +367,14 @@ public sealed class KeyboardNavigation : IPlotterElement
   {
     if (!aboutWindowOpened)
     {
-      AboutWindow window = new();
-      window.Closed += aboutWindow_Closed;
-      window.DataContext = plotter2D;
+      AboutWindow window_ = new();
+      window_.Closed += aboutWindow_Closed;
+      window_.DataContext = plotter2D;
 
-      window.Owner = Window.GetWindow(dependencyObject: plotter2D);
+      window_.Owner = Window.GetWindow(dependencyObject: plotter2D);
 
       aboutWindowOpened = true;
-      window.Show();
+      window_.Show();
 
       e.Handled = true;
     }
@@ -380,8 +382,8 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   private void aboutWindow_Closed(object sender, EventArgs e)
   {
-    var window = (Window)sender;
-    window.Closed -= aboutWindow_Closed;
+    var window_ = (Window)sender;
+    window_.Closed -= aboutWindow_Closed;
     aboutWindowOpened = false;
   }
 
@@ -436,9 +438,9 @@ public sealed class KeyboardNavigation : IPlotterElement
 
   void IPlotterElement.OnPlotterDetaching(PlotterBase plotter)
   {
-    foreach (var commandBinding in addedBindings)
+    foreach (var commandBinding_ in addedBindings)
     {
-      plotter.CommandBindings.Remove(commandBinding: commandBinding);
+      plotter.CommandBindings.Remove(commandBinding: commandBinding_);
     }
     addedBindings.Clear();
 

@@ -4,7 +4,7 @@ namespace Crystal.Plot2D.Common.Auxiliary;
 
 public static class ColorExtensions
 {
-  internal static Color MakeTransparent(this Color color, int alpha)
+  private static Color MakeTransparent(this Color color, int alpha)
   {
     color.A = (byte)alpha;
     return color;

@@ -6,6 +6,7 @@ namespace Crystal.Plot2D.ViewportConstraints;
 public class ScaleInjectionConstraint : ViewportConstraint
 {
   private readonly Viewport2D parentViewport;
+
   public ScaleInjectionConstraint(Viewport2D parentViewport)
   {
     this.parentViewport = parentViewport ?? throw new ArgumentNullException(paramName: nameof(parentViewport));
@@ -39,13 +40,13 @@ public class ScaleInjectionConstraint : ViewportConstraint
 
   public override DataRect Apply(DataRect previousDataRect, DataRect proposedDataRect, Viewport2D viewport)
   {
-    var parentVisible = parentViewport.Visible;
+    var parentVisible_ = parentViewport.Visible;
 
-    var xmin = parentVisible.XMin * xScale + xShift;
-    var xmax = parentVisible.XMax * xScale + xShift;
-    var ymin = parentVisible.YMin * yScale + yShift;
-    var ymax = parentVisible.YMax * yScale + yShift;
+    var xMin_ = parentVisible_.XMin * xScale + xShift;
+    var xMax_ = parentVisible_.XMax * xScale + xShift;
+    var yMin_ = parentVisible_.YMin * yScale + yShift;
+    var yMax_ = parentVisible_.YMax * yScale + yShift;
 
-    return DataRect.Create(xMin: xmin, yMin: ymin, xMax: xmax, yMax: ymax);
+    return DataRect.Create(xMin: xMin_, yMin: yMin_, xMax: xMax_, yMax: yMax_);
   }
 }

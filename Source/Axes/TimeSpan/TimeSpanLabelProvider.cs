@@ -7,21 +7,22 @@ public sealed class TimeSpanLabelProvider : LabelProviderBase<System.TimeSpan>
 {
   public override UIElement[] CreateLabels(ITicksInfo<System.TimeSpan> ticksInfo)
   {
-    var info = ticksInfo.Info;
-    var ticks = ticksInfo.Ticks;
+    var info_ = ticksInfo.Info;
+    var ticks_ = ticksInfo.Ticks;
 
-    LabelTickInfo<System.TimeSpan> tickInfo = new();
+    LabelTickInfo<System.TimeSpan> tickInfo_ = new();
 
-    var res = new UIElement[ticks.Length];
-    for (var i = 0; i < ticks.Length; i++)
+    var res_ = new UIElement[ticks_.Length];
+    for (var i_ = 0; i_ < ticks_.Length; i_++)
     {
-      tickInfo.Tick = ticks[i];
-      tickInfo.Info = info;
+      tickInfo_.Tick = ticks_[i_];
+      tickInfo_.Info = info_;
 
-      var tickText = GetString(tickInfo: tickInfo);
-      UIElement label = new TextBlock { Text = tickText, ToolTip = ticks[i] };
-      res[i] = label;
+      var tickText_ = GetString(tickInfo: tickInfo_);
+      UIElement label_ = new TextBlock { Text = tickText_, ToolTip = ticks_[i_] };
+      res_[i_] = label_;
     }
-    return res;
+
+    return res_;
   }
 }

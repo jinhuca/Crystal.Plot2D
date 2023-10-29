@@ -28,7 +28,8 @@ internal sealed class SortedXSearcher1d
     {
       return SearchResult1d.Empty;
     }
-    else if (Collection[index: lastIndex].X < _x)
+
+    if (Collection[index: lastIndex].X < _x)
     {
       return SearchResult1d.Empty;
     }

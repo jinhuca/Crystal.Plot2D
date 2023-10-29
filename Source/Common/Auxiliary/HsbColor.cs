@@ -90,11 +90,11 @@ public struct HsbColor
   /// <returns></returns>
   public static HsbColor FromArgbColor(Color color)
   {
-    double limit255_ = 255;
+    const double limit255 = 255;
 
-    var r_ = color.R / limit255_;
-    var g_ = color.G / limit255_;
-    var b_ = color.B / limit255_;
+    var r_ = color.R / limit255;
+    var g_ = color.G / limit255;
+    var b_ = color.B / limit255;
 
     var max_ = Math.Max(val1: Math.Max(val1: r_, val2: g_), val2: b_);
     var min_ = Math.Min(val1: Math.Min(val1: r_, val2: g_), val2: b_);
@@ -113,11 +113,11 @@ public struct HsbColor
     else
     {
       sat_ = len_ / max_;
-      if (r_ == max_)
+      if (Math.Abs(r_ - max_) < Constants.Constants.FloatComparisonTolerance)
       {
         hue_ = (g_ - b_) / len_;
       }
-      else if (g_ == max_)
+      else if (Math.Abs(g_ - max_) < Constants.Constants.FloatComparisonTolerance)
       {
         hue_ = 2 + (b_ - r_) / len_;
       }
@@ -133,11 +133,13 @@ public struct HsbColor
       hue_ += 360;
     }
 
-    HsbColor res_ = new();
-    res_.hue = hue_;
-    res_.saturation = sat_;
-    res_.brightness = brightness_;
-    res_.alpha = color.A / limit255_;
+    HsbColor res_ = new()
+    {
+      hue = hue_,
+      saturation = sat_,
+      brightness = brightness_,
+      alpha = color.A / limit255
+    };
     return res_;
   }
 
@@ -242,10 +244,8 @@ public struct HsbColor
              c_.hue == hue &&
              c_.saturation == saturation;
     }
-    else
-    {
-      return false;
-    }
+
+    return false;
   }
 
   /// <summary>

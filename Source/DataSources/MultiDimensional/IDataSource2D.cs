@@ -19,7 +19,7 @@ public interface IDataSource2D<T> : IGridSource2D where T : struct
   ///   The data.
   /// </value>
   T[,] Data { get; }
-  IDataSource2D<T> GetSubset(int x0, int y0, int countX, int countY, int stepX, int stepY);
+  IDataSource2D<T> GetSubset(int countY, int stepX, int stepY);
   Range<T>? Range { get; }
   T? MissingValue { get; }
 }

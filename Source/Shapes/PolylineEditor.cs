@@ -18,9 +18,12 @@ public class PolylineEditor : IPlotterElement
   /// <summary>
   ///   Initializes a new instance of the <see cref="PolylineEditor"/> class.
   /// </summary>
-  public PolylineEditor() { }
+  public PolylineEditor()
+  {
+  }
 
   private ViewportPolylineBase polyline;
+
   /// <summary>
   /// Gets or sets the polyline, to edit points of which.
   /// </summary>
@@ -36,21 +39,20 @@ public class PolylineEditor : IPlotterElement
         throw new ArgumentNullException(paramName: nameof(Polyline));
       }
 
-      if (polyline != value)
-      {
-        polyline = value;
-        var descr = DependencyPropertyDescriptor.FromProperty(dependencyProperty: ViewportPolylineBase.PointsProperty, targetType: typeof(ViewportPolylineBase));
-        descr.AddValueChanged(component: polyline, handler: OnPointsReplaced);
+      if (polyline == value) return;
+      polyline = value;
+      var descriptor_ = DependencyPropertyDescriptor.FromProperty(dependencyProperty: ViewportPolylineBase.PointsProperty, targetType: typeof(ViewportPolylineBase));
+      descriptor_.AddValueChanged(component: polyline, handler: OnPointsReplaced);
 
-        if (plotter != null)
-        {
-          AddLineToPlotter(asyncVar: false);
-        }
+      if (plotter != null)
+      {
+        AddLineToPlotter(asyncVar: false);
       }
     }
   }
 
   private bool pointsAdded;
+
   private void OnPointsReplaced(object sender, EventArgs e)
   {
     if (plotter == null)
@@ -63,15 +65,15 @@ public class PolylineEditor : IPlotterElement
       return;
     }
 
-    var line = (ViewportPolylineBase)sender;
+    var line_ = (ViewportPolylineBase)sender;
 
     pointsAdded = true;
-    List<IPlotterElement> draggablePoints = new();
-    GetDraggablePoints(collection: draggablePoints);
+    List<IPlotterElement> draggablePoints_ = new();
+    GetDraggablePoints(collection: draggablePoints_);
 
-    foreach (var point in draggablePoints)
+    foreach (var point_ in draggablePoints_)
     {
-      plotter.Children.Add(item: point);
+      plotter.Children.Add(item: point_);
     }
   }
 
@@ -79,9 +81,9 @@ public class PolylineEditor : IPlotterElement
   {
     if (!asyncVar)
     {
-      foreach (var item in GetAllElementsToAdd())
+      foreach (var item_ in GetAllElementsToAdd())
       {
-        plotter.Children.Add(item: item);
+        plotter.Children.Add(item: item_);
       }
     }
     else
@@ -92,26 +94,25 @@ public class PolylineEditor : IPlotterElement
 
   private List<IPlotterElement> GetAllElementsToAdd()
   {
-    var result = new List<IPlotterElement>(capacity: 1 + polyline.Points.Count);
-    result.Add(item: polyline);
+    var result_ = new List<IPlotterElement>(capacity: 1 + polyline.Points.Count) { polyline };
 
-    GetDraggablePoints(collection: result);
+    GetDraggablePoints(collection: result_);
 
-    return result;
+    return result_;
   }
 
   private void GetDraggablePoints(List<IPlotterElement> collection)
   {
-    for (var i = 0; i < polyline.Points.Count; i++)
+    for (var i_ = 0; i_ < polyline.Points.Count; i_++)
     {
-      DraggablePoint point = new();
-      point.SetBinding(dp: PositionalViewportUIContainer.PositionProperty, binding: new Binding
+      DraggablePoint point_ = new();
+      point_.SetBinding(dp: PositionalViewportUIContainer.PositionProperty, binding: new Binding
       {
         Source = polyline,
-        Path = new PropertyPath(path: "Points[" + i + "]"),
+        Path = new PropertyPath(path: "Points[" + i_ + "]"),
         Mode = BindingMode.TwoWay
       });
-      collection.Add(item: point);
+      collection.Add(item: point_);
     }
   }
 

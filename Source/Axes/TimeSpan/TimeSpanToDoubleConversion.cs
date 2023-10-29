@@ -23,17 +23,17 @@ internal sealed class TimeSpanToDoubleConversion
 
   internal System.TimeSpan FromDouble(double d)
   {
-    var ratio = (d - min) / length;
-    var ticks = (long)(ticksMin + ticksLength * ratio);
+    var ratio_ = (d - min) / length;
+    var ticks_ = (long)(ticksMin + ticksLength * ratio_);
 
-    ticks = MathHelper.Clamp(value: ticks, min: System.TimeSpan.MinValue.Ticks, max: System.TimeSpan.MaxValue.Ticks);
+    ticks_ = MathHelper.Clamp(value: ticks_, min: System.TimeSpan.MinValue.Ticks, max: System.TimeSpan.MaxValue.Ticks);
 
-    return new System.TimeSpan(ticks: ticks);
+    return new System.TimeSpan(ticks: ticks_);
   }
 
   internal double ToDouble(System.TimeSpan span)
   {
-    var ratio = (span.Ticks - ticksMin) / (double)ticksLength;
-    return min + ratio * length;
+    var ratio_ = (span.Ticks - ticksMin) / (double)ticksLength;
+    return min + ratio_ * length;
   }
 }

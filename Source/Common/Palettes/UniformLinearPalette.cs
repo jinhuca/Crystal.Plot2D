@@ -61,42 +61,38 @@ public sealed class UniformLinearPalette : IPalette, ISupportInitialize
     {
       return Colors[index: 0];
     }
-    else if (t >= 1)
+
+    if (t >= 1)
     {
       return Colors[index: Colors.Count - 1];
     }
-    else
+    var i = 0;
+    while (Points[i] < t)
     {
-      var i = 0;
-      while (Points[i] < t)
-      {
-        i++;
-      }
-
-      var ratio = (Points[i] - t) / (Points[i] - Points[i - 1]);
-
-      Verify.IsTrue(condition: 0 <= ratio && ratio <= 1);
-
-      var c0 = Colors[index: i - 1];
-      var c1 = Colors[index: i];
-      var res = Color.FromRgb(
-        r: (byte)(c0.R * ratio + c1.R * (1 - ratio)),
-        g: (byte)(c0.G * ratio + c1.G * (1 - ratio)),
-        b: (byte)(c0.B * ratio + c1.B * (1 - ratio)));
-
-      // Increasing saturation and brightness
-      if (IncreaseBrightness)
-      {
-        var hsb = res.ToHsbColor();
-        //hsb.Saturation = 0.5 * (1 + hsb.Saturation);
-        hsb.Brightness = 0.5 * (1 + hsb.Brightness);
-        return hsb.ToArgbColor();
-      }
-      else
-      {
-        return res;
-      }
+      i++;
     }
+
+    var ratio = (Points[i] - t) / (Points[i] - Points[i - 1]);
+
+    Verify.IsTrue(condition: 0 <= ratio && ratio <= 1);
+
+    var c0 = Colors[index: i - 1];
+    var c1 = Colors[index: i];
+    var res = Color.FromRgb(
+      r: (byte)(c0.R * ratio + c1.R * (1 - ratio)),
+      g: (byte)(c0.G * ratio + c1.G * (1 - ratio)),
+      b: (byte)(c0.B * ratio + c1.B * (1 - ratio)));
+
+    // Increasing saturation and brightness
+    if (IncreaseBrightness)
+    {
+      var hsb = res.ToHsbColor();
+      //hsb.Saturation = 0.5 * (1 + hsb.Saturation);
+      hsb.Brightness = 0.5 * (1 + hsb.Brightness);
+      return hsb.ToArgbColor();
+    }
+
+    return res;
   }
 
   #region ISupportInitialize Members

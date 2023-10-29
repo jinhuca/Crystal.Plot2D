@@ -5,40 +5,41 @@ namespace Crystal.Plot2D.LegendItems;
 
 public static class LegendStyles
 {
-  private static Style defaultStyle;
+  private static Style _defaultStyle;
 
   public static Style Default
   {
     get
     {
-      if (defaultStyle == null)
+      if (_defaultStyle == null)
       {
-        var legendStyles = GetLegendStyles();
-        defaultStyle = (Style)legendStyles[key: typeof(Legend)];
+        var legendStyles_ = GetLegendStyles();
+        _defaultStyle = (Style)legendStyles_[key: typeof(Legend)];
       }
 
-      return defaultStyle;
+      return _defaultStyle;
     }
   }
 
-  private static Style noScrollStyle;
+  private static Style _noScrollStyle;
+
   public static Style NoScroll
   {
     get
     {
-      if (noScrollStyle == null)
+      if (_noScrollStyle == null)
       {
-        var legendStyles = GetLegendStyles();
-        noScrollStyle = (Style)legendStyles[key: "NoScrollLegendStyle"];
+        var legendStyles_ = GetLegendStyles();
+        _noScrollStyle = (Style)legendStyles_[key: "NoScrollLegendStyle"];
       }
 
-      return noScrollStyle;
+      return _noScrollStyle;
     }
   }
 
   private static ResourceDictionary GetLegendStyles()
   {
-    var legendStyles = (ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.Constants.LegendResourceUri, uriKind: UriKind.Relative));
-    return legendStyles;
+    var legendStyles_ = (ResourceDictionary)Application.LoadComponent(resourceLocator: new Uri(uriString: Constants.Constants.LegendResourceUri, uriKind: UriKind.Relative));
+    return legendStyles_;
   }
 }

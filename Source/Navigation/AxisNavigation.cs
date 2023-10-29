@@ -27,8 +27,8 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
 
   private static void OnPlacementChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    var navigation = (AxisNavigation)d;
-    navigation.OnPlacementChanged();
+    var navigation_ = (AxisNavigation)d;
+    navigation_.OnPlacementChanged();
   }
 
   private Panel listeningPanel;
@@ -46,8 +46,8 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
       return;
     }
 
-    var placement = Placement;
-    switch (placement)
+    var placement_ = Placement;
+    switch (placement_)
     {
       case AxisPlacement.Left:
         listeningPanel = plotter.LeftPanel;
@@ -115,8 +115,8 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
   {
     rmbInitialPosition = e.GetPosition(relativeTo: listeningPanel);
 
-    var foundActivePlotter = UpdateActivePlotter(e: e);
-    if (foundActivePlotter)
+    var foundActivePlotter_ = UpdateActivePlotter(e: e);
+    if (foundActivePlotter_)
     {
       rmbPressed = true;
       dragStartInViewport = rmbInitialPosition.ScreenToViewport(transform: activePlotter.Transform);
@@ -158,47 +158,47 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
     listeningPanel.ReleaseMouseCapture();
   }
 
-  private const double wheelZoomSpeed = 1.2;
+  private const double WheelZoomSpeed = 1.2;
   private void OnMouseWheel(object sender, MouseWheelEventArgs e)
   {
-    var mousePos = e.GetPosition(relativeTo: listeningPanel);
+    var mousePos_ = e.GetPosition(relativeTo: listeningPanel);
 
-    Rect listeningPanelBounds = new(size: listeningPanel.RenderSize);
-    if (!listeningPanelBounds.Contains(point: mousePos))
+    Rect listeningPanelBounds_ = new(size: listeningPanel.RenderSize);
+    if (!listeningPanelBounds_.Contains(point: mousePos_))
     {
       return;
     }
 
-    var foundActivePlotter = UpdateActivePlotter(e: e);
-    if (!foundActivePlotter)
+    var foundActivePlotter_ = UpdateActivePlotter(e: e);
+    if (!foundActivePlotter_)
     {
       return;
     }
 
-    var delta = -e.Delta;
+    var delta_ = -e.Delta;
 
-    var zoomTo = mousePos.ScreenToViewport(transform: activePlotter.Transform);
+    var zoomTo_ = mousePos_.ScreenToViewport(transform: activePlotter.Transform);
 
-    double zoomSpeed = Math.Abs(value: delta / Mouse.MouseWheelDeltaForOneLine);
-    zoomSpeed *= wheelZoomSpeed;
-    if (delta < 0)
+    double zoomSpeed_ = Math.Abs(value: delta_ / Mouse.MouseWheelDeltaForOneLine);
+    zoomSpeed_ *= WheelZoomSpeed;
+    if (delta_ < 0)
     {
-      zoomSpeed = 1 / zoomSpeed;
+      zoomSpeed_ = 1 / zoomSpeed_;
     }
 
-    var visible = activePlotter.Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
-    var oldVisible = activePlotter.Viewport.Visible;
+    var visible_ = activePlotter.Viewport.Visible.Zoom(to: zoomTo_, ratio: zoomSpeed_);
+    var oldVisible_ = activePlotter.Viewport.Visible;
     if (Placement.IsBottomOrTop())
     {
-      visible.YMin = oldVisible.YMin;
-      visible.Height = oldVisible.Height;
+      visible_.YMin = oldVisible_.YMin;
+      visible_.Height = oldVisible_.Height;
     }
     else
     {
-      visible.XMin = oldVisible.XMin;
-      visible.Width = oldVisible.Width;
+      visible_.XMin = oldVisible_.XMin;
+      visible_.Width = oldVisible_.Width;
     }
-    activePlotter.Viewport.Visible = visible;
+    activePlotter.Viewport.Visible = visible_;
 
     e.Handled = true;
   }
@@ -216,27 +216,27 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
         return;
       }
 
-      var screenMousePos = e.GetPosition(relativeTo: listeningPanel);
-      var dataMousePos = screenMousePos.ScreenToViewport(transform: activePlotter.Transform);
-      var visible = activePlotter.Viewport.Visible;
-      double delta;
+      var screenMousePos_ = e.GetPosition(relativeTo: listeningPanel);
+      var dataMousePos_ = screenMousePos_.ScreenToViewport(transform: activePlotter.Transform);
+      var visible_ = activePlotter.Viewport.Visible;
+      double delta_;
       if (Placement.IsBottomOrTop())
       {
-        delta = (dataMousePos - dragStartInViewport).X;
-        visible.XMin -= delta;
+        delta_ = (dataMousePos_ - dragStartInViewport).X;
+        visible_.XMin -= delta_;
       }
       else
       {
-        delta = (dataMousePos - dragStartInViewport).Y;
-        visible.YMin -= delta;
+        delta_ = (dataMousePos_ - dragStartInViewport).Y;
+        visible_.YMin -= delta_;
       }
 
-      if (screenMousePos != lmbInitialPosition)
+      if (screenMousePos_ != lmbInitialPosition)
       {
         listeningPanel.Cursor = Placement.IsBottomOrTop() ? Cursors.ScrollWE : Cursors.ScrollNS;
       }
 
-      activePlotter.Viewport.Visible = visible;
+      activePlotter.Viewport.Visible = visible_;
 
       e.Handled = true;
     }
@@ -250,33 +250,32 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
         return;
       }
 
-      var screenMousePos = e.GetPosition(relativeTo: listeningPanel);
-      var visible = activePlotter.Viewport.Visible;
-      double delta;
+      var screenMousePos_ = e.GetPosition(relativeTo: listeningPanel);
+      var visible_ = activePlotter.Viewport.Visible;
 
-      var isHorizontal = Placement.IsBottomOrTop();
-      delta = isHorizontal ? (screenMousePos - rmbInitialPosition).X : (screenMousePos - rmbInitialPosition).Y;
+      var isHorizontal_ = Placement.IsBottomOrTop();
+      var delta_ = isHorizontal_ ? (screenMousePos_ - rmbInitialPosition).X : (screenMousePos_ - rmbInitialPosition).Y;
 
-      if (delta < 0)
+      if (delta_ < 0)
       {
-        delta = 1 / Math.Exp(d: -delta / RmbZoomScale);
+        delta_ = 1 / Math.Exp(d: -delta_ / RmbZoomScale);
       }
       else
       {
-        delta = Math.Exp(d: delta / RmbZoomScale);
+        delta_ = Math.Exp(d: delta_ / RmbZoomScale);
       }
 
-      var center = dragStartInViewport;
+      var center_ = dragStartInViewport;
 
-      visible = isHorizontal ? rmbDragStartRect.ZoomX(to: center, ratio: delta) : rmbDragStartRect.ZoomY(to: center, ratio: delta);
+      visible_ = isHorizontal_ ? rmbDragStartRect.ZoomX(to: center_, ratio: delta_) : rmbDragStartRect.ZoomY(to: center_, ratio: delta_);
 
-      if (screenMousePos != lmbInitialPosition)
+      if (screenMousePos_ != lmbInitialPosition)
       {
         listeningPanel.Cursor = Placement.IsBottomOrTop() ? Cursors.ScrollWE : Cursors.ScrollNS;
       }
 
 
-      activePlotter.Viewport.Visible = visible;
+      activePlotter.Viewport.Visible = visible_;
 
       //e.Handled = true;
     }
@@ -303,8 +302,8 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
   {
     lmbInitialPosition = e.GetPosition(relativeTo: listeningPanel);
 
-    var foundActivePlotter = UpdateActivePlotter(e: e);
-    if (foundActivePlotter)
+    var foundActivePlotter_ = UpdateActivePlotter(e: e);
+    if (foundActivePlotter_)
     {
       lmbPressed = true;
       dragStartInViewport = lmbInitialPosition.ScreenToViewport(transform: activePlotter.Transform);
@@ -320,15 +319,15 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
 
   private bool UpdateActivePlotter(MouseEventArgs e)
   {
-    var axes = listeningPanel.Children.OfType<GeneralAxis>();
+    var axes_ = listeningPanel.Children.OfType<GeneralAxis>();
 
-    foreach (var axis in axes)
+    foreach (var axis_ in axes_)
     {
-      var positionInAxis = e.GetPosition(relativeTo: axis);
-      Rect axisBounds = new(size: axis.RenderSize);
-      if (axisBounds.Contains(point: positionInAxis))
+      var positionInAxis_ = e.GetPosition(relativeTo: axis_);
+      Rect axisBounds_ = new(size: axis_.RenderSize);
+      if (axisBounds_.Contains(point: positionInAxis_))
       {
-        activePlotter = axis.Plotter;
+        activePlotter = axis_.Plotter;
 
         return true;
       }

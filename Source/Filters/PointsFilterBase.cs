@@ -17,6 +17,7 @@ public abstract class PointsFilterBase : IPointsFilter
   {
     Changed.Raise(sender: this);
   }
+
   public event EventHandler Changed;
 
   #endregion

@@ -23,12 +23,10 @@ public sealed class ValueStore : CustomTypeDescriptor, INotifyPropertyChanged
     set => SetValue(propertyName: propertyName, value: value);
   }
 
-  public ValueStore SetValue(string propertyName, object value)
+  public void SetValue(string propertyName, object value)
   {
     cache[key: propertyName] = value;
     PropertyChanged.Raise(sender: this, propertyName: propertyName);
-
-    return this;
   }
 
   private PropertyDescriptorCollection collection;

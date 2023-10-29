@@ -7,7 +7,7 @@ internal static class ArrayExtensions
 {
   internal static T Last<T>(this T[] array)
   {
-    return array[array.Length - 1];
+    return array[^1];
   }
 
   internal static T[] CreateArray<T>(int length, T defaultValue)
@@ -17,6 +17,7 @@ internal static class ArrayExtensions
     {
       res[i] = defaultValue;
     }
+
     return res;
   }
 
@@ -26,7 +27,7 @@ internal static class ArrayExtensions
 
     for (var i = 0; i < array.Count - 1; i++)
     {
-      yield return new Range<T>(min: array[index: i], max: array[index: i + 1]);
+      yield return new Range<T>(min: array[index: i], max: array[i + 1]);
     }
   }
 }

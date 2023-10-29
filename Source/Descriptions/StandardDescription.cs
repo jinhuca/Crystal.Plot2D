@@ -6,6 +6,7 @@ namespace Crystal.Plot2D.Descriptions;
 public class StandardDescription : Description
 {
   public StandardDescription() { }
+
   public StandardDescription(string description)
   {
     DescriptionString = description ?? throw new ArgumentNullException(paramName: nameof(description));

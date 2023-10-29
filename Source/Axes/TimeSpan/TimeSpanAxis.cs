@@ -17,19 +17,19 @@ public class TimeSpanAxis : AxisBase<System.TimeSpan>
   private static readonly long maxTicks = System.TimeSpan.MaxValue.Ticks;
   private static System.TimeSpan DoubleToTimeSpan(double value)
   {
-    var ticks = (long)(value * 10000000000L);
+    var ticks_ = (long)(value * 10000000000L);
 
     // todo should we throw an exception if number of ticks is too big or small?
-    if (ticks < minTicks)
+    if (ticks_ < minTicks)
     {
-      ticks = minTicks;
+      ticks_ = minTicks;
     }
-    else if (ticks > maxTicks)
+    else if (ticks_ > maxTicks)
     {
-      ticks = maxTicks;
+      ticks_ = maxTicks;
     }
 
-    return new System.TimeSpan(ticks: ticks);
+    return new System.TimeSpan(ticks: ticks_);
   }
 
   private static double TimeSpanToDouble(System.TimeSpan time)
@@ -47,9 +47,9 @@ public class TimeSpanAxis : AxisBase<System.TimeSpan>
   /// <param name="maxValue">The value of axis type, corresponding to maximal viewport value.</param>
   public override void SetConversion(double min, System.TimeSpan minValue, double max, System.TimeSpan maxValue)
   {
-    var conversion = new TimeSpanToDoubleConversion(min: min, minSpan: minValue, max: max, maxSpan: maxValue);
+    var conversion_ = new TimeSpanToDoubleConversion(min: min, minSpan: minValue, max: max, maxSpan: maxValue);
 
-    ConvertToDouble = conversion.ToDouble;
-    ConvertFromDouble = conversion.FromDouble;
+    ConvertToDouble = conversion_.ToDouble;
+    ConvertFromDouble = conversion_.FromDouble;
   }
 }

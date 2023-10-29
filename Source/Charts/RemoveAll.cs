@@ -7,6 +7,7 @@ namespace Crystal.Plot2D.Charts;
 public sealed class RemoveAll : IPlotterElement
 {
   private Type type;
+
   [NotNull]
   public Type Type
   {

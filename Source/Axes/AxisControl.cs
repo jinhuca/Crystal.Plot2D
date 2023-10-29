@@ -862,14 +862,14 @@ public abstract class AxisControl<T> : AxisControlBase
 
         minorTicks_ = minorTicksProvider_.GetTicks(range: range, ticksCount: minorTicksCount_);
 
-        prevActualTicksCount_ = minorTicks_.Ticks.Length;
         var prevResult_ = result_;
         result_ = CheckMinorTicksArrangement(minorTicks: minorTicks_);
-        if(prevResult_ == TickCountChange.Decrease && result_ == TickCountChange.Increase)
+        if (prevResult_ == TickCountChange.Decrease && result_ == TickCountChange.Increase)
         {
           // stop tick number oscillating
           result_ = TickCountChange.Ok;
         }
+
         if(result_ == TickCountChange.Decrease)
         {
           var newMinorTicksCount_ = minorTicksProvider_.DecreaseTickCount(ticksCount: minorTicksCount_);
@@ -877,6 +877,7 @@ public abstract class AxisControl<T> : AxisControlBase
           {
             result_ = TickCountChange.Ok;
           }
+
           minorTicksCount_ = newMinorTicksCount_;
         }
         else if(result_ == TickCountChange.Increase)
@@ -886,17 +887,17 @@ public abstract class AxisControl<T> : AxisControlBase
           {
             result_ = TickCountChange.Ok;
           }
+
           minorTicksCount_ = newCount_;
         }
-
       } while(result_ != TickCountChange.Ok);
+
       prevMinorTicksCount = minorTicksCount_;
 
       var sizes_ = minorTicks_.TickSizes;
 
       var screenCoords_ = minorTicks_.Ticks.Select(
-          selector: coord => getCoordinate(arg: createDataPoint(arg: convertToDouble(arg: coord)).
-              DataToScreen(transform: transform))).ToArray();
+        selector: coord => getCoordinate(arg: createDataPoint(arg: convertToDouble(arg: coord)).DataToScreen(transform: transform))).ToArray();
 
       minorScreenTicks = new MinorTickInfo<double>[screenCoords_.Length];
       for(var i_ = 0; i_ < screenCoords_.Length; i_++)

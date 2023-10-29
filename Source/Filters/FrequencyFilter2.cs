@@ -15,77 +15,75 @@ public class FrequencyFilter2 : PointsFilterBase
 
   public override List<Point> Filter(List<Point> points)
   {
-    List<Point> result = new();
+    List<Point> result_ = new();
 
-    using (var enumerator = points.GetEnumerator())
+    using var enumerator_ = points.GetEnumerator();
+    var currentX_ = double.NegativeInfinity;
+
+    double minX_ = 0, maxX_ = 0, minY_ = 0, maxY_ = 0;
+
+    Point left_ = new(), right_ = new(), top_ = new(), bottom_ = new();
+
+    var isFirstPoint_ = true;
+    while (enumerator_.MoveNext())
     {
-      var currentX = double.NegativeInfinity;
-
-      double minX = 0, maxX = 0, minY = 0, maxY = 0;
-
-      Point left = new(), right = new(), top = new(), bottom = new();
-
-      var isFirstPoint = true;
-      while (enumerator.MoveNext())
+      var currPoint_ = enumerator_.Current;
+      var x_ = currPoint_.X;
+      var y_ = currPoint_.Y;
+      var xInt_ = Math.Floor(d: x_);
+      if (Math.Abs(xInt_ - currentX_) < Constants.Constants.FloatComparisonTolerance)
       {
-        var currPoint = enumerator.Current;
-        var x = currPoint.X;
-        var y = currPoint.Y;
-        var xInt = Math.Floor(d: x);
-        if (xInt == currentX)
+        if (x_ > maxX_)
         {
-          if (x > maxX)
-          {
-            maxX = x;
-            right = currPoint;
-          }
-
-          if (y > maxY)
-          {
-            maxY = y;
-            top = currPoint;
-          }
-          else if (y < minY)
-          {
-            minY = y;
-            bottom = currPoint;
-          }
-        }
-        else
-        {
-          if (!isFirstPoint)
-          {
-            result.Add(item: left);
-
-            var leftY = top.X < bottom.X ? top : bottom;
-            var rightY = top.X > bottom.X ? top : bottom;
-
-            if (top != bottom)
-            {
-              result.Add(item: leftY);
-              result.Add(item: rightY);
-            }
-            else if (top != left)
-            {
-              result.Add(item: top);
-            }
-
-            if (right != rightY)
-            {
-              result.Add(item: right);
-            }
-          }
-
-          currentX = xInt;
-          left = right = top = bottom = currPoint;
-          minX = maxX = x;
-          minY = maxY = y;
+          maxX_ = x_;
+          right_ = currPoint_;
         }
 
-        isFirstPoint = false;
+        if (y_ > maxY_)
+        {
+          maxY_ = y_;
+          top_ = currPoint_;
+        }
+        else if (y_ < minY_)
+        {
+          minY_ = y_;
+          bottom_ = currPoint_;
+        }
       }
+      else
+      {
+        if (!isFirstPoint_)
+        {
+          result_.Add(item: left_);
+
+          var leftY_ = top_.X < bottom_.X ? top_ : bottom_;
+          var rightY_ = top_.X > bottom_.X ? top_ : bottom_;
+
+          if (top_ != bottom_)
+          {
+            result_.Add(item: leftY_);
+            result_.Add(item: rightY_);
+          }
+          else if (top_ != left_)
+          {
+            result_.Add(item: top_);
+          }
+
+          if (right_ != rightY_)
+          {
+            result_.Add(item: right_);
+          }
+        }
+
+        currentX_ = xInt_;
+        left_ = right_ = top_ = bottom_ = currPoint_;
+        maxX_ = x_;
+        minY_ = maxY_ = y_;
+      }
+
+      isFirstPoint_ = false;
     }
 
-    return result;
+    return result_;
   }
 }

@@ -9,14 +9,17 @@ public enum AxisPlacement
   /// Axis is placed to the left.
   /// </summary>
   Left,
+
   /// <summary>
   /// Axis is placed to the right.
   /// </summary>
   Right,
+  
   /// <summary>
   /// Axis is placed to the top.
   /// </summary>
   Top,
+  
   /// <summary>
   /// Axis is placed to the bottom.
   /// </summary>

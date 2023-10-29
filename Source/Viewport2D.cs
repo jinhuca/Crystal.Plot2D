@@ -457,10 +457,8 @@ public class Viewport2D : DependencyObject
       // doesn't apply rects with zero square
       return DependencyProperty.UnsetValue;
     }
-    else
-    {
-      return newRect;
-    }
+
+    return newRect;
   }
 
   #endregion

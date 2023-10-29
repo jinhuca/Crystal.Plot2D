@@ -16,12 +16,12 @@ public sealed class DataRectConverter : TypeConverter
   {
     if (value == null)
     {
-      throw GetConvertFromException(value: value);
+      throw GetConvertFromException(value: null);
     }
 
-    if (value is string source)
+    if (value is string source_)
     {
-      return DataRect.Parse(source: source);
+      return DataRect.Parse(source: source_);
     }
 
     return base.ConvertFrom(context: context, culture: culture, value: value);
@@ -29,14 +29,14 @@ public sealed class DataRectConverter : TypeConverter
 
   public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
   {
-    if (destinationType != null && value is DataRect)
+    if (value is DataRect rect_)
     {
-      var rect = (DataRect)value;
       if (destinationType == typeof(string))
       {
-        return rect.ConvertToString(format: null, provider: culture);
+        return rect_.ConvertToString(format: null, provider: culture);
       }
     }
+
     return base.ConvertTo(context: context, culture: culture, value: value, destinationType: destinationType);
   }
 }
