@@ -163,7 +163,7 @@ public sealed class FastIsolineRenderer : IsolineRenderer
 
     // getting and filtering annotations to draw only visible ones
     Annotator.WayBeforeText = Math.Sqrt(d: visible.Width * visible.Width + visible.Height * visible.Height) / 8 * WayBeforeTextMultiplier;
-    var annotations = Annotator.Annotate(collection: collection, visible: visible)
+    var annotations = Annotator.Annotate(collection: collection)
     .Where(predicate: annotation =>
     {
       var viewportPosition = annotation.Position.DataToViewport(transform: transform);

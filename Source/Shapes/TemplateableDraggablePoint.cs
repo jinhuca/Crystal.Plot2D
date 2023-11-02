@@ -25,5 +25,4 @@ public class TemplateableDraggablePoint : DraggablePoint
     propertyType: typeof(ControlTemplate),
     ownerType: typeof(TemplateableDraggablePoint),
     typeMetadata: new FrameworkPropertyMetadata(propertyChangedCallback: null));
-
 }

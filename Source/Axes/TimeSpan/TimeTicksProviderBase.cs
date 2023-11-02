@@ -8,7 +8,8 @@ namespace Crystal.Plot2D.Axes.TimeSpan;
 public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
 {
   public event EventHandler Changed;
-  protected void RaiseChanged()
+
+  private void RaiseChanged()
   {
     if (Changed != null)
     {
@@ -16,13 +17,11 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
     }
   }
 
-  private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> providers =
-      new();
+  private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> providers = new();
 
   protected static Dictionary<DifferenceIn, ITicksProvider<T>> Providers => providers;
 
-  private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> minorProviders =
-      new();
+  private static readonly Dictionary<DifferenceIn, ITicksProvider<T>> minorProviders = new();
 
   protected static Dictionary<DifferenceIn, ITicksProvider<T>> MinorProviders => minorProviders;
 
@@ -31,6 +30,7 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
   #region ITicksProvider<T> Members
 
   private IDateTimeTicksStrategy strategy = new DefaultDateTimeTicksStrategy();
+
   public IDateTimeTicksStrategy Strategy
   {
     get => strategy;
@@ -61,7 +61,7 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
     if (providers.TryGetValue(key: diff, value: out var provider_))
     {
       var innerResult_ = provider_.GetTicks(range: range, ticksCount: ticksCount);
-      var ticks_ = ModifyTicksGuard(ticks: innerResult_.Ticks, info: diff);
+      var ticks_ = ModifyTicksGuard(ticks: innerResult_.Ticks);
 
       result_.Ticks = ticks_;
       result = result_;
@@ -71,9 +71,9 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
     throw new InvalidOperationException(message: Strings.Exceptions.UnsupportedRangeInAxis);
   }
 
-  private T[] ModifyTicksGuard(T[] ticks, object info)
+  private T[] ModifyTicksGuard(T[] ticks)
   {
-    var result_ = ModifyTicks(ticks: ticks, info: info);
+    var result_ = ModifyTicks(ticks: ticks);
     if (result_ == null)
     {
       throw new ArgumentNullException(paramName: nameof(ticks));
@@ -82,7 +82,7 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
     return result_;
   }
 
-  protected virtual T[] ModifyTicks(T[] ticks, object info)
+  private T[] ModifyTicks(T[] ticks)
   {
     return ticks;
   }
@@ -141,20 +141,9 @@ public abstract class TimeTicksProviderBase<T> : ITicksProvider<T>
     }
   }
 
-  public ITicksProvider<T> MajorProvider
-  {
-    get
-    {
-      var biggerDiff_ = DifferenceIn.Smallest;
-      if (strategy.TryGetBiggerDiff(diff: diff, biggerDiff: out biggerDiff_))
-      {
-        return providers[key: biggerDiff_];
-      }
-
-      return null;
-      // todo What to do if this already is the biggest provider?
-    }
-  }
+  public ITicksProvider<T> MajorProvider => 
+    strategy.TryGetBiggerDiff(diff: diff, biggerDiff: out var biggerDiff_) ? providers[key: biggerDiff_] : null;
+  // todo What to do if this already is the biggest provider?
 
   #endregion
 }

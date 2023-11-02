@@ -4,7 +4,7 @@
 					xmlns:m="clr-namespace:Crystal.Plot2D"
 					xmlns:markupExtensions="clr-namespace:Crystal.Plot2D.Common.Auxiliary.MarkupExtensions">
 
-	<Grid Canvas.Bottom="10" Canvas.Left="10" Panel.ZIndex="2" x:Key="Indicator">
+	<Grid Panel.ZIndex="2" x:Key="Indicator">
 		<Rectangle RadiusX="5" RadiusY="5" Fill="#B0FFFFFF" Stroke="LightGray" StrokeThickness="1"/>
 		<TextBlock Text="{markupExtensions:Resource Loading}" Margin="3"/>
 	</Grid>

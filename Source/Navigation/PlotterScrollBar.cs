@@ -50,7 +50,7 @@ public abstract class PlotterScrollBar : IPlotterElement
 
   protected abstract void UpdateScrollBar(Viewport2D viewport);
 
-  protected virtual void SetValue(Range<double> visibleRange, Range<double> domainRange)
+  protected void SetValue(Range<double> visibleRange)
   {
     scrollBar.Value = visibleRange.Min;
   }

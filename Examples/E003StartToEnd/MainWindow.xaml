@@ -6,6 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:E003StartToEnd"
         xmlns:shapes="clr-namespace:Crystal.Plot2D.Shapes;assembly=Crystal.Plot2D"
+        xmlns:navigation="clr-namespace:Crystal.Plot2D.Navigation;assembly=Crystal.Plot2D"
         mc:Ignorable="d" Background="DarkGray"
         Title="MainWindow" Height="700" Width="1250">
   <Window.Resources>
@@ -28,7 +29,9 @@
       <shapes:VerticalRange StartValue="0" EndValue="12" Fill="LightBlue">
         <TextBlock Text="Transition" Foreground="Red" FontSize="20"/>
       </shapes:VerticalRange>
-      <!--<p2:VerticalRange StartValue="2" EndValue="4" Fill="LightCoral"/>-->
+      <!--<p2:CursorCoordinateGraph FollowMouse="False" Cursor="No" LineStrokeThickness="5"/>-->
+      <!--<p2:AxisCursorGraph></p2:AxisCursorGraph>-->
+      <p2:HorizontalLine Value="0" StrokeThickness="4"></p2:HorizontalLine>
       <shapes:VerticalRange StartValue="13" EndValue="38" Fill="Aquamarine">
         <TextBlock Text="Ablation" Foreground="Blue" FontSize="20"/>
       </shapes:VerticalRange>

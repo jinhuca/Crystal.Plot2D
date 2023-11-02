@@ -8,7 +8,6 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Crystal.Plot2D.Charts;
 using Crystal.Plot2D.Common;
 using Crystal.Plot2D.Common.Auxiliary;
 using Crystal.Plot2D.Transforms;
@@ -94,7 +93,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private void UpdateSizeGetters()
   {
-    switch (placement)
+    switch(placement)
     {
       case AxisPlacement.Left:
       case AxisPlacement.Right:
@@ -194,7 +193,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
     Content = mainGrid;
 
-    var transformKey_ = AdditionalLabelTransformKey + placement_.ToString();
+    var transformKey_ = AdditionalLabelTransformKey + placement_;
     if(resources_.Contains(key: transformKey_))
     {
       additionalLabelTransform = (Transform)resources_[key: transformKey_];
@@ -619,7 +618,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
   private const double ScrCoord1 = 0; // px
   private double scrCoord2 = 10; // px
-  
+
   /// <summary>
   /// Gets or sets the size of main axis ticks.
   /// </summary>
@@ -852,7 +851,6 @@ public abstract class AxisControl<T> : AxisControlBase
     if(minorTicksProvider_ != null)
     {
       var minorTicksCount_ = prevMinorTicksCount;
-      var prevActualTicksCount_ = -1;
       ITicksInfo<T> minorTicks_;
       var result_ = TickCountChange.Ok;
       var iteration_ = 0;
@@ -864,7 +862,7 @@ public abstract class AxisControl<T> : AxisControlBase
 
         var prevResult_ = result_;
         result_ = CheckMinorTicksArrangement(minorTicks: minorTicks_);
-        if (prevResult_ == TickCountChange.Decrease && result_ == TickCountChange.Increase)
+        if(prevResult_ == TickCountChange.Decrease && result_ == TickCountChange.Increase)
         {
           // stop tick number oscillating
           result_ = TickCountChange.Ok;
@@ -1065,7 +1063,7 @@ public abstract class AxisControl<T> : AxisControlBase
   }
 
   private Func<T, double> convertToDouble;
-  
+
   /// <summary>
   /// Gets or sets the conversation of tick to double.
   /// Should not be null.
@@ -1154,7 +1152,7 @@ public abstract class AxisControl<T> : AxisControlBase
       if(result_ != TickCountChange.Ok)
       {
         var prevTickCount_ = tickCount_;
-        tickCount_ = result_ == TickCountChange.Decrease 
+        tickCount_ = result_ == TickCountChange.Decrease
           ? ticksProvider.DecreaseTickCount(ticksCount: tickCount_)
           : ticksProvider.IncreaseTickCount(ticksCount: tickCount_);
 
@@ -1174,15 +1172,15 @@ public abstract class AxisControl<T> : AxisControlBase
   private TickCountChange CheckLabelsArrangement(UIElement[] labels, T[] ticks)
   {
     var actualLabels_ = labels.Select(selector: (label, i) => new { Label = label, Index = i })
-        .Where(predicate: el => el.Label != null)
-        .Select(selector: el => new { Label = el.Label, Tick = ticks[el.Index] })
-        .ToList();
+      .Where(predicate: el => el.Label != null)
+      .Select(selector: el => new { el.Label, Tick = ticks[el.Index] })
+      .ToList();
 
     actualLabels_.ForEach(action: item => item.Label.Measure(availableSize: RenderSize));
 
     var sizeInfos_ = actualLabels_.Select(selector: item =>
         new { X = GetCoordinateFromTick(tick: item.Tick), Size = getSize(arg: item.Label.DesiredSize) })
-        .OrderBy(keySelector: item => item.X).ToArray();
+      .OrderBy(keySelector: item => item.X).ToArray();
 
     var res_ = TickCountChange.Ok;
 
@@ -1194,11 +1192,13 @@ public abstract class AxisControl<T> : AxisControlBase
         res_ = TickCountChange.Decrease;
         break;
       }
+
       if(sizeInfos_[i_].X + sizeInfos_[i_].Size * IncreaseRatio < sizeInfos_[i_ + 1].X)
       {
         increaseCount_++;
       }
     }
+
     if(increaseCount_ > sizeInfos_.Length / 2)
     {
       res_ = TickCountChange.Increase;

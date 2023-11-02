@@ -1,12 +1,10 @@
-﻿using System;
-using System.Globalization;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 
 namespace Crystal.Plot2D.Converters;
 
 public class BackgroundToForegroundConverter : GenericValueConverter<SolidColorBrush>
 {
-  public override object ConvertCore(SolidColorBrush value, Type targetType, object parameter, CultureInfo culture)
+  protected override object ConvertCore(SolidColorBrush value)
   {
     var back = value;
     var diff = back.Color - Colors.Black;

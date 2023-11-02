@@ -2,7 +2,7 @@
 
 namespace Crystal.Plot2D.Common.Auxiliary;
 
-public static class IPlotterElementExtensions
+public static class PlotterElementExtensions
 {
   public static void RemoveFromPlotter(this IPlotterElement element)
   {

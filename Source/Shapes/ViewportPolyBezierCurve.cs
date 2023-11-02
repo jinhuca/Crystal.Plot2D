@@ -28,6 +28,7 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
     typeMetadata: new FrameworkPropertyMetadata(defaultValue: null, propertyChangedCallback: OnPropertyChanged));
 
   private bool buildBezierPoints = true;
+
   public bool BuildBezierPoints
   {
     get => buildBezierPoints;
@@ -35,6 +36,7 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
   }
 
   private bool updating;
+
   protected override void UpdateUIRepresentationCore()
   {
     if (updating)
@@ -44,54 +46,56 @@ public class ViewportPolyBezierCurve : ViewportPolylineBase
 
     updating = true;
 
-    var transform = Plotter.Viewport.Transform;
+    var transform_ = Plotter.Viewport.Transform;
+    var geometry_ = PathGeometry;
+    var points_ = Points;
 
-    var geometry = PathGeometry;
-
-    var points = Points;
-
-    geometry.Clear();
+    geometry_.Clear();
 
     if (BezierPoints != null)
     {
-      points = BezierPoints;
+      points_ = BezierPoints;
 
-      var screenPoints = points.DataToScreen(transform: transform).ToArray();
-      PathFigure figure = new();
-      figure.StartPoint = screenPoints[0];
-      figure.Segments.Add(value: new PolyBezierSegment(points: screenPoints.Skip(skipCount: 1), isStroked: true));
-      geometry.Figures.Add(value: figure);
-      geometry.FillRule = FillRule;
+      var screenPoints_ = points_.DataToScreen(transform: transform_).ToArray();
+      PathFigure figure_ = new()
+      {
+        StartPoint = screenPoints_[0]
+      };
+      figure_.Segments.Add(value: new PolyBezierSegment(points: screenPoints_.Skip(skipCount: 1), isStroked: true));
+      geometry_.Figures.Add(value: figure_);
+      geometry_.FillRule = FillRule;
     }
-    else if (points == null) { }
+    else if (points_ == null)
+    {
+    }
     else
     {
-      PathFigure figure = new();
-      if (points.Count > 0)
+      PathFigure figure_ = new();
+      if (points_.Count > 0)
       {
-        Point[] bezierPoints = null;
-        figure.StartPoint = points[index: 0].DataToScreen(transform: transform);
-        if (points.Count > 1)
+        Point[] bezierPoints_ = null;
+        figure_.StartPoint = points_[index: 0].DataToScreen(transform: transform_);
+        if (points_.Count > 1)
         {
-          var screenPoints = points.DataToScreen(transform: transform).ToArray();
+          var screenPoints_ = points_.DataToScreen(transform: transform_).ToArray();
 
-          bezierPoints = BezierBuilder.GetBezierPoints(points: screenPoints).Skip(count: 1).ToArray();
+          bezierPoints_ = BezierBuilder.GetBezierPoints(points: screenPoints_).Skip(count: 1).ToArray();
 
-          figure.Segments.Add(value: new PolyBezierSegment(points: bezierPoints, isStroked: true));
+          figure_.Segments.Add(value: new PolyBezierSegment(points: bezierPoints_, isStroked: true));
         }
 
-        if (bezierPoints != null && buildBezierPoints)
+        if (bezierPoints_ != null && buildBezierPoints)
         {
-          Array.Resize(array: ref bezierPoints, newSize: bezierPoints.Length + 1);
-          Array.Copy(sourceArray: bezierPoints, sourceIndex: 0, destinationArray: bezierPoints, destinationIndex: 1, length: bezierPoints.Length - 1);
-          bezierPoints[0] = figure.StartPoint;
+          Array.Resize(array: ref bezierPoints_, newSize: bezierPoints_.Length + 1);
+          Array.Copy(sourceArray: bezierPoints_, sourceIndex: 0, destinationArray: bezierPoints_, destinationIndex: 1, length: bezierPoints_.Length - 1);
+          bezierPoints_[0] = figure_.StartPoint;
 
-          BezierPoints = new PointCollection(collection: bezierPoints.ScreenToData(transform: transform));
+          BezierPoints = new PointCollection(collection: bezierPoints_.ScreenToData(transform: transform_));
         }
       }
 
-      geometry.Figures.Add(value: figure);
-      geometry.FillRule = FillRule;
+      geometry_.Figures.Add(value: figure_);
+      geometry_.FillRule = FillRule;
     }
 
     updating = false;

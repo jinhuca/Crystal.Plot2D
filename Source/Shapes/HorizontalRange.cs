@@ -1,5 +1,4 @@
 ﻿using System.Windows;
-using Crystal.Plot2D.Common;
 using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Shapes;

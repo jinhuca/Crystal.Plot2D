@@ -1,5 +1,4 @@
 ﻿using System;
-using Crystal.Plot2D.Charts;
 
 namespace Crystal.Plot2D.Axes;
 

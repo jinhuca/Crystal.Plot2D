@@ -29,8 +29,8 @@ public class NonUniformDataSource2D<T> : INonUniformDataSource2D<T> where T : st
   public double[] XCoordinates { get; }
   public double[] YCoordinates { get; }
   public T[,] Data { get; }
-  public IDataSource2D<T> GetSubset(int countY, int stepX, int stepY) => throw new NotImplementedException();
-  public void ApplyMappings(DependencyObject marker, int x, int y) => throw new NotImplementedException();
+  public IDataSource2D<T> GetSubset() => throw new NotImplementedException();
+  public void ApplyMappings() => throw new NotImplementedException();
   public Point[,] Grid { get; private set; }
   public int Width => XCoordinates.Length;
   public int Height => YCoordinates.Length;

@@ -9,7 +9,6 @@ namespace Crystal.Plot2D.Filters;
 /// </summary>
 public interface IPointsFilter
 {
-
   /// <summary>
   ///   Performs filtering.
   /// </summary>

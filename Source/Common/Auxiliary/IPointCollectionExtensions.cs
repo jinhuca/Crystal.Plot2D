@@ -3,7 +3,7 @@ using System.Windows;
 
 namespace Crystal.Plot2D.Common.Auxiliary;
 
-public static class IPointCollectionExtensions
+internal static class PointCollectionExtensions
 {
   public static DataRect GetBounds(this IEnumerable<Point> points)
   {
@@ -12,9 +12,9 @@ public static class IPointCollectionExtensions
 
   public static IEnumerable<Point> Skip(this IList<Point> points, int skipCount)
   {
-    for (var i = skipCount; i < points.Count; i++)
+    for (var i_ = skipCount; i_ < points.Count; i_++)
     {
-      yield return points[index: i];
+      yield return points[index: i_];
     }
   }
 }

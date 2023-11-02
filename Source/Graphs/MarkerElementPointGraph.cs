@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Crystal.Plot2D.Common;
-using Crystal.Plot2D.DataSources;
 using Crystal.Plot2D.DataSources.OneDimensional;
 using Crystal.Plot2D.PointMarkers;
 using Crystal.Plot2D.Transforms;
@@ -54,18 +53,6 @@ public sealed class ElementMarkerPointsGraph : PointsGraphBase
     _grid = null;
     _canvas = null;
     base.OnPlotterDetaching(plotter: plotter);
-  }
-
-  protected override void OnDataChanged()
-  {
-    //			if (canvas != null)
-    //			{
-    //                foreach(UIElement child in canvas.Children)
-    //                    unused.Add(child);
-    //				canvas.Children.Clear();
-    //			}
-    // todo What is that?
-    base.OnDataChanged();
   }
 
   public ElementPointMarker Marker

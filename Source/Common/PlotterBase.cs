@@ -127,11 +127,11 @@ public abstract class PlotterBase : ContentControl
     OnLoaded();
   }
 
-  protected virtual void OnLoaded() => Focus();
+  protected void OnLoaded() => Focus();
 
   private void Plotter_Unloaded(object sender, RoutedEventArgs e) => OnUnloaded();
 
-  protected virtual void OnUnloaded() { }
+  protected void OnUnloaded() { }
 
   #endregion Loaded & Unloaded
 
@@ -169,7 +169,7 @@ public abstract class PlotterBase : ContentControl
   }
 
   private bool _isLoadedIntensively;
-  protected virtual bool IsLoadedInternal => _isLoadedIntensively || IsLoaded;
+  protected bool IsLoadedInternal => _isLoadedIntensively || IsLoaded;
 
   protected internal void ExecuteWaitingChildrenAdditions()
   {
@@ -309,7 +309,7 @@ public abstract class PlotterBase : ContentControl
             notifyingPanel_.ChildrenCreated += NotifyingItem_ChildrenCreated;
           }
         }
-        OnVisualChildAdded(target: (UIElement)item_, uIElementCollection: (UIElementCollection)sender);
+        OnVisualChildAdded(target: (UIElement)item_);
       }
     }
 
@@ -325,13 +325,13 @@ public abstract class PlotterBase : ContentControl
         }
       }
 
-      OnVisualChildRemoved(target: (UIElement)item_, uiElementCollection: (UIElementCollection)sender);
+      OnVisualChildRemoved(target: (UIElement)item_);
     }
   }
 
   public VisualBindingCollection VisualBindings { get; } = new();
 
-  protected virtual void OnVisualChildAdded(UIElement target, UIElementCollection uIElementCollection)
+  protected void OnVisualChildAdded(UIElement target)
   {
     if(_addingElements.Count > 0)
     {
@@ -384,7 +384,7 @@ public abstract class PlotterBase : ContentControl
     //yield return FrameworkElement.DataContextProperty;
   }
 
-  protected virtual void OnVisualChildRemoved(UIElement target, UIElementCollection uiElementCollection)
+  protected void OnVisualChildRemoved(UIElement target)
   {
     if(_removingElements.Count <= 0) return;
     var element = _removingElements.Peek();
@@ -406,7 +406,7 @@ public abstract class PlotterBase : ContentControl
     RemoveBindings(proxy: proxy, target: target);
   }
 
-  internal virtual IEnumerable<Panel> GetAllPanels()
+  internal IEnumerable<Panel> GetAllPanels()
   {
     yield return HeaderPanel;
     yield return FooterPanel;
@@ -488,7 +488,7 @@ public abstract class PlotterBase : ContentControl
     return result;
   }
 
-  protected virtual void OnChildAdded(IPlotterElement child)
+  protected void OnChildAdded(IPlotterElement child)
   {
     if(child == null) return;
     _addingElements.Push(item: child);
@@ -535,7 +535,7 @@ public abstract class PlotterBase : ContentControl
     }
   }
   
-  protected virtual void OnChildRemoved(IPlotterElement child)
+  protected void OnChildRemoved(IPlotterElement child)
   {
     if(child == null) return;
     CurrentChild = child;

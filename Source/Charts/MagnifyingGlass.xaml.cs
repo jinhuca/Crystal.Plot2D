@@ -6,7 +6,7 @@ using Crystal.Plot2D.Common;
 
 namespace Crystal.Plot2D.Charts;
 
-public partial class MagnifyingGlass : Grid, IPlotterElement
+public partial class MagnifyingGlass : IPlotterElement
 {
   public MagnifyingGlass()
   {

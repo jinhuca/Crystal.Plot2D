@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;
@@ -8,7 +7,6 @@ using System.Windows.Shapes;
 using Crystal.Plot2D.Charts;
 using Crystal.Plot2D.Common;
 using Crystal.Plot2D.Common.Auxiliary;
-using Crystal.Plot2D.DataSources;
 using Crystal.Plot2D.DataSources.OneDimensional;
 using Crystal.Plot2D.Descriptions;
 using Crystal.Plot2D.LegendItems;

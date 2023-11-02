@@ -92,7 +92,7 @@ public sealed class IsolineGraph : IsolineRenderer
         var transform = Plotter2D.Viewport.Transform;
         var wayBeforeText = new Rect(size: new Size(width: 2000, height: 2000)).ScreenToData(transform: transform).Width;
         Annotator.WayBeforeText = wayBeforeText;
-        var textLabels = Annotator.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
+        var textLabels = Annotator.Annotate(collection: Collection);
 
         foreach (var textLabel in textLabels)
         {
@@ -222,7 +222,7 @@ public sealed class IsolineGraph : IsolineRenderer
 
       var wayBeforeText = new Rect(size: new Size(width: 100, height: 100)).ScreenToData(transform: transform).Width;
       Annotator.WayBeforeText = wayBeforeText;
-      var textLabels = Annotator.Annotate(collection: Collection, visible: Plotter2D.Viewport.Visible);
+      var textLabels = Annotator.Annotate(collection: Collection);
       foreach (var textLabel in textLabels)
       {
         var text = CreateTextLabel(textLabel: textLabel);

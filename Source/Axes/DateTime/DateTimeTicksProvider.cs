@@ -32,7 +32,7 @@ public sealed class DateTimeTicksProvider : TimeTicksProviderBase<System.DateTim
     MinorProviders.Add(key: DifferenceIn.Millisecond, value: new MinorDateTimeProvider(owner: new MillisecondDateTimeProvider()));
   }
 
-  protected sealed override System.TimeSpan GetDifference(System.DateTime start, System.DateTime end)
+  protected override System.TimeSpan GetDifference(System.DateTime start, System.DateTime end)
   {
     return end - start;
   }
@@ -81,7 +81,7 @@ internal sealed class YearDateTimeProvider : DatePeriodTicksProvider
     return dt.Year;
   }
 
-  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int step)
   {
     var year = start.Year;
     var newYear = year / step * step;
@@ -126,7 +126,7 @@ internal sealed class MonthDateTimeProvider : DatePeriodTicksProvider
     return dt.Month + (dt.Year - start.Year) * 12;
   }
 
-  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int step)
   {
     return new System.DateTime(year: start.Year, month: 1, day: 1);
   }
@@ -159,7 +159,7 @@ internal sealed class DayDateTimeProvider : DatePeriodTicksProvider
     return (dt - start).Days;
   }
 
-  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int step)
   {
     return start.Date;
   }
@@ -192,7 +192,7 @@ internal sealed class HourDateTimeProvider : DatePeriodTicksProvider
     return (int)(dt - start).TotalHours;
   }
 
-  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int step)
   {
     return start.Date;
   }
@@ -225,7 +225,7 @@ internal sealed class MinuteDateTimeProvider : DatePeriodTicksProvider
     return (int)(dt - start).TotalMinutes;
   }
 
-  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int step)
   {
     return start.Date.AddHours(value: start.Hour);
   }
@@ -258,7 +258,7 @@ internal sealed class SecondDateTimeProvider : DatePeriodTicksProvider
     return (int)(dt - start).TotalSeconds;
   }
 
-  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int step)
   {
     return start.Date.AddHours(value: start.Hour).AddMinutes(value: start.Minute);
   }
@@ -291,7 +291,7 @@ internal sealed class MillisecondDateTimeProvider : DatePeriodTicksProvider
     return (int)(dt - start).TotalMilliseconds;
   }
 
-  protected override System.DateTime GetStart(System.DateTime start, int value, int step)
+  protected override System.DateTime GetStart(System.DateTime start, int step)
   {
     return start.Date.AddHours(value: start.Hour).AddMinutes(value: start.Minute).AddSeconds(value: start.Second);
   }

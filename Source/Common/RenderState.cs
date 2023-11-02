@@ -11,6 +11,7 @@ public enum RenderTo
   /// Rendering directly to screen
   /// </summary>
   Screen,
+
   /// <summary>
   /// Rendering to bitmap, which will be drawn to screen later.
   /// </summary>
@@ -21,7 +22,7 @@ public sealed class RenderState
 {
   public DataRect RenderVisible { get; }
   public RenderTo RenderingType { get; }
-  public Rect Output { get; }
+  internal Rect Output { get; }
   public DataRect Visible { get; }
 
   internal RenderState(DataRect renderVisible, DataRect visible, Rect output, RenderTo renderingType)

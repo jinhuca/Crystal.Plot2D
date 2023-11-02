@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
-using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -38,35 +37,37 @@ public sealed class DefaultContextMenu : IPlotterElement
 
   private static BitmapImage LoadIcon(string name)
   {
-    var currentAssembly = typeof(DefaultContextMenu).Assembly;
+    var currentAssembly_ = typeof(DefaultContextMenu).Assembly;
 
-    BitmapImage icon = new();
-    icon.BeginInit();
-    icon.StreamSource = currentAssembly.GetManifestResourceStream(name: "Crystal.Plot2D.Resources." + name + ".png");
-    icon.EndInit();
-    icon.Freeze();
+    BitmapImage icon_ = new();
+    icon_.BeginInit();
+    icon_.StreamSource = currentAssembly_.GetManifestResourceStream(name: "Crystal.Plot2D.Resources." + name + ".png");
+    icon_.EndInit();
+    icon_.Freeze();
 
-    return icon;
+    return icon_;
   }
 
-  private static StreamGeometry LoadIconGeometry(string geometryKey)
+  private static StreamGeometry LoadIconGeometry()
   {
-    var currentAssembly = typeof(DefaultContextMenu).Assembly;
-    StreamGeometry iconGeometry = new();
+    var currentAssembly_ = typeof(DefaultContextMenu).Assembly;
+    StreamGeometry iconGeometry_ = new();
 
-    return iconGeometry;
+    return iconGeometry_;
   }
 
   /// <summary>
   /// Initializes a new instance of the <see cref="DefaultContextMenu"/> class.
   /// </summary>
-  public DefaultContextMenu() { }
+  internal DefaultContextMenu()
+  {
+  }
 
   private ContextMenu PopulateContextMenu(PlotterBase target)
   {
-    ContextMenu menu = new();
+    ContextMenu menu_ = new();
     //menu.Background = Brushes.Beige;
-    MenuItem fitToViewMenuItem = new()
+    MenuItem fitToViewMenuItem_ = new()
     {
       Header = Strings.UIResources.ContextMenuFitToView,
       ToolTip = Strings.UIResources.ContextMenuFitToViewTooltip,
@@ -75,7 +76,7 @@ public sealed class DefaultContextMenu : IPlotterElement
       CommandTarget = target
     };
 
-    MenuItem savePictureMenuItem = new()
+    MenuItem savePictureMenuItem_ = new()
     {
       Header = Strings.UIResources.ContextMenuSaveScreenshot,
       ToolTip = Strings.UIResources.ContextMenuSaveScreenshotTooltip,
@@ -84,7 +85,7 @@ public sealed class DefaultContextMenu : IPlotterElement
       CommandTarget = target
     };
 
-    MenuItem copyPictureMenuItem = new()
+    MenuItem copyPictureMenuItem_ = new()
     {
       Header = Strings.UIResources.ContextMenuCopyScreenshot,
       ToolTip = Strings.UIResources.ContextMenuCopyScreenshotTooltip,
@@ -93,7 +94,7 @@ public sealed class DefaultContextMenu : IPlotterElement
       CommandTarget = target
     };
 
-    MenuItem quickHelpMenuItem = new()
+    MenuItem quickHelpMenuItem_ = new()
     {
       Header = Strings.UIResources.ContextMenuQuickHelp,
       ToolTip = Strings.UIResources.ContextMenuQuickHelpTooltip,
@@ -102,23 +103,23 @@ public sealed class DefaultContextMenu : IPlotterElement
       CommandTarget = target
     };
 
-    MenuItem reportFeedback = new()
+    MenuItem reportFeedback_ = new()
     {
       Header = Strings.UIResources.ContextMenuReportFeedback,
       ToolTip = Strings.UIResources.ContextMenuReportFeedbackTooltip,
       Icon = (Image)plotter.Resources[key: "SendFeedbackIcon"]
     };
-    reportFeedback.Click += reportFeedback_Click;
+    reportFeedback_.Click += reportFeedback_Click;
 
-    staticMenuItems.Add(item: fitToViewMenuItem);
-    staticMenuItems.Add(item: copyPictureMenuItem);
-    staticMenuItems.Add(item: savePictureMenuItem);
-    staticMenuItems.Add(item: quickHelpMenuItem);
-    staticMenuItems.Add(item: reportFeedback);
+    staticMenuItems.Add(item: fitToViewMenuItem_);
+    staticMenuItems.Add(item: copyPictureMenuItem_);
+    staticMenuItems.Add(item: savePictureMenuItem_);
+    staticMenuItems.Add(item: quickHelpMenuItem_);
+    staticMenuItems.Add(item: reportFeedback_);
 
-    menu.ItemsSource = staticMenuItems;
+    menu_.ItemsSource = staticMenuItems;
 
-    return menu;
+    return menu_;
   }
 
   private void reportFeedback_Click(object sender, RoutedEventArgs e)
@@ -152,8 +153,8 @@ public sealed class DefaultContextMenu : IPlotterElement
   {
     this.plotter = (PlotterBase)plotter;
 
-    var menu = PopulateContextMenu(target: plotter);
-    plotter.ContextMenu = menu;
+    var menu_ = PopulateContextMenu(target: plotter);
+    plotter.ContextMenu = menu_;
 
     plotter.PreviewMouseRightButtonDown += plotter_PreviewMouseRightButtonDown;
     plotter.PreviewMouseRightButtonUp += plotter_PreviewMouseRightButtonUp;
@@ -186,9 +187,9 @@ public sealed class DefaultContextMenu : IPlotterElement
   private void ContextMenu_Closed(object sender, RoutedEventArgs e)
   {
     contextMenuOpen = false;
-    foreach (var item in dynamicMenuItems)
+    foreach (var item_ in dynamicMenuItems)
     {
-      staticMenuItems.Remove(item: item);
+      staticMenuItems.Remove(item: item_);
     }
   }
 
@@ -210,44 +211,44 @@ public sealed class DefaultContextMenu : IPlotterElement
 
   private void plotter_PreviewMouseRightButtonUp(object sender, MouseButtonEventArgs e)
   {
-    var position = e.GetPosition(relativeTo: plotter);
-    if (mousePos == position)
+    var position_ = e.GetPosition(relativeTo: plotter);
+    if (mousePos == position_)
     {
       hitResults.Clear();
-      VisualTreeHelper.HitTest(reference: plotter, filterCallback: null, resultCallback: CollectAllVisuals_Callback, hitTestParameters: new PointHitTestParameters(point: position));
+      VisualTreeHelper.HitTest(reference: plotter, filterCallback: null, resultCallback: CollectAllVisuals_Callback, hitTestParameters: new PointHitTestParameters(point: position_));
 
-      foreach (var item in dynamicMenuItems)
+      foreach (var item_ in dynamicMenuItems)
       {
-        staticMenuItems.Remove(item: item);
+        staticMenuItems.Remove(item: item_);
       }
   
       dynamicMenuItems.Clear();
-      var dynamicItems = hitResults.Where(predicate: r =>
+      var dynamicItems_ = hitResults.Where(predicate: r =>
       {
-        if (r is IPlotterContextMenuSource menuSource)
+        if (r is IPlotterContextMenuSource menuSource_)
         {
-          menuSource.BuildMenu();
+          menuSource_.BuildMenu();
         }
 
-        var items = GetPlotterContextMenu(obj: r);
-        return items != null && items.Count > 0;
+        var items_ = GetPlotterContextMenu(obj: r);
+        return items_ != null && items_.Count > 0;
       }).SelectMany(selector: r =>
       {
-        var menuItems = GetPlotterContextMenu(obj: r);
+        var menuItems_ = GetPlotterContextMenu(obj: r);
 
-        if (r is FrameworkElement chart)
+        if (r is FrameworkElement chart_)
         {
-          foreach (var menuItem in menuItems.OfType<MenuItem>())
+          foreach (var menuItem_ in menuItems_.OfType<MenuItem>())
           {
-            menuItem.DataContext = chart.DataContext;
+            menuItem_.DataContext = chart_.DataContext;
           }
         }
-        return menuItems;
+        return menuItems_;
       }).ToList();
 
-      foreach (var item in dynamicItems)
+      foreach (var item_ in dynamicItems_)
       {
-        dynamicMenuItems.Add(item: item);
+        dynamicMenuItems.Add(item: item_);
         //MenuItem menuItem = item as MenuItem;
         //if (menuItem != null)
         //{

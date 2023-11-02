@@ -3,7 +3,6 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using Crystal.Plot2D.Axes;
-using Crystal.Plot2D.Charts;
 using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Common;

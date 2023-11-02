@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Windows;
 using Crystal.Plot2D.Charts;
 using Crystal.Plot2D.Common.Auxiliary;
-using Crystal.Plot2D.DataSources;
 using Crystal.Plot2D.DataSources.OneDimensional;
 using Crystal.Plot2D.Transforms;
 

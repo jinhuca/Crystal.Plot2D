@@ -14,12 +14,7 @@ public class ObservableCollectionWrapper<T> : INotifyCollectionChanged, IList<T>
 
   public ObservableCollectionWrapper(ObservableCollection<T> _collection)
   {
-    if (_collection == null)
-    {
-      throw new ArgumentNullException(paramName: "collection");
-    }
-
-    collection = _collection;
+    collection = _collection ?? throw new ArgumentNullException(paramName: nameof(_collection));
     _collection.CollectionChanged += collection_CollectionChanged;
   }
 

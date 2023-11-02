@@ -12,6 +12,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   public EnumerableDataSource(IEnumerable data) : base(data: data) { }
 
   private Func<T, Point> _xyMapping;
+
   [NotNull]
   public Func<T, Point> XYMapping
   {
@@ -24,6 +25,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   }
 
   private Func<T, double> _xMapping;
+
   [NotNull] 
   public Func<T, double> XMapping
   {
@@ -36,6 +38,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   }
 
   private Func<T, double> _yMapping;
+
   [NotNull] 
   public Func<T, double> YMapping
   {
@@ -57,7 +60,7 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
   public override IPointEnumerator GetEnumerator(DependencyObject context)
     => new EnumerablePointEnumerator<T>(dataSource: this);
 
-  internal List<Mapping<T>> Mappings { get; } = new();
+  private List<Mapping<T>> Mappings { get; } = new();
 
   internal void FillPoint(T elem, ref Point point)
   {
@@ -67,11 +70,12 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
     }
     else
     {
-      if(XMapping != null)
+      if (XMapping != null)
       {
         point.X = XMapping(arg: elem);
       }
-      if(YMapping != null)
+
+      if (YMapping != null)
       {
         point.Y = YMapping(arg: elem);
       }
@@ -80,8 +84,8 @@ public class EnumerableDataSource<T> : EnumerableDataSourceBase<T>
 
   internal void ApplyMappings(DependencyObject target, T elem)
   {
-    if(target == null) return;
-    foreach(var mapping_ in Mappings)
+    if (target == null) return;
+    foreach (var mapping_ in Mappings)
     {
       target.SetValue(dp: mapping_.Property, value: mapping_.F(arg: elem));
     }

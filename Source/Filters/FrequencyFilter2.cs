@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using Crystal.Plot2D.Charts;
 
 namespace Crystal.Plot2D.Filters;
 
 public class FrequencyFilter2 : PointsFilterBase
 {
   private Rect screenRect;
+
   public override void SetScreenRect(Rect screenRect)
   {
     this.screenRect = screenRect;
@@ -20,7 +20,7 @@ public class FrequencyFilter2 : PointsFilterBase
     using var enumerator_ = points.GetEnumerator();
     var currentX_ = double.NegativeInfinity;
 
-    double minX_ = 0, maxX_ = 0, minY_ = 0, maxY_ = 0;
+    double maxX_ = 0, minY_ = 0, maxY_ = 0;
 
     Point left_ = new(), right_ = new(), top_ = new(), bottom_ = new();
 

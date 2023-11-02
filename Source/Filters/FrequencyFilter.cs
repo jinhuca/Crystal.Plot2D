@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
-using Crystal.Plot2D.Charts;
 using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Filters;
 
-public sealed class FrequencyFilter : PointsFilterBase
+internal sealed class FrequencyFilter : PointsFilterBase
 {
-
   /// <summary>
   ///   Visible region in screen coordinates.
   /// </summary>

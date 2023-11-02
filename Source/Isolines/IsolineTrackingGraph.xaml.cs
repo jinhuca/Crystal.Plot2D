@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
+using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
@@ -6,16 +8,13 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Crystal.Plot2D.Common;
-using Crystal.Plot2D.Common.Auxiliary;
-using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Isolines;
 
 /// <summary>
 /// Draws one isoline line through mouse position.
 /// </summary>
-public partial class IsolineTrackingGraph : IsolineGraphBase
+public partial class IsolineTrackingGraph
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="IsolineTrackingGraph"/> class.
@@ -26,6 +25,7 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
   }
 
   private Style pathStyle;
+  
   /// <summary>
   /// Gets or sets style, applied to line path.
   /// </summary>
@@ -187,22 +187,22 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
     var width = DataSource.Width;
     var height = DataSource.Height;
     var found = false;
-    int i = 0, j = 0;
-    for (i = 0; i < width - 1; i++)
+    int i_, j_ = 0;
+    for (i_ = 0; i_ < width - 1; i_++)
     {
-      for (j = 0; j < height - 1; j++)
+      for (j_ = 0; j_ < height - 1; j_++)
       {
         Quad quad = new(
-        v00: grid[i, j],
-        v01: grid[i, j + 1],
-        v11: grid[i + 1, j + 1],
-        v10: grid[i + 1, j]);
+        v00: grid[i_, j_],
+        v01: grid[i_, j_ + 1],
+        v11: grid[i_ + 1, j_ + 1],
+        v10: grid[i_ + 1, j_]);
         if (quad.Contains(pt: pt))
         {
           found = true;
           foundQuad = quad;
-          foundI = i;
-          foundJ = j;
+          foundI = i_;
+          foundJ = j_;
 
           break;
         }
@@ -222,14 +222,14 @@ public partial class IsolineTrackingGraph : IsolineGraphBase
 
     var x = pt.X;
     var y = pt.Y;
-    var A = grid[i, j + 1].ToVector();         // @TODO: in common case add a sorting of points:
-    var B = grid[i + 1, j + 1].ToVector();       //   maxA ___K___ B
-    var C = grid[i + 1, j].ToVector();         //      |         |
-    var D = grid[i, j].ToVector();           //      M    P    N
-    var a = data[i, j + 1];            //		|         |
-    var b = data[i + 1, j + 1];          //		В ___L____С min
-    var c = data[i + 1, j];
-    var d = data[i, j];
+    var A = grid[i_, j_ + 1].ToVector();         // @TODO: in common case add a sorting of points:
+    var B = grid[i_ + 1, j_ + 1].ToVector();       //   maxA ___K___ B
+    var C = grid[i_ + 1, j_].ToVector();         //      |         |
+    var D = grid[i_, j_].ToVector();           //      M    P    N
+    var a = data[i_, j_ + 1];            //		|         |
+    var b = data[i_ + 1, j_ + 1];          //		В ___L____С min
+    var c = data[i_ + 1, j_];
+    var d = data[i_, j_];
 
     Vector K, L;
     double k, l;

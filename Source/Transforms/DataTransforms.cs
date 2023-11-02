@@ -183,7 +183,7 @@ public sealed class MercatorTransform : DataTransform
   /// </summary>
   /// <param name="pt">The point in data coordinates.</param>
   /// <returns></returns>
-  public sealed override Point DataToViewport(Point pt)
+  public override Point DataToViewport(Point pt)
   {
     var y = pt.Y;
     if (-MaxLatitude <= y && y <= MaxLatitude)
@@ -199,7 +199,7 @@ public sealed class MercatorTransform : DataTransform
   /// </summary>
   /// <param name="pt">The point in viewport coordinates.</param>
   /// <returns></returns>
-  public sealed override Point ViewportToData(Point pt)
+  public override Point ViewportToData(Point pt)
   {
     var y = pt.Y;
     if (-MaxLatitude <= y && y <= MaxLatitude)

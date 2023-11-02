@@ -1,5 +1,4 @@
 ﻿using System.Collections.ObjectModel;
-using Crystal.Plot2D.Common;
 using Crystal.Plot2D.Common.Auxiliary;
 
 namespace Crystal.Plot2D.Isolines;
@@ -24,9 +23,8 @@ public sealed class IsolineTextAnnotator
   /// Annotates the specified isoline collection.
   /// </summary>
   /// <param name="collection">The collection.</param>
-  /// <param name="visible">The visible rectangle.</param>
   /// <returns></returns>
-  public Collection<IsolineTextLabel> Annotate(IsolineCollection collection, DataRect visible)
+  internal Collection<IsolineTextLabel> Annotate(IsolineCollection collection)
   {
     Collection<IsolineTextLabel> res_ = new();
 

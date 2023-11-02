@@ -28,11 +28,12 @@ public abstract class IndividualArrangePanel : Panel
   /// <returns>
   ///   An ordered collection of elements that have the specified logical parent.
   /// </returns>
-  protected sealed override UIElementCollection CreateUIElementCollection(FrameworkElement logicalParent) => new UIChildrenCollection(visualParent: this, logicalParent: logicalParent);
+  protected sealed override UIElementCollection CreateUIElementCollection(FrameworkElement logicalParent) 
+    => new UIChildrenCollection(visualParent: this, logicalParent: logicalParent);
 
   internal bool InBatchAdd => Children1.IsAddingMany;
 
-  internal virtual void BeginBatchAdd() { Children1.IsAddingMany = true; }
+  internal virtual void BeginBatchAdd() => Children1.IsAddingMany = true;
 
   internal virtual void EndBatchAdd() => Children1.IsAddingMany = false;
 
@@ -42,12 +43,15 @@ public abstract class IndividualArrangePanel : Panel
   /// <param name="child">
   ///   The added child.
   /// </param>
-  protected internal virtual void OnChildAdded(FrameworkElement child) { }
+  protected internal virtual void OnChildAdded(FrameworkElement child)
+  {
+  }
 
   #region Overrides
 
+  /// <inheritdoc />
   /// <summary>
-  ///   Overrides <see cref="M:System.Windows.Media.Visual.GetVisualChild(System.Int32)"/>, 
+  ///   Overrides <see cref="M:System.Windows.Media.Visual.GetVisualChild(System.Int32)" />, 
   ///   and returns a child at the specified index from a collection of child elements.
   /// </summary>
   /// <param name="index">
@@ -58,6 +62,7 @@ public abstract class IndividualArrangePanel : Panel
   /// </returns>
   protected sealed override Visual GetVisualChild(int index) => Children[index: index];
 
+  /// <inheritdoc />
   /// <summary>
   ///   Gets the number of visual child elements within this element.
   /// </summary>
@@ -67,6 +72,7 @@ public abstract class IndividualArrangePanel : Panel
   /// </returns>
   protected sealed override int VisualChildrenCount => Children.Count;
 
+  /// <inheritdoc />
   /// <summary>
   ///   Gets an enumerator for logical child elements of this element.
   /// </summary>

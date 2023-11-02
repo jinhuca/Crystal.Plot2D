@@ -2,10 +2,7 @@
 
 namespace Crystal.Plot2D.Charts;
 
-/// <summary>
-/// Interaction logic for LineLegendItem.xaml
-/// </summary>
-public sealed partial class LineLegendItem : LegendItem
+internal sealed partial class LineLegendItem
 {
   public LineLegendItem()
   {

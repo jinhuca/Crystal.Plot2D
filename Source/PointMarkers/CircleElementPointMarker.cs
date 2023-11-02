@@ -9,7 +9,7 @@ namespace Crystal.Plot2D.PointMarkers;
 /// </summary>
 public class CircleElementPointMarker : ShapeElementPointMarker
 {
-  public override UIElement CreateMarker()
+  internal override UIElement CreateMarker()
   {
     Ellipse result = new();
     result.Width = Size;
@@ -26,7 +26,7 @@ public class CircleElementPointMarker : ShapeElementPointMarker
     return result;
   }
 
-  public override void SetMarkerProperties(UIElement marker)
+  internal override void SetMarkerProperties(UIElement marker)
   {
     var ellipse = (Ellipse)marker;
 
@@ -43,7 +43,7 @@ public class CircleElementPointMarker : ShapeElementPointMarker
     }
   }
 
-  public override void SetPosition(UIElement marker, Point screenPoint)
+  internal override void SetPosition(UIElement marker, Point screenPoint)
   {
     Canvas.SetLeft(element: marker, length: screenPoint.X - Size / 2);
     Canvas.SetTop(element: marker, length: screenPoint.Y - Size / 2);

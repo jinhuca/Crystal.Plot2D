@@ -140,7 +140,7 @@ public abstract class LabelProviderBase<T>
     CustomView = view;
   }
 
-  protected virtual string GetString(LabelTickInfo<T> tickInfo)
+  protected string GetString(LabelTickInfo<T> tickInfo)
   {
     string text = null;
     if (CustomFormatter != null)

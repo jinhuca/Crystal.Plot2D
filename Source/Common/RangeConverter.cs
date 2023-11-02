@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Charts;
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Globalization;
 
@@ -42,6 +41,7 @@ public sealed class RangeConverter : TypeConverter
         var maxDouble_ = double.Parse(s: maxStr_, style: NumberStyles.Float, provider: culture);
         return new Range<double>(min: minDouble_, max: maxDouble_);
       }
+      
       if (DateTime.TryParse(s: minStr_, provider: culture, styles: DateTimeStyles.None, result: out var minDateTime_))
       {
         var maxDateTime_ = DateTime.Parse(s: maxStr_, provider: culture);
@@ -54,15 +54,10 @@ public sealed class RangeConverter : TypeConverter
 
   public override object ConvertTo(ITypeDescriptorContext context, CultureInfo culture, object value, Type destinationType)
   {
-    if (destinationType != null && value is DataRect)
+    return value switch
     {
-      var rect_ = (DataRect)value;
-      if (destinationType == typeof(string))
-      {
-        return rect_.ConvertToString(format: null, provider: culture);
-      }
-    }
-
-    return base.ConvertTo(context: context, culture: culture, value: value, destinationType: destinationType);
+      DataRect dataRect_ when destinationType == typeof(string) => dataRect_.ConvertToString(format: null, provider: culture),
+      _ => base.ConvertTo(context: context, culture: culture, value: value, destinationType: destinationType)
+    };
   }
 }

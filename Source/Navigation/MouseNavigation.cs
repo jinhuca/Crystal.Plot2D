@@ -81,9 +81,9 @@ public sealed class MouseNavigation : NavigationBase
   {
     if (!e.Handled)
     {
-      var mousePos = e.GetPosition(relativeTo: this);
-      var delta = -e.Delta;
-      MouseWheelZoom(mousePos: mousePos, wheelRotationDelta: delta);
+      var mousePos_ = e.GetPosition(relativeTo: this);
+      var delta_ = -e.Delta;
+      MouseWheelZoom(mousePos: mousePos_, wheelRotationDelta: delta_);
 
       e.Handled = true;
     }
@@ -106,12 +106,12 @@ public sealed class MouseNavigation : NavigationBase
   {
     if (!adornerAdded)
     {
-      var layer = AdornerLayer;
-      if (layer != null)
+      var layer_ = AdornerLayer;
+      if (layer_ != null)
       {
         selectionAdorner = new RectangleSelectionAdorner(element: this) { Border = zoomRect };
 
-        layer.Add(adorner: selectionAdorner);
+        layer_.Add(adorner: selectionAdorner);
         adornerAdded = true;
       }
     }
@@ -119,10 +119,10 @@ public sealed class MouseNavigation : NavigationBase
 
   private void RemoveSelectionAdorner()
   {
-    var layer = AdornerLayer;
-    if (layer != null)
+    var layer_ = AdornerLayer;
+    if (layer_ != null)
     {
-      layer.Remove(adorner: selectionAdorner);
+      layer_.Remove(adorner: selectionAdorner);
       adornerAdded = false;
     }
   }
@@ -134,7 +134,7 @@ public sealed class MouseNavigation : NavigationBase
   }
 
   private Rect? zoomRect;
-  private const double wheelZoomSpeed = 1.2;
+  private const double WheelZoomSpeed = 1.2;
   private bool shouldKeepRatioWhileZooming;
 
   private bool isZooming;
@@ -152,9 +152,9 @@ public sealed class MouseNavigation : NavigationBase
   {
     get
     {
-      var currKeys = Keyboard.Modifiers;
-      return (currKeys | ModifierKeys.Shift) == currKeys ||
-        (currKeys | ModifierKeys.Control) == currKeys;
+      var currKeys_ = Keyboard.Modifiers;
+      return (currKeys_ | ModifierKeys.Shift) == currKeys_ ||
+        (currKeys_ | ModifierKeys.Control) == currKeys_;
     }
   }
 
@@ -206,15 +206,15 @@ public sealed class MouseNavigation : NavigationBase
   private void OnMouseDown(object sender, MouseButtonEventArgs e)
   {
     // dragging
-    var shouldStartDrag = ShouldStartPanning(e: e);
-    if (shouldStartDrag)
+    var shouldStartDrag_ = ShouldStartPanning(e: e);
+    if (shouldStartDrag_)
     {
       StartPanning(e: e);
     }
 
     // zooming
-    var shouldStartZoom = ShouldStartZoom(e: e);
-    if (shouldStartZoom)
+    var shouldStartZoom_ = ShouldStartZoom(e: e);
+    if (shouldStartZoom_)
     {
       StartZoom(e: e);
     }
@@ -252,21 +252,21 @@ public sealed class MouseNavigation : NavigationBase
         CaptureMouse();
       }
 
-      var endPoint = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Viewport.Transform);
+      var endPoint_ = e.GetPosition(relativeTo: this).ScreenToViewport(transform: Viewport.Transform);
 
-      var loc = Viewport.Visible.Location;
-      var shift = panningStartPointInViewport - endPoint;
-      loc += shift;
+      var loc_ = Viewport.Visible.Location;
+      var shift_ = panningStartPointInViewport - endPoint_;
+      loc_ += shift_;
 
       // preventing unnecessary changes, if actually visible hasn't change.
-      if (shift.X != 0 || shift.Y != 0)
+      if (shift_.X != 0 || shift_.Y != 0)
       {
         Cursor = Cursors.ScrollAll;
 
-        var visible = Viewport.Visible;
+        var visible_ = Viewport.Visible;
 
-        visible.Location = loc;
-        Viewport.Visible = visible;
+        visible_.Location = loc_;
+        Viewport.Visible = visible_;
       }
 
       e.Handled = true;
@@ -274,8 +274,8 @@ public sealed class MouseNavigation : NavigationBase
     // zooming
     else if (isZooming && e.LeftButton == MouseButtonState.Pressed)
     {
-      var zoomEndPoint = e.GetPosition(relativeTo: this);
-      UpdateZoomRect(zoomEndPoint: zoomEndPoint);
+      var zoomEndPoint_ = e.GetPosition(relativeTo: this);
+      UpdateZoomRect(zoomEndPoint: zoomEndPoint_);
 
       e.Handled = true;
     }
@@ -288,38 +288,38 @@ public sealed class MouseNavigation : NavigationBase
 
   private void UpdateZoomRect(Point zoomEndPoint)
   {
-    var output = Viewport.Output;
-    Rect tmpZoomRect = new(point1: zoomStartPoint, point2: zoomEndPoint);
-    tmpZoomRect = Rect.Intersect(rect1: tmpZoomRect, rect2: output);
+    var output_ = Viewport.Output;
+    Rect tmpZoomRect_ = new(point1: zoomStartPoint, point2: zoomEndPoint);
+    tmpZoomRect_ = Rect.Intersect(rect1: tmpZoomRect_, rect2: output_);
 
     shouldKeepRatioWhileZooming = IsShiftPressed();
     if (shouldKeepRatioWhileZooming)
     {
-      var currZoomRatio = tmpZoomRect.Width / tmpZoomRect.Height;
-      var zoomRatio = output.Width / output.Height;
-      if (currZoomRatio < zoomRatio)
+      var currZoomRatio_ = tmpZoomRect_.Width / tmpZoomRect_.Height;
+      var zoomRatio_ = output_.Width / output_.Height;
+      if (currZoomRatio_ < zoomRatio_)
       {
-        var oldHeight = tmpZoomRect.Height;
-        var height = tmpZoomRect.Width / zoomRatio;
-        tmpZoomRect.Height = height;
-        if (!tmpZoomRect.Contains(point: zoomStartPoint))
+        var oldHeight_ = tmpZoomRect_.Height;
+        var height_ = tmpZoomRect_.Width / zoomRatio_;
+        tmpZoomRect_.Height = height_;
+        if (!tmpZoomRect_.Contains(point: zoomStartPoint))
         {
-          tmpZoomRect.Offset(offsetX: 0, offsetY: oldHeight - height);
+          tmpZoomRect_.Offset(offsetX: 0, offsetY: oldHeight_ - height_);
         }
       }
       else
       {
-        var oldWidth = tmpZoomRect.Width;
-        var width = tmpZoomRect.Height * zoomRatio;
-        tmpZoomRect.Width = width;
-        if (!tmpZoomRect.Contains(point: zoomStartPoint))
+        var oldWidth_ = tmpZoomRect_.Width;
+        var width_ = tmpZoomRect_.Height * zoomRatio_;
+        tmpZoomRect_.Width = width_;
+        if (!tmpZoomRect_.Contains(point: zoomStartPoint))
         {
-          tmpZoomRect.Offset(offsetX: oldWidth - width, offsetY: 0);
+          tmpZoomRect_.Offset(offsetX: oldWidth_ - width_, offsetY: 0);
         }
       }
     }
 
-    zoomRect = tmpZoomRect;
+    zoomRect = tmpZoomRect_;
     UpdateSelectionAdorner();
   }
 
@@ -344,19 +344,17 @@ public sealed class MouseNavigation : NavigationBase
 
   private void StopZooming()
   {
-    if (zoomRect.HasValue)
-    {
-      var output = Viewport.Output;
+    if (!zoomRect.HasValue) return;
+    var output_ = Viewport.Output;
 
-      var p1 = zoomRect.Value.TopLeft.ScreenToViewport(transform: Viewport.Transform);
-      var p2 = zoomRect.Value.BottomRight.ScreenToViewport(transform: Viewport.Transform);
-      DataRect newVisible = new(point1: p1, point2: p2);
-      Viewport.Visible = newVisible;
+    var p1_ = zoomRect.Value.TopLeft.ScreenToViewport(transform: Viewport.Transform);
+    var p2_ = zoomRect.Value.BottomRight.ScreenToViewport(transform: Viewport.Transform);
+    DataRect newVisible_ = new(point1: p1_, point2: p2_);
+    Viewport.Visible = newVisible_;
 
-      zoomRect = null;
-      ReleaseMouseCapture();
-      RemoveSelectionAdorner();
-    }
+    zoomRect = null;
+    ReleaseMouseCapture();
+    RemoveSelectionAdorner();
   }
 
   private void StopPanning(MouseButtonEventArgs e)
@@ -392,14 +390,14 @@ public sealed class MouseNavigation : NavigationBase
 
   private void MouseWheelZoom(Point mousePos, double wheelRotationDelta)
   {
-    var zoomTo = mousePos.ScreenToViewport(transform: Viewport.Transform);
+    var zoomTo_ = mousePos.ScreenToViewport(transform: Viewport.Transform);
 
-    var zoomSpeed = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
-    zoomSpeed *= wheelZoomSpeed;
+    var zoomSpeed_ = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
+    zoomSpeed_ *= WheelZoomSpeed;
     if (wheelRotationDelta < 0)
     {
-      zoomSpeed = 1 / zoomSpeed;
+      zoomSpeed_ = 1 / zoomSpeed_;
     }
-    Viewport.Visible = Viewport.Visible.Zoom(to: zoomTo, ratio: zoomSpeed);
+    Viewport.Visible = Viewport.Visible.Zoom(to: zoomTo_, ratio: zoomSpeed_);
   }
 }

@@ -1,0 +1,18 @@
+﻿<Window x:Class="E004Shapes.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:p2d="http://schemas.crystal.com/Plot2D"
+        xmlns:local="clr-namespace:E004Shapes"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="450" Width="800">
+  <Grid>
+    <p2d:Plotter x:Name="_plotter" Background="DarkGray">
+      <p2d:HorizontalLine Value="3" StrokeThickness="4" Stroke="Red"/>
+      <p2d:VerticalLine Value="3" StrokeThickness="4" Stroke="Red"/>
+      <p2d:Arrow StrokeThickness="5" Stroke="Red" StartPoint="5,5" EndPoint="8,8"/>
+      <p2d:ViewportPolyBezierCurve Points="0,0 0,1 0,2 1,3" StrokeThickness="3" Stroke="YellowGreen"/>
+    </p2d:Plotter>
+  </Grid>
+</Window>

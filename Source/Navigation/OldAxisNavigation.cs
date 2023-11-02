@@ -4,7 +4,6 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
 using Crystal.Plot2D.Common.Auxiliary;
 using Crystal.Plot2D.Transforms;
 

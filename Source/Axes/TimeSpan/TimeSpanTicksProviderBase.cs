@@ -153,7 +153,7 @@ internal sealed class DayTimeSpanProvider : TimeSpanTicksProviderBase
     return (dt - start).Days;
   }
 
-  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int step)
   {
     var days_ = start.TotalDays;
     double newDays_ = (int)(days_ / step) * step;
@@ -188,7 +188,7 @@ internal sealed class HourTimeSpanProvider : TimeSpanTicksProviderBase
     return (int)(dt - start).TotalHours;
   }
 
-  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int step)
   {
     var hours_ = start.TotalHours;
     double newHours_ = (int)(hours_ / step) * step;
@@ -223,7 +223,7 @@ internal sealed class MinuteTimeSpanProvider : TimeSpanTicksProviderBase
     return (int)(dt - start).TotalMinutes;
   }
 
-  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int step)
   {
     var minutes_ = start.TotalMinutes;
     double newMinutes_ = (int)(minutes_ / step) * step;
@@ -258,7 +258,7 @@ internal sealed class SecondTimeSpanProvider : TimeSpanTicksProviderBase
     return (int)(dt - start).TotalSeconds;
   }
 
-  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int step)
   {
     var seconds_ = start.TotalSeconds;
     double newSeconds_ = (int)(seconds_ / step) * step;
@@ -294,7 +294,7 @@ internal sealed class MillisecondTimeSpanProvider : TimeSpanTicksProviderBase
     return (int)(dt - start).TotalMilliseconds;
   }
 
-  protected override System.TimeSpan GetStart(System.TimeSpan start, int value, int step)
+  protected override System.TimeSpan GetStart(System.TimeSpan start, int step)
   {
     var millis_ = start.TotalMilliseconds;
     double newMillis_ = (int)(millis_ / step) * step;

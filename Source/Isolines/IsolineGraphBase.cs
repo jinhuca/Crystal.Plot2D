@@ -94,7 +94,7 @@ public abstract class IsolineGraphBase : ContentGraph
     owner.OnDataSourceChanged(prevDataSource: (DataSource)e.OldValue, currDataSource: (DataSource)e.NewValue);
   }
 
-  protected virtual void OnDataSourceChanged(DataSource prevDataSource, DataSource currDataSource)
+  protected void OnDataSourceChanged(DataSource prevDataSource, DataSource currDataSource)
   {
     if (prevDataSource != null)
     {
@@ -238,7 +238,7 @@ public abstract class IsolineGraphBase : ContentGraph
 
   protected virtual void CreateUIRepresentation() { }
 
-  protected virtual void OnDataSourceChanged(object sender, EventArgs e)
+  protected void OnDataSourceChanged(object sender, EventArgs e)
   {
     UpdateDataSource();
   }

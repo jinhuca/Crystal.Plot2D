@@ -27,9 +27,9 @@ public class ObservableDataSource<T> : IPointDataSource
   public ObservableDataSource(IEnumerable<T> data) : this()
   {
     ArgumentNullException.ThrowIfNull(data);
-    foreach (var item in data)
+    foreach (var item_ in data)
     {
-      Collection.Add(item: item);
+      Collection.Add(item: item_);
     }
   }
 
@@ -38,11 +38,9 @@ public class ObservableDataSource<T> : IPointDataSource
   public void ResumeUpdate()
   {
     UpdatesEnabled = true;
-    if (CollectionChanged)
-    {
-      CollectionChanged = false;
-      RaiseDataChanged();
-    }
+    if (!CollectionChanged) return;
+    CollectionChanged = false;
+    RaiseDataChanged();
   }
 
   private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
@@ -57,23 +55,24 @@ public class ObservableDataSource<T> : IPointDataSource
     }
   }
 
-  public ObservableCollection<T> Collection { get; } = new();
-  public bool CollectionChanged { get; set; }
-  public bool UpdatesEnabled { get; set; } = true;
+  private ObservableCollection<T> Collection { get; } = new();
+  private bool CollectionChanged { get; set; }
+  private bool UpdatesEnabled { get; set; } = true;
 
-  internal List<Mapping<T>> Mappings { get; } = new();
-  public Func<T, double> XMapping { get; set; }
-  public Func<T, double> YMapping { get; set; }
-  public Func<T, Point> XyMapping { get; set; }
+  private List<Mapping<T>> Mappings { get; } = new();
+  private Func<T, double> XMapping { get; set; }
+  private Func<T, double> YMapping { get; set; }
+  private Func<T, Point> XyMapping { get; set; }
 
   public void AppendMany(IEnumerable<T> data)
   {
     ArgumentNullException.ThrowIfNull(data);
     UpdatesEnabled = false;
-    foreach (var p in data)
+    foreach (var p_ in data)
     {
-      Collection.Add(item: p);
+      Collection.Add(item: p_);
     }
+
     UpdatesEnabled = true;
     RaiseDataChanged();
   }
@@ -96,9 +95,9 @@ public class ObservableDataSource<T> : IPointDataSource
 
   private sealed class ObservableIterator : IPointEnumerator
   {
-	    private ObservableDataSource<T> DataSource { get; }
+    private ObservableDataSource<T> DataSource { get; }
 
-	    private IEnumerator<T> Enumerator { get; }
+    private IEnumerator<T> Enumerator { get; }
 
     public ObservableIterator(ObservableDataSource<T> dataSource)
     {
@@ -135,6 +134,7 @@ public class ObservableDataSource<T> : IPointDataSource
       {
         point.X = XMapping(arg: elem);
       }
+
       if (YMapping != null)
       {
         point.Y = YMapping(arg: elem);
@@ -144,12 +144,10 @@ public class ObservableDataSource<T> : IPointDataSource
 
   private void ApplyMappings(DependencyObject target, T elem)
   {
-    if (target != null)
+    if (target == null) return;
+    foreach (var mapping_ in Mappings)
     {
-      foreach (var mapping in Mappings)
-      {
-        target.SetValue(dp: mapping.Property, value: mapping.F(arg: elem));
-      }
+      target.SetValue(dp: mapping_.Property, value: mapping_.F(arg: elem));
     }
   }
 

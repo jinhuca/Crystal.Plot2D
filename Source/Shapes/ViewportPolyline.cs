@@ -16,32 +16,32 @@ public sealed class ViewportPolyline : ViewportPolylineBase
 
   protected override void UpdateUIRepresentationCore()
   {
-    var transform = Plotter.Viewport.Transform;
+    var transform_ = Plotter.Viewport.Transform;
+    var geometry_ = PathGeometry;
+    var points_ = Points;
+    geometry_.Clear();
 
-    var geometry = PathGeometry;
-
-    var points = Points;
-    geometry.Clear();
-
-    if (points == null) { }
+    if (points_ == null) { }
     else
     {
-      PathFigure figure = new();
-      if (points.Count > 0)
+      PathFigure figure_ = new();
+      if (points_.Count > 0)
       {
-        figure.StartPoint = points[index: 0].DataToScreen(transform: transform);
-        if (points.Count > 1)
+        figure_.StartPoint = points_[index: 0].DataToScreen(transform: transform_);
+        if (points_.Count > 1)
         {
-          var pointArray = new Point[points.Count - 1];
-          for (var i = 1; i < points.Count; i++)
+          var pointArray_ = new Point[points_.Count - 1];
+          for (var i_ = 1; i_ < points_.Count; i_++)
           {
-            pointArray[i - 1] = points[index: i].DataToScreen(transform: transform);
+            pointArray_[i_ - 1] = points_[index: i_].DataToScreen(transform: transform_);
           }
-          figure.Segments.Add(value: new PolyLineSegment(points: pointArray, isStroked: true));
+
+          figure_.Segments.Add(value: new PolyLineSegment(points: pointArray_, isStroked: true));
         }
       }
-      geometry.Figures.Add(value: figure);
-      geometry.FillRule = FillRule;
+
+      geometry_.Figures.Add(value: figure_);
+      geometry_.FillRule = FillRule;
     }
   }
 }

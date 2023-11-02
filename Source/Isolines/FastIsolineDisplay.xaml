@@ -3,7 +3,6 @@
                            xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"						   
                            xmlns:isolines="clr-namespace:Crystal.Plot2D.Charts"
                            xmlns:local="clr-namespace:Crystal.Plot2D.Charts"
-                           xmlns:common="clr-namespace:Crystal.Plot2D"
                            xmlns:isolines1="clr-namespace:Crystal.Plot2D.Isolines"
                            IsHitTestVisible="False">
 	<isolines1:IsolineGraphBase.Template>

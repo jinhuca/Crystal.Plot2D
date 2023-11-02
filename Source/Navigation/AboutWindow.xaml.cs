@@ -5,10 +5,7 @@ using System.Windows.Input;
 
 namespace Crystal.Plot2D.Navigation;
 
-/// <summary>
-/// Interaction logic for AboutWindow.xaml
-/// </summary>
-internal sealed partial class AboutWindow : Window
+internal sealed partial class AboutWindow
 {
   public AboutWindow()
   {

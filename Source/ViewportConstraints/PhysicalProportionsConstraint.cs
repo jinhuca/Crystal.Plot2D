@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Windows;
 using Crystal.Plot2D.Common;
 
 namespace Crystal.Plot2D.ViewportConstraints;

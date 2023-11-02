@@ -38,7 +38,7 @@ public class PositionalViewportUIContainer : ContentControl, IPlotterElement
     //SetBinding(ViewportPanel.YProperty, new Binding("Position.Y") { Source = this, Mode = BindingMode.TwoWay });
   }
 
-  protected virtual void OnPlotterChanged(object sender, PlotterChangedEventArgs e)
+  protected void OnPlotterChanged(object sender, PlotterChangedEventArgs e)
   {
     if (e.CurrentPlotter != null)
     {

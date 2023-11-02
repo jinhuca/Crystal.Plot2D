@@ -7,6 +7,7 @@ namespace Crystal.Plot2D.ViewportConstraints;
 public sealed class ProportionsConstraint : ViewportConstraint
 {
   private double widthToHeightRatio = 1;
+
   public double WidthToHeightRatio
   {
     get => widthToHeightRatio;

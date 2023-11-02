@@ -6,13 +6,13 @@ public sealed class LambdaUndoAction : UndoAction
 {
   public LambdaUndoAction(Action doAction, Action undoAction)
   {
-    DoAction = doAction ?? throw new ArgumentNullException(paramName: "doHander");
+    DoAction = doAction ?? throw new ArgumentNullException(paramName: nameof(doAction));
     UndoAction = undoAction ?? throw new ArgumentNullException(paramName: nameof(undoAction));
   }
 
-  public Action DoAction { get; }
+  private Action DoAction { get; }
 
-  public Action UndoAction { get; }
+  private Action UndoAction { get; }
 
   public override void Do() => DoAction();
 

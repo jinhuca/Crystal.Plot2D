@@ -11,7 +11,9 @@ public abstract class SimpleLine : ViewportShape
   /// <summary>
   /// Initializes a new instance of the <see cref="SimpleLine"/> class.
   /// </summary>
-  protected SimpleLine() { }
+  protected SimpleLine()
+  {
+  }
 
   /// <summary>
   /// Gets or sets the value of line - e.g., its horizontal or vertical coordinate.
@@ -31,16 +33,15 @@ public abstract class SimpleLine : ViewportShape
       name: nameof(Value),
       propertyType: typeof(double),
       ownerType: typeof(SimpleLine),
-      typeMetadata: new PropertyMetadata(
-        defaultValue: 0.0, propertyChangedCallback: OnValueChanged));
+      typeMetadata: new PropertyMetadata(defaultValue: 0.0, propertyChangedCallback: OnValueChanged));
 
   private static void OnValueChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    var line = (SimpleLine)d;
-    line.OnValueChanged();
+    var line_ = (SimpleLine)d;
+    line_.OnValueChanged();
   }
 
-  protected virtual void OnValueChanged()
+  private void OnValueChanged()
   {
     UpdateUIRepresentation();
   }

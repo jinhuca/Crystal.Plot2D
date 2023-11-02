@@ -1,11 +1,11 @@
 ﻿using Crystal.Plot2D.Common;
-using System;
 using System.Windows;
 using Crystal.Plot2D.Common.Auxiliary;
 using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Charts;
 
+/// <inheritdoc />
 /// <summary>
 ///   Represents a panel on which elements are arranged in coordinates in viewport space.
 /// </summary>
@@ -20,10 +20,10 @@ public partial class ViewportPanel : IndividualArrangePanel
   private static void OnPlotterChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
     var panel_ = (ViewportPanel)d;
-    panel_.OnPlotterChanged(currPlotter: (PlotterBase)e.NewValue, prevPlotter: (PlotterBase)e.OldValue);
+    panel_.OnPlotterChanged(currPlotter: (PlotterBase)e.NewValue);
   }
 
-  private void OnPlotterChanged(PlotterBase currPlotter, PlotterBase prevPlotter)
+  private void OnPlotterChanged(PlotterBase currPlotter)
   {
     if (currPlotter != null)
     {
@@ -39,7 +39,9 @@ public partial class ViewportPanel : IndividualArrangePanel
   /// <summary>
   ///   Initializes a new instance of the <see cref="ViewportRectPanel"/> class.
   /// </summary>
-  public ViewportPanel() { }
+  protected ViewportPanel()
+  {
+  }
 
   #region Panel methods override
 
@@ -100,7 +102,7 @@ public partial class ViewportPanel : IndividualArrangePanel
     return availableSize;
   }
 
-  protected virtual Size GetElementSize(FrameworkElement child, Size availableSize, CoordinateTransform transform)
+  protected Size GetElementSize(FrameworkElement child, Size availableSize, CoordinateTransform transform)
   {
     Size res_;
     var ownViewportBounds_ = GetViewportBounds(obj: child);
@@ -168,7 +170,7 @@ public partial class ViewportPanel : IndividualArrangePanel
     return screenBounds_;
   }
 
-  protected virtual Rect GetElementScreenBoundsCore(CoordinateTransform transform, UIElement child)
+  protected Rect GetElementScreenBoundsCore(CoordinateTransform transform, UIElement child)
   {
     Rect bounds_ = new(x: 0, y: 0, width: 1, height: 1);
 

@@ -6,9 +6,9 @@ namespace Crystal.Plot2D.Converters;
 
 public class GenericValueConverter<T> : IValueConverter
 {
-  public GenericValueConverter() { }
+  protected GenericValueConverter() { }
 
-  public Func<T, object> Conversion { get; }
+  private Func<T, object> Conversion { get; }
 
   public GenericValueConverter(Func<T, object> conversion)
   {
@@ -19,16 +19,11 @@ public class GenericValueConverter<T> : IValueConverter
 
   public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
   {
-    if (value is T)
-    {
-      var genericValue = (T)value;
-      var result = ConvertCore(value: genericValue, targetType: targetType, parameter: parameter, culture: culture);
-      return result;
-    }
-    return null;
+    if (value is not T genericValue_) return null;
+    return ConvertCore(value: genericValue_);
   }
 
-  public virtual object ConvertCore(T value, Type targetType, object parameter, CultureInfo culture)
+  protected virtual object ConvertCore(T value)
   {
     if (Conversion != null)
     {

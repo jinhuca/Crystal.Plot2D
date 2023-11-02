@@ -1,7 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Media;
 using Crystal.Plot2D.Common;
-using Crystal.Plot2D.DataSources;
 using Crystal.Plot2D.DataSources.OneDimensional;
 using Crystal.Plot2D.PointMarkers;
 using Crystal.Plot2D.Transforms;

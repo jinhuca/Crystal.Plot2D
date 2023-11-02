@@ -1,6 +1,4 @@
-﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using Crystal.Plot2D.Axes;

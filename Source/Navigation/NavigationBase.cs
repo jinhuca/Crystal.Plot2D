@@ -18,10 +18,10 @@ public abstract class NavigationBase : Viewport2DElement
 
   private void NavigationBase_Loaded(object sender, RoutedEventArgs e)
   {
-    OnLoaded(e: e);
+    OnLoaded();
   }
 
-  protected virtual void OnLoaded(RoutedEventArgs e)
+  private void OnLoaded()
   {
     // this call enables contextMenu to be shown after loading and
     // before any changes to Viewport - without this call 

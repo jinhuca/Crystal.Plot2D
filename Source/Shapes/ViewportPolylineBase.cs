@@ -28,11 +28,9 @@ public abstract class ViewportPolylineBase : ViewportShape
 
   protected static void OnPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    var polyline = (ViewportPolylineBase)d;
-
-    var currentPoints = (PointCollection)e.NewValue;
-
-    polyline.UpdateUIRepresentation();
+    var polyline_ = (ViewportPolylineBase)d;
+    var currentPoints_ = (PointCollection)e.NewValue;
+    polyline_.UpdateUIRepresentation();
   }
 
   /// <summary>

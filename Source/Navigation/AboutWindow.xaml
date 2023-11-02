@@ -20,10 +20,6 @@
             <Setter Property="Foreground" Value="#FF00A010"/>
           </Style>
 
-          <Style TargetType="InlineUIContainer" x:Key="{x:Type InlineUIContainer}">
-            <Setter Property="BaselineAlignment" Value="Center"/>
-          </Style>
-
           <Style TargetType="ContentControl" x:Key="btn">
             <Setter Property="Margin" Value="0,1,0,1"/>
             <Setter Property="FontSize" Value="14"/>

@@ -29,30 +29,37 @@ public abstract class MouseNavigationBase : NavigationBase
 
   private void OnMouseWheel(object sender, MouseWheelEventArgs e)
   {
-    OnPlotterMouseWheel(e: e);
+    OnPlotterMouseWheel();
   }
 
-  protected virtual void OnPlotterMouseWheel(MouseWheelEventArgs e) { }
+  protected virtual void OnPlotterMouseWheel()
+  {
+  }
 
   private void OnMouseUp(object sender, MouseButtonEventArgs e)
   {
-    OnPlotterMouseUp(e: e);
+    OnPlotterMouseUp();
   }
 
-  protected virtual void OnPlotterMouseUp(MouseButtonEventArgs e) { }
+  protected virtual void OnPlotterMouseUp()
+  {
+  }
 
   private void OnMouseDown(object sender, MouseButtonEventArgs e)
   {
-    OnPlotterMouseDown(e: e);
+    OnPlotterMouseDown();
   }
 
-  protected virtual void OnPlotterMouseDown(MouseButtonEventArgs e) { }
+  protected virtual void OnPlotterMouseDown()
+  {
+  }
 
   private void OnMouseMove(object sender, MouseEventArgs e)
   {
-    OnPlotterMouseMove(e: e);
+    OnPlotterMouseMove();
   }
 
-  protected virtual void OnPlotterMouseMove(MouseEventArgs e) { }
-
+  protected virtual void OnPlotterMouseMove()
+  {
+  }
 }

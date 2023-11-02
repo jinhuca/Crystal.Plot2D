@@ -4,164 +4,171 @@ using Crystal.Plot2D.DataSources.MultiDimensional;
 
 namespace Crystal.Plot2D.Common.Auxiliary;
 
-public static class IDataSource2DExtensions
+public static class DataSource2DExtensions
 {
   public static Range<double> GetMinMax(this double[,] data)
   {
-    data.VerifyNotNull(paramName: "data");
+    data.VerifyNotNull(paramName: nameof(data));
 
-    var width = data.GetLength(dimension: 0);
-    var height = data.GetLength(dimension: 1);
-    Verify.IsTrueWithMessage(condition: width > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
-    Verify.IsTrueWithMessage(condition: height > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
+    var width_ = data.GetLength(dimension: 0);
+    var height_ = data.GetLength(dimension: 1);
+    Verify.IsTrueWithMessage(condition: width_ > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
+    Verify.IsTrueWithMessage(condition: height_ > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
 
-    var min = data[0, 0];
-    var max = data[0, 0];
-    for (var x = 0; x < width; x++)
+    var min_ = data[0, 0];
+    var max_ = data[0, 0];
+    for (var x_ = 0; x_ < width_; x_++)
     {
-      for (var y = 0; y < height; y++)
+      for (var y_ = 0; y_ < height_; y_++)
       {
-        if (data[x, y] < min)
+        if (data[x_, y_] < min_)
         {
-          min = data[x, y];
+          min_ = data[x_, y_];
         }
-        if (data[x, y] > max)
+
+        if (data[x_, y_] > max_)
         {
-          max = data[x, y];
+          max_ = data[x_, y_];
         }
       }
     }
 
-    Range<double> res = new(min: min, max: max);
-    return res;
+    Range<double> res_ = new(min: min_, max: max_);
+    return res_;
   }
 
-  public static Range<double> GetMinMax(this double[,] data, double missingValue)
+  private static Range<double> GetMinMax(this double[,] data, double missingValue)
   {
-    data.VerifyNotNull(paramName: "data");
+    data.VerifyNotNull(paramName: nameof(data));
 
-    var width = data.GetLength(dimension: 0);
-    var height = data.GetLength(dimension: 1);
-    Verify.IsTrueWithMessage(condition: width > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
-    Verify.IsTrueWithMessage(condition: height > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
+    var width_ = data.GetLength(dimension: 0);
+    var height_ = data.GetLength(dimension: 1);
+    Verify.IsTrueWithMessage(condition: width_ > 0, message: Strings.Exceptions.ArrayWidthShouldBePositive);
+    Verify.IsTrueWithMessage(condition: height_ > 0, message: Strings.Exceptions.ArrayHeightShouldBePositive);
 
-    var min = double.MaxValue;
-    var max = double.MinValue;
-    for (var x = 0; x < width; x++)
+    var min_ = double.MaxValue;
+    var max_ = double.MinValue;
+    for (var x_ = 0; x_ < width_; x_++)
     {
-      for (var y = 0; y < height; y++)
+      for (var y_ = 0; y_ < height_; y_++)
       {
-        if (data[x, y] != missingValue && data[x, y] < min)
+        if (Math.Abs(data[x_, y_] - missingValue) > Constants.Constants.FloatComparisonTolerance && data[x_, y_] < min_)
         {
-          min = data[x, y];
+          min_ = data[x_, y_];
         }
-        if (data[x, y] != missingValue && data[x, y] > max)
+        
+        if (Math.Abs(data[x_, y_] - missingValue) > Constants.Constants.FloatComparisonTolerance && data[x_, y_] > max_)
         {
-          max = data[x, y];
+          max_ = data[x_, y_];
         }
       }
     }
 
-    Range<double> res = new(min: min, max: max);
-    return res;
+    Range<double> res_ = new(min: min_, max: max_);
+    return res_;
   }
 
-  public static Range<double> GetMinMax(this IDataSource2D<double> dataSource)
+  internal static Range<double> GetMinMax(this IDataSource2D<double> dataSource)
   {
     dataSource.VerifyNotNull(paramName: "dataSource");
     return GetMinMax(data: dataSource.Data);
   }
 
-  public static Range<double> GetMinMax(this IDataSource2D<double> dataSource, double missingValue)
+  internal static Range<double> GetMinMax(this IDataSource2D<double> dataSource, double missingValue)
   {
     dataSource.VerifyNotNull(paramName: "dataSource");
     return GetMinMax(data: dataSource.Data, missingValue: missingValue);
   }
 
-  public static Range<double> GetMinMax(this IDataSource2D<double> dataSource, DataRect area)
+  internal static Range<double> GetMinMax(this IDataSource2D<double> dataSource, DataRect area)
   {
     ArgumentNullException.ThrowIfNull(dataSource);
 
-    var min = double.PositiveInfinity;
-    var max = double.NegativeInfinity;
-    var width = dataSource.Width;
-    var height = dataSource.Height;
-    var grid = dataSource.Grid;
-    var data = dataSource.Data;
-    for (var ix = 0; ix < width; ix++)
+    var min_ = double.PositiveInfinity;
+    var max_ = double.NegativeInfinity;
+    var width_ = dataSource.Width;
+    var height_ = dataSource.Height;
+    var grid_ = dataSource.Grid;
+    var data_ = dataSource.Data;
+    for (var ix_ = 0; ix_ < width_; ix_++)
     {
-      for (var iy = 0; iy < height; iy++)
+      for (var iy_ = 0; iy_ < height_; iy_++)
       {
-        if (area.Contains(point: grid[ix, iy]))
+        if (area.Contains(point: grid_[ix_, iy_]))
         {
-          var value = data[ix, iy];
-          if (value < min)
+          var value_ = data_[ix_, iy_];
+          if (value_ < min_)
           {
-            min = value;
+            min_ = value_;
           }
-          if (value > max)
+          
+          if (value_ > max_)
           {
-            max = value;
+            max_ = value_;
           }
         }
       }
     }
 
-    return min < max ? new Range<double>(min: min, max: max) : new Range<double>();
+    return min_ < max_ ? new Range<double>(min: min_, max: max_) : new Range<double>();
   }
 
 
-  public static DataRect GetGridBounds(this Point[,] grid)
+  private static DataRect GetGridBounds(this Point[,] grid)
   {
-    var minX = grid[0, 0].X;
-    var maxX = minX;
-    var minY = grid[0, 0].Y;
-    var maxY = minY;
+    var minX_ = grid[0, 0].X;
+    var maxX_ = minX_;
+    var minY_ = grid[0, 0].Y;
+    var maxY_ = minY_;
 
-    var width = grid.GetLength(dimension: 0);
-    var height = grid.GetLength(dimension: 1);
-    for (var ix = 0; ix < width; ix++)
+    var width_ = grid.GetLength(dimension: 0);
+    var height_ = grid.GetLength(dimension: 1);
+    for (var ix_ = 0; ix_ < width_; ix_++)
     {
-      for (var iy = 0; iy < height; iy++)
+      for (var iy_ = 0; iy_ < height_; iy_++)
       {
-        var pt = grid[ix, iy];
-        var x = pt.X;
-        var y = pt.Y;
-        if (x < minX)
+        var pt_ = grid[ix_, iy_];
+        var x_ = pt_.X;
+        var y_ = pt_.Y;
+        
+        if (x_ < minX_)
         {
-          minX = x;
+          minX_ = x_;
         }
-        if (x > maxX)
+        
+        if (x_ > maxX_)
         {
-          maxX = x;
+          maxX_ = x_;
         }
 
-        if (y < minY)
+        if (y_ < minY_)
         {
-          minY = y;
+          minY_ = y_;
         }
-        if (y > maxY)
+        
+        if (y_ > maxY_)
         {
-          maxY = y;
+          maxY_ = y_;
         }
       }
     }
-    return new DataRect(point1: new Point(x: minX, y: minY), point2: new Point(x: maxX, y: maxY));
+    
+    return new DataRect(point1: new Point(x: minX_, y: minY_), point2: new Point(x: maxX_, y: maxY_));
   }
 
   public static DataRect GetGridBounds<T>(this IDataSource2D<T> dataSource) where T : struct => dataSource.Grid.GetGridBounds();
 
   public static DataRect GetGridBounds<T>(this INonUniformDataSource2D<T> dataSource) where T : struct
   {
-    var xCoordinates = dataSource.XCoordinates;
-    var yCoordinates = dataSource.YCoordinates;
-    var xMin = xCoordinates[0];
-    var xMax = xCoordinates[xCoordinates.Length - 1];
+    var xCoordinates_ = dataSource.XCoordinates;
+    var yCoordinates_ = dataSource.YCoordinates;
+    var xMin_ = xCoordinates_[0];
+    var xMax_ = xCoordinates_[xCoordinates_.Length - 1];
 
-    var yMin = yCoordinates[0];
-    var yMax = yCoordinates[yCoordinates.Length - 1];
+    var yMin_ = yCoordinates_[0];
+    var yMax_ = yCoordinates_[yCoordinates_.Length - 1];
 
-    var contentBounds = DataRect.FromPoints(x1: xMin, y1: yMin, x2: xMax, y2: yMax);
-    return contentBounds;
+    var contentBounds_ = DataRect.FromPoints(x1: xMin_, y1: yMin_, x2: xMax_, y2: yMax_);
+    return contentBounds_;
   }
 }

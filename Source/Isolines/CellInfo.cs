@@ -7,7 +7,7 @@ namespace Crystal.Plot2D.Isolines;
 /// <summary>
 /// Isoline's grid cell
 /// </summary>
-internal interface ICell
+file interface ICell
 {
   Vector LeftTop { get; }
   Vector LeftBottom { get; }
@@ -17,7 +17,7 @@ internal interface ICell
 
 internal sealed class IrregularCell : ICell
 {
-  public IrregularCell(Vector leftBottom, Vector rightBottom, Vector rightTop, Vector leftTop)
+  private IrregularCell(Vector leftBottom, Vector rightBottom, Vector rightTop, Vector leftTop)
   {
     this.leftBottom = leftBottom;
     this.rightBottom = rightBottom;
@@ -60,7 +60,7 @@ internal sealed class IrregularCell : ICell
 
   #endregion
 
-  public Point Center => MathHelper.ToPoint((LeftSide + RightSide) / 2);
+  private Point Center => MathHelper.ToPoint((LeftSide + RightSide) / 2);
 
   public IrregularCell GetSubRect(SubCell sub)
   {

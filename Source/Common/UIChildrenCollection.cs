@@ -24,7 +24,7 @@ internal sealed class UIChildrenCollection : UIElementCollection
   }
 
   private readonly VisualCollection visualChildren;
-  public bool IsAddingMany { get; set; } = false;
+  public bool IsAddingMany { get; set; }
 
   public override int Add(UIElement element)
   {

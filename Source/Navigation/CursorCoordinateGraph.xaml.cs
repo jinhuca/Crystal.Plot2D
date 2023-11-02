@@ -1,15 +1,13 @@
-﻿using System;
+﻿using Crystal.Plot2D.Axes;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
-using Crystal.Plot2D.Axes;
-using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.Common;
-using Crystal.Plot2D.Common.Auxiliary;
-using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Navigation;
 
@@ -17,7 +15,7 @@ namespace Crystal.Plot2D.Navigation;
 ///   Adds to Plotter two crossed lines, bound to mouse cursor position, 
 ///   and two labels near axes with mouse position in its text.
 /// </summary>
-public sealed partial class CursorCoordinateGraph : ContentGraph
+public sealed partial class CursorCoordinateGraph
 {
   /// <summary>
   ///   Initializes a new instance of the <see cref="CursorCoordinateGraph"/> class.
@@ -382,13 +380,15 @@ public sealed partial class CursorCoordinateGraph : ContentGraph
     var log_ = RoundingHelper.GetDifferenceLog(min: min, max: max);
     var format_ = "G3";
     var diff_ = Math.Abs(value: max - min);
-    if (1E3 < diff_ && diff_ < 1E6)
+    
+    if (diff_ is > 1E3 and < 1E6)
     {
       format_ = "F0";
     }
+   
     if (log_ < 0)
     {
-      format_ = "G" + (-log_ + 2).ToString();
+      format_ = "G" + (-log_ + 2);
     }
 
     return roundedValue_.ToString(format: format_);

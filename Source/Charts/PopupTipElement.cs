@@ -62,7 +62,7 @@ public abstract class PopupTipElement : IPlotterElement
     var screenPoint_ = e.GetPosition(relativeTo: plotter.CentralGrid);
     var viewportPoint_ = screenPoint_.ScreenToData(transform: plotter.Transform);
 
-    var tooltip_ = GetTooltipForPoint(viewportPosition: viewportPoint_);
+    var tooltip_ = GetTooltipForPoint();
     if (tooltip_ == null)
     {
       return;
@@ -97,7 +97,7 @@ public abstract class PopupTipElement : IPlotterElement
     popup_.Child = grid_;
   }
 
-  protected virtual UIElement GetTooltipForPoint(Point viewportPosition)
+  protected virtual UIElement GetTooltipForPoint()
   {
     return null;
   }

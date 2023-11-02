@@ -12,7 +12,9 @@ public class Segment : ViewportShape
   /// <summary>
   /// Initializes a new instance of the <see cref="Segment"/> class.
   /// </summary>
-  public Segment() { }
+  public Segment()
+  {
+  }
 
   /// <summary>
   /// Initializes a new instance of the <see cref="Segment"/> class.
@@ -46,11 +48,13 @@ public class Segment : ViewportShape
 
   protected static void OnPointChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    var segment = (Segment)d;
-    segment.UpdateUIRepresentation();
+    var segment_ = (Segment)d;
+    segment_.UpdateUIRepresentation();
   }
 
-  protected virtual void OnPointChanged() { }
+  protected void OnPointChanged()
+  {
+  }
 
   /// <summary>
   /// Gets or sets the end point of segment.
@@ -78,13 +82,12 @@ public class Segment : ViewportShape
       return;
     }
 
-    var transform = Plotter.Viewport.Transform;
+    var transform_ = Plotter.Viewport.Transform;
+    var p1_ = StartPoint.DataToScreen(transform: transform_);
+    var p2_ = EndPoint.DataToScreen(transform: transform_);
 
-    var p1 = StartPoint.DataToScreen(transform: transform);
-    var p2 = EndPoint.DataToScreen(transform: transform);
-
-    lineGeometry.StartPoint = p1;
-    lineGeometry.EndPoint = p2;
+    lineGeometry.StartPoint = p1_;
+    lineGeometry.EndPoint = p2_;
   }
 
   private readonly LineGeometry lineGeometry = new();

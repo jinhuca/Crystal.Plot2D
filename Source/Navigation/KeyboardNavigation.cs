@@ -1,25 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
-using System.Windows.Input;
-using Crystal.Plot2D.Common;
+﻿using Crystal.Plot2D.Common;
 using Crystal.Plot2D.Common.Auxiliary;
 using Crystal.Plot2D.Common.UndoSystem;
 using Microsoft.Win32;
+using System;
+using System.Collections.Generic;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Crystal.Plot2D.Navigation;
 
-///<summary>
-/// Provides keyboard navigation around viewport of Plotter.
-///</summary>
+/// <inheritdoc />
+/// <summary>
+///  Provides keyboard navigation around viewport of Plotter.
+/// </summary>
 public sealed class KeyboardNavigation : IPlotterElement
 {
   ///<summary>
   /// Initializes a new instance of the <see cref="KeyboardNavigation"/> class.
   ///</summary>
-  public KeyboardNavigation() { }
+  public KeyboardNavigation()
+  {
+  }
 
   private bool isReversed = true;
+
   /// <summary>
   /// Gets or sets a value indicating whether panning directions are reversed.
   /// </summary>
@@ -33,6 +37,7 @@ public sealed class KeyboardNavigation : IPlotterElement
   }
 
   private readonly List<CommandBinding> addedBindings = new();
+
   private void AddBinding(CommandBinding binding)
   {
     plotter2D.CommandBindings.Add(commandBinding: binding);
@@ -83,9 +88,9 @@ public sealed class KeyboardNavigation : IPlotterElement
     AddBinding(binding: fitToViewCommandBinding_);
 
     var scrollLeftCommandBinding_ = new CommandBinding(
-        command: ChartCommands.ScrollLeft,
-        executed: ScrollLeftExecute,
-        canExecute: ScrollLeftCanExecute);
+      command: ChartCommands.ScrollLeft,
+      executed: ScrollLeftExecute,
+      canExecute: ScrollLeftCanExecute);
     AddBinding(binding: scrollLeftCommandBinding_);
 
     var scrollRightCommandBinding_ = new CommandBinding(
@@ -195,6 +200,7 @@ public sealed class KeyboardNavigation : IPlotterElement
   #region Zoom in
 
   private const double ZoomInCoeff = 0.9;
+
   private void ZoomInExecute(object target, ExecutedRoutedEventArgs e)
   {
     Viewport.Zoom(factor: ZoomInCoeff);
@@ -230,7 +236,7 @@ public sealed class KeyboardNavigation : IPlotterElement
   private void FitToViewExecute(object target, ExecutedRoutedEventArgs e)
   {
     // todo: do it right.
-    (Viewport as Viewport2D).FitToView();
+    Viewport.FitToView();
     e.Handled = true;
   }
 
@@ -429,10 +435,10 @@ public sealed class KeyboardNavigation : IPlotterElement
   private Viewport2D Viewport => plotter2D.Viewport;
 
   private PlotterBase plotter2D;
+
   void IPlotterElement.OnPlotterAttached(PlotterBase plotter)
   {
-    plotter2D = (PlotterBase)plotter;
-
+    plotter2D = plotter;
     InitCommands();
   }
 
@@ -442,8 +448,8 @@ public sealed class KeyboardNavigation : IPlotterElement
     {
       plotter.CommandBindings.Remove(commandBinding: commandBinding_);
     }
-    addedBindings.Clear();
 
+    addedBindings.Clear();
     plotter2D = null;
   }
 

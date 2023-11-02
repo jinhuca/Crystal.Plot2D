@@ -24,7 +24,7 @@ public sealed class ScaleConverter : GenericValueConverter<DataRect>
   private double yShift;
   private double yScale = 1;
 
-  public override object ConvertCore(DataRect value, Type targetType, object parameter, CultureInfo culture)
+  protected override object ConvertCore(DataRect value)
   {
     var parentVisible = value;
     var xmin = parentVisible.XMin * xScale + xShift;

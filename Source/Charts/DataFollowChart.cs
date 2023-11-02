@@ -172,7 +172,7 @@ public class DataFollowChart : ViewportHostPanel, INotifyPropertyChanged
     }
 
     var source_ = PointSource;
-    if (source_ == null || (source_ != null && source_.VisiblePoints == null))
+    if (source_ is null or { VisiblePoints: null })
     {
       SetValue(key: markerPositionPropertyKey, value: new Point(x: double.NaN, y: double.NaN));
       marker.Visibility = Visibility.Hidden;

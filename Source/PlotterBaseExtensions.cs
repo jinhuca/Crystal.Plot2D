@@ -1,5 +1,4 @@
 ﻿using Crystal.Plot2D.Charts;
-using Crystal.Plot2D.DataSources;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Windows.Media;
@@ -105,15 +104,16 @@ public static class PlotterBaseExtensions
     Description description = default) 
     where TMarker : PointMarker
   {
-    var res = new MarkerPointsGraph();
+    var res_ = new MarkerPointsGraph();
     switch (marker)
     {
-      case CirclePointMarker s:
+      case CirclePointMarker s_:
         break;
-      case TrianglePointMarker t:
+      case TrianglePointMarker t_:
         break;
     }
-    return res;
+    
+    return res_;
   }
 
   #endregion [-- MarkerPointsGraph --]
@@ -140,19 +140,19 @@ public static class PlotterBaseExtensions
   {
     ArgumentNullException.ThrowIfNull(pointSource);
 
-    var res = new LineAndMarker<MarkerPointsGraph>();
+    var res_ = new LineAndMarker<MarkerPointsGraph>();
 
     if (penForDrawingLine != null) // We are requested to draw line graphs
     {
-      LineGraph graph = new()
+      LineGraph graph_ = new()
       {
         DataSource = pointSource,
         LinePen = penForDrawingLine
       };
       if (description != null)
       {
-        Legend.SetDescription(obj: graph, value: description.Brief);
-        graph.Description = description;
+        Legend.SetDescription(obj: graph_, value: description.Brief);
+        graph_.Description = description;
       }
       if (marker == null)
       {
@@ -160,26 +160,26 @@ public static class PlotterBaseExtensions
         // graph.Filters.Add(new InclinationFilter());
       }
 
-      res.LineGraph = graph;
+      res_.LineGraph = graph_;
 
-      graph.Filters.Add(item: new FrequencyFilter());
-      plotter.Children.Add(content: graph);
+      graph_.Filters.Add(item: new FrequencyFilter());
+      plotter.Children.Add(content: graph_);
     }
 
     if (marker != null) // We are requested to draw marker graphs
     {
-      MarkerPointsGraph markerGraph = new()
+      MarkerPointsGraph markerGraph_ = new()
       {
         DataSource = pointSource,
         Marker = marker
       };
 
-      res.MarkerGraph = markerGraph;
+      res_.MarkerGraph = markerGraph_;
 
-      plotter.Children.Add(content: markerGraph);
+      plotter.Children.Add(content: markerGraph_);
     }
 
-    return res;
+    return res_;
   }
 
   /// <summary>

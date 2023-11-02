@@ -3,7 +3,7 @@ using System.Windows.Controls;
 
 namespace Crystal.Plot2D.Isolines;
 
-public partial class FastIsolineDisplay : IsolineGraphBase
+public partial class FastIsolineDisplay
 {
   public FastIsolineDisplay()
   {

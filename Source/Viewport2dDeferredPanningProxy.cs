@@ -6,6 +6,7 @@ namespace Crystal.Plot2D;
 internal sealed class Viewport2dDeferredPanningProxy : Viewport2D
 {
   private readonly Viewport2D viewport;
+
   internal Viewport2dDeferredPanningProxy(Viewport2D viewport) : base(host: viewport.HostElement, plotter: viewport.PlotterBase)
   {
     viewport.PropertyChanged += viewport_PropertyChanged;

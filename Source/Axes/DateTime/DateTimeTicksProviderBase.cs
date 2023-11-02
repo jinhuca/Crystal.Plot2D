@@ -7,6 +7,7 @@ namespace Crystal.Plot2D.Axes;
 public abstract class DateTimeTicksProviderBase : ITicksProvider<System.DateTime>
 {
   public event EventHandler Changed;
+
   protected void RaiseChanged()
   {
     if (Changed != null)

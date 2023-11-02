@@ -7,7 +7,7 @@ namespace Crystal.Plot2D.Shapes;
 /// <summary>
 /// Represents a simple draggable point with position bound to point in viewport coordinates, which allows to drag itself by mouse.
 /// </summary>
-public partial class DraggablePoint : PositionalViewportUIContainer
+public partial class DraggablePoint
 {
   /// <summary>
   /// Initializes a new instance of the <see cref="DraggablePoint"/> class.

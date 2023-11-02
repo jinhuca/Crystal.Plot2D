@@ -22,6 +22,8 @@ using Crystal.Plot2D.Properties;
 [assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Descriptions")]
 [assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Converters")]
 [assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.LegendItems")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Navigation")]
+[assembly: XmlnsDefinition(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, clrNamespace: "Crystal.Plot2D.Shapes")]
 
 [assembly: XmlnsPrefix(xmlNamespace: AssemblyConstants.DefaultXmlNamespace, prefix: "Plotter2D")]
 [assembly: AllowPartiallyTrustedCallers]

@@ -18,7 +18,7 @@ namespace Crystal.Plot2D;
 /// </summary>
 public abstract class Viewport2DElement : FrameworkElement, IPlotterElement, INotifyPropertyChanged
 {
-  protected virtual Panel GetHostPanel(PlotterBase plotter) => plotter.CentralGrid;
+  protected Panel GetHostPanel(PlotterBase plotter) => plotter.CentralGrid;
 
   #region IPlotterElement Members
 

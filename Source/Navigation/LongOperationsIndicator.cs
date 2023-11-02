@@ -73,7 +73,7 @@ public sealed class LongOperationsIndicator : IPlotterElement
     if (plotter != null)
     {
       var indicator = plotter.Children.OfType<LongOperationsIndicator>().FirstOrDefault();
-      indicator?.OnLongOperationRunningChanged(element: element, longOperationRunning: (bool)e.NewValue);
+      indicator?.OnLongOperationRunningChanged(longOperationRunning: (bool)e.NewValue);
     }
   }
 
@@ -88,7 +88,7 @@ public sealed class LongOperationsIndicator : IPlotterElement
 
   private readonly DispatcherTimer timer = new() { Interval = TimeSpan.FromMilliseconds(value: 100) };
   private int operationsCounter;
-  private void OnLongOperationRunningChanged(IPlotterElement element, bool longOperationRunning)
+  private void OnLongOperationRunningChanged(bool longOperationRunning)
   {
     var change = longOperationRunning ? +1 : -1;
     operationsCounter += change;

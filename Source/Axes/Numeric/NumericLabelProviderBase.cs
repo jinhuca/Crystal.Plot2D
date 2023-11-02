@@ -7,6 +7,7 @@ public abstract class NumericLabelProviderBase : LabelProviderBase<double>
 {
   private bool shouldRound = true;
   private int rounding;
+
   protected void Init(double[] ticks)
   {
     if (ticks.Length == 0)
@@ -14,22 +15,22 @@ public abstract class NumericLabelProviderBase : LabelProviderBase<double>
       return;
     }
 
-    var start = ticks[0];
-    var finish = ticks[ticks.Length - 1];
+    var start_ = ticks[0];
+    var finish_ = ticks[ticks.Length - 1];
 
-    if (start == finish)
+    if (Math.Abs(start_ - finish_) < Constants.Constants.FloatComparisonTolerance)
     {
       shouldRound = false;
       return;
     }
 
-    var delta = finish - start;
+    var delta_ = finish_ - start_;
 
-    rounding = (int)Math.Round(a: Math.Log10(d: delta));
+    rounding = (int)Math.Round(a: Math.Log10(d: delta_));
 
-    var newStart = RoundingHelper.Round(number: start, rem: rounding);
-    var newFinish = RoundingHelper.Round(number: finish, rem: rounding);
-    if (newStart == newFinish)
+    var newStart_ = RoundingHelper.Round(number: start_, rem: rounding);
+    var newFinish_ = RoundingHelper.Round(number: finish_, rem: rounding);
+    if (Math.Abs(newStart_ - newFinish_) < Constants.Constants.FloatComparisonTolerance)
     {
       rounding--;
     }
@@ -37,17 +38,17 @@ public abstract class NumericLabelProviderBase : LabelProviderBase<double>
 
   protected override string GetStringCore(LabelTickInfo<double> tickInfo)
   {
-    string res;
+    string res_;
     if (!shouldRound)
     {
-      res = tickInfo.Tick.ToString(provider: CultureInfo.InvariantCulture);
+      res_ = tickInfo.Tick.ToString(provider: CultureInfo.InvariantCulture);
     }
     else
     {
-      var round = Math.Min(val1: 15, val2: Math.Max(val1: -15, val2: rounding - 3)); // was rounding - 2
-      res = RoundingHelper.Round(number: tickInfo.Tick, rem: round).ToString(provider: CultureInfo.InvariantCulture);
+      var round_ = Math.Min(val1: 15, val2: Math.Max(val1: -15, val2: rounding - 3)); // was rounding - 2
+      res_ = RoundingHelper.Round(number: tickInfo.Tick, rem: round_).ToString(provider: CultureInfo.InvariantCulture);
     }
 
-    return res;
+    return res_;
   }
 }

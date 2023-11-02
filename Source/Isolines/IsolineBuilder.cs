@@ -195,12 +195,13 @@ public sealed class IsolineBuilder
 
           break;
       }
+      
       return result_;
     }
 
     if (cellVal_.IsDiagonal())
     {
-      return GetOutForOpposite(inEdge: inEdge, cellVal: cellVal_, value: value, cellValues: cv, rect: rect);
+      return GetOutForOpposite(inEdge: inEdge, value: value, cellValues: cv, rect: rect);
     }
 
     const double nearZero = 0.0001;
@@ -214,39 +215,18 @@ public sealed class IsolineBuilder
     switch (inEdge)
     {
       case Edge.Left:
-        if (value == lt_)
-        {
-          value = nearOne * lt_ + nearZero * lb_;
-        }
-        else if (value == lb_)
-        {
-          value = nearOne * lb_ + nearZero * lt_;
-        }
-        else
-        {
-          return Edge.None;
-        }
-        
+        if (Math.Abs(value - lt_) < Constants.Constants.FloatComparisonTolerance) break;
+
         // Now this is possible because of missing value
         //throw new IsolineGenerationException(Strings.Exceptions.IsolinesUnsupportedCase);
-        break;
+        return Edge.None;
       case Edge.Top:
-        if (value == rt_)
-        {
-          value = nearOne * rt_ + nearZero * lt_;
-        }
-        else if (value == lt_)
-        {
-          value = nearOne * lt_ + nearZero * rt_;
-        }
-        else
-        {
-          return Edge.None;
-        }
-        
+        if (!(Math.Abs(value - rt_) < Constants.Constants.FloatComparisonTolerance) &&
+            !(Math.Abs(value - lt_) < Constants.Constants.FloatComparisonTolerance)) return Edge.None;
+        break;
+
         // Now this is possible because of missing value
         //throw new IsolineGenerationException(Strings.Exceptions.IsolinesUnsupportedCase);
-        break;
       case Edge.Right:
         if (Math.Abs(value - rb_) < Constants.Constants.FloatComparisonTolerance)
         {
@@ -289,7 +269,7 @@ public sealed class IsolineBuilder
     return Edge.None;
   }
 
-  private Edge GetOutForOpposite(Edge inEdge, CellBitmask cellVal, double value, ValuesInCell cellValues, IrregularCell rect)
+  private Edge GetOutForOpposite(Edge inEdge, double value, ValuesInCell cellValues, IrregularCell rect)
   {
     var subCell_ = GetSubCell(inEdge: inEdge, value: value, vc: cellValues);
     var iterations_ = 1000; // max number of iterations
@@ -325,7 +305,7 @@ public sealed class IsolineBuilder
 
   private static SubCell GetAdjacentEdge(SubCell sub, Edge edge)
   {
-    var res_ = SubCell.LeftBottom;
+    SubCell res_;
 
     switch (sub)
     {
@@ -354,7 +334,7 @@ public sealed class IsolineBuilder
     var rt_ = vc.RightTop;
     var lt_ = vc.LeftTop;
 
-    var res_ = SubCell.LeftBottom;
+    SubCell res_;
     switch (inEdge)
     {
       case Edge.Left:
@@ -467,7 +447,7 @@ public sealed class IsolineBuilder
     }
   }
 
-  private Edge TrackLine(Edge inEdge, double value, ref int x, ref int y, out double newX, out double newY)
+  private Edge TrackLine(Edge inEdge, double value, ref int x, ref int y)
   {
     // Getting output edge
     var vc_ = missingValue.IsNaN() ?
@@ -490,14 +470,11 @@ public sealed class IsolineBuilder
     var outEdge_ = GetOutEdge(inEdge: inEdge, cv: vc_, rect: rect_, value: value);
     if (outEdge_ == Edge.None)
     {
-      newX = newY = -1; // Impossible cell indices
       return Edge.None;
     }
 
     // Drawing new segment
     var point_ = GetPointXY(edge: outEdge_, value: value, vc: vc_, rect: rect_);
-    newX = point_.X;
-    newY = point_.Y;
     segments.AddPoint(p: point_);
     processed[x, y] = true;
 
@@ -560,10 +537,9 @@ public sealed class IsolineBuilder
 
     //processed[x, y] = true;
 
-    double x2_, y2_;
     do
     {
-      inEdge = TrackLine(inEdge: inEdge, value: value, x: ref s_, y: ref t_, newX: out x2_, newY: out y2_);
+      inEdge = TrackLine(inEdge: inEdge, value: value, x: ref s_, y: ref t_);
     } while (inEdge != Edge.None);
   }
 

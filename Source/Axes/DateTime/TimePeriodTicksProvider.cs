@@ -76,7 +76,7 @@ internal abstract class TimePeriodTicksProvider<T> : ITicksProvider<T>
   }
 
   protected abstract int GetSpecificValue(T start, T dt);
-  protected abstract T GetStart(T start, int value, int step);
+  protected abstract T GetStart(T start, int step);
   protected abstract bool IsMinDate(T dt);
   protected abstract T AddStep(T dt, int step);
 
@@ -105,7 +105,7 @@ internal abstract class TimePeriodTicksProvider<T> : ITicksProvider<T>
       step_ = 1;
     }
 
-    var tick_ = GetStart(start: start_, value: (int)bounds_.Min, step: step_);
+    var tick_ = GetStart(start: start_, step: step_);
     var isMinDateTime_ = IsMinDate(dt: tick_) && step_ != 1;
     if (isMinDateTime_)
     {

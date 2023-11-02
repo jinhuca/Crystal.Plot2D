@@ -1,5 +1,4 @@
-﻿using Crystal.Plot2D.Axes;
-using Crystal.Plot2D.Common;
+﻿using Crystal.Plot2D.Common;
 
 namespace Crystal.Plot2D.Axes.TimeSpan;
 

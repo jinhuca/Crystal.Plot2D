@@ -38,13 +38,9 @@ public sealed class ResourceExtension : MarkupExtension
   /// </param>
   public ResourceExtension(string _resourceKey)
   {
-    if (_resourceKey == null)
-    {
-      throw new ArgumentNullException(paramName: "resourceKey");
-    }
-
-    resourceKey = _resourceKey;
+    resourceKey = _resourceKey ?? throw new ArgumentNullException(paramName: "resourceKey");
   }
 
-  public override object ProvideValue(IServiceProvider serviceProvider) => Strings.UIResources.ResourceManager.GetString(name: resourceKey);
+  public override object ProvideValue(IServiceProvider serviceProvider) 
+    => Strings.UIResources.ResourceManager.GetString(name: resourceKey);
 }

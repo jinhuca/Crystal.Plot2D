@@ -65,12 +65,12 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
     ManualTranslate = true;
   }
 
-  protected virtual UIElement GetTooltipForPoint(Point point, DataRect visible, Rect output)
+  protected virtual UIElement GetTooltipForPoint()
   {
     return null;
   }
 
-  protected PopupTip GetPopupTipWindow()
+  private PopupTip GetPopupTipWindow()
   {
     if (popup != null)
     {
@@ -115,7 +115,7 @@ public abstract class BitmapBasedGraph : Viewport2DElement, IDisposable
     var p_ = e.GetPosition(relativeTo: this);
     var dp_ = p_.ScreenToData(transform: Plotter.Transform);
 
-    var tooltip_ = GetTooltipForPoint(point: p_, visible: completedRequest.Visible, output: completedRequest.Output);
+    var tooltip_ = GetTooltipForPoint();
     if (tooltip_ == null)
     {
       return;

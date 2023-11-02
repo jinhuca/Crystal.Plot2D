@@ -251,8 +251,6 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
       }
 
       var screenMousePos_ = e.GetPosition(relativeTo: listeningPanel);
-      var visible_ = activePlotter.Viewport.Visible;
-
       var isHorizontal_ = Placement.IsBottomOrTop();
       var delta_ = isHorizontal_ ? (screenMousePos_ - rmbInitialPosition).X : (screenMousePos_ - rmbInitialPosition).Y;
 
@@ -267,7 +265,7 @@ public sealed class AxisNavigation : DependencyObject, IPlotterElement
 
       var center_ = dragStartInViewport;
 
-      visible_ = isHorizontal_ ? rmbDragStartRect.ZoomX(to: center_, ratio: delta_) : rmbDragStartRect.ZoomY(to: center_, ratio: delta_);
+      var visible_ = isHorizontal_ ? rmbDragStartRect.ZoomX(to: center_, ratio: delta_) : rmbDragStartRect.ZoomY(to: center_, ratio: delta_);
 
       if (screenMousePos_ != lmbInitialPosition)
       {

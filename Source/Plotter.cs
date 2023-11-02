@@ -140,8 +140,8 @@ public class Plotter : PlotterBase
 
   private void OnHorizontalAxisTicksChanged(object sender, EventArgs e)
   {
-    var axis = (GeneralAxis)sender;
-    UpdateHorizontalTicks(axis: axis);
+    var axis_ = (GeneralAxis)sender;
+    UpdateHorizontalTicks(axis: axis_);
   }
 
   private void UpdateHorizontalTicks(GeneralAxis axis)
@@ -164,8 +164,8 @@ public class Plotter : PlotterBase
 
   private void OnVerticalAxisTicksChanged(object sender, EventArgs e)
   {
-    var axis = (GeneralAxis)sender;
-    UpdateVerticalTicks(axis: axis);
+    var axis_ = (GeneralAxis)sender;
+    UpdateVerticalTicks(axis: axis_);
   }
 
   private void UpdateVerticalTicks(GeneralAxis axis)
@@ -250,8 +250,13 @@ public class Plotter : PlotterBase
     }
   }
 
-  protected virtual void OnVerticalAxisChanged() { }
-  protected virtual void ValidateVerticalAxis(GeneralAxis axis) { }
+  private void OnVerticalAxisChanged()
+  {
+  }
+
+  private void ValidateVerticalAxis(GeneralAxis axis)
+  {
+  }
 
   /// <summary>
   ///   Gets or sets the main horizontal axis visibility.
@@ -321,7 +326,7 @@ public class Plotter : PlotterBase
 
       if (value != _horizontalAxis)
       {
-        ValidateHorizontalAxis(axis: value);
+        ValidateHorizontalAxis();
         _updatingAxis = true;
         if (_horizontalAxis != null)
         {
@@ -331,8 +336,10 @@ public class Plotter : PlotterBase
           {
             Children.Remove(item: _horizontalAxis);
           }
+        
           value.Visibility = _horizontalAxis.Visibility;
         }
+
         SetIsDefaultAxis(obj: value, value: true);
         _horizontalAxis = value;
         _horizontalAxis.TicksChanged += OnHorizontalAxisTicksChanged;
@@ -349,25 +356,30 @@ public class Plotter : PlotterBase
     }
   }
 
-  protected virtual void OnHorizontalAxisChanged() { }
-  protected virtual void ValidateHorizontalAxis(GeneralAxis axis) { }
+  private void OnHorizontalAxisChanged()
+  {
+  }
+
+  private void ValidateHorizontalAxis()
+  {
+  }
 
   private static void VerifyAxisType(AxisPlacement axisPlacement, AxisType axisType)
   {
-    var result = false;
+    var result_ = false;
     switch (axisPlacement)
     {
       case AxisPlacement.Left:
       case AxisPlacement.Right:
-        result = axisType == AxisType.Vertical;
+        result_ = axisType == AxisType.Vertical;
         break;
       case AxisPlacement.Top:
       case AxisPlacement.Bottom:
-        result = axisType == AxisType.Horizontal;
+        result_ = axisType == AxisType.Horizontal;
         break;
     }
 
-    if (!result)
+    if (!result_)
     {
       throw new ArgumentException(message: Strings.Exceptions.InvalidAxisPlacement);
     }
@@ -375,26 +387,26 @@ public class Plotter : PlotterBase
 
   protected override void OnIsDefaultAxisChangedCore(DependencyObject d, DependencyPropertyChangedEventArgs e)
   {
-    if (d is GeneralAxis axis)
+    if (d is GeneralAxis axis_)
     {
       var value_ = (bool)e.NewValue;
       var oldKeepOldAxis_ = _keepOldAxis;
-      var horizontal_ = axis.Placement == AxisPlacement.Bottom || axis.Placement == AxisPlacement.Top;
+      var horizontal_ = axis_.Placement is AxisPlacement.Bottom or AxisPlacement.Top;
       _keepOldAxis = true;
 
       if (value_ && horizontal_)
       {
-        MainHorizontalAxis = axis;
+        MainHorizontalAxis = axis_;
       }
-      else if (value_ && !horizontal_)
+      else if (value_)
       {
-        MainVerticalAxis = axis;
+        MainVerticalAxis = axis_;
       }
-      else if (!value_ && horizontal_)
+      else if (horizontal_)
       {
         MainHorizontalAxis = null;
       }
-      else if (!value_ && !horizontal_)
+      else
       {
         MainVerticalAxis = null;
       }
