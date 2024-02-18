@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Crystal.Plot2D.Common;
+using Crystal.Plot2D.Common.Auxiliary;
+using Crystal.Plot2D.Transforms;
+using System;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using Crystal.Plot2D.Common;
-using Crystal.Plot2D.Common.Auxiliary;
-using Crystal.Plot2D.Transforms;
 
 namespace Crystal.Plot2D.Navigation;
 
+/// <inheritdoc />
 /// <summary>
 /// Provides common methods of mouse navigation around viewport.
 /// </summary>
@@ -24,10 +25,10 @@ public sealed class MouseNavigation : NavigationBase
   {
     get
     {
-      if (adornerLayer == null)
+      if(adornerLayer == null)
       {
         adornerLayer = AdornerLayer.GetAdornerLayer(visual: this);
-        if (adornerLayer != null)
+        if(adornerLayer != null)
         {
           adornerLayer.IsHitTestVisible = false;
         }
@@ -63,9 +64,9 @@ public sealed class MouseNavigation : NavigationBase
 
   private void OnParentKeyDown(object sender, KeyEventArgs e)
   {
-    if (e.Key == Key.Escape || e.Key == Key.Back)
+    if(e.Key == Key.Escape || e.Key == Key.Back)
     {
-      if (isZooming)
+      if(isZooming)
       {
         isZooming = false;
         zoomRect = null;
@@ -79,7 +80,7 @@ public sealed class MouseNavigation : NavigationBase
 
   private void OnMouseWheel(object sender, MouseWheelEventArgs e)
   {
-    if (!e.Handled)
+    if(!e.Handled)
     {
       var mousePos_ = e.GetPosition(relativeTo: this);
       var delta_ = -e.Delta;
@@ -92,7 +93,7 @@ public sealed class MouseNavigation : NavigationBase
 #if DEBUG
   public override string ToString()
   {
-    if (!string.IsNullOrEmpty(value: Name))
+    if(!string.IsNullOrEmpty(value: Name))
     {
       return Name;
     }
@@ -104,10 +105,10 @@ public sealed class MouseNavigation : NavigationBase
   private RectangleSelectionAdorner selectionAdorner;
   private void AddSelectionAdorner()
   {
-    if (!adornerAdded)
+    if(!adornerAdded)
     {
       var layer_ = AdornerLayer;
-      if (layer_ != null)
+      if(layer_ != null)
       {
         selectionAdorner = new RectangleSelectionAdorner(element: this) { Border = zoomRect };
 
@@ -120,7 +121,7 @@ public sealed class MouseNavigation : NavigationBase
   private void RemoveSelectionAdorner()
   {
     var layer_ = AdornerLayer;
-    if (layer_ != null)
+    if(layer_ != null)
     {
       layer_.Remove(adorner: selectionAdorner);
       adornerAdded = false;
@@ -192,7 +193,7 @@ public sealed class MouseNavigation : NavigationBase
   private void StartZoom(MouseButtonEventArgs e)
   {
     zoomStartPoint = e.GetPosition(relativeTo: this);
-    if (Viewport.Output.Contains(point: zoomStartPoint))
+    if(Viewport.Output.Contains(point: zoomStartPoint))
     {
       isZooming = true;
       AddSelectionAdorner();
@@ -207,19 +208,19 @@ public sealed class MouseNavigation : NavigationBase
   {
     // dragging
     var shouldStartDrag_ = ShouldStartPanning(e: e);
-    if (shouldStartDrag_)
+    if(shouldStartDrag_)
     {
       StartPanning(e: e);
     }
 
     // zooming
     var shouldStartZoom_ = ShouldStartZoom(e: e);
-    if (shouldStartZoom_)
+    if(shouldStartZoom_)
     {
       StartZoom(e: e);
     }
 
-    if (!Plotter.IsFocused)
+    if(!Plotter.IsFocused)
     {
       //var window = Window.GetWindow(Plotter);
       //var focusWithinWindow = FocusManager.GetFocusedElement(window) != null;
@@ -239,15 +240,15 @@ public sealed class MouseNavigation : NavigationBase
 
   private void OnMouseMove(object sender, MouseEventArgs e)
   {
-    if (!isPanning && !isZooming)
+    if(!isPanning && !isZooming)
     {
       return;
     }
 
     // dragging
-    if (isPanning && e.LeftButton == MouseButtonState.Pressed)
+    if(isPanning && e.LeftButton == MouseButtonState.Pressed)
     {
-      if (!IsMouseCaptured)
+      if(!IsMouseCaptured)
       {
         CaptureMouse();
       }
@@ -259,7 +260,7 @@ public sealed class MouseNavigation : NavigationBase
       loc_ += shift_;
 
       // preventing unnecessary changes, if actually visible hasn't change.
-      if (shift_.X != 0 || shift_.Y != 0)
+      if(shift_.X != 0 || shift_.Y != 0)
       {
         Cursor = Cursors.ScrollAll;
 
@@ -272,7 +273,7 @@ public sealed class MouseNavigation : NavigationBase
       e.Handled = true;
     }
     // zooming
-    else if (isZooming && e.LeftButton == MouseButtonState.Pressed)
+    else if(isZooming && e.LeftButton == MouseButtonState.Pressed)
     {
       var zoomEndPoint_ = e.GetPosition(relativeTo: this);
       UpdateZoomRect(zoomEndPoint: zoomEndPoint_);
@@ -293,16 +294,16 @@ public sealed class MouseNavigation : NavigationBase
     tmpZoomRect_ = Rect.Intersect(rect1: tmpZoomRect_, rect2: output_);
 
     shouldKeepRatioWhileZooming = IsShiftPressed();
-    if (shouldKeepRatioWhileZooming)
+    if(shouldKeepRatioWhileZooming)
     {
       var currZoomRatio_ = tmpZoomRect_.Width / tmpZoomRect_.Height;
       var zoomRatio_ = output_.Width / output_.Height;
-      if (currZoomRatio_ < zoomRatio_)
+      if(currZoomRatio_ < zoomRatio_)
       {
         var oldHeight_ = tmpZoomRect_.Height;
         var height_ = tmpZoomRect_.Width / zoomRatio_;
         tmpZoomRect_.Height = height_;
-        if (!tmpZoomRect_.Contains(point: zoomStartPoint))
+        if(!tmpZoomRect_.Contains(point: zoomStartPoint))
         {
           tmpZoomRect_.Offset(offsetX: 0, offsetY: oldHeight_ - height_);
         }
@@ -312,7 +313,7 @@ public sealed class MouseNavigation : NavigationBase
         var oldWidth_ = tmpZoomRect_.Width;
         var width_ = tmpZoomRect_.Height * zoomRatio_;
         tmpZoomRect_.Width = width_;
-        if (!tmpZoomRect_.Contains(point: zoomStartPoint))
+        if(!tmpZoomRect_.Contains(point: zoomStartPoint))
         {
           tmpZoomRect_.Offset(offsetX: oldWidth_ - width_, offsetY: 0);
         }
@@ -330,12 +331,12 @@ public sealed class MouseNavigation : NavigationBase
 
   private void OnParentMouseUp(MouseButtonEventArgs e)
   {
-    if (isPanning && e.ChangedButton == MouseButton.Left)
+    if(isPanning && e.ChangedButton == MouseButton.Left)
     {
       isPanning = false;
       StopPanning(e: e);
     }
-    else if (isZooming && e.ChangedButton == MouseButton.Left)
+    else if(isZooming && e.ChangedButton == MouseButton.Left)
     {
       isZooming = false;
       StopZooming();
@@ -344,7 +345,7 @@ public sealed class MouseNavigation : NavigationBase
 
   private void StopZooming()
   {
-    if (!zoomRect.HasValue) return;
+    if(!zoomRect.HasValue) return;
     var output_ = Viewport.Output;
 
     var p1_ = zoomRect.Value.TopLeft.ScreenToViewport(transform: Viewport.Transform);
@@ -361,7 +362,7 @@ public sealed class MouseNavigation : NavigationBase
   {
     Plotter.UndoProvider.CaptureNewValue(target: Plotter.Viewport, property: Viewport2D.VisibleProperty, newValue: Viewport.Visible);
 
-    if (!Plotter.IsFocused)
+    if(!Plotter.IsFocused)
     {
       Plotter.Focus();
     }
@@ -374,12 +375,12 @@ public sealed class MouseNavigation : NavigationBase
 
   protected override void OnLostFocus(RoutedEventArgs e)
   {
-    if (isZooming)
+    if(isZooming)
     {
       RemoveSelectionAdorner();
       isZooming = false;
     }
-    if (isPanning)
+    if(isPanning)
     {
       Plotter.Viewport.PanningState = Viewport2DPanningState.NotPanning;
       isPanning = false;
@@ -394,7 +395,7 @@ public sealed class MouseNavigation : NavigationBase
 
     var zoomSpeed_ = Math.Abs(value: wheelRotationDelta / Mouse.MouseWheelDeltaForOneLine);
     zoomSpeed_ *= WheelZoomSpeed;
-    if (wheelRotationDelta < 0)
+    if(wheelRotationDelta < 0)
     {
       zoomSpeed_ = 1 / zoomSpeed_;
     }

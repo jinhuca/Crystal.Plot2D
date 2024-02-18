@@ -4,9 +4,10 @@ using Crystal.Plot2D.Common;
 
 namespace Crystal.Plot2D.Navigation;
 
-///<summary>
-/// Base class for all navigation providers.
-///</summary>
+/// <inheritdoc />
+/// <summary>
+///  Base class for all navigation providers.
+/// </summary>
 public abstract class NavigationBase : Viewport2DElement
 {
   protected NavigationBase()
